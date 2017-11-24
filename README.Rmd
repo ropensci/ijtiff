@@ -1,0 +1,99 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# ijtiff
+
+The goal of ijtiff is to be an R package which can correctly import TIFF files that were saved from ImageJ and to write TIFF files than can be correctly read by ImageJ. It may also satisfy some non-ImageJ TIFF requirements that you might have. This is not an extension of the original `tiff` package, it behaves differently. Hence, if this package isn't satisfying your TIFF needs, it's definitely worth checking out the original `tiff` package.
+
+[![Travis-CI Build Status](https://travis-ci.org/rorynolan/ijtiff.svg?branch=master)](https://travis-ci.org/rorynolan/ijtiff)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/rorynolan/ijtiff?branch=master&svg=true)](https://ci.appveyor.com/project/rorynolan/ijtiff)
+[![codecov](https://codecov.io/gh/rorynolan/ijtiff/branch/master/graph/badge.svg)](https://codecov.io/gh/rorynolan/ijtiff)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff)
+![RStudio CRAN downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff)
+![RStudio CRAN monthly downloads](http://cranlogs.r-pkg.org/badges/ijtiff)
+[![Rdocumentation](http://www.rdocumentation.org/badges/version/ijtiff)](http://www.rdocumentation.org/packages/ijtiff)
+![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)
+
+## Installation
+
+### `libtiff`
+
+`ijtiff` requires you to have the `libtiff` C library installed. To install `libtiff`:
+
+* On __Mac__ you need [Homebrew](https://brew.sh/). Then in the terminal, run `brew install libtiff`.
+* On __Debian Linux__, try `sudo apt-get install libtiff5`, or if that fails, try `sudo apt-get install libtiff4`.
+* On __Fedora Linux__, try `sudo yum install libtiff5`, or if that doesn't work, try `sudo yum install libtiff4`.
+
+__Windows__ has `libtiff` by default :)
+
+### The `ijtiff` R package
+
+You can install `ijtiff` from github with:
+```{r gh-installation, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("rorynolan/ijtiff")
+```
+
+## Reading ImageJ TIFF files
+
+```{r 2 channel path}
+path_2ch_ij <- system.file("img", "2ch_ij.tif", package = "ijtiff")
+```
+`path_2ch_ij` is the path to a 2-channel, five-frame image which was saved from ImageJ. 
+
+### The original `tiff` library
+
+When we import it with the original `tiff` library:
+```{r original tiff import}
+img <- tiff::readTIFF(path_2ch_ij, all = TRUE)
+str(img)  # 10 images
+img[[1]][100:110, 101:105]  # print a section of the first image in the series
+```
+
+* We just get 10 frames, with no information about the two channels.
+* We get annoying warnings about ImageJ's private TIFF tags 50838 and 50839, which are of no interest to the `R` user. 
+* The numbers in the image array(s) are (by default) normalized to the range [0, 1].
+
+### The `ijtiff` library
+
+When we import the same image with the `ijtiff` library:
+```{r ijtiff import}
+img <- ijtiff::read_tif(path_2ch_ij)
+dim(img)  # 2 channels, 5 frames
+img[100:110, 101:105, 1, 1]  # print a section of the first channel, first frame
+```
+
+* We see the image nicely divided into 2 channels of 5 frames.
+* We get no needless warnings.
+* The numbers in the image are integers, the same as would be seen if one opened the image with ImageJ.
+
+`ijtiff` also includes a basic image display function:
+```{r display}
+ijtiff::display(img[, , 1, 1])  # first channel, first frame
+```
+
+#### Note
+`tiff` reads several types of TIFFs correctly, including many that are saved from ImageJ. This is just an example of a TIFF type that it doesn't perform so well with.
+
+## Floating point TIFFs
+The original `tiff` library could read but not write floating point (real-numbered) TIFF files. The `ijtiff` library can do both. It automatically decides which type is appropriate when writing.
+
+## Advice for all ImageJ users
+Base ImageJ (similar to the `tiff` R package) does not properly open some perfectly TIFF files^[I think native ImageJ only likes 1, 3 and 4-channel images and complains about the rest, but I'm not sure about this.] (including some TIFF files written by the `tiff` and `ijtiff` R packages).  Instead it gives you the error message: _imagej can only open 8 and 16 bit/channel images_. These images in fact can be opened in ImageJ using the wonderful _BioFormats_ plugin. See https://imagej.net/Bio-Formats.
+
+# Acknowledgement
+This package uses a lot of code from the original `tiff` package by Simon Urbanek.
+
+# Contribution
+Contributions to this package are welcome. The preferred method of contribution is through a github pull request. Feel free to contact me by creating an issue. Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.

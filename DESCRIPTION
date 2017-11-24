@@ -1,0 +1,37 @@
+Package: ijtiff
+Type: Package
+Title: TIFF I/O for 'ImageJ' users
+Version: 0.0.0.9000
+Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com", 
+                    role = c("aut", "cre", "cph")),
+             person("Sergi", "Padilla-Parra", email = "spadilla@well.ox.ac.uk", 
+                    role = "ths"))
+Maintainer: Rory Nolan <rorynoolan@gmail.com>
+Description: Correctly import TIFF files that were saved from ImageJ and write 
+    TIFF files than can be correctly read by ImageJ. Full support for TIFF files
+    with float/real-numbered pixels.
+License: GPL-3
+SystemRequirements: libtiff
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.4.0)
+RoxygenNote: 6.0.1
+URL: https://www.github.com/rorynolan/ijtiff
+BugReports: https://www.github.com/rorynolan/ijtiff/issues
+Roxygen: list(markdown = TRUE)
+VignetteBuilder: knitr
+Imports: checkmate,
+    RSAGA,
+    magrittr,
+    filesstrings,
+    stringr,
+    purrr,
+    dplyr,
+    Rcpp,
+    tiff,
+    fields,
+    grDevices
+Suggests: knitr,
+    testthat,
+    rmarkdown
+LinkingTo: Rcpp

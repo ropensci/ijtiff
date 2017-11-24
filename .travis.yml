@@ -1,0 +1,15 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
+sudo: true
+cache: packages
+r_github_packages:
+  - rorynolan/filesstrings
+after_success:
+  - travis_wait 30 Rscript -e 'covr::codecov(line_exclusions = "R/nandb.R")'
+apt_packages:
+  - libssl-dev
+  - libtiff4-dev
+  - libfftw3-dev
+  - libcurl4-openssl-dev
+  - libxml2-dev

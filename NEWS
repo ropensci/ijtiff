@@ -1,0 +1,42 @@
+NEWS/Changelog
+
+0.1-5	2013-09-03
+    o	bugfix: output of readTIFF(..., as.is=TRUE) with integer
+	values was shifted by one (i.e., stored integer value x
+	was returned as x + 1)
+
+    o	writeTIFF() now supports 32-bit (integer) output
+
+    o	writeTIFF() issues a warning if the input data range
+	is outside [0, 1]
+
+0.1-4	2013-02-19
+    o	remove debugging output (it is now only shown if tiff
+	is compiled with -DTIFF_DEBUG=1)
+
+0.1-3	2012-11-05
+    o	add support for 12-bit grayscale TIFF images in readTIFF()
+	(Note that 12-bit TIFFs are outside of the standard, so
+	we assume big-endian packing order)
+
+    o	add readTIFF(..., as.is=TRUE) which preserves the integer
+	values used in the TIFF as they are (if applicable) instead
+	of rescaling to reals
+
+0.1-2	2012-08-30
+    o	fixed a bug in writeTIFF() for 16-bit images
+
+
+0.1-1	2012-08-24
+    o	add readTIFF(..., indexed=TRUE) which return indexed images as
+	color map and an index matrix.
+
+    o	fixed a bug in writing a TIFF file consisting of multiple
+	subimages
+
+    o	prevent TIFF from re-entering error calls
+
+
+0.1-0	2012-08-04
+    o	first CRAN release
+

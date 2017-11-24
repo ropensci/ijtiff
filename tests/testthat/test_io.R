@@ -1,0 +1,163 @@
+test_that("Package 2-channel example I/O works", {
+  set.seed(1)
+  cwd <- getwd()
+  on.exit(setwd(cwd))
+  setwd(tempdir())
+  context("Package 2-channel example I/O")
+  img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
+  expect_equal(dim(img), c(256, 256, 2, 5))
+  context("8-bit unsigned integer TIFF I/O")
+  v2345 <- 2:5
+  a2345 <- array(sample.int(prod(v2345)), dim = v2345)
+  write_tif(a2345, "temp")
+  in_tif <- read_tif("temp.tif")
+  expect_equal(dim(in_tif), v2345)
+  expect_equal(as.vector(in_tif), as.vector(a2345), check.attributes = FALSE)
+  suppressWarnings(file.remove(dir()))
+})
+
+test_that("Package RGB I/O works", {
+  set.seed(1)
+  cwd <- getwd()
+  on.exit(setwd(cwd))
+  setwd(tempdir())
+  context("Package RGB I/O")
+  img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
+  expect_equal(dim(img), c(76, 100, 4, 1))
+  suppressWarnings(file.remove(dir()))
+})
+
+test_that("8-bit unsigned integer TIFF I/O works", {
+  set.seed(2)
+  cwd <- getwd()
+  on.exit(setwd(cwd))
+  setwd(tempdir())
+  context("8-bit unsigned integer TIFF I/O")
+  v2345 <- 2:5
+  a2345 <- array(sample.int(prod(v2345)), dim = v2345)
+  write_tif(a2345, "temp")
+  in_tif <- read_tif("temp.tif")
+  expect_equal(dim(in_tif), v2345)
+  expect_equal(as.vector(in_tif), as.vector(a2345), check.attributes = FALSE)
+  suppressWarnings(file.remove(dir()))
+})
+
+test_that("16-bit unsigned integer TIFF I/O works", {
+  set.seed(3)
+  cwd <- getwd()
+  on.exit(setwd(cwd))
+  setwd(tempdir())
+  context("16-bit unsigned integer TIFF I/O")
+  v6789 <- 6:9
+  a6789 <- array(sample.int(prod(v6789)), dim = v6789)
+  write_tif(a6789, "temp")
+  in_tif <- read_tif("temp.tif")
+  expect_equal(dim(in_tif), v6789)
+  expect_equal(as.vector(in_tif), as.vector(a6789), check.attributes = FALSE)
+  suppressWarnings(file.remove(dir()))
+})
+
+test_that("32-bit unsigned integer TIFF I/O works", {
+  set.seed(4)
+  cwd <- getwd()
+  on.exit(setwd(cwd))
+  setwd(tempdir())
+  context("32-bit unsigned integer TIFF I/O")
+  v96979899 <- 96:99
+  a96979899 <- array(sample.int(prod(v96979899)), dim = v96979899)
+  write_tif(a96979899, "temp")
+  in_tif <- read_tif("temp.tif")
+  expect_equal(dim(in_tif), v96979899)
+  expect_equal(as.vector(in_tif), as.vector(a96979899), check.attributes = FALSE)
+  suppressWarnings(file.remove(dir()))
+})
+
+test_that("Float (real-numbered) TIFF I/O works", {
+  set.seed(5)
+  cwd <- getwd()
+  on.exit(setwd(cwd))
+  setwd(tempdir())
+  context("8-bit unsigned integer TIFF I/O")
+  v2345 <- 2:5
+  a2345 <- array(sample.int(prod(v2345)), dim = v2345) + 0.5
+  write_tif(a2345, "temp.tiff")
+  in_tif <- read_tif("temp.tif")
+  expect_equal(dim(in_tif), v2345)
+  expect_equal(as.vector(in_tif), as.vector(a2345), check.attributes = FALSE)
+  a2345[9] <- NA
+  write_tif(a2345, "temp")
+  in_tif <- read_tif("temp.tif")
+  expect_equal(dim(in_tif), v2345)
+  expect_equal(as.vector(in_tif), as.vector(a2345), check.attributes = FALSE)
+  suppressWarnings(file.remove(dir()))
+})
+
+test_that("Negative-numbered TIFF I/O works", {
+  cwd <- getwd()
+  on.exit(setwd(cwd))
+  setwd(tempdir())
+  context("Negative-numbered TIFF I/O")
+  v2345 <- 2:5
+  a2345 <- array(sample.int(prod(v2345)), dim = v2345)
+  a2345[1] <- -1
+  write_tif(a2345, "temp.tiff")
+  in_tif <- read_tif("temp.tif")
+  expect_equal(dim(in_tif), v2345)
+  expect_equal(as.vector(in_tif), as.vector(a2345), check.attributes = FALSE)
+  expect_equal(attr(in_tif, "sample_format"), "float")
+  suppressWarnings(file.remove(dir()))
+})
+
+test_that("List returning works", {
+  cwd <- getwd()
+  on.exit(setwd(cwd))
+  setwd(tempdir())
+  context("List returning")
+  img1 <- matrix(0.5, nrow = 2, ncol = 2)
+  img2 <- matrix(0.7, nrow = 3, ncol = 7)
+  weird_list_img <- list(img1, img2)
+  expect_equal(tiff::writeTIFF(weird_list_img, "weird.tif"), 2)
+  expect_error(read_tif("weird.tif"), "tried to return a list")
+  expect_warning(read_tif("weird.tif", list_safety = "warn"),
+                 "returning a list")
+  in_weird <- read_tif("weird.tif", list_safety = "n")
+  expect_equal(in_weird,
+               purrr::map(weird_list_img, ~ floor(. * (2 ^ 8 - 1))),
+               check.attributes = FALSE)  # writing causes truncation
+  suppressWarnings(file.remove(dir()))
+})
+
+test_that("TIFFErrorHandler_ works", {
+  cwd <- getwd()
+  on.exit(setwd(cwd))
+  setwd(tempdir())
+  context("TIFFErrorHandler_")
+  writeLines(c("a", "b"), "t.txt")
+  expect_error(suppressWarnings(read_tif("t.txt")), "Cannot read TIFF header")
+  suppressWarnings(file.remove(dir()))
+})
+
+test_that("write_tif() errors correctly", {
+  context("write_tif() exceptions")
+  aaaa <- array(0, dim = rep(4, 4))
+  expect_error(write_tif(aaaa, "a", bits_per_sample = "abc"),
+               "If .* is a string")
+  expect_error(write_tif(aaaa, "a", bits_per_sample = 12),
+               "one of 8, 16 or 32")
+  aaaa[1] <- - 2 * float_max()
+  expect_error(write_tif(aaaa, "a"), "lowest allowable negative")
+  aaaa[1] <- -1
+  aaaa[2] <- 2 * float_max()
+  expect_error(write_tif(aaaa, "a"),
+               "If .* has negative .* maximum allowed positive")
+  aaaa[2] <- 1
+  aaaa[1] <- 0.5
+  expect_error(write_tif(aaaa, "a", bits_per_sample = 16),
+               "needs .* floating point .* necessary to have 32 bits")
+  aaaa[1] <- 2 ^ 33
+  expect_error(write_tif(aaaa, "a", bits_per_sample = 16),
+               "maximum .* greater than 2 \\^ 32 - 1")
+  aaaa[1] <-  2 ^ 20
+  expect_error(write_tif(aaaa, "a", bits_per_sample = 16),
+               "TIFF file needs to be at least .*-bit")
+})

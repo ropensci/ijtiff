@@ -1,0 +1,10 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^todo\.txt$
+^junk$
+^todo\.md$
+^README\.Rmd$
+^README-.*\.png$
+^CONDUCT\.md$
+^appveyor\.yml$
+^\.travis\.yml$
