@@ -1,0 +1,23 @@
+{
+  "@context": "https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld",
+  "@type": "Code",
+  "author": [
+    {
+      "@id": "0000-0002-5239-4043",
+      "@type": "Person",
+      "email": "rorynoolan@gmail.com",
+      "name": "Rory Nolan",
+      "affiliation": "University of Oxford"
+    }
+  ],
+  "identifier": "",
+  "codeRepository": "https://github.com/rorynolan/ijtiff",
+  "datePublished": "2017-11-24",
+  "dateModified": "2017-11-24",
+  "dateCreated": "2017-11-24",
+  "description": "An R package for TIFF I/O for ImageJ users",
+  "keywords": "R, TIFF, ImageJ",
+  "license": "GPL v3.0",
+  "title": "ijtiff",
+  "version": ""
+}
