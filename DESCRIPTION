@@ -33,5 +33,6 @@ Imports: checkmate,
     grDevices
 Suggests: knitr,
     testthat,
-    rmarkdown
+    rmarkdown,
+    covr
 LinkingTo: Rcpp
