@@ -63,12 +63,12 @@ test_that("32-bit unsigned integer TIFF I/O works", {
   on.exit(setwd(cwd))
   setwd(tempdir())
   context("32-bit unsigned integer TIFF I/O")
-  v96979899 <- 96:99
-  a96979899 <- array(sample.int(prod(v96979899)), dim = v96979899)
-  write_tif(a96979899, "temp")
+  v1m <- c(20, 50, 10, 100)
+  a1m <- array(sample.int(2 ^ 32 - 1, prod(v1m)), dim = v1m)
+  write_tif(a1m, "temp")
   in_tif <- read_tif("temp.tif")
-  expect_equal(dim(in_tif), v96979899)
-  expect_equal(as.vector(in_tif), as.vector(a96979899), check.attributes = FALSE)
+  expect_equal(dim(in_tif), v1m)
+  expect_equal(as.vector(in_tif), as.vector(a1m), check.attributes = FALSE)
   suppressWarnings(file.remove(dir()))
 })
 
