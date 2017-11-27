@@ -170,13 +170,13 @@ test_that("text-image-io works", {
   write_txt_img(mm, "mm")
   expect_equal(dir(pattern = "txt$"), "mm.txt")
   expect_equal(as.vector(mm),
-               unlist(lapply(dir(pattern = "txt$"), read_txt_img)))
+               unlist(lapply(dir(pattern = "^mm.*txt$"), read_txt_img)))
   suppressWarnings(file.remove(dir()))
   mmm <- abind::abind(mm, mm, along = 3)
   write_txt_img(mmm, "mmm")
   expect_equal(dir(pattern = "txt$"), c("mmm_ch1.txt", "mmm_ch2.txt"))
   expect_equal(as.vector(mmm),
-               unlist(lapply(dir(pattern = "txt$"), read_txt_img)))
+               unlist(lapply(dir(pattern = "^mm.*txt$"), read_txt_img)))
   suppressWarnings(file.remove(dir()))
   mmmm <- abind::abind(mmm, mmm, along = 4)
   write_txt_img(mmmm, "mmmm")
@@ -185,7 +185,7 @@ test_that("text-image-io works", {
                                         "mmmm_ch2_frame1.txt",
                                         "mmmm_ch2_frame2.txt"))
   expect_equal(as.vector(mmmm),
-               unlist(lapply(dir(pattern = "txt$"), read_txt_img)))
+               unlist(lapply(dir(pattern = "^mm.*txt$"), read_txt_img)))
   mmmmm <- array(1, dim = rep(5, 5))
   expect_error(write_txt_img(mmmmm, "abc"), "dimension")
 
