@@ -10,7 +10,7 @@ display(img, ...)
 \item{img}{A numeric matrix.}
 
 \item{...}{Arguments passed to \code{\link[fields:image.plot]{fields::image.plot()}}. These arguments should
-be named.}
+be fully named.}
 }
 \description{
 Display an image that has been read in by \code{\link[=read_tif]{read_tif()}} as it would look in

@@ -5,7 +5,7 @@
 #'
 #' @param img A numeric matrix.
 #' @param ... Arguments passed to [fields::image.plot()]. These arguments should
-#'   be named.
+#'   be fully named.
 #' @examples
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' display(img[, , 1, 1])  # red channel
@@ -15,10 +15,13 @@
 #' @export
 display <- function(img, ...) {
   checkmate::assert_matrix(img)
-  img %>% {
-    .[rev(seq_len(nrow(.))), ]
-  } %>% t() %>%
-    fields::image.plot(..., axes = FALSE,
-                       col = grDevices::grey.colors(999,
-                                                    start = 0, end = 1))
+  img %<>% {t(.[rev(seq_len(nrow(.))), ])}
+  dots <- list(...)
+  dots[[1]] <- img
+  if (! "axes" %in% names(dots)) dots$axes <- FALSE
+  if (! "col" %in% names(dots)) {
+    dots$col <- grDevices::grey.colors(999, start = 0, end = 1)
+  }
+  do.call(fields::image.plot, dots)
 }
+
