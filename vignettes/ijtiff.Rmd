@@ -14,52 +14,66 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+original_files <- dir()
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+## Reading ImageJ TIFF files
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+```{r 2 channel path}
+path_2ch_ij <- system.file("img", "2ch_ij.tif", package = "ijtiff")
+```
+`path_2ch_ij` is the path to a 2-channel, five-frame image which was saved from ImageJ. 
 
-## Vignette Info
+### The original `tiff` library
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+When we import it with the original `tiff` library:
+```{r original tiff import}
+img <- tiff::readTIFF(path_2ch_ij, all = TRUE)
+str(img)  # 10 images
+img[[1]][100:110, 101:105]  # print a section of the first image in the series
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+* We just get 10 frames, with no information about the two channels.
+* We get annoying warnings about ImageJ's private TIFF tags 50838 and 50839, which are of no interest to the `R` user. 
+* The numbers in the image array(s) are (by default) normalized to the range [0, 1].
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+### The `ijtiff` library
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+When we import the same image with the `ijtiff` library:
+```{r ijtiff import}
+img <- ijtiff::read_tif(path_2ch_ij)
+dim(img)  # 2 channels, 5 frames
+img[100:110, 101:105, 1, 1]  # print a section of the first channel, first frame
 ```
 
-Also a quote using `>`:
+* We see the image nicely divided into 2 channels of 5 frames.
+* We get no needless warnings.
+* The numbers in the image are integers, the same as would be seen if one opened the image with ImageJ.
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+`ijtiff` also includes a basic image display function:
+```{r display}
+ijtiff::display(img[, , 1, 1])  # first channel, first frame
+```
+
+#### Note
+`tiff` reads several types of TIFFs correctly, including many that are saved from ImageJ. This is just an example of a TIFF type that it doesn't perform so well with.
+
+## Floating point TIFFs
+The original `tiff` library could read but not write floating point (real-numbered) TIFF files. The `ijtiff` library can do both. It automatically decides which type is appropriate when writing.
+
+## Advice for all ImageJ users
+Base ImageJ (similar to the `tiff` R package) does not properly open some perfectly TIFF files^[I think native ImageJ only likes 1, 3 and 4-channel images and complains about the rest, but I'm not sure about this.] (including some TIFF files written by the `tiff` and `ijtiff` R packages).  Instead it gives you the error message: _imagej can only open 8 and 16 bit/channel images_. These images in fact can be opened in ImageJ using the wonderful _BioFormats_ plugin. See https://imagej.net/Bio-Formats.
+
+## Text Images
+TIFF files are limited in which numbers they can represent (they can't go outside the 32-bit range). Real-numbered TIFFs can also lack precision, having only the precision of a 32-bit floating point number. If TIFF isn't good enough, you can use text images.
+```{r text images, error=TRUE}
+library(ijtiff)
+img[1] <- 2 ^ 99  # too high for TIFF
+write_tif(img, "img")  # errors
+write_txt_img(img, "img")  # no problem
+```
+
+```{r cleanup, include = FALSE}
+new_files <- setdiff(dir(), original_files)
+file.remove(new_files)
+```
