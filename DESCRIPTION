@@ -30,7 +30,8 @@ Imports: checkmate,
     tiff,
     fields,
     grDevices,
-    readr
+    readr,
+    abind
 Suggests: knitr,
     testthat,
     rmarkdown,
