@@ -26,9 +26,9 @@ channel-frame pair gets its own file.
 }
 \examples{
 setwd(tempdir())
-img <- read_tif(system.file('extdata', '50.tif', package = 'nandb'))
+img <- read_tif(system.file('img', 'Rlogo.tif', package = 'ijtiff'))
 write_txt_img(img, 'temp')
 
-img <- read_txt_img('temp_frame01.txt')
+img <- read_txt_img('temp_ch1.txt')
 suppressWarnings(file.remove(list.files()))  # cleanup
 }
