@@ -106,14 +106,6 @@ img[100:110, 101:105, 1, 1]  # print a section of the first channel, first frame
 -   We get no needless warnings.
 -   The numbers in the image are integers, the same as would be seen if one opened the image with ImageJ.
 
-`ijtiff` also includes a basic image display function:
-
-``` r
-ijtiff::display(img[, , 1, 1])  # first channel, first frame
-```
-
-![](README-display-1.png)
-
 #### Note
 
 `tiff` reads several types of TIFFs correctly, including many that are saved from ImageJ. This is just an example of a TIFF type that it doesn't perform so well with.
@@ -126,7 +118,7 @@ The original `tiff` library could read but not write floating point (real-number
 Advice for all ImageJ users
 ---------------------------
 
-Base ImageJ (similar to the `tiff` R package) does not properly open some perfectly TIFF files[1] (including some TIFF files written by the `tiff` and `ijtiff` R packages). Instead it gives you the error message: *imagej can only open 8 and 16 bit/channel images*. These images in fact can be opened in ImageJ using the wonderful *BioFormats* plugin. See <https://imagej.net/Bio-Formats>.
+Base *ImageJ* (similar to the `tiff` R package) does not properly open some perfectly TIFF files[1] (including some TIFF files written by the `tiff` and `ijtiff` R packages). Instead it gives you the error message: *imagej can only open 8 and 16 bit/channel images*. These images in fact can be opened in ImageJ using the wonderful *BioFormats* plugin. See <https://imagej.net/Bio-Formats>.
 
 Acknowledgement
 ===============

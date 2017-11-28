@@ -1,7 +1,7 @@
 Package: ijtiff
 Type: Package
-Title: TIFF I/O for 'ImageJ' users
-Version: 0.0.0.9000
+Title: TIFF I/O for 'ImageJ' Users
+Version: 0.1.0
 Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com", 
                     role = c("aut", "cre", "cph")),
              person("Sergi", "Padilla-Parra", email = "spadilla@well.ox.ac.uk", 
@@ -23,7 +23,7 @@ VignetteBuilder: knitr
 Imports: checkmate,
     RSAGA,
     magrittr,
-    filesstrings,
+    filesstrings (>= 1.1.0),
     stringr,
     purrr,
     Rcpp,

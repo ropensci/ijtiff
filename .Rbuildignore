@@ -10,3 +10,4 @@
 ^\.travis\.yml$
 ^codecov\.yml$
 ^paper$
+^cran-comments\.md$
