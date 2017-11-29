@@ -10,14 +10,14 @@
       "affiliation": "University of Oxford"
     }
   ],
-  "identifier": "",
+  "identifier": "https://doi.org/10.5281/zenodo.1068231",
   "codeRepository": "https://github.com/rorynolan/ijtiff",
-  "datePublished": "2017-11-24",
-  "dateModified": "2017-11-24",
-  "dateCreated": "2017-11-24",
-  "description": "An R package for TIFF I/O for ImageJ users",
-  "keywords": "R, TIFF, ImageJ",
+  "datePublished": "2017-11-29",
+  "dateModified": "2017-11-29",
+  "dateCreated": "2017-11-29",
+  "description": "R Package for TIFF file I/O which plays nice with ImageJ",
+  "keywords": "R, tiff, ImageJ, image",
   "license": "GPL v3.0",
   "title": "ijtiff",
-  "version": ""
+  "version": "v0.1.0"
 }

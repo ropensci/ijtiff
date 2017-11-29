@@ -3,9 +3,9 @@
 ijtiff
 ======
 
-The goal of ijtiff is to be an R package which can correctly import TIFF files that were saved from ImageJ and to write TIFF files than can be correctly read by ImageJ. It may also satisfy some non-ImageJ TIFF requirements that you might have. This is not an extension of the original `tiff` package, it behaves differently. Hence, if this package isn't satisfying your TIFF needs, it's definitely worth checking out the original `tiff` package.
+The goal of the `ijtiff` R package is to correctly import TIFF files that were saved from *ImageJ* and to write TIFF files than can be correctly read by *ImageJ*. It may also satisfy some non-*ImageJ* TIFF requirements that you might have. This is not an extension of the original `tiff` package, it behaves differently. Hence, if this package isn't satisfying your TIFF needs, it's definitely worth checking out the original `tiff` package.
 
-[![Travis-CI Build Status](https://travis-ci.org/rorynolan/ijtiff.svg?branch=master)](https://travis-ci.org/rorynolan/ijtiff) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/rorynolan/ijtiff?branch=master&svg=true)](https://ci.appveyor.com/project/rorynolan/ijtiff) [![codecov](https://codecov.io/gh/rorynolan/ijtiff/branch/master/graph/badge.svg)](https://codecov.io/gh/rorynolan/ijtiff) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff) ![RStudio CRAN downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff) ![RStudio CRAN monthly downloads](http://cranlogs.r-pkg.org/badges/ijtiff) [![Rdocumentation](http://www.rdocumentation.org/badges/version/ijtiff)](http://www.rdocumentation.org/packages/ijtiff) ![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)
+[![Travis-CI Build Status](https://travis-ci.org/rorynolan/ijtiff.svg?branch=master)](https://travis-ci.org/rorynolan/ijtiff) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/rorynolan/ijtiff?branch=master&svg=true)](https://ci.appveyor.com/project/rorynolan/ijtiff) [![codecov](https://codecov.io/gh/rorynolan/ijtiff/branch/master/graph/badge.svg)](https://codecov.io/gh/rorynolan/ijtiff) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff) ![RStudio CRAN downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff) ![RStudio CRAN monthly downloads](http://cranlogs.r-pkg.org/badges/ijtiff) [![Rdocumentation](http://www.rdocumentation.org/badges/version/ijtiff)](http://www.rdocumentation.org/packages/ijtiff) ![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg) [![DOI](https://zenodo.org/badge/111798542.svg)](https://zenodo.org/badge/latestdoi/111798542)
 
 Installation
 ------------
@@ -29,14 +29,14 @@ You can install `ijtiff` from github with:
 devtools::install_github("rorynolan/ijtiff")
 ```
 
-Reading ImageJ TIFF files
--------------------------
+Reading *ImageJ* TIFF files
+---------------------------
 
 ``` r
 path_2ch_ij <- system.file("img", "2ch_ij.tif", package = "ijtiff")
 ```
 
-`path_2ch_ij` is the path to a 2-channel, five-frame image which was saved from ImageJ.
+`path_2ch_ij` is the path to a 2-channel, five-frame image which was saved from *ImageJ*.
 
 ### The original `tiff` library
 
@@ -108,17 +108,17 @@ img[100:110, 101:105, 1, 1]  # print a section of the first channel, first frame
 
 #### Note
 
-`tiff` reads several types of TIFFs correctly, including many that are saved from ImageJ. This is just an example of a TIFF type that it doesn't perform so well with.
+`tiff` reads several types of TIFFs correctly, including many that are saved from *ImageJ*. This is just an example of a TIFF type that it doesn't perform so well with.
 
 Floating point TIFFs
 --------------------
 
 The original `tiff` library could read but not write floating point (real-numbered) TIFF files. The `ijtiff` library can do both. It automatically decides which type is appropriate when writing.
 
-Advice for all ImageJ users
----------------------------
+Advice for all *ImageJ* users
+-----------------------------
 
-Base *ImageJ* (similar to the `tiff` R package) does not properly open some perfectly TIFF files[1] (including some TIFF files written by the `tiff` and `ijtiff` R packages). Instead it gives you the error message: *imagej can only open 8 and 16 bit/channel images*. These images in fact can be opened in ImageJ using the wonderful *BioFormats* plugin. See <https://imagej.net/Bio-Formats>.
+Base *ImageJ* (similar to the `tiff` R package) does not properly open some perfectly TIFF files[1] (including some TIFF files written by the `tiff` and `ijtiff` R packages). Instead it gives you the error message: *imagej can only open 8 and 16 bit/channel images*. These images in fact can be opened in *ImageJ* using the wonderful *BioFormats* plugin. See <https://imagej.net/Bio-Formats>.
 
 Acknowledgement
 ===============
@@ -130,4 +130,4 @@ Contribution
 
 Contributions to this package are welcome. The preferred method of contribution is through a github pull request. Feel free to contact me by creating an issue. Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
 
-[1] I think native ImageJ only likes 1, 3 and 4-channel images and complains about the rest, but I'm not sure about this.
+[1] I think native *ImageJ* only likes 1, 3 and 4-channel images and complains about the rest, but I'm not sure about this.
