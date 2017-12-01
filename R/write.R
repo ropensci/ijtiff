@@ -57,6 +57,9 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     path <- paste0(filesstrings::before_last_dot(path), ".tif")
   path %<>% filesstrings::give_ext("tif")
   checkmate::assert_array(img, d = 4)
+  d <- dim(img)
+  if (d[3] > 1e9) stop("Cannot write more than a billion channels.")
+  if (d[4] > 1e9) stop("Cannot write more than a billion frames.")
   compressions <- c(none = 1L, rle = 2L, packbits = 32773L, jpeg = 7L,
                     deflate = 8L)
   compression %<>% RSAGA::match.arg.ext(names(compressions),
@@ -81,7 +84,6 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     }
   }
   if (is.integer(img)) {
-    d <- dim(img)
     img %<>% as.numeric()  # The C function needs img to be numeric
     dim(img) <- d
   }
@@ -113,7 +115,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
            "correctly, the TIFF file needs to be at least ", ideal_bps, "-bit.")
     }
   }
-  n_ch <- dim(img)[3]
+  n_ch <- d[3]
   what <- enlist_img(img)
   written <- .Call("write_tif_c", what, path, bits_per_sample, compression,
                    floats, PACKAGE="ijtiff")

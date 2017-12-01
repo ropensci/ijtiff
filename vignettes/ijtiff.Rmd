@@ -65,6 +65,9 @@ The original `tiff` library could read but not write floating point (real-number
 ## Advice for all ImageJ users
 Base ImageJ (similar to the `tiff` R package) does not properly open some perfectly TIFF files^[I think native ImageJ only likes 1, 3 and 4-channel images and complains about the rest, but I'm not sure about this.] (including some TIFF files written by the `tiff` and `ijtiff` R packages).  Instead it gives you the error message: _imagej can only open 8 and 16 bit/channel images_. These images in fact can be opened in ImageJ using the wonderful _BioFormats_ plugin. See https://imagej.net/Bio-Formats.
 
+## No support for volumetric, time based images
+The package supports volumetric ($z$-stack) and time-based (time-stack) images, but not both volume and time simultaneously. The fourth slot in an `ijtiff_img` is either for $z$ or time.
+
 ## Text Images
 TIFF files are limited in which numbers they can represent (they can't go outside the 32-bit range). Real-numbered TIFFs can also lack precision, having only the precision of a 32-bit floating point number. If TIFF isn't good enough, you can use text images.
 ```{r text images, error=TRUE}
