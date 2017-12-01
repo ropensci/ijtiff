@@ -23,7 +23,7 @@ VignetteBuilder: knitr
 Imports: checkmate,
     RSAGA,
     magrittr,
-    filesstrings (>= 1.1.0),
+    filesstrings (>= 2.0.0),
     stringr,
     purrr,
     Rcpp,
