@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 The goal of the `ijtiff` R package is to correctly import TIFF files that were saved from _ImageJ_ and to write TIFF files than can be correctly read by _ImageJ_. It may also satisfy some non-_ImageJ_ TIFF requirements that you might have. This is not an extension of the original `tiff` package, it behaves differently. Hence, if this package isn't satisfying your TIFF needs, it's definitely worth checking out the original `tiff` package.
 
 [![Travis-CI Build Status](https://travis-ci.org/rorynolan/ijtiff.svg?branch=master)](https://travis-ci.org/rorynolan/ijtiff)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/rorynolan/ijtiff?branch=master&svg=true)](https://ci.appveyor.com/project/rorynolan/ijtiff)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/rorynolan/ijtiff?branch=for_appveyor&svg=true)](https://ci.appveyor.com/project/rorynolan/ijtiff)
 [![codecov](https://codecov.io/gh/rorynolan/ijtiff/branch/master/graph/badge.svg)](https://codecov.io/gh/rorynolan/ijtiff)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff)
 ![RStudio CRAN downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff)
