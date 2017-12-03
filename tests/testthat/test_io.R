@@ -5,7 +5,7 @@ test_that("Package 2-channel example I/O works", {
   setwd(tempdir())
   context("Package 2-channel example I/O")
   img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
-  expect_equal(dim(img), c(256, 256, 2, 5))
+  expect_equal(dim(img), c(128, 128, 2, 5))
   context("8-bit unsigned integer TIFF I/O")
   v2345 <- 2:5
   a2345 <- array(sample.int(prod(v2345)), dim = v2345)

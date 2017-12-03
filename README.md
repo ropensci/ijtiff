@@ -17,8 +17,7 @@ Installation
 -   On **Mac** you need [Homebrew](https://brew.sh/). Then in the terminal, run `brew install libtiff`.
 -   On **Debian Linux**, try `sudo apt-get install libtiff5`, or if that fails, try `sudo apt-get install libtiff4`.
 -   On **Fedora Linux**, try `sudo yum install libtiff5`, or if that doesn't work, try `sudo yum install libtiff4`.
-
-**Windows** has `libtiff` by default :)
+-   On **Windows** mostly no setup is required 😄, but if you experience problems, check out <http://gnuwin32.sourceforge.net/packages/tiff.htm>.
 
 ### The `ijtiff` R package
 
