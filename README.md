@@ -17,7 +17,7 @@ Installation
 -   On **Mac** you need [Homebrew](https://brew.sh/). Then in the terminal, run `brew install libtiff`.
 -   On **Debian Linux**, try `sudo apt-get install libtiff5`, or if that fails, try `sudo apt-get install libtiff4`.
 -   On **Fedora Linux**, try `sudo yum install libtiff5`, or if that doesn't work, try `sudo yum install libtiff4`.
--   On **Windows** mostly no setup is required 😄, but if you experience problems, check out <http://gnuwin32.sourceforge.net/packages/tiff.htm>.
+-   On **Windows** for most people, no setup is required 😄, but if you experience problems, check out <http://gnuwin32.sourceforge.net/packages/tiff.htm>.
 
 ### The `ijtiff` R package
 
@@ -84,6 +84,7 @@ When we import the same image with the `ijtiff` library:
 
 ``` r
 img <- ijtiff::read_tif(path_2ch_ij)
+#> Reading a 128x128 pixel image of  type with 2 channels and 5 frames.
 dim(img)  # 2 channels, 5 frames
 #> [1] 128 128   2   5
 img[100:110, 101:105, 1, 1]  # print a section of the first channel, first frame
