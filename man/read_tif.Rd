@@ -4,7 +4,7 @@
 \alias{read_tif}
 \title{Read an image stored in the TIFF format}
 \usage{
-read_tif(path, list_safety = "error")
+read_tif(path, list_safety = "error", msg = TRUE)
 }
 \arguments{
 \item{path}{A string. The path to the tiff file to read.}
@@ -13,6 +13,8 @@ read_tif(path, list_safety = "error")
 returning a list is unlikely and probably unexpected, the default is to
 error. You can instead opt to throw a warning (\code{list_safety = "warning"})
 or to just return the list quietly (\code{list_safety = "none"}).}
+
+\item{msg}{Print an informative message about the image being read?}
 }
 \value{
 An object of class \link{ijtiff_img} or a list of \link{ijtiff_img}s.

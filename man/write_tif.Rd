@@ -4,7 +4,8 @@
 \alias{write_tif}
 \title{Write images in TIFF format}
 \usage{
-write_tif(img, path, bits_per_sample = "auto", compression = "none")
+write_tif(img, path, bits_per_sample = "auto", compression = "none",
+  msg = TRUE)
 }
 \arguments{
 \item{img}{A numeric array, the image to write. It's possible to write
@@ -20,6 +21,8 @@ if the maximum element in \code{img} is 789, then 16-bit will be chosen because
 
 \item{compression}{A string, the desired compression algorithm. Must be one
 of \code{"LZW"}, \code{"none"}, \code{PackBits}", \code{"RLE"}, \code{"JPEG"}, or \code{"deflate"}.}
+
+\item{msg}{Print an informative message about the image being written?}
 }
 \value{
 The input \code{img} (invisibly).
@@ -39,7 +42,7 @@ multi-plane image, use a 4-dimensional array \code{img[y, x, channel, plane]}.}
 img <- read_tif(system.file("img", "Rlogo.tif", package="ijtiff"))
 temp_dir <- tempdir()
 write_tif(img, paste0(temp_dir, "/", "Rlogo"))
-list.files(temp_dir)
+list.files(temp_dir, pattern = "tif$")
 
 }
 \seealso{

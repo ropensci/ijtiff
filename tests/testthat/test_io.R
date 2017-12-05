@@ -50,8 +50,9 @@ test_that("16-bit unsigned integer TIFF I/O works", {
   context("16-bit unsigned integer TIFF I/O")
   v6789 <- 6:9
   a6789 <- array(sample.int(prod(v6789)), dim = v6789)
-  write_tif(a6789, "temp")
-  in_tif <- read_tif("temp.tif")
+  dir.create("tempwithintemp")
+  write_tif(a6789, "tempwithintemp/temp.tif")
+  in_tif <- read_tif("tempwithintemp/temp.tif")
   expect_equal(dim(in_tif), v6789)
   expect_equal(as.vector(in_tif), as.vector(a6789), check.attributes = FALSE)
   suppressWarnings(file.remove(dir()))
@@ -160,6 +161,11 @@ test_that("write_tif() errors correctly", {
   aaaa[1] <-  2 ^ 20
   expect_error(write_tif(aaaa, "a", bits_per_sample = 16),
                "TIFF file needs to be at least .*-bit")
+  too_big <- seq_len(1e9 + 3)
+  dim(too_big) <- c(1, 1, length(too_big), 1)
+  expect_error(write_tif(too_big, "a"), "billion channels")
+  dim(too_big) <- c(1, 1, 1, length(too_big))
+  expect_error(write_tif(too_big, "a"), "billion frames")
 })
 
 context("Text I/O")

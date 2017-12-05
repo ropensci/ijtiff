@@ -31,6 +31,7 @@
 #'   returning a list is unlikely and probably unexpected, the default is to
 #'   error. You can instead opt to throw a warning (`list_safety = "warning"`)
 #'   or to just return the list quietly (`list_safety = "none"`).
+#' @param msg Print an informative message about the image being read?
 #'
 #' @return An object of class [ijtiff_img] or a list of [ijtiff_img]s.
 #'
@@ -50,9 +51,12 @@
 #' str(img)  # we see that `ijtiff` correctly recognises this image's 2 channels
 #'
 #' @export
-read_tif <- function(path, list_safety = "error") {
+read_tif <- function(path, list_safety = "error", msg = TRUE) {
   checkmate::assert_file_exists(path)
-  list_safety %<>% RSAGA::match.arg.ext(c("error", "warning", "none"))
+  checkmate::assert_logical(msg, max.len = 1)
+  checkmate::assert_string(list_safety)
+  list_safety %<>% RSAGA::match.arg.ext(c("error", "warning", "none"),
+                                        ignore.case = TRUE)
   out <- .Call("read_tif_c", path.expand(path), PACKAGE = "ijtiff")
   checkmate::assert_list(out)
   ds <- dims(out)
@@ -79,6 +83,17 @@ read_tif <- function(path, list_safety = "error") {
   if (is.list(out)) {
     if (list_safety == "error") stop("`read_tif()` tried to return a list.")
     if (list_safety == "warning") warning("`read_tif()` is returning a list.")
+    if (list_safety == "none") {
+      if (msg) message("Reading a list of images with differing dimensions.")
+    }
+  } else if (msg) {
+    ints <- attr(out, "sample_format") == "uint"
+    dim(out) %>% {
+      message("Reading a ", .[1], "x", .[2], " pixel image of ",
+              ifelse(ints, "unsigned integer", "floating point"), " type with ",
+              .[3], " channel", ifelse(.[3] > 1, "s", ""), " and ", .[4],
+              " frame", ifelse(.[4] > 1, "s", ""), ".")
+    }
   }
   out
 }

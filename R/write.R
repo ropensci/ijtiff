@@ -19,6 +19,7 @@
 #'   789 is greater than 2 ^ 8 - 1 but less than or equal to 2 ^ 16 - 1.
 #' @param compression A string, the desired compression algorithm. Must be one
 #'   of `"LZW"`, `"none"`, `PackBits`", `"RLE"`, `"JPEG"`, or `"deflate"`.
+#' @param msg Print an informative message about the image being written?
 #'
 #' @return The input `img` (invisibly).
 #'
@@ -31,11 +32,18 @@
 #' img <- read_tif(system.file("img", "Rlogo.tif", package="ijtiff"))
 #' temp_dir <- tempdir()
 #' write_tif(img, paste0(temp_dir, "/", "Rlogo"))
-#' list.files(temp_dir)
+#' list.files(temp_dir, pattern = "tif$")
 #'
 #' @export
 write_tif <- function(img, path, bits_per_sample = "auto",
-                      compression = "none") {
+                      compression = "none", msg = TRUE) {
+  checkmate::assert_string(path)
+  if (stringr::str_detect(path, "/")) {  # I've noticed that write_tif()
+    init_wd <- getwd()                   # sometimes fails when writing to
+    on.exit(setwd(init_wd))              # far away directories.
+    setwd(filesstrings::str_before_last(path, "/"))
+    path %<>% filesstrings::str_after_last("/")
+  }
   to_invisibly_return <- img
   checkmate::assert_scalar(bits_per_sample)
   checkmate::assert(checkmate::check_string(bits_per_sample),
@@ -115,9 +123,16 @@ write_tif <- function(img, path, bits_per_sample = "auto",
            "correctly, the TIFF file needs to be at least ", ideal_bps, "-bit.")
     }
   }
-  n_ch <- d[3]
+  if (msg) {
+    message("Writing a ", d[1], "x", d[2], " pixel ",
+            ifelse(floats, "floating point", "integer"),
+            " type image with ", d[3],
+            " ", "channel", ifelse(d[3] > 1, "s", ""), " and ",
+            d[4], " frame", ifelse(d[4] > 1, "s", ""), " to '", path,"' . . .")
+  }
   what <- enlist_img(img)
   written <- .Call("write_tif_c", what, path, bits_per_sample, compression,
                    floats, PACKAGE="ijtiff")
+  if (msg) message("\b Done.")
   invisible(to_invisibly_return)
 }
