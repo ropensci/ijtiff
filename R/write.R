@@ -1,16 +1,8 @@
 #' Write images in TIFF format
 #'
-#' Writes images into a TIFF file.
+#' Write images into a TIFF file.
 #'
-#' \itemize{\item For a single-plane, grayscale image, use a matrix `img[y, x]`.
-#' \item For a multi-plane, grayscale image, use a 3-dimensional array `img[y,
-#' x, plane]`. \item For a multi-channel, single-plane image, use a
-#' 4-dimensional array with a redundant 4th slot `img[y, x, channel, ]` (see
-#' 'Examples' for an example of how to do this). \item For a multi-channel,
-#' multi-plane image, use a 4-dimensional array `img[y, x, channel, plane]`.}
-#'
-#' @param img A numeric array, the image to write. It's possible to write
-#'   single- and multi-plane, images with 1 (grayscale) or more channels.
+#' @inheritParams ijtiff_img
 #' @param path file name or a raw vector
 #' @param bits_per_sample number of bits per sample (numeric scalar). Supported
 #'   values are 8, 16, and 32. The default `"auto"` automatically picks the
@@ -32,6 +24,8 @@
 #' img <- read_tif(system.file("img", "Rlogo.tif", package="ijtiff"))
 #' temp_dir <- tempdir()
 #' write_tif(img, paste0(temp_dir, "/", "Rlogo"))
+#' img <- matrix(1:4, nrow = 2)
+#' write_tif(img, paste0(temp_dir, "/", "tiny2x2"))
 #' list.files(temp_dir, pattern = "tif$")
 #'
 #' @export
@@ -64,8 +58,10 @@ write_tif <- function(img, path, bits_per_sample = "auto",
   if (endsWith(tolower(path), ".tiff") || endsWith(tolower(path), ".tif"))
     path <- paste0(filesstrings::before_last_dot(path), ".tif")
   path %<>% filesstrings::give_ext("tif")
-  checkmate::assert_array(img, d = 4)
+  checkmate::assert_array(img)
+  checkmate::assert_array(img, min.d = 2, max.d = 4)
   checkmate::assert_numeric(img)
+  img %<>% ijtiff_img()
   d <- dim(img)
   if (d[3] > 1e9) stop("Cannot write more than a billion channels.")
   if (d[4] > 1e9) stop("Cannot write more than a billion frames.")
@@ -125,9 +121,9 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     }
   }
   if (msg) {
-    message("Writing a ", d[1], "x", d[2], " pixel ",
-            ifelse(floats, "floating point", "integer"),
-            " type image with ", d[3],
+    message("Writing a ", d[1], "x", d[2], " pixel image of ",
+            ifelse(floats, "floating point", "unsigned integer"),
+            " type with ", d[3],
             " ", "channel", ifelse(d[3] > 1, "s", ""), " and ",
             d[4], " frame", ifelse(d[4] > 1, "s", ""), " to '", path,"' . . .")
   }

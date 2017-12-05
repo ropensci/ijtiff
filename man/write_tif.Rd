@@ -8,8 +8,13 @@ write_tif(img, path, bits_per_sample = "auto", compression = "none",
   msg = TRUE)
 }
 \arguments{
-\item{img}{A numeric array, the image to write. It's possible to write
-single- and multi-plane, images with 1 (grayscale) or more channels.}
+\item{img}{An array representing the image. \itemize{\item For a
+single-plane, grayscale image, use a matrix \code{img[y, x]}. \item For a
+multi-plane, grayscale image, use a 3-dimensional array \code{img[y, x, plane]}.
+\item For a multi-channel, single-plane image, use a 4-dimensional array
+with a redundant 4th slot \code{img[y, x, channel, ]} (see \link{ijtiff_img}
+'Examples' for an example). \item For a multi-channel, multi-plane image,
+use a 4-dimensional array \code{img[y, x, channel, plane]}.}}
 
 \item{path}{file name or a raw vector}
 
@@ -28,20 +33,15 @@ of \code{"LZW"}, \code{"none"}, \code{PackBits}", \code{"RLE"}, \code{"JPEG"}, o
 The input \code{img} (invisibly).
 }
 \description{
-Writes images into a TIFF file.
-}
-\details{
-\itemize{\item For a single-plane, grayscale image, use a matrix \code{img[y, x]}.
-\item For a multi-plane, grayscale image, use a 3-dimensional array \code{img[y, x, plane]}. \item For a multi-channel, single-plane image, use a
-4-dimensional array with a redundant 4th slot \code{img[y, x, channel, ]} (see
-'Examples' for an example of how to do this). \item For a multi-channel,
-multi-plane image, use a 4-dimensional array \code{img[y, x, channel, plane]}.}
+Write images into a TIFF file.
 }
 \examples{
 
 img <- read_tif(system.file("img", "Rlogo.tif", package="ijtiff"))
 temp_dir <- tempdir()
 write_tif(img, paste0(temp_dir, "/", "Rlogo"))
+img <- matrix(1:4, nrow = 2)
+write_tif(img, paste0(temp_dir, "/", "tiny2x2"))
 list.files(temp_dir, pattern = "tif$")
 
 }
