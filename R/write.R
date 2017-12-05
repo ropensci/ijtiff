@@ -65,6 +65,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     path <- paste0(filesstrings::before_last_dot(path), ".tif")
   path %<>% filesstrings::give_ext("tif")
   checkmate::assert_array(img, d = 4)
+  checkmate::assert_numeric(img)
   d <- dim(img)
   if (d[3] > 1e9) stop("Cannot write more than a billion channels.")
   if (d[4] > 1e9) stop("Cannot write more than a billion frames.")

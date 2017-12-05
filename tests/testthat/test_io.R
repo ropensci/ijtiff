@@ -161,6 +161,9 @@ test_that("write_tif() errors correctly", {
   aaaa[1] <-  2 ^ 20
   expect_error(write_tif(aaaa, "a", bits_per_sample = 16),
                "TIFF file needs to be at least .*-bit")
+  skip_on_travis()
+  skip_on_cran()
+  skip_on_appveyor()
   too_big <- seq_len(1e9 + 3)
   dim(too_big) <- c(1, 1, length(too_big), 1)
   expect_error(write_tif(too_big, "a"), "billion channels")
