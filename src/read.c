@@ -44,6 +44,8 @@ static void TIFF_add_info(TIFF *tiff, SEXP res) {
   	  name = uv;
   	}
 	  setAttr(res, "sample_format", mkString(name));
+  } else {
+    setAttr(res, "sample_format", mkString("uint"));
   }
   if (TIFFGetField(tiff, TIFFTAG_PLANARCONFIG, &i16)) {
 	  if (i16 == PLANARCONFIG_CONTIG) {
@@ -218,7 +220,7 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
   	}
 
   	if (sformat == SAMPLEFORMAT_INT)
-  	    Rf_warning("The \'tifferent\' package only supports unsigned "
+  	    Rf_warning("The \'ijtiff\' package only supports unsigned "
                    "integer or float sample formats, but your image contains "
                     "the signed integer format.");
 
