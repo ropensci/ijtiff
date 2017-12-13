@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 # ijtiff
 
-The goal of the `ijtiff` R package is to correctly import TIFF files that were saved from _ImageJ_ and to write TIFF files than can be correctly read by _ImageJ_. It may also satisfy some non-_ImageJ_ TIFF requirements that you might have. This is not an extension of the original `tiff` package, it behaves differently. Hence, if this package isn't satisfying your TIFF needs, it's definitely worth checking out the original `tiff` package.
+The goal of the `ijtiff` R package is to correctly import TIFF files that were saved from _ImageJ_ and to write TIFF files than can be correctly read by _ImageJ_. It may also satisfy some non-_ImageJ_ TIFF requirements that you might have. This is not an extension of the original `tiff` package; it behaves differently. Hence, if this package isn't satisfying your TIFF needs, it's definitely worth checking out the original `tiff` package.
 
 [![Travis-CI Build Status](https://travis-ci.org/rorynolan/ijtiff.svg?branch=master)](https://travis-ci.org/rorynolan/ijtiff)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/rorynolan/ijtiff?branch=for_appveyor&svg=true)](https://ci.appveyor.com/project/rorynolan/ijtiff)
@@ -33,10 +33,10 @@ The goal of the `ijtiff` R package is to correctly import TIFF files that were s
 
 `ijtiff` requires you to have the `libtiff` C library installed. To install `libtiff`:
 
-* On __Mac__ you need [Homebrew](https://brew.sh/). Then in the terminal, run `brew install libtiff`.
 * On __Debian Linux__, try `sudo apt-get install libtiff5`, or if that fails, try `sudo apt-get install libtiff4`.
 * On __Fedora Linux__, try `sudo yum install libtiff5`, or if that doesn't work, try `sudo yum install libtiff4`.
-* On __Windows__ for most people, no setup is required `r emo::ji("smile")`, but if you experience problems, check out http://gnuwin32.sourceforge.net/packages/tiff.htm.
+* On __Mac__, you need [Homebrew](https://brew.sh/). Then in the terminal, run `brew install libtiff`.
+* On __Windows__, for most people, no setup is required `r emo::ji("smile")`, but if you experience problems, check out http://gnuwin32.sourceforge.net/packages/tiff.htm.
 
 ### The `ijtiff` R package
 
@@ -86,7 +86,7 @@ img[100:110, 101:105, 1, 1]  # print a section of the first channel, first frame
 The original `tiff` library could read but not write floating point (real-numbered) TIFF files. The `ijtiff` library can do both. It automatically decides which type is appropriate when writing.
 
 ## Advice for all _ImageJ_ users
-Base _ImageJ_ (similar to the `tiff` R package) does not properly open some perfectly TIFF files^[I think native _ImageJ_ only likes 1, 3 and 4-channel images and complains about the rest, but I'm not sure about this.] (including some TIFF files written by the `tiff` and `ijtiff` R packages).  Instead it gives you the error message: _imagej can only open 8 and 16 bit/channel images_. These images in fact can be opened in _ImageJ_ using the wonderful _BioFormats_ plugin. See https://imagej.net/Bio-Formats.
+Base _ImageJ_ (similar to the `tiff` R package) does not properly open some perfectly good TIFF files^[I think native _ImageJ_ only likes 1, 3 and 4-channel images and complains about the rest, but I'm not sure about this.] (including some TIFF files written by the `tiff` and `ijtiff` R packages).  Instead it gives you the error message: _imagej can only open 8 and 16 bit/channel images_. These images in fact can be opened in _ImageJ_ using the wonderful _BioFormats_ plugin. See https://imagej.net/Bio-Formats.
 
 # Acknowledgement
 This package uses a lot of code from the original `tiff` package by Simon Urbanek.

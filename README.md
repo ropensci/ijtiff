@@ -3,7 +3,7 @@
 ijtiff
 ======
 
-The goal of the `ijtiff` R package is to correctly import TIFF files that were saved from *ImageJ* and to write TIFF files than can be correctly read by *ImageJ*. It may also satisfy some non-*ImageJ* TIFF requirements that you might have. This is not an extension of the original `tiff` package, it behaves differently. Hence, if this package isn't satisfying your TIFF needs, it's definitely worth checking out the original `tiff` package.
+The goal of the `ijtiff` R package is to correctly import TIFF files that were saved from *ImageJ* and to write TIFF files than can be correctly read by *ImageJ*. It may also satisfy some non-*ImageJ* TIFF requirements that you might have. This is not an extension of the original `tiff` package; it behaves differently. Hence, if this package isn't satisfying your TIFF needs, it's definitely worth checking out the original `tiff` package.
 
 [![Travis-CI Build Status](https://travis-ci.org/rorynolan/ijtiff.svg?branch=master)](https://travis-ci.org/rorynolan/ijtiff) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/rorynolan/ijtiff?branch=for_appveyor&svg=true)](https://ci.appveyor.com/project/rorynolan/ijtiff) [![codecov](https://codecov.io/gh/rorynolan/ijtiff/branch/master/graph/badge.svg)](https://codecov.io/gh/rorynolan/ijtiff) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff) ![RStudio CRAN downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff) ![RStudio CRAN monthly downloads](http://cranlogs.r-pkg.org/badges/ijtiff) [![Rdocumentation](http://www.rdocumentation.org/badges/version/ijtiff)](http://www.rdocumentation.org/packages/ijtiff) ![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg) [![DOI](https://zenodo.org/badge/111798542.svg)](https://zenodo.org/badge/latestdoi/111798542)
 
@@ -14,10 +14,10 @@ Installation
 
 `ijtiff` requires you to have the `libtiff` C library installed. To install `libtiff`:
 
--   On **Mac** you need [Homebrew](https://brew.sh/). Then in the terminal, run `brew install libtiff`.
 -   On **Debian Linux**, try `sudo apt-get install libtiff5`, or if that fails, try `sudo apt-get install libtiff4`.
 -   On **Fedora Linux**, try `sudo yum install libtiff5`, or if that doesn't work, try `sudo yum install libtiff4`.
--   On **Windows** for most people, no setup is required 😄, but if you experience problems, check out <http://gnuwin32.sourceforge.net/packages/tiff.htm>.
+-   On **Mac**, you need [Homebrew](https://brew.sh/). Then in the terminal, run `brew install libtiff`.
+-   On **Windows**, for most people, no setup is required 😄, but if you experience problems, check out <http://gnuwin32.sourceforge.net/packages/tiff.htm>.
 
 ### The `ijtiff` R package
 
@@ -84,7 +84,7 @@ When we import the same image with the `ijtiff` library:
 
 ``` r
 img <- ijtiff::read_tif(path_2ch_ij)
-#> Reading a 128x128 pixel image of  type with 2 channels and 5 frames.
+#> Reading a 128x128 pixel image of unsigned integer type with 2 channels and 5 frames.
 dim(img)  # 2 channels, 5 frames
 #> [1] 128 128   2   5
 img[100:110, 101:105, 1, 1]  # print a section of the first channel, first frame
@@ -118,7 +118,7 @@ The original `tiff` library could read but not write floating point (real-number
 Advice for all *ImageJ* users
 -----------------------------
 
-Base *ImageJ* (similar to the `tiff` R package) does not properly open some perfectly TIFF files[1] (including some TIFF files written by the `tiff` and `ijtiff` R packages). Instead it gives you the error message: *imagej can only open 8 and 16 bit/channel images*. These images in fact can be opened in *ImageJ* using the wonderful *BioFormats* plugin. See <https://imagej.net/Bio-Formats>.
+Base *ImageJ* (similar to the `tiff` R package) does not properly open some perfectly good TIFF files[1] (including some TIFF files written by the `tiff` and `ijtiff` R packages). Instead it gives you the error message: *imagej can only open 8 and 16 bit/channel images*. These images in fact can be opened in *ImageJ* using the wonderful *BioFormats* plugin. See <https://imagej.net/Bio-Formats>.
 
 Acknowledgement
 ===============
