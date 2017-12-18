@@ -25,10 +25,9 @@ Write images (arrays) as tab-separated \code{.txt} files on disk. Each
 channel-frame pair gets its own file.
 }
 \examples{
-setwd(tempdir())
+\dontrun{
 img <- read_tif(system.file('img', 'Rlogo.tif', package = 'ijtiff'))
 write_txt_img(img, 'temp')
+img <- read_txt_img('temp_ch1.txt')}
 
-img <- read_txt_img('temp_ch1.txt')
-suppressWarnings(file.remove(list.files()))  # cleanup
 }

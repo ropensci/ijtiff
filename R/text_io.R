@@ -16,9 +16,10 @@ NULL
 #' @rdname text-image-io
 #'
 #' @examples
-#' setwd(tempdir())
+#' \dontrun{
 #' img <- read_tif(system.file('img', 'Rlogo.tif', package = 'ijtiff'))
 #' write_txt_img(img, 'temp')
+#' img <- read_txt_img('temp_ch1.txt')}
 #'
 #' @export
 write_txt_img <- function(img, path, rds = FALSE) {
@@ -48,9 +49,6 @@ write_txt_img <- function(img, path, rds = FALSE) {
 
 #' @rdname text-image-io
 #'
-#' @examples
-#' img <- read_txt_img('temp_ch1.txt')
-#' suppressWarnings(file.remove(list.files()))  # cleanup
 #' @export
 read_txt_img <- function(path) {
   suppressMessages(readr::read_tsv(path, col_names = FALSE,
