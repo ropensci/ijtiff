@@ -1,8 +1,10 @@
-## detect 64-bit Windows
-ifeq ($(strip $(shell $(R_HOME)/bin/R --slave -e 'cat(.Machine$$sizeof.pointer)')),8)
-PKG_CFLAGS=-Iwin64
-PKG_LIBS=-Lwin64 -ltiff -ljpeg -lz
-else
-PKG_CFLAGS=-Iwin32
-PKG_LIBS=-Lwin32 -ltiff -ljpeg -lz
-endif
+PKG_CPPFLAGS= -I../windows/libtiff-4.0.9/include
+PKG_LIBS= -L../windows/libtiff-4.0.9/lib${R_ARCH} -ltiff -ljpeg -llzma -lz
+
+all: clean winlibs
+
+winlibs:
+	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R"
+
+clean:
+	rm -f $(SHLIB) $(OBJECTS)
