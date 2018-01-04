@@ -3,6 +3,7 @@
 #' @importFrom magrittr '%>%' '%<>%' '%T>%'
 #' @importFrom tiff readTIFF
 #' @importFrom abind acorn
+#' @importFrom magick magick_options
 NULL
 
 ## quiets concerns of R CMD check re: the .'s that appear in pipelines

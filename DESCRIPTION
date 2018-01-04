@@ -33,7 +33,8 @@ Imports: checkmate,
     fields,
     grDevices,
     readr,
-    abind
+    abind,
+    magick
 Suggests: knitr,
     testthat,
     rmarkdown,

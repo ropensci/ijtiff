@@ -64,7 +64,7 @@ path_2ch_ij <- system.file("img", "Rlogo-banana-red_green.tif",
 
 `path_2ch_ij` is the path to a TIFF file which was made in *ImageJ* from the R logo dancing banana GIF used in the README of Jeroen Ooms' `magick` package. The TIFF is a time-stack containing only the red and green channels of the first, third and fifth frames of the original GIF. Here's the full gif:
 
-![](https://github.com/rorynolan/ijtiff/blob/master/inst/img/Rlogo-banana.tif)
+![](/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T//Rtmpz47Nb8/file906b194be59c.gif)
 
 Here are the red and green channels of the first, third and fifth frames of the TIFF:
 
