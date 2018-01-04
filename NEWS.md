@@ -1,3 +1,12 @@
+### 0.3.0
+
+#### MINOR IMPROVEMENTS
+* Improve README and vignette with more tangible and fun example.
+
+#### BUG FIXES
+* Fix windows libtiff issues (thanks to Jeroen Ooms).
+* Found some ImageJ-written TIFFs that weren't being read correctly and fixed that.
+
 ## 0.2.0
 * First CRAN release.
 

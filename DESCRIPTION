@@ -1,7 +1,7 @@
 Package: ijtiff
 Type: Package
 Title: TIFF I/O for 'ImageJ' Users
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com", 
                     role = c("aut", "cre")),
              person("Simon", "Urbanek", email = "Simon.Urbanek@r-project.org", 
@@ -17,7 +17,6 @@ License: GPL-3
 SystemRequirements: libtiff
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.4.0)
 RoxygenNote: 6.0.1
 URL: https://www.github.com/rorynolan/ijtiff
 BugReports: https://www.github.com/rorynolan/ijtiff/issues

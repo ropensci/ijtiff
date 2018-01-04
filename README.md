@@ -3,9 +3,27 @@
 ijtiff
 ======
 
+[![Travis-CI Build Status](https://travis-ci.org/rorynolan/ijtiff.svg?branch=master)](https://travis-ci.org/rorynolan/ijtiff) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/rorynolan/ijtiff?branch=master&svg=true)](https://ci.appveyor.com/project/rorynolan/ijtiff) [![codecov](https://codecov.io/gh/rorynolan/ijtiff/branch/master/graph/badge.svg)](https://codecov.io/gh/rorynolan/ijtiff) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff) ![RStudio CRAN downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff) ![RStudio CRAN monthly downloads](http://cranlogs.r-pkg.org/badges/ijtiff) [![Rdocumentation](http://www.rdocumentation.org/badges/version/ijtiff)](http://www.rdocumentation.org/packages/ijtiff) ![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg) [![DOI](https://zenodo.org/badge/111798542.svg)](https://zenodo.org/badge/latestdoi/111798542)
+
+TL;DR
+-----
+
+*ImageJ* sometimes writes channel information in TIFF files in a peculiar way, meaning that most ordinary TIFF-reading softwares don't read this channel information correctly. `ijtiff` knows about *ImageJ*'s peculiarities, so it can be relied upon to read *ImageJ*-written TIFF files correctly.
+
+Introduction
+------------
+
+The *ImageJ* software (<https://imagej.nih.gov/ij>) is a widely-used image viewing and processing software, particularly popular in microscopy and life sciences. It supports the TIFF image format (and many others). It reads TIFF files perfectly, however it can sometimes write them in a peculiar way, meaning that when other softwares try to read TIFF files written by *ImageJ*, mistakes can be made.
+
 The goal of the `ijtiff` R package is to correctly import TIFF files that were saved from *ImageJ* and to write TIFF files than can be correctly read by *ImageJ*. It may also satisfy some non-*ImageJ* TIFF requirements that you might have. This is not an extension of the original `tiff` package; it behaves differently. Hence, if this package isn't satisfying your TIFF needs, it's definitely worth checking out the original `tiff` package.
 
-[![Travis-CI Build Status](https://travis-ci.org/rorynolan/ijtiff.svg?branch=master)](https://travis-ci.org/rorynolan/ijtiff) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/rorynolan/ijtiff?branch=for_appveyor&svg=true)](https://ci.appveyor.com/project/rorynolan/ijtiff) [![codecov](https://codecov.io/gh/rorynolan/ijtiff/branch/master/graph/badge.svg)](https://codecov.io/gh/rorynolan/ijtiff) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff) ![RStudio CRAN downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff) ![RStudio CRAN monthly downloads](http://cranlogs.r-pkg.org/badges/ijtiff) [![Rdocumentation](http://www.rdocumentation.org/badges/version/ijtiff)](http://www.rdocumentation.org/packages/ijtiff) ![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg) [![DOI](https://zenodo.org/badge/111798542.svg)](https://zenodo.org/badge/latestdoi/111798542)
+#### The Peculiarity of *ImageJ* TIFF files
+
+*Note*: If you don't care about the particulars of TIFF files or how this package works on the inside, feel free to skip this subsection.
+
+It is common to use `TIFFTAG_SAMPLESPERPIXEL` to record the number of channels in a TIFF image, however *ImageJ* sometimes leaves `TIFFTAG_SAMPLESPERPIXEL` with a value of 1 and instead encodes the number of channels in `TIFFTAG_IMAGEDESCRIPTION` which might look something like `"ImageJ=1.51 images=16 channels=2 slices=8"`.
+
+A conventional TIFF reader would miss this channel information (becaus it is in an unusual place). `ijtiff` does not miss it. We'll see an example below. First, let's install the package.
 
 Installation
 ------------
@@ -19,12 +37,20 @@ Installation
 -   On **Mac**, you need [Homebrew](https://brew.sh/). Then in the terminal, run `brew install libtiff`.
 -   On **Windows**, for most people, no setup is required 😄, but if you experience problems, check out <http://gnuwin32.sourceforge.net/packages/tiff.htm>.
 
-### The `ijtiff` R package
+### Installing the release version of the `ijtiff` R package
 
-You can install `ijtiff` from github with:
+You can install `ijtiff` from CRAN (recommended) with:
 
 ``` r
-# install.packages("devtools")
+install.packages("ijtiff")
+```
+
+### Installing the release version of the `ijtiff` R package
+
+You can install the development version from GitHub with:
+
+``` r
+if (!require(devtools)) install.packages("devtools")
 devtools::install_github("rorynolan/ijtiff")
 ```
 
@@ -32,14 +58,21 @@ Reading *ImageJ* TIFF files
 ---------------------------
 
 ``` r
-path_2ch_ij <- system.file("img", "2ch_ij.tif", package = "ijtiff")
+path_2ch_ij <- system.file("img", "Rlogo-banana-red_green.tif", 
+                           package = "ijtiff")
 ```
 
-`path_2ch_ij` is the path to a 2-channel, five-frame image which was saved from *ImageJ*.
+`path_2ch_ij` is the path to a TIFF file which was made in *ImageJ* from the R logo dancing banana GIF used in the README of Jeroen Ooms' `magick` package. The TIFF is a time-stack containing only the red and green channels of the first, third and fifth frames of the original GIF. Here's the full gif:
 
-### The original `tiff` library
+![](https://github.com/rorynolan/ijtiff/blob/master/inst/img/Rlogo-banana.tif)
 
-When we import it with the original `tiff` library:
+Here are the red and green channels of the first, third and fifth frames of the TIFF:
+
+![](README-red%20and%20green%20banana-1.png)
+
+### The original `tiff` package
+
+When we import it with the original `tiff` package:
 
 ``` r
 img <- tiff::readTIFF(path_2ch_ij, all = TRUE)
@@ -48,72 +81,80 @@ img <- tiff::readTIFF(path_2ch_ij, all = TRUE)
 #> Warning in tiff::readTIFF(path_2ch_ij, all = TRUE): TIFFReadDirectory:
 #> Unknown field with tag 50839 (0xc697) encountered
 str(img)  # 10 images
-#> List of 10
-#>  $ : num [1:128, 1:128] 0 0 0 0.00392 0 ...
-#>  $ : num [1:128, 1:128] 0 0.00392 0.00392 0.00392 0 ...
-#>  $ : num [1:128, 1:128] 0.00392 0.00392 0 0 0 ...
-#>  $ : num [1:128, 1:128] 0 0 0 0.00392 0 ...
-#>  $ : num [1:128, 1:128] 0 0 0.00392 0 0 ...
-#>  $ : num [1:128, 1:128] 0 0 0.00392 0 0 ...
-#>  $ : num [1:128, 1:128] 0 0.00392 0 0 0 ...
-#>  $ : num [1:128, 1:128] 0 0 0 0.00392 0.00392 ...
-#>  $ : num [1:128, 1:128] 0 0 0 0 0 ...
-#>  $ : num [1:128, 1:128] 0 0 0 0.00392 0 ...
-img[[1]][100:110, 101:105]  # print a section of the first image in the series
-#>             [,1]       [,2]        [,3]        [,4]        [,5]
-#>  [1,] 0.01176471 0.01176471 0.035294118 0.027450980 0.023529412
-#>  [2,] 0.02352941 0.02745098 0.015686275 0.027450980 0.035294118
-#>  [3,] 0.05490196 0.02352941 0.031372549 0.031372549 0.035294118
-#>  [4,] 0.03921569 0.01568627 0.027450980 0.023529412 0.027450980
-#>  [5,] 0.04313725 0.04313725 0.031372549 0.015686275 0.015686275
-#>  [6,] 0.02352941 0.02352941 0.039215686 0.011764706 0.007843137
-#>  [7,] 0.03137255 0.03529412 0.027450980 0.023529412 0.019607843
-#>  [8,] 0.01960784 0.03921569 0.019607843 0.015686275 0.031372549
-#>  [9,] 0.01568627 0.01960784 0.015686275 0.007843137 0.019607843
-#> [10,] 0.05490196 0.04705882 0.019607843 0.035294118 0.023529412
-#> [11,] 0.03137255 0.02352941 0.007843137 0.023529412 0.027450980
+#> List of 6
+#>  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...
+#>  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...
+#>  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...
+#>  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...
+#>  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...
+#>  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...
+img[[1]][100:110, 50:60]  # print a section of the first image in the series
+#>            [,1]      [,2]      [,3]      [,4]      [,5]      [,6]
+#>  [1,] 0.6627451 0.6627451 0.6549020 0.6627451 0.7058824 0.9215686
+#>  [2,] 0.6745098 0.6431373 0.6745098 0.6431373 0.6431373 0.6745098
+#>  [3,] 0.6549020 0.6627451 0.6431373 0.6627451 0.6627451 0.6431373
+#>  [4,] 0.6431373 0.6431373 0.6627451 0.6431373 0.6627451 0.6431373
+#>  [5,] 0.6745098 0.6745098 0.6431373 0.6627451 0.6431373 0.6627451
+#>  [6,] 0.6745098 0.6431373 0.6431373 0.6431373 0.6549020 0.6549020
+#>  [7,] 0.6549020 0.6549020 0.6431373 0.6549020 0.6549020 0.6431373
+#>  [8,] 0.6431373 0.6549020 0.6431373 0.6549020 0.6431373 0.6431373
+#>  [9,] 0.6431373 0.6745098 0.6431373 0.6431373 0.6431373 0.6549020
+#> [10,] 0.6431373 0.6549020 0.6431373 0.6549020 0.6431373 0.6431373
+#> [11,] 0.6431373 0.6431373 0.6431373 0.6431373 0.6431373 0.6431373
+#>            [,7]      [,8]      [,9]     [,10]     [,11]
+#>  [1,] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+#>  [2,] 0.8705882 1.0000000 1.0000000 1.0000000 1.0000000
+#>  [3,] 0.6627451 0.7803922 1.0000000 1.0000000 1.0000000
+#>  [4,] 0.6627451 0.6431373 0.7058824 0.9058824 1.0000000
+#>  [5,] 0.6431373 0.6627451 0.6431373 0.6431373 0.8039216
+#>  [6,] 0.6549020 0.6431373 0.6431373 0.6549020 0.6431373
+#>  [7,] 0.6431373 0.6549020 0.6431373 0.6431373 0.6431373
+#>  [8,] 0.6549020 0.6431373 0.6549020 0.6431373 0.6431373
+#>  [9,] 0.6431373 0.6431373 0.6431373 0.6431373 0.6431373
+#> [10,] 0.6431373 0.6431373 0.6431373 0.6431373 0.6431373
+#> [11,] 0.6549020 0.6431373 0.6431373 0.6431373 0.6431373
 ```
 
--   We just get 10 frames, with no information about the two channels.
+-   We just get a list of 6 frames, with no information about the channels.
 -   We get annoying warnings about ImageJ's private TIFF tags 50838 and 50839, which are of no interest to the `R` user.
 -   The numbers in the image array(s) are (by default) normalized to the range \[0, 1\].
 
-### The `ijtiff` library
+### The `ijtiff` package
 
-When we import the same image with the `ijtiff` library:
+When we import the same image with the `ijtiff` package:
 
 ``` r
 img <- ijtiff::read_tif(path_2ch_ij)
-#> Reading a 128x128 pixel image of unsigned integer type with 2 channels and 5 frames.
+#> Reading a 155x200 pixel image of unsigned integer type with 2 channels and 3 frames.
 dim(img)  # 2 channels, 5 frames
-#> [1] 128 128   2   5
-img[100:110, 101:105, 1, 1]  # print a section of the first channel, first frame
-#>       [,1] [,2] [,3] [,4] [,5]
-#>  [1,]    3    3    9    7    6
-#>  [2,]    6    7    4    7    9
-#>  [3,]   14    6    8    8    9
-#>  [4,]   10    4    7    6    7
-#>  [5,]   11   11    8    4    4
-#>  [6,]    6    6   10    3    2
-#>  [7,]    8    9    7    6    5
-#>  [8,]    5   10    5    4    8
-#>  [9,]    4    5    4    2    5
-#> [10,]   14   12    5    9    6
-#> [11,]    8    6    2    6    7
+#> [1] 155 200   2   3
+img[100:110, 50:60, 1, 1]  # print a section of the first channel, first frame
+#>       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11]
+#>  [1,]  169  169  167  169  180  235  255  255  255   255   255
+#>  [2,]  172  164  172  164  164  172  222  255  255   255   255
+#>  [3,]  167  169  164  169  169  164  169  199  255   255   255
+#>  [4,]  164  164  169  164  169  164  169  164  180   231   255
+#>  [5,]  172  172  164  169  164  169  164  169  164   164   205
+#>  [6,]  172  164  164  164  167  167  167  164  164   167   164
+#>  [7,]  167  167  164  167  167  164  164  167  164   164   164
+#>  [8,]  164  167  164  167  164  164  167  164  167   164   164
+#>  [9,]  164  172  164  164  164  167  164  164  164   164   164
+#> [10,]  164  167  164  167  164  164  164  164  164   164   164
+#> [11,]  164  164  164  164  164  164  167  164  164   164   164
 ```
 
--   We see the image nicely divided into 2 channels of 5 frames.
+-   We see the image nicely represented as an array of channels of frames.
 -   We get no needless warnings.
 -   The numbers in the image are integers, the same as would be seen if one opened the image with ImageJ.
 
 #### Note
 
-`tiff` reads several types of TIFFs correctly, including many that are saved from *ImageJ*. This is just an example of a TIFF type that it doesn't perform so well with.
+The original `tiff` package reads several types of TIFFs correctly, including many that are saved from *ImageJ*. This is just an example of a TIFF type that it doesn't perform so well with.
 
 Floating point TIFFs
 --------------------
 
-The original `tiff` library could read but not write floating point (real-numbered) TIFF files. The `ijtiff` library can do both. It automatically decides which type is appropriate when writing.
+The original `tiff` package could read but not write floating point (real-numbered) TIFF files. The `ijtiff` package can do both. It automatically decides which type is appropriate when writing.
 
 Advice for all *ImageJ* users
 -----------------------------

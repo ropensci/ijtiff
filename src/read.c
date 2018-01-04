@@ -15,7 +15,7 @@ static void setAttr(SEXP x, const char *name, SEXP val) {
     UNPROTECT(1);
 }
 
-/* add information attributes accorsing to the TIFF tags.
+/* add information attributes according to the TIFF tags.
    Only a somewhat random set (albeit mostly baseline) is supported */
 static void TIFF_add_info(TIFF *tiff, SEXP res) {
   uint32 i32;
@@ -58,57 +58,57 @@ static void TIFF_add_info(TIFF *tiff, SEXP res) {
 	    setAttr(res, "planar_config", mkString(uv));
 	  }
   }
-    if (TIFFGetField(tiff, TIFFTAG_COMPRESSION, &i16)) {  // working here
-	char uv[24];
-	const char *name = 0;
-	switch (i16) {
-	case 1: name = "none"; break;
-	case 2: name = "CCITT RLE"; break;
-	case 32773: name = "PackBits"; break;
-	case 3: name = "CCITT Group 3 fax"; break;
-	case 4: name = "CCITT Group 4 fax"; break;
-	case 5: name = "LZW"; break;
-	case 6: name = "old JPEG"; break;
-	case 7: name = "JPEG"; break;
-	case 8: name = "deflate"; break;
-	case 9: name = "JBIG b/w"; break;
-	case 10: name = "JBIG color"; break;
-	default:
-	    snprintf(uv, sizeof(uv), "unknown (%d)", i16);
-	    name = uv;
-	}
-	setAttr(res, "compression", mkString(name));
-    }
-    if (TIFFGetField(tiff, TIFFTAG_THRESHHOLDING, &i16))
-	setAttr(res, "threshholding", ScalarInteger(i16));
-    if (TIFFGetField(tiff, TIFFTAG_XRESOLUTION, &f))
-	setAttr(res, "x_resolution", ScalarReal(f));
-    if (TIFFGetField(tiff, TIFFTAG_YRESOLUTION, &f))
-	setAttr(res, "y_resolution", ScalarReal(f));
-    if (TIFFGetField(tiff, TIFFTAG_RESOLUTIONUNIT, &i16)) {
-	const char *name = "unknown";
-	switch (i16) {
-	case 1: name = "none"; break;
-	case 2: name = "inch"; break;
-	case 3: name = "cm"; break;
-	}
+  if (TIFFGetField(tiff, TIFFTAG_COMPRESSION, &i16)) {
+  	char uv[24];
+  	const char *name = 0;
+  	switch (i16) {
+    	case 1: name = "none"; break;
+    	case 2: name = "CCITT RLE"; break;
+    	case 32773: name = "PackBits"; break;
+    	case 3: name = "CCITT Group 3 fax"; break;
+    	case 4: name = "CCITT Group 4 fax"; break;
+    	case 5: name = "LZW"; break;
+    	case 6: name = "old JPEG"; break;
+    	case 7: name = "JPEG"; break;
+    	case 8: name = "deflate"; break;
+    	case 9: name = "JBIG b/w"; break;
+    	case 10: name = "JBIG color"; break;
+    	default:
+  	    snprintf(uv, sizeof(uv), "unknown (%d)", i16);
+  	    name = uv;
+	  }
+	  setAttr(res, "compression", mkString(name));
+  }
+  if (TIFFGetField(tiff, TIFFTAG_THRESHHOLDING, &i16))
+	  setAttr(res, "threshholding", ScalarInteger(i16));
+  if (TIFFGetField(tiff, TIFFTAG_XRESOLUTION, &f))
+	  setAttr(res, "x_resolution", ScalarReal(f));
+  if (TIFFGetField(tiff, TIFFTAG_YRESOLUTION, &f))
+	  setAttr(res, "y_resolution", ScalarReal(f));
+  if (TIFFGetField(tiff, TIFFTAG_RESOLUTIONUNIT, &i16)) {
+	  const char *name = "unknown";
+  	switch (i16) {
+  	  case 1: name = "none"; break;
+  	  case 2: name = "inch"; break;
+	    case 3: name = "cm"; break;
+	  }
 	setAttr(res, "resolution_unit", mkString(name));
-    }
-#ifdef TIFFTAG_INDEXED /* very recent in libtiff even though it's an old tag */
+  }
+  #ifdef TIFFTAG_INDEXED /* very recent in libtiff even though it's an old tag */
     if (TIFFGetField(tiff, TIFFTAG_INDEXED, &i16))
-	setAttr(res, "indexed", ScalarLogical(i16));
-#endif
-    if (TIFFGetField(tiff, TIFFTAG_ORIENTATION, &i16)) {
-	const char *name = "<invalid>";
-	switch (i16) {
-	case 1: name = "top_left"; break;
-	case 2: name = "top_right"; break;
-	case 3: name = "bottom_right"; break;
-	case 4: name = "bottom_left"; break;
-	case 5: name = "left_top"; break;
-	case 6: name = "right_top"; break;
-	case 7: name = "right_bottom"; break;
-	case 8: name = "left_bottom"; break;
+	    setAttr(res, "indexed", ScalarLogical(i16));
+  #endif
+  if (TIFFGetField(tiff, TIFFTAG_ORIENTATION, &i16)) {
+  	const char *name = "<invalid>";
+	  switch (i16) {
+  	case 1: name = "top_left"; break;
+	  case 2: name = "top_right"; break;
+  	case 3: name = "bottom_right"; break;
+	  case 4: name = "bottom_left"; break;
+  	case 5: name = "left_top"; break;
+	  case 6: name = "right_top"; break;
+  	case 7: name = "right_bottom"; break;
+	  case 8: name = "left_bottom"; break;
 	}
 	setAttr(res, "orientation", mkString(name));
     }
@@ -196,8 +196,11 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
   	  is_float = true;
   	}
   	if (spp == 1) { /* modify out_spp for colormaps */
-  	  if (colormap[2]) out_spp = 3;
-  	  else if (colormap[1]) out_spp = 2;
+  	  if (colormap[2]) {
+  	    out_spp = 3;
+  	  } else if (colormap[1]) {
+  	    out_spp = 2;
+  	  }
   	}
     #if TIFF_DEBUG
   	  Rprintf("image %d x %d x %d, tiles %d x %d, bps = %d, spp = %d (output %d), "
@@ -238,7 +241,7 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
       #endif
     	for (strip = 0; strip < TIFFNumberOfStrips(tiff); strip++) {
     	  tsize_t n = TIFFReadEncodedStrip(tiff, strip, buf, (tsize_t) -1);
-    	  if (spp == 1) { /* config doesn't matter for spp == 1 */
+    	  if (spp == 1) { // config doesn't matter for spp == 1
     	    if (colormap[0]) {
     	  	  tsize_t i, step = bps / 8;
     			  for (i = 0; i < n; i += step) {
@@ -306,7 +309,7 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
       			  }
       			}
     		  }
-    		} else if (config == PLANARCONFIG_CONTIG) { /* interlaced */   //working here
+    		} else if (config == PLANARCONFIG_CONTIG) { // interlaced
     		  tsize_t i, j, step = spp * bps / 8;
     		  for (i = 0; i < n; i += step) {
     			  const uint8_t *v = (const uint8_t*) buf + i;

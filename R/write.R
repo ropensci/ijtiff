@@ -63,8 +63,6 @@ write_tif <- function(img, path, bits_per_sample = "auto",
   checkmate::assert_numeric(img)
   img %<>% ijtiff_img()
   d <- dim(img)
-  if (d[3] > 1e9) stop("Cannot write more than a billion channels.")
-  if (d[4] > 1e9) stop("Cannot write more than a billion frames.")
   compressions <- c(none = 1L, rle = 2L, packbits = 32773L, jpeg = 7L,
                     deflate = 8L)
   compression %<>% RSAGA::match.arg.ext(names(compressions),

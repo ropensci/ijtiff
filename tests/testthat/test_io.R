@@ -5,7 +5,19 @@ test_that("Package 2-channel example I/O works", {
   setwd(tempdir())
   context("Package 2-channel example I/O")
   img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
-  expect_equal(dim(img), c(128, 128, 2, 5))
+  expect_equal(dim(img), c(15, 6, 2, 5))
+  img <- read_tif(system.file("img", "Rlogo-banana-red_green.tif",
+                              package = "ijtiff"))
+  expect_equal(dim(img), c(155, 200, 2, 3))
+  img <- read_tif(system.file("img", "Rlogo-banana-1-2.tif",
+                              package = "ijtiff"))
+  expect_equal(dim(img), c(155, 200, 3, 2))
+  img <- read_tif(system.file("img", "Rlogo-banana-red_green_blue.tif",
+                              package = "ijtiff"))
+  expect_equal(dim(img), c(155, 200, 3, 2))
+  img <- read_tif(system.file("img", "Rlogo-banana-red.tif",
+                              package = "ijtiff"))
+  expect_equal(dim(img), c(155, 200, 1, 2))
   context("8-bit unsigned integer TIFF I/O")
   v2345 <- 2:5
   a2345 <- array(sample.int(prod(v2345)), dim = v2345)
@@ -161,14 +173,12 @@ test_that("write_tif() errors correctly", {
   aaaa[1] <-  2 ^ 20
   expect_error(write_tif(aaaa, "a", bits_per_sample = 16),
                "TIFF file needs to be at least .*-bit")
-  skip_on_travis()
-  skip_on_cran()
-  skip_on_appveyor()
-  too_big <- seq_len(1e9 + 3)
-  dim(too_big) <- c(1, 1, length(too_big), 1)
-  expect_error(write_tif(too_big, "a"), "billion channels")
-  dim(too_big) <- c(1, 1, 1, length(too_big))
-  expect_error(write_tif(too_big, "a"), "billion frames")
+  expect_error(read_tif(system.file("img", "bad_ij1.tif", package = "ijtiff")),
+               "The ImageJ.* image .* has 13 images of 5 slices of 2 channels")
+  expect_error(read_tif(system.file("img", "bad_ij2.tif", package = "ijtiff")),
+               "The ImageJ.* image .* has 13 images of 5 slices of 2 channels")
+  expect_error(read_tif(system.file("img", "bad_ij3.tif", package = "ijtiff")),
+               "The ImageJ.* image .* has 8 frames AND 5 slices")
 })
 
 context("Text I/O")

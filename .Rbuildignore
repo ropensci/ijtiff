@@ -3,8 +3,7 @@
 ^todo\.txt$
 ^junk$
 ^todo\.md$
-^README\.Rmd$
-^README-.*\.png$
+^README.*$
 ^CONDUCT\.md$
 ^appveyor\.yml$
 ^\.travis\.yml$

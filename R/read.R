@@ -61,21 +61,70 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
   checkmate::assert_list(out)
   ds <- dims(out)
   if (filesstrings::all_equal(ds)) {
+    d <- ds[[1]]
     attrs1 <- attributes(out[[1]])
     n_ch <- 1
     if ("samples_per_pixel" %in% names(attrs1)) n_ch <- attrs1$samples_per_pixel
     if ("description" %in% names(attrs1)) {
       description <- attrs1$description
       if (startsWith(description, "ImageJ")) {
+        ij_n_ch <- FALSE
         if (stringr::str_detect(description, "channels=")) {
           n_ch <- description %>%
             filesstrings::str_after_first("channels=") %>%
             filesstrings::first_number()
+          ij_n_ch <- TRUE
+        }
+        n_imgs <- NA
+        if (stringr::str_detect(description, "images=")) {
+          n_imgs <- description %>%
+            filesstrings::str_after_first("images=") %>%
+            filesstrings::first_number()
+        }
+        n_slices <- NA
+        if (stringr::str_detect(description, "slices=")) {
+          n_slices <- description %>%
+            filesstrings::str_after_first("slices=") %>%
+            filesstrings::first_number()
+        }
+        if (stringr::str_detect(description, "frames=")) {
+          n_frames <- description %>%
+            filesstrings::str_after_first("frames=") %>%
+            filesstrings::first_number()
+          if (!is.na(n_slices)) {
+            stop("The ImageJ-written image you're trying to read says it has ",
+                 n_frames, " frames AND ", n_slices, " slices. To be read by ",
+                 "the 'ijtiff' package, the number of slices OR the number ",
+                 "of frames should be specified in the description tiff tag ",
+                 "(and they're interpreted as the same thing), but not both. ")
+          }
+          n_slices <- n_frames
+        }
+        if (!is.na(n_slices) && !is.na(n_imgs)) {
+          if (ij_n_ch) {
+            if (n_imgs != n_ch * n_slices) {
+              stop("The ImageJ-written image you're trying to read says in its",
+                   " TIFFTAG_DESSCRIPTION that it has ", n_imgs, " images of ",
+                   n_slices, " slices of ", n_ch,
+                   " channels. However, with ", n_slices, " slices of ", n_ch,
+                   " channels, one would expect there to be ", n_slices, "x",
+                   n_ch, "=", n_ch * n_slices, " images. ",
+                   "This discrepancy means that the ",
+                   "'ijtiff' package can't read your image correctly. One ",
+                   "possible source of this kind of error is that your image ",
+                   "is temporal and volumetric. 'ijtiff' can handle either ",
+                   "time-based or volumetric stacks, but not both.")
+            }
+          }
+        }
+        if ((isTRUE(length(out) == n_imgs) && ij_n_ch) ||
+             ((!ij_n_ch) && n_ch == 1)) {
+          if (length(d) > 2) out %<>% purrr::map(extract_nonzero_plane)
         }
       }
     }
     out %<>% unlist()
-    dim(out) <- c(ds[[1]][1:2], n_ch, length(out) / prod(c(ds[[1]][1:2], n_ch)))
+    dim(out) <- c(d[1:2], n_ch, length(out) / prod(c(d[1:2], n_ch)))
     if ("dim" %in% names(attrs1)) attrs1$dim <- NULL
     do_call_list <- c(list(img = out), attrs1)
     out <- do.call(ijtiff_img, do_call_list)
