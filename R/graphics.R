@@ -4,6 +4,7 @@
 #' 'ImageJ'. This function wraps [fields::image.plot()].
 #'
 #' @param img A numeric matrix.
+#' @param col Colour lookup table to use for display.
 #' @param ... Arguments passed to [fields::image.plot()]. These arguments should
 #'   be fully named.
 #' @examples
@@ -13,14 +14,12 @@
 #' display(img[, , 3, 1])  # blue channel
 #'
 #' @export
-display <- function(img, ...) {
+display <- function(img, col = grDevices::grey.colors(999, 0, 1), ...) {
   checkmate::assert_matrix(img)
   img %<>% {t(.[rev(seq_len(nrow(.))), ])}
   dots <- list(...)
+  dots %<>% c(list(col = col))
   if (! "axes" %in% names(dots)) dots$axes <- FALSE
-  if (! "col" %in% names(dots)) {
-    dots$col <- grDevices::grey.colors(999, start = 0, end = 1)
-  }
   dots %<>% c(list(img), .)
   do.call(fields::image.plot, dots)
 }

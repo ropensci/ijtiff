@@ -17,13 +17,20 @@ The *ImageJ* software (<https://imagej.nih.gov/ij>) is a widely-used image viewi
 
 The goal of the `ijtiff` R package is to correctly import TIFF files that were saved from *ImageJ* and to write TIFF files than can be correctly read by *ImageJ*. It may also satisfy some non-*ImageJ* TIFF requirements that you might have. This is not an extension of the original `tiff` package; it behaves differently. Hence, if this package isn't satisfying your TIFF needs, it's definitely worth checking out the original `tiff` package.
 
+#### Frames and Channels in TIFF files
+
+-   In a volumetric image, *frames* are typically the different z-slices. In a time-stack of images (i.e. a video), each frame represents a time-point.
+-   There is one *channel* per colour. A conventional colour image is made up of 3 colour channels: red, green and blue. A grayscale (black and white) image has just one channel. It's possible to acquire two channels (e.g. red an blue but not green), five channels (e.g. infrared, red, green, blue and ultraviolet), or any number at all, but these cases are seen mostly in specialist imaging fields like microscopy.
+
 #### The Peculiarity of *ImageJ* TIFF files
 
 *Note*: If you don't care about the particulars of TIFF files or how this package works on the inside, feel free to skip this subsection.
 
 It is common to use `TIFFTAG_SAMPLESPERPIXEL` to record the number of channels in a TIFF image, however *ImageJ* sometimes leaves `TIFFTAG_SAMPLESPERPIXEL` with a value of 1 and instead encodes the number of channels in `TIFFTAG_IMAGEDESCRIPTION` which might look something like `"ImageJ=1.51 images=16 channels=2 slices=8"`.
 
-A conventional TIFF reader would miss this channel information (becaus it is in an unusual place). `ijtiff` does not miss it. We'll see an example below. First, let's install the package.
+A conventional TIFF reader would miss this channel information (becaus it is in an unusual place). `ijtiff` does not miss it. We'll see an example below.
+
+*Note*: These peculiar *ImageJ*-written TIFF files are still bona fide TIFF files according to the TIFF specification. They just break with common conventions of encoding channel information.
 
 Installation
 ------------
@@ -64,7 +71,7 @@ path_2ch_ij <- system.file("img", "Rlogo-banana-red_green.tif",
 
 `path_2ch_ij` is the path to a TIFF file which was made in *ImageJ* from the R logo dancing banana GIF used in the README of Jeroen Ooms' `magick` package. The TIFF is a time-stack containing only the red and green channels of the first, third and fifth frames of the original GIF. Here's the full gif:
 
-![](/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T//Rtmpz47Nb8/file906b194be59c.gif)
+![](/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T//Rtmpc44fmE/fileba5ebdb99ca.gif)
 
 Here are the red and green channels of the first, third and fifth frames of the TIFF:
 
@@ -126,7 +133,7 @@ When we import the same image with the `ijtiff` package:
 ``` r
 img <- ijtiff::read_tif(path_2ch_ij)
 #> Reading a 155x200 pixel image of unsigned integer type with 2 channels and 3 frames.
-dim(img)  # 2 channels, 5 frames
+dim(img)  # 2 channels, 3 frames
 #> [1] 155 200   2   3
 img[100:110, 50:60, 1, 1]  # print a section of the first channel, first frame
 #>       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11]
@@ -161,14 +168,34 @@ Advice for all *ImageJ* users
 
 Base *ImageJ* (similar to the `tiff` R package) does not properly open some perfectly good TIFF files[1] (including some TIFF files written by the `tiff` and `ijtiff` R packages). Instead it gives you the error message: *imagej can only open 8 and 16 bit/channel images*. These images in fact can be opened in *ImageJ* using the wonderful *BioFormats* plugin. See <https://imagej.net/Bio-Formats>.
 
+Text Images
+-----------
+
+TIFF files are limited in which numbers they can represent (they can't go outside the 32-bit range). Real-numbered TIFFs can also lack precision, having only the precision of a 32-bit floating point number. If TIFF isn't good enough, you can use text images. Text images are just plain text files which are tab-separated arrays of pixel values[2]. Hence, they are unconstrained in the precision they can offer (but are very inefficient with memory).
+
+``` r
+library(ijtiff)
+img[1] <- 2 ^ 99  # too high for TIFF
+write_tif(img, "img")  # errors
+#> Error in write_tif(img, "img"): The maximum value in 'img' is greater than 2 ^ 32 - 1 and therefore too high to be written to a TIFF file.
+write_txt_img(img, "img")  # no problem
+```
+
+Writing TIFF Files with `ijtiff`
+--------------------------------
+
+`ijtiff::write_tif()` writes TIFF files in the conventional manner, with the number of channels in `TIFFTAG_SAMPLESPERPIXEL`. It records in `TIFFTAG_SOFTWARE` that the TIFF file was written with the `ijtiff` R package. Otherwise, no metadata is recorded.
+
 Acknowledgement
-===============
+---------------
 
 This package uses a lot of code from the original `tiff` package by Simon Urbanek.
 
 Contribution
-============
+------------
 
 Contributions to this package are welcome. The preferred method of contribution is through a github pull request. Feel free to contact me by creating an issue. Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
 
 [1] I think native *ImageJ* only likes 1, 3 and 4-channel images and complains about the rest, but I'm not sure about this.
+
+[2] `read_txt_img()` and `write_txt_img()` are just wrappers of `readr::read_tsv()` and `readr::write_tsv()`.

@@ -28,13 +28,22 @@ The _ImageJ_ software (https://imagej.nih.gov/ij) is a widely-used image viewing
 
 The goal of the `ijtiff` R package is to correctly import TIFF files that were saved from _ImageJ_ and to write TIFF files than can be correctly read by _ImageJ_. It may also satisfy some non-_ImageJ_ TIFF requirements that you might have. This is not an extension of the original `tiff` package; it behaves differently. Hence, if this package isn't satisfying your TIFF needs, it's definitely worth checking out the original `tiff` package.
 
+#### Frames and Channels in TIFF files
+
+* In a volumetric image, _frames_ are typically the different z-slices. In a time-stack of images (i.e. a video), each frame represents a time-point.
+* There is one _channel_ per colour. A conventional colour image is made up of 3 colour channels: red, green and blue. A grayscale (black and white) image has just one channel. It's possible to acquire two channels (e.g. red an blue but not green), five channels (e.g. infrared, red, green, blue and ultraviolet), or any number at all, but these cases are seen mostly in specialist imaging fields like microscopy.
+
 #### The Peculiarity of _ImageJ_ TIFF files
 
 _Note_: If you don't care about the particulars of TIFF files or how this package works on the inside, feel free to skip this subsection.
 
-It is common to use `TIFFTAG_SAMPLESPERPIXEL` to record the number of channels in a TIFF image, however _ImageJ_ sometimes leaves `TIFFTAG_SAMPLESPERPIXEL` with a value of 1 and instead encodes the number of channels in `TIFFTAG_IMAGEDESCRIPTION` which might look something like `"ImageJ=1.51 images=16 channels=2 slices=8"`.
+It is common to use `TIFFTAG_SAMPLESPERPIXEL` to record the number of channels in a TIFF image, however _ImageJ_ sometimes leaves `TIFFTAG_SAMPLESPERPIXEL` with a value of 1 and instead encodes the number of channels in `TIFFTAG_IMAGEDESCRIPTION` which might look something like  
+`"ImageJ=1.51 images=16 channels=2 slices=8"`.
 
 A conventional TIFF reader would miss this channel information (becaus it is in an unusual place). `ijtiff` does not miss it. We'll see an example below. 
+
+_Note_: These peculiar _ImageJ_-written TIFF files are still bona fide TIFF files according to the TIFF specification. They just break with common conventions of encoding channel information.
+
 ## Reading _ImageJ_ TIFF files
 
 ```{r 2 channel path}
@@ -84,7 +93,7 @@ img[[1]][100:110, 50:60]  # print a section of the first image in the series
 When we import the same image with the `ijtiff` package:
 ```{r ijtiff import}
 img <- ijtiff::read_tif(path_2ch_ij)
-dim(img)  # 2 channels, 5 frames
+dim(img)  # 2 channels, 3 frames
 img[100:110, 50:60, 1, 1]  # print a section of the first channel, first frame
 ```
 
@@ -105,7 +114,7 @@ Base _ImageJ_ (similar to the `tiff` R package) does not properly open some perf
 The package supports volumetric ($z$-stack) and time-based (time-stack) images, but not both volume and time simultaneously. The fourth slot in an `ijtiff_img` is either for $z$ or time.
 
 ## Text Images
-TIFF files are limited in which numbers they can represent (they can't go outside the 32-bit range). Real-numbered TIFFs can also lack precision, having only the precision of a 32-bit floating point number. If TIFF isn't good enough, you can use text images.
+TIFF files are limited in which numbers they can represent (they can't go outside the 32-bit range). Real-numbered TIFFs can also lack precision, having only the precision of a 32-bit floating point number. If TIFF isn't good enough, you can use text images. Text images are just plain text files which are tab-separated arrays of pixel values^[`read_txt_img()` and `write_txt_img()` are just wrappers of `readr::read_tsv()` and `readr::write_tsv()`.]. Hence, they are unconstrained in the precision they can offer (but are very inefficient with memory). 
 ```{r text images, error=TRUE}
 library(ijtiff)
 img[1] <- 2 ^ 99  # too high for TIFF
@@ -113,10 +122,13 @@ write_tif(img, "img")  # errors
 write_txt_img(img, "img")  # no problem
 ```
 
+## Writing TIFF Files with `ijtiff`
+`ijtiff::write_tif()` writes TIFF files in the conventional manner, with the number of channels in `TIFFTAG_SAMPLESPERPIXEL`. It records in `TIFFTAG_SOFTWARE` that the TIFF file was written with the `ijtiff` R package. Otherwise, no metadata is recorded.
+
+### Acknowledgement
+This package uses a lot of code from the original `tiff` package by Simon Urbanek.
+
 ```{r cleanup, include = FALSE}
 new_files <- setdiff(dir(), original_files)
 file.remove(new_files)
 ```
-
-### Acknowledgement
-This package uses a lot of code from the original `tiff` package by Simon Urbanek.

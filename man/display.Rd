@@ -4,10 +4,12 @@
 \alias{display}
 \title{Basic image display.}
 \usage{
-display(img, ...)
+display(img, col = grDevices::grey.colors(999, 0, 1), ...)
 }
 \arguments{
 \item{img}{A numeric matrix.}
+
+\item{col}{Colour lookup table to use for display.}
 
 \item{...}{Arguments passed to \code{\link[fields:image.plot]{fields::image.plot()}}. These arguments should
 be fully named.}

@@ -32,12 +32,13 @@ ijtiff_img <- function(img, ...) {
   checkmate::assert_numeric(img)
   if (length(dim(img)) == 2) dim(img) %<>% c(1, 1)
   if (length(dim(img)) == 3) dim(img) %<>% {c(.[1:2], 1, .[3])}
-  checkmate::assert_array(img, d = 4)
   dots <- list(...)
   if (length(dots)) {
     namez <- names(dots)
-    if (is.null(namez)) stop("All arguments in ... must be named.")
-    for (n in namez) attr(img, n) <- dots[[n]]
+    if (is.null(namez) || any(namez == ""))
+      stop("All arguments in ... must be named.")
+    do_call_args <- c(list(img), dots)
+    img <- do.call(structure, do_call_args)
   }
   class(img) %<>% c("ijtiff_img", .)
   img

@@ -199,6 +199,13 @@ void check_type_sizes(void) {
                "on \'unsigned int\' being 32-bit, so it will not work "
                "on your system.", sz);
   }
+  sz = sizeof(unsigned long long int) * CHAR_BIT;
+  if (sz != 64) {
+    Rf_error("Usually, the size of the \'unsigned long long int\' type is "
+               "64 bits, however on your system it is %i. The \'ijtiff\' "
+               "library relies on \'unsigned int\' being 32-bit, so it will not"
+               " work on your system.", sz);
+  }
   sz = sizeof(float) * CHAR_BIT;
   if (sz != 32) {
     Rf_error("Usually, the size of the \'float\' type is 32 bits, "

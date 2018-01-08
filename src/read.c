@@ -147,24 +147,34 @@ static void TIFF_add_info(TIFF *tiff, SEXP res) {
 }
 
 SEXP read_tif_c(SEXP sFn /*filename*/) {
+  uint64_t to_unprotect = 0;
   check_type_sizes();
-  SEXP res = R_NilValue, multi_res = R_NilValue, multi_tail = R_NilValue, dim;
+  SEXP res = PROTECT(R_NilValue), multi_res = PROTECT(R_NilValue);
+  SEXP multi_tail = PROTECT(R_NilValue), dim;
+  to_unprotect += 3;
   const char *fn;
   int n_img = 0;
   tiff_job_t rj;
   TIFF *tiff;
   FILE *f;
-	if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) != 1) Rf_error("invalid filename");
+	if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) != 1) {
+	  Rf_error("invalid filename");
+	  UNPROTECT(to_unprotect);
+	  return R_NilValue;
+	}
 	fn = CHAR(STRING_ELT(sFn, 0));
 	f = fopen(fn, "rb");
 	if (!f) {
 	  Rf_error("unable to open %s", fn);
+	  UNPROTECT(to_unprotect);
 	  return R_NilValue;
 	}
 	rj.f = f;
   tiff = TIFF_Open("rmc", &rj); /* no mmap, no chopping */
   if (!tiff) {
+    TIFFClose(tiff);
     Rf_error("Unable to open TIFF");
+    UNPROTECT(to_unprotect);
     return R_NilValue;
   }
 
@@ -213,12 +223,14 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
       Rf_error("12-bit images are not supported. "
                "Try converting your image to 16-bit.");
       TIFFClose(tiff);
+      UNPROTECT(to_unprotect);
       return R_NilValue;
     }
   	if (bps != 8 && bps != 16 && bps != 32) {
   	    TIFFClose(tiff);
   	    Rf_error("image has %d bits/sample which is unsupported in direct mode - "
                   "use native=TRUE or convert=TRUE", bps);
+  	    UNPROTECT(to_unprotect);
   	    return R_NilValue;
   	}
 
@@ -228,6 +240,7 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
                     "the signed integer format.");
 
   	res = PROTECT(allocVector(REALSXP, imageWidth * imageLength * out_spp));
+  	to_unprotect++;
   	real_arr = REAL(res);
 
   	if (tileWidth == 0) {
@@ -369,19 +382,15 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
     		}
     	}
   	} else {
+  	  TIFFClose(tiff);
   	  Rf_error("tile-based images are not supported");
-  	  buf = _TIFFmalloc(TIFFTileSize(tiff));
-
-  	  for (y = 0; y < imageLength; y += tileLength) {
-  		  for (x = 0; x < imageWidth; x += tileWidth) {
-  		    TIFFReadTile(tiff, buf, x, y, 0 /*depth*/, 0 /*plane*/);
-  		  }
-  	  }
+  	  UNPROTECT(to_unprotect);
+  	  return R_NilValue;
   	}
 
   	_TIFFfree(buf);
 
-  	dim = allocVector(INTSXP, (out_spp > 1) ? 3 : 2);
+  	dim = PROTECT(allocVector(INTSXP, (out_spp > 1) ? 3 : 2));
   	INTEGER(dim)[0] = imageLength;
   	INTEGER(dim)[1] = imageWidth;
   	if (out_spp > 1) INTEGER(dim)[2] = out_spp;
@@ -390,10 +399,11 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
   	UNPROTECT(1);
   	n_img++;
   	if (multi_res == R_NilValue) {
-  	  multi_tail = multi_res = CONS(res, R_NilValue);
-  	  PROTECT(multi_res);
+  	  multi_res = multi_tail = PROTECT(CONS(res, R_NilValue));
+  	  to_unprotect ++;
   	} else {
-  	  SEXP q = CONS(res, R_NilValue);
+  	  SEXP q = PROTECT(CONS(res, R_NilValue));
+  	  to_unprotect++;
   	  SETCDR(multi_tail, q);
   	  multi_tail = q;
   	}
@@ -401,13 +411,14 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
   }
   TIFFClose(tiff);
   /* convert LISTSXP into VECSXP */
-  PROTECT(res = allocVector(VECSXP, n_img));
+  res = PROTECT(allocVector(VECSXP, n_img));
+  to_unprotect++;
 	int i = 0;
 	while (multi_res != R_NilValue) {
 	  SET_VECTOR_ELT(res, i, CAR(multi_res));
 	  i++;
 	  multi_res = CDR(multi_res);
 	}
-  UNPROTECT(2);
+  UNPROTECT(to_unprotect);
   return res;
 }

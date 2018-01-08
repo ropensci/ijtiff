@@ -32,6 +32,7 @@
 write_tif <- function(img, path, bits_per_sample = "auto",
                       compression = "none", msg = TRUE) {
   checkmate::assert_string(path)
+  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/")  # windows safe
   if (stringr::str_detect(path, "/")) {  # I've noticed that write_tif()
     init_wd <- getwd()                   # sometimes fails when writing to
     on.exit(setwd(init_wd))              # far away directories.

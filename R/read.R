@@ -52,7 +52,15 @@
 #'
 #' @export
 read_tif <- function(path, list_safety = "error", msg = TRUE) {
+  checkmate::assert_string(path)
+  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/")  # windows safe
   checkmate::assert_file_exists(path)
+  if (stringr::str_detect(path, "/")) {  # I've noticed that read_tif()
+    init_wd <- getwd()                   # sometimes fails when writing to
+    on.exit(setwd(init_wd))              # far away directories.
+    setwd(filesstrings::str_before_last(path, "/"))
+    path %<>% filesstrings::str_after_last("/")
+  }
   checkmate::assert_logical(msg, max.len = 1)
   checkmate::assert_string(list_safety)
   list_safety %<>% RSAGA::match.arg.ext(c("error", "warning", "none"),
