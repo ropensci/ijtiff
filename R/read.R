@@ -127,11 +127,30 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
         }
         if ((isTRUE(length(out) == n_imgs) && ij_n_ch) ||
              ((!ij_n_ch) && n_ch == 1)) {
-          if (length(d) > 2) out %<>% purrr::map(extract_nonzero_plane)
+          if (length(d) > 2) out %<>% purrr::map(extract_desired_plane)
         }
       }
     }
     out %<>% unlist()
+    if (attrs1$sample_format == "uint") {
+      bps <- attrs1$bits_per_sample
+      checkmate::assert_int(bps, lower = 8, upper = 32)
+      max_allowed <- 2 ^ bps - 1
+      if (any(out > max_allowed)) {
+        biggest_offender <- max(out)
+        while (all(out %% (2 ^ bps) == 0))
+          out <- out / 2 ^ bps
+        if (any(out > max_allowed)) {
+          stop("ijtiff encountered a fatal error trying to read your image.\n",
+               "* Your image is ", bps, "-bit, meaning that the maximum ",
+               "possible value in it is ", 2 ^ bps - 1, ", however ijtiff has ",
+               "managed to read values up to ", biggest_offender,
+               "which is clearly wrong. \n", "Please file a bug at ",
+               "https://github.com/rorynolan/ijtiff/issues ",
+               "and attach the offending image. Sorry and thanks.")
+        }
+      }
+    }
     dim(out) <- c(d[1:2], n_ch, length(out) / prod(c(d[1:2], n_ch)))
     if ("dim" %in% names(attrs1)) attrs1$dim <- NULL
     do_call_list <- c(list(img = out), attrs1)
