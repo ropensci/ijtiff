@@ -44,8 +44,8 @@
 #'   package. Credit should be directed towards Lord Urbanek.
 #'
 #' @seealso \code{\link{write_tif}}
-#' @examples
 #'
+#' @examples
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
 #' str(img)  # we see that `ijtiff` correctly recognises this image's 2 channels
@@ -65,7 +65,21 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
   checkmate::assert_string(list_safety)
   list_safety %<>% RSAGA::match.arg.ext(c("error", "warning", "none"),
                                         ignore.case = TRUE)
-  out <- .Call("read_tif_c", path.expand(path), PACKAGE = "ijtiff")
+  out <- tryCatch(.Call("read_tif_c", path.expand(path), PACKAGE = "ijtiff"),
+                  error = function(c) {
+                    c_msg <- conditionMessage(c)
+                    if (stringr::str_detect(c, "protection stack overflow")) {
+                      c$message <- paste("Your image has too many frames to",
+                                         "read. Try starting R in the TERMINAL",
+                                         "with the command",
+                                         "`R --max-ppsize=500000` and try",
+                                         "again from there. This will give you",
+                                         "the ability to read almost half a",
+                                         "million frames. The default R",
+                                         "allows almost 50000.")
+                    }
+                    stop(c)
+                  })
   checkmate::assert_list(out)
   ds <- dims(out)
   if (filesstrings::all_equal(ds)) {
@@ -160,16 +174,18 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
     if (list_safety == "error") stop("`read_tif()` tried to return a list.")
     if (list_safety == "warning") warning("`read_tif()` is returning a list.")
     if (list_safety == "none") {
-      if (msg) message("Reading a list of images with differing dimensions.")
+      if (msg)
+        message("Reading a list of images with differing dimensions . . .")
     }
   } else if (msg) {
     ints <- attr(out, "sample_format") == "uint"
     dim(out) %>% {
-      message("Reading a ", .[1], "x", .[2], " pixel image of ",
+      message("Reading ", path, ": a ", .[1], "x", .[2], " pixel image of ",
               ifelse(ints, "unsigned integer", "floating point"), " type with ",
               .[3], " channel", ifelse(.[3] > 1, "s", ""), " and ", .[4],
-              " frame", ifelse(.[4] > 1, "s", ""), ".")
+              " frame", ifelse(.[4] > 1, "s", ""), " . . .")
     }
   }
+  if (msg) message("\b Done.")
   out
 }

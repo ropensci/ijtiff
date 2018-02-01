@@ -52,7 +52,6 @@ standard for packing order for TIFFs beyond 8-bit so we assume big-endian
 packing}.
 }
 \examples{
-
 img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
 str(img)  # we see that `ijtiff` correctly recognises this image's 2 channels

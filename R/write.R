@@ -120,7 +120,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     }
   }
   if (msg) {
-    message("Writing a ", d[1], "x", d[2], " pixel image of ",
+    message("Writing ", path, ": a ", d[1], "x", d[2], " pixel image of ",
             ifelse(floats, "floating point", "unsigned integer"),
             " type with ", d[3],
             " ", "channel", ifelse(d[3] > 1, "s", ""), " and ",
