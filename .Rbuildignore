@@ -11,3 +11,4 @@
 ^paper$
 ^cran-comments\.md$
 ^windows$
+^revdep$
