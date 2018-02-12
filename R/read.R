@@ -65,21 +65,7 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
   checkmate::assert_string(list_safety)
   list_safety %<>% RSAGA::match.arg.ext(c("error", "warning", "none"),
                                         ignore.case = TRUE)
-  out <- tryCatch(.Call("read_tif_c", path.expand(path), PACKAGE = "ijtiff"),
-                  error = function(c) {
-                    c_msg <- conditionMessage(c)
-                    if (stringr::str_detect(c, "protection stack overflow")) {
-                      c$message <- paste("Your image has too many frames to",
-                                         "read. Try starting R in the TERMINAL",
-                                         "with the command",
-                                         "`R --max-ppsize=500000` and try",
-                                         "again from there. This will give you",
-                                         "the ability to read almost half a",
-                                         "million frames. The default R",
-                                         "allows almost 50000.")
-                    }
-                    stop(c)
-                  })
+  out <- .Call("read_tif_c", path.expand(path), PACKAGE = "ijtiff")
   checkmate::assert_list(out)
   ds <- dims(out)
   if (filesstrings::all_equal(ds)) {

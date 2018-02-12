@@ -8,18 +8,19 @@
 
 #include <Rinternals.h>
 
-/* avoid protection issues with setAttrib where new symbols may trigger GC probelms */
+// avoid protection issues with setAttrib
+// where new symbols may trigger GC probelms
 static void setAttr(SEXP x, const char *name, SEXP val) {
-    PROTECT(val);
-    setAttrib(x, Rf_install(name), val);
-    UNPROTECT(1);
+  PROTECT(val);
+  setAttrib(x, Rf_install(name), val);
+  UNPROTECT(1);
 }
 
-/* add information attributes according to the TIFF tags.
-   Only a somewhat random set (albeit mostly baseline) is supported */
+// Add information attributes according to the TIFF tags.
+// Only a somewhat random set (albeit mostly baseline) is supported
 static void TIFF_add_info(TIFF *tiff, SEXP res) {
-  uint32 i32;
-  uint16 i16;
+  uint32_t i32;
+  uint16_t i16;
   float f;
   char *c = 0;
 
@@ -179,13 +180,13 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
   }
 
   while (true) { /* loop over separate image in a directory if desired */
-  	uint32 imageWidth = 0, imageLength = 0, imageDepth;
-  	uint32 tileWidth, tileLength;
-  	uint32 x, y;
-  	uint16 config, bps = 8, spp = 1, sformat = 1, out_spp;
+  	uint32_t imageWidth = 0, imageLength = 0, imageDepth;
+  	uint32_t tileWidth, tileLength;
+  	uint32_t x, y;
+  	uint16_t config, bps = 8, spp = 1, sformat = 1, out_spp;
   	tdata_t buf;
   	double *real_arr;
-  	uint16 *colormap[3] = {0, 0, 0};
+  	uint16_t *colormap[3] = {0, 0, 0};
   	bool is_float = false;
 
   	TIFFGetField(tiff, TIFFTAG_IMAGEWIDTH, &imageWidth);
@@ -228,8 +229,7 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
     }
   	if (bps != 8 && bps != 16 && bps != 32) {
   	    TIFFClose(tiff);
-  	    Rf_error("image has %d bits/sample which is unsupported in direct mode - "
-                  "use native=TRUE or convert=TRUE", bps);
+  	    Rf_error("image has %d bits/sample which is unsupported", bps);
   	    UNPROTECT(to_unprotect);
   	    return R_NilValue;
   	}
@@ -364,7 +364,7 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
     			      (uint16_t) ((const uint16_t*)v)[0];
     			  }	else if (bps == 32 && !is_float) {
     			    real_arr[plane_offset + imageLength * x + y] =
-    			      (uint32_t) ((const uint32*)v)[0];
+    			      (uint32_t) ((const uint32_t*)v)[0];
     			  }	else if (bps == 32 && is_float) {
     			    real_arr[plane_offset + imageLength * x + y] =
     			      (double) ((const float*)v)[0];
@@ -398,14 +398,15 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
     TIFF_add_info(tiff, res);
   	UNPROTECT(1);
   	n_img++;
-  	if (multi_res == R_NilValue) {
+  	if (multi_res == R_NilValue) {  // first image in stack
   	  multi_res = multi_tail = PROTECT(CONS(res, R_NilValue));
   	  to_unprotect ++;
   	} else {
   	  SEXP q = PROTECT(CONS(res, R_NilValue));
-  	  to_unprotect++;
-  	  SETCDR(multi_tail, q);
+  	  SETCDR(multi_tail, q);  // q is now protected as part of multi_tail
   	  multi_tail = q;
+  	  UNPROTECT(2);  // removing explit protection of q and protection of res
+  	  to_unprotect--;
   	}
   	if (!TIFFReadDirectory(tiff)) break;
   }
