@@ -174,6 +174,7 @@ test_that("text-image-io works", {
   expect_equal(as.vector(mm), unlist(read_txt_img(tmpfl_txt)),
                check.attributes = FALSE)
   file.remove(tmpfl_txt)
+  skip_if_not_installed("abind")
   mmm <- abind::abind(mm, mm, along = 3)
   write_txt_img(mmm, tmpfl)
   tmpfl_txts <- paste0(tmpfl, "_ch", 1:2, ".txt")

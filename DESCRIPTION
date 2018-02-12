@@ -26,18 +26,18 @@ Depends: R (>= 2.10)
 Imports: checkmate,
     RSAGA,
     magrittr,
-    filesstrings (>= 2.0.2),
+    filesstrings (>= 2.0.4),
     stringr,
     purrr,
     Rcpp,
-    tiff,
     fields,
     grDevices,
-    readr,
-    abind,
-    magick
+    readr
 Suggests: knitr,
     testthat,
     rmarkdown,
-    covr
+    covr,
+    magick,
+    abind,
+    tiff
 LinkingTo: Rcpp
