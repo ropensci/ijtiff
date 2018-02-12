@@ -4,7 +4,7 @@
 * Improve README and vignette with more tangible and fun example.
 
 #### BUG FIXES
-* Fix windows libtiff issues (thanks to Jeroen Ooms).
+* Fix windows `libtiff` issues (thanks to Jeroen Ooms).
 * Found some ImageJ-written TIFFs that weren't being read correctly and fixed that.
 * Fix `protection stack overflow` error for TIFFs with many images.
 
@@ -19,4 +19,4 @@
 
 # `ijtiff` 0.1.0
 
-* First github release
+* First github release.
