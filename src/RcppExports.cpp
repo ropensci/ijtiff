@@ -26,3 +26,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+RcppExport SEXP read_tif_c(SEXP);
+RcppExport SEXP write_tif_c(SEXP, SEXP, SEXP, SEXP, SEXP);
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_ijtiff_dims_cpp", (DL_FUNC) &_ijtiff_dims_cpp, 1},
+    {"_ijtiff_float_max", (DL_FUNC) &_ijtiff_float_max, 0},
+    {"read_tif_c",        (DL_FUNC) &read_tif_c,        1},
+    {"write_tif_c",       (DL_FUNC) &write_tif_c,       5},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_ijtiff(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}
