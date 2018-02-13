@@ -158,25 +158,15 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
   tiff_job_t rj;
   TIFF *tiff;
   FILE *f;
-	if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) != 1) {
-	  Rf_error("invalid filename");
-	  UNPROTECT(to_unprotect);
-	  return R_NilValue;
-	}
+	if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) != 1) Rf_error("invalid filename");
 	fn = CHAR(STRING_ELT(sFn, 0));
 	f = fopen(fn, "rb");
-	if (!f) {
-	  Rf_error("unable to open %s", fn);
-	  UNPROTECT(to_unprotect);
-	  return R_NilValue;
-	}
+	if (!f) Rf_error("unable to open %s", fn);
 	rj.f = f;
   tiff = TIFF_Open("rmc", &rj); /* no mmap, no chopping */
   if (!tiff) {
     TIFFClose(tiff);
     Rf_error("Unable to open TIFF");
-    UNPROTECT(to_unprotect);
-    return R_NilValue;
   }
 
   while (true) { /* loop over separate image in a directory if desired */
@@ -221,23 +211,19 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
     #endif
 
     if (bps == 12) {
+      TIFFClose(tiff);
       Rf_error("12-bit images are not supported. "
                "Try converting your image to 16-bit.");
-      TIFFClose(tiff);
-      UNPROTECT(to_unprotect);
-      return R_NilValue;
     }
   	if (bps != 8 && bps != 16 && bps != 32) {
   	    TIFFClose(tiff);
   	    Rf_error("image has %d bits/sample which is unsupported", bps);
-  	    UNPROTECT(to_unprotect);
-  	    return R_NilValue;
   	}
 
   	if (sformat == SAMPLEFORMAT_INT)
   	    Rf_warning("The \'ijtiff\' package only supports unsigned "
                    "integer or float sample formats, but your image contains "
-                    "the signed integer format.");
+                   "the signed integer format.");
 
   	res = PROTECT(allocVector(REALSXP, imageWidth * imageLength * out_spp));
   	to_unprotect++;
@@ -384,8 +370,6 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
   	} else {
   	  TIFFClose(tiff);
   	  Rf_error("tile-based images are not supported");
-  	  UNPROTECT(to_unprotect);
-  	  return R_NilValue;
   	}
 
   	_TIFFfree(buf);
