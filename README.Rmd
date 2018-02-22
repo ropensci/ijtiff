@@ -22,12 +22,13 @@ original_files <- dir()
 ![RStudio CRAN downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff)
 ![RStudio CRAN monthly downloads](http://cranlogs.r-pkg.org/badges/ijtiff)
 [![Rdocumentation](http://www.rdocumentation.org/badges/version/ijtiff)](http://www.rdocumentation.org/packages/ijtiff)
+[![](https://badges.ropensci.org/164_status.svg)](https://github.com/ropensci/onboarding/issues/164)
 ![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)
 [![DOI](https://zenodo.org/badge/111798542.svg)](https://zenodo.org/badge/latestdoi/111798542)
 
 ## TL;DR
 
-_ImageJ_ sometimes writes channel information in TIFF files in a peculiar way, meaning that most ordinary TIFF-reading softwares don't read this channel information correctly. `ijtiff` knows about _ImageJ_'s peculiarities, so it can be relied upon to read _ImageJ_-written TIFF files correctly.
+_ImageJ_ sometimes writes channel information in TIFF files in a peculiar way, meaning that most ordinary TIFF reading softwares don't read this channel information correctly. `ijtiff` knows about _ImageJ_'s peculiarities, so it can be relied upon to read _ImageJ_-written TIFF files correctly.
 
 ## Introduction
 
@@ -166,3 +167,5 @@ Contributions to this package are welcome. The preferred method of contribution 
 new_files <- setdiff(dir(), original_files)
 file.remove(new_files)
 ```
+
+[![ropensci_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)

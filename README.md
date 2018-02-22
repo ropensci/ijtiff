@@ -14,6 +14,7 @@ downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff)
 ![RStudio CRAN monthly
 downloads](http://cranlogs.r-pkg.org/badges/ijtiff)
 [![Rdocumentation](http://www.rdocumentation.org/badges/version/ijtiff)](http://www.rdocumentation.org/packages/ijtiff)
+[![](https://badges.ropensci.org/164_status.svg)](https://github.com/ropensci/onboarding/issues/164)
 ![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)
@@ -22,7 +23,7 @@ developed.](http://www.repostatus.org/badges/latest/active.svg)
 ## TL;DR
 
 *ImageJ* sometimes writes channel information in TIFF files in a
-peculiar way, meaning that most ordinary TIFF-reading softwares don’t
+peculiar way, meaning that most ordinary TIFF reading softwares don’t
 read this channel information correctly. `ijtiff` knows about *ImageJ*’s
 peculiarities, so it can be relied upon to read *ImageJ*-written TIFF
 files correctly.
@@ -280,7 +281,10 @@ Contributions to this package are welcome. The preferred method of
 contribution is through a github pull request. Feel free to contact me
 by creating an issue. Please note that this project is released with a
 [Contributor Code of Conduct](CONDUCT.md). By participating in this
-project you agree to abide by its terms.
+project you agree to abide by its
+terms.
+
+[![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
 
 1.  I think native *ImageJ* only likes 1, 3 and 4-channel images and
     complains about the rest, but I’m not sure about this.
