@@ -18,6 +18,7 @@ downloads](http://cranlogs.r-pkg.org/badges/ijtiff)
 ![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)
+[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![DOI](https://zenodo.org/badge/111798542.svg)](https://zenodo.org/badge/latestdoi/111798542)
 
 ## TL;DR

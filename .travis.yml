@@ -8,8 +8,5 @@ r_github_packages:
 after_success:
   - travis_wait 30 Rscript -e 'covr::codecov()'
 apt_packages:
-  - libssl-dev
   - libtiff4-dev
-  - libfftw3-dev
-  - libcurl4-openssl-dev
-  - libxml2-dev
+  - libgdal-dev
