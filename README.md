@@ -4,10 +4,10 @@
 # ijtiff
 
 [![Travis-CI Build
-Status](https://travis-ci.org/rorynolan/ijtiff.svg?branch=master)](https://travis-ci.org/rorynolan/ijtiff)
+Status](https://travis-ci.org/ropensci/ijtiff.svg?branch=master)](https://travis-ci.org/ropensci/ijtiff)
 [![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/rorynolan/ijtiff?branch=master&svg=true)](https://ci.appveyor.com/project/rorynolan/ijtiff)
-[![codecov](https://codecov.io/gh/rorynolan/ijtiff/branch/master/graph/badge.svg)](https://codecov.io/gh/rorynolan/ijtiff)
+Status](https://ci.appveyor.com/api/projects/status/github/ropensci/ijtiff?branch=master&svg=true)](https://ci.appveyor.com/project/ropensci/ijtiff)
+[![codecov](https://codecov.io/gh/ropensci/ijtiff/branch/master/graph/badge.svg)](https://codecov.io/gh/ropensci/ijtiff)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff)
 ![RStudio CRAN
 downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff)
