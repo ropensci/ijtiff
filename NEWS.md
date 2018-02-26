@@ -1,3 +1,9 @@
+### 0.3.1
+
+#### PEER REVIEW
+* The package is now peer reviewed by ROpenSci.
+
+
 ### 0.3.0
 
 #### MINOR IMPROVEMENTS
