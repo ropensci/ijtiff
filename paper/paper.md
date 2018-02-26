@@ -16,7 +16,7 @@ affiliations:
     index: 1
   - name: Department of Structural Biology, University of Oxford
     index: 2
-date: 28 November 2017
+date: 26 February 2018
 bibliography: paper.bib
 nocite: | 
   @R, @RStudio, @checkmate, @RSAGA, @magrittr, @filesstrings, @stringr, @readr, @purrr, @Rcpp, @fields, @grDevices, @knitr, @testthat, @rmarkdown, @covr, @devtools, @exampletestr, @ImageJ, @BioFormats, @libtiff
