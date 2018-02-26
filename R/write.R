@@ -66,10 +66,9 @@ write_tif <- function(img, path, bits_per_sample = "auto",
   d <- dim(img)
   compressions <- c(none = 1L, rle = 2L, packbits = 32773L, jpeg = 7L,
                     deflate = 8L)
-  compression %<>% RSAGA::match.arg.ext(names(compressions),
-                                        ignore.case = TRUE) %>% {
-    compressions[match(., names(compressions))]
-  }
+  compression %<>% filesstrings::match_arg(names(compressions),
+                                           ignore_case = TRUE) %>%
+    {compressions[match(., names(compressions))]}
   floats <- FALSE
   if (anyNA(img)) floats <- TRUE
   if (!floats) if (!filesstrings::all_equal(img, floor(img))) floats <- TRUE

@@ -22,7 +22,6 @@ environment:
 
 build_script:
   - travis-tool.sh install_deps
-  - travis-tool.sh install_r locfit tiff jpeg png fftwtools
   - travis-tool.sh install_github rorynolan/filesstrings
 
 test_script:

@@ -63,8 +63,8 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
   }
   checkmate::assert_logical(msg, max.len = 1)
   checkmate::assert_string(list_safety)
-  list_safety %<>% RSAGA::match.arg.ext(c("error", "warning", "none"),
-                                        ignore.case = TRUE)
+  list_safety %<>% filesstrings::match_arg(c("error", "warning", "none"),
+                                           ignore_case = TRUE)
   out <- .Call("read_tif_c", path.expand(path), PACKAGE = "ijtiff")
   checkmate::assert_list(out)
   ds <- dims(out)

@@ -24,9 +24,8 @@ Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
 Imports: checkmate,
-    RSAGA,
     magrittr,
-    filesstrings (>= 2.0.4),
+    filesstrings (>= 2.1.0),
     stringr,
     purrr,
     Rcpp,
