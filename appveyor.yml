@@ -15,10 +15,13 @@ cache:
 
 # Adapt as necessary starting from here
 
+platform: x64
+
 environment:
-  global:
-    R_VERSION: release
-    R_ARCH: x64
+  R_VERSION: release
+  R_ARCH: x64
+  R_BUILD_ARGS: --no-manual --no-multiarch
+  R_CHECK_ARGS: --no-manual --as-cran --no-multiarch
 
 build_script:
   - travis-tool.sh install_deps
