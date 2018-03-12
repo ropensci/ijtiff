@@ -1,7 +1,7 @@
 Package: ijtiff
 Type: Package
 Title: TIFF I/O for 'ImageJ' Users
-Version: 0.3.1
+Version: 1.0.0
 Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com", 
                     role = c("aut", "cre")),
              person("Simon", "Urbanek", email = "Simon.Urbanek@r-project.org", 

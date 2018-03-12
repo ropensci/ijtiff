@@ -1,4 +1,4 @@
-### 0.3.1
+### 1.0.0
 
 #### PEER REVIEW
 * The package is now peer reviewed by ROpenSci.

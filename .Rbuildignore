@@ -13,3 +13,4 @@
 ^windows$
 ^revdep$
 ^\.github$
+^blog$

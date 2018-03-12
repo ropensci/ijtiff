@@ -130,7 +130,7 @@ This package uses a lot of code from the original `tiff` package by Simon Urbane
 
 ```{r cleanup, include = FALSE}
 new_files <- setdiff(dir(), original_files)
-file.remove(new_files)
+if (length(new_files)) file.remove(new_files)
 ```
 
-[![ropensci_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
+[![ropensci_footer](../inst/img/ropensci_footer.png)](https://ropensci.org)
