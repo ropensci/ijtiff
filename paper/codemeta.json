@@ -3,21 +3,21 @@
   "@type": "Code",
   "author": [
     {
-      "@id": "0000-0002-5239-4043",
+      "@id": "https://orcid.org/0000-0002-5239-4043",
       "@type": "Person",
       "email": "rorynoolan@gmail.com",
       "name": "Rory Nolan",
       "affiliation": "University of Oxford"
     }
   ],
-  "identifier": "https://doi.org/10.5281/zenodo.1068231",
-  "codeRepository": "https://github.com/rorynolan/ijtiff",
-  "datePublished": "2017-11-29",
-  "dateModified": "2017-11-29",
-  "dateCreated": "2017-11-29",
-  "description": "R Package for TIFF file I/O which plays nice with ImageJ",
-  "keywords": "R, tiff, ImageJ, image",
+  "identifier": "https://doi.org/10.5281/zenodo.1200842",
+  "codeRepository": "https://github.com/ropensci/ijtiff",
+  "datePublished": "2018-03-16",
+  "dateModified": "2018-03-16",
+  "dateCreated": "2018-03-16",
+  "description": "An R package providing TIFF I/O for ImageJ users",
+  "keywords": "R, TIFF, ImageJ",
   "license": "GPL v3.0",
   "title": "ijtiff",
-  "version": "v0.1.0"
+  "version": "v1.0.0"
 }

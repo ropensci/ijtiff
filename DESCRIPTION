@@ -3,11 +3,16 @@ Type: Package
 Title: TIFF I/O for 'ImageJ' Users
 Version: 1.0.0
 Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com", 
-                    role = c("aut", "cre")),
+                    role = c("aut", "cre"), 
+                    comment = c(ORCID = "0000-0002-5239-4043")),
              person("Simon", "Urbanek", email = "Simon.Urbanek@r-project.org", 
                     role = "ctb"),
              person("Sergi", "Padilla-Parra", email = "spadilla@well.ox.ac.uk", 
-                    role = "ths"))
+                    role = "ths", comment = c(ORCID = "0000-0002-8010-9481")),
+             person("Jeroen", "Ooms", role = "rev", 
+                    comment = c(ORCID = "0000-0002-4035-0289")),
+             person("Jon", "Clayden", 
+                    role = "rev", comment = c(ORCID = "0000-0002-6608-0619")))
 Maintainer: Rory Nolan <rorynoolan@gmail.com>
 Description: Correctly import TIFF files that were saved from 'ImageJ' and write 
     TIFF files than can be correctly read by 'ImageJ' 
