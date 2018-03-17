@@ -384,7 +384,7 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
   	n_img++;
   	if (multi_res == R_NilValue) {  // first image in stack
   	  multi_res = multi_tail = PROTECT(CONS(res, R_NilValue));
-  	  to_unprotect ++;
+  	  to_unprotect++;
   	} else {
   	  SEXP q = PROTECT(CONS(res, R_NilValue));
   	  SETCDR(multi_tail, q);  // q is now protected as part of multi_tail
@@ -395,15 +395,9 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
   	if (!TIFFReadDirectory(tiff)) break;
   }
   TIFFClose(tiff);
-  /* convert LISTSXP into VECSXP */
-  res = PROTECT(allocVector(VECSXP, n_img));
+  // convert LISTSXP into VECSXP
+  res = PROTECT(PairToVectorList(multi_res));
   to_unprotect++;
-	int i = 0;
-	while (multi_res != R_NilValue) {
-	  SET_VECTOR_ELT(res, i, CAR(multi_res));
-	  i++;
-	  multi_res = CDR(multi_res);
-	}
   UNPROTECT(to_unprotect);
   return res;
 }
