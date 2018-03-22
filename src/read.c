@@ -13,7 +13,7 @@
 static void setAttr(SEXP x, const char *name, SEXP val) {
   PROTECT(val);
   setAttrib(x, Rf_install(name), val);
-  UNPROTECT(1);
+  UNPROTECT(1);  // UNPROTECT val
 }
 
 // Add information attributes according to the TIFF tags.
@@ -23,7 +23,6 @@ static void TIFF_add_info(TIFF *tiff, SEXP res) {
   uint16_t i16;
   float f;
   char *c = 0;
-
   if (TIFFGetField(tiff, TIFFTAG_IMAGEDEPTH, &i32))
 	  setAttr(res, "depth", ScalarInteger(i32));
   if (TIFFGetField(tiff, TIFFTAG_BITSPERSAMPLE, &i16))
@@ -93,7 +92,7 @@ static void TIFF_add_info(TIFF *tiff, SEXP res) {
   	  case 2: name = "inch"; break;
 	    case 3: name = "cm"; break;
 	  }
-	setAttr(res, "resolution_unit", mkString(name));
+	  setAttr(res, "resolution_unit", mkString(name));
   }
   #ifdef TIFFTAG_INDEXED /* very recent in libtiff even though it's an old tag */
     if (TIFFGetField(tiff, TIFFTAG_INDEXED, &i16))
@@ -110,50 +109,50 @@ static void TIFF_add_info(TIFF *tiff, SEXP res) {
 	  case 6: name = "right_top"; break;
   	case 7: name = "right_bottom"; break;
 	  case 8: name = "left_bottom"; break;
-	}
+	  }
 	setAttr(res, "orientation", mkString(name));
-    }
-    if (TIFFGetField(tiff, TIFFTAG_COPYRIGHT, &c) && c)
-	setAttr(res, "copyright", mkString(c));
-    if (TIFFGetField(tiff, TIFFTAG_ARTIST, &c) && c)
-	setAttr(res, "artist", mkString(c));
-    if (TIFFGetField(tiff, TIFFTAG_DOCUMENTNAME, &c) && c)
-	setAttr(res, "document_name", mkString(c));
-    if (TIFFGetField(tiff, TIFFTAG_DATETIME, &c) && c)
-	setAttr(res, "date_time", mkString(c));
-    if (TIFFGetField(tiff, TIFFTAG_IMAGEDESCRIPTION, &c) && c)
-	setAttr(res, "description", mkString(c));
-    if (TIFFGetField(tiff, TIFFTAG_SOFTWARE, &c) && c)
-	setAttr(res, "software", mkString(c));
-    if (TIFFGetField(tiff, TIFFTAG_PHOTOMETRIC, &i16)) {
-	char uv[24];
-	const char *name = 0;
-	switch (i16) {
-	case 0: name = "white is zero"; break;
-	case 1: name = "black is zero"; break;
-	case 2: name = "RGB"; break;
-	case 3: name = "palette"; break;
-	case 4: name = "mask"; break;
-	case 5: name = "separated"; break;
-	case 6: name = "YCbCr"; break;
-	case 8: name = "CIELAB"; break;
-	case 9: name = "ICCLab"; break;
-	case 10: name = "ITULab"; break;
-	default:
+  }
+  if (TIFFGetField(tiff, TIFFTAG_COPYRIGHT, &c) && c)
+	  setAttr(res, "copyright", mkString(c));
+  if (TIFFGetField(tiff, TIFFTAG_ARTIST, &c) && c)
+	  setAttr(res, "artist", mkString(c));
+  if (TIFFGetField(tiff, TIFFTAG_DOCUMENTNAME, &c) && c)
+	  setAttr(res, "document_name", mkString(c));
+  if (TIFFGetField(tiff, TIFFTAG_DATETIME, &c) && c)
+	  setAttr(res, "date_time", mkString(c));
+  if (TIFFGetField(tiff, TIFFTAG_IMAGEDESCRIPTION, &c) && c)
+	  setAttr(res, "description", mkString(c));
+  if (TIFFGetField(tiff, TIFFTAG_SOFTWARE, &c) && c)
+	  setAttr(res, "software", mkString(c));
+  if (TIFFGetField(tiff, TIFFTAG_PHOTOMETRIC, &i16)) {
+	  char uv[24];
+	  const char *name = 0;
+	  switch (i16) {
+  	case 0: name = "white is zero"; break;
+	  case 1: name = "black is zero"; break;
+  	case 2: name = "RGB"; break;
+	  case 3: name = "palette"; break;
+  	case 4: name = "mask"; break;
+	  case 5: name = "separated"; break;
+	  case 6: name = "YCbCr"; break;
+	  case 8: name = "CIELAB"; break;
+	  case 9: name = "ICCLab"; break;
+	  case 10: name = "ITULab"; break;
+	  default:
 	    snprintf(uv, sizeof(uv), "unknown (%d)", i16);
 	    name = uv;
-	}
-	setAttr(res, "color_space", mkString(name));
-    }
+	  }
+	  setAttr(res, "color_space", mkString(name));
+  }
 }
 
 SEXP read_tif_c(SEXP sFn /*filename*/) {
   uint64_t to_unprotect = 0;
   check_type_sizes();
   SEXP res = PROTECT(R_NilValue), multi_res = PROTECT(R_NilValue);
-  SEXP multi_tail = PROTECT(R_NilValue), dim;
-  to_unprotect += 3;
-  const char *fn;
+  to_unprotect += 2;  // res and multi_res
+  SEXP multi_tail = multi_res, dim;
+  const char *fn;  // file name
   int n_img = 0;
   tiff_job_t rj;
   TIFF *tiff;
@@ -168,7 +167,6 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
     TIFFClose(tiff);
     Rf_error("Unable to open TIFF");
   }
-
   while (true) { /* loop over separate image in a directory if desired */
   	uint32_t imageWidth = 0, imageLength = 0, imageDepth;
   	uint32_t tileWidth, tileLength;
@@ -178,7 +176,6 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
   	double *real_arr;
   	uint16_t *colormap[3] = {0, 0, 0};
   	bool is_float = false;
-
   	TIFFGetField(tiff, TIFFTAG_IMAGEWIDTH, &imageWidth);
   	TIFFGetField(tiff, TIFFTAG_IMAGELENGTH, &imageLength);
   	if (!TIFFGetField(tiff, TIFFTAG_IMAGEDEPTH, &imageDepth)) imageDepth = 0;
@@ -209,7 +206,6 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
               imageWidth, imageLength, imageDepth, tileWidth, tileLength, bps, spp,
               out_spp, config, colormap[0] ? "yes" : "no");
     #endif
-
     if (bps == 12) {
       TIFFClose(tiff);
       Rf_error("12-bit images are not supported. "
@@ -219,16 +215,13 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
   	    TIFFClose(tiff);
   	    Rf_error("image has %d bits/sample which is unsupported", bps);
   	}
-
   	if (sformat == SAMPLEFORMAT_INT)
   	    Rf_warning("The \'ijtiff\' package only supports unsigned "
                    "integer or float sample formats, but your image contains "
                    "the signed integer format.");
-
   	res = PROTECT(allocVector(REALSXP, imageWidth * imageLength * out_spp));
-  	to_unprotect++;
+  	to_unprotect++;  // res needs to be UNPROTECTed later
   	real_arr = REAL(res);
-
   	if (tileWidth == 0) {
   	  tstrip_t strip;
   	  tsize_t plane_offset = 0;
@@ -255,23 +248,24 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
     			    }
     			    if (is_float) {
     			      real_arr[imageLength * x + y] = (double) colormap[0][ci];
-    			      /* color maps are always 16-bit */
+    			      // color maps are always 16-bit
     			      if (colormap[1]) {
     			        real_arr[(imageLength * imageWidth) + imageLength * x + y] =
     			          (double) colormap[1][ci];
     			        if (colormap[2]) {
     			          real_arr[(2 * imageLength * imageWidth) +
-    			                    imageLength * x + y] = (double) colormap[2][ci];
+    			                     imageLength * x + y] = (double) colormap[2][ci];
     			        }
     			      }
     			    } else {
     				    real_arr[imageLength * x + y] = colormap[0][ci];
-    			      /* color maps are always 16-bit */
+    			      // color maps are always 16-bit
     				    if (colormap[1]) {
     				      real_arr[(imageLength * imageWidth) + imageLength * x + y] =
     				        colormap[1][ci];
     				      if (colormap[2]) {
-    					      real_arr[(2 * imageLength * imageWidth) + imageLength * x + y] =
+    					      real_arr[(2 * imageLength * imageWidth) +
+    					                imageLength * x + y] =
     					        colormap[2][ci];
     				      }
     				    }
@@ -282,7 +276,7 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
     				    y++;
     			    }
     			  }
-    		  } else { /* direct gray */
+    		  } else { // direct gray
       			tsize_t i, step = bps / 8;
       			for (i = 0; i < n; i += step) {
       			  const uint8_t *v = (const uint8_t*) buf + i;
@@ -371,32 +365,29 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
   	  TIFFClose(tiff);
   	  Rf_error("tile-based images are not supported");
   	}
-
   	_TIFFfree(buf);
-
   	dim = PROTECT(allocVector(INTSXP, (out_spp > 1) ? 3 : 2));
   	INTEGER(dim)[0] = imageLength;
   	INTEGER(dim)[1] = imageWidth;
   	if (out_spp > 1) INTEGER(dim)[2] = out_spp;
   	setAttrib(res, R_DimSymbol, dim);
     TIFF_add_info(tiff, res);
-  	UNPROTECT(1);
+  	UNPROTECT(1);  // UNPROTECT `dim`
   	n_img++;
   	if (multi_res == R_NilValue) {  // first image in stack
-  	  multi_res = multi_tail = PROTECT(CONS(res, R_NilValue));
-  	  to_unprotect++;
+  	  multi_res = multi_tail = PROTECT(Rf_list1(res));
+  	  to_unprotect++;  // `multi_res` needs to be UNPROTECTed later
   	} else {
-  	  SEXP q = PROTECT(CONS(res, R_NilValue));
-  	  SETCDR(multi_tail, q);  // q is now protected as part of multi_tail
+  	  SEXP q = PROTECT(Rf_list1(res));
+  	  SETCDR(multi_tail, q);  // `q` is now PROTECTed as part of `multi_tail`
   	  multi_tail = q;
-  	  UNPROTECT(2);  // removing explit protection of q and protection of res
+  	  UNPROTECT(2);  // removing explit PROTECTion of `q` UNPROTECTing `res`
   	  to_unprotect--;
   	}
   	if (!TIFFReadDirectory(tiff)) break;
   }
   TIFFClose(tiff);
-  // convert LISTSXP into VECSXP
-  res = PROTECT(PairToVectorList(multi_res));
+  res = PROTECT(PairToVectorList(multi_res));  // convert LISTSXP into VECSXP
   to_unprotect++;
   UNPROTECT(to_unprotect);
   return res;
