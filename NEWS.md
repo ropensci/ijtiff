@@ -1,4 +1,10 @@
-### 1.0.0
+### 1.1.0 
+
+#### MINOR IMPROVEMENTS
+* Now includes citation information.
+* C code is more readable.
+
+## 1.0.0
 
 #### PEER REVIEW
 * The package is now peer reviewed by ROpenSci.

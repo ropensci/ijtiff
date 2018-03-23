@@ -19,6 +19,7 @@ downloads](http://cranlogs.r-pkg.org/badges/ijtiff)
 state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![DOI](http://joss.theoj.org/papers/10.21105/joss.00633/status.svg)](https://doi.org/10.21105/joss.00633)
 [![DOI](https://zenodo.org/badge/122435081.svg)](https://zenodo.org/badge/latestdoi/122435081)
 
 ## TL;DR
