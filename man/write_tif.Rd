@@ -46,7 +46,7 @@ list.files(temp_dir, pattern = "tif$")
 
 }
 \seealso{
-\code{\link{read_tif}}
+\code{\link[=read_tif]{read_tif()}}
 }
 \author{
 Simon Urbanek wrote most of this code for the 'tiff' package. Rory

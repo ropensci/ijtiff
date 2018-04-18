@@ -20,8 +20,9 @@ Display an image that has been read in by \code{\link[=read_tif]{read_tif()}} as
 }
 \examples{
 img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
-display(img[, , 1, 1])  # red channel
-display(img[, , 2, 1])  # green channel
-display(img[, , 3, 1])  # blue channel
+display(img)  # first channel, first frame
+display(img[, , 1, 1])  # first (red) channel, first frame
+display(img[, , 2, ])  # second (green) channel, first frame
+display(img[, , 3, ])  # third (blue) channel, first frame
 
 }

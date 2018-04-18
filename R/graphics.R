@@ -9,12 +9,16 @@
 #'   be fully named.
 #' @examples
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
-#' display(img[, , 1, 1])  # red channel
-#' display(img[, , 2, 1])  # green channel
-#' display(img[, , 3, 1])  # blue channel
+#' display(img)  # first channel, first frame
+#' display(img[, , 1, 1])  # first (red) channel, first frame
+#' display(img[, , 2, ])  # second (green) channel, first frame
+#' display(img[, , 3, ])  # third (blue) channel, first frame
 #'
 #' @export
 display <- function(img, col = grDevices::grey.colors(999, 0, 1), ...) {
+  ld <- length(dim(img))
+  if (ld == 4) img %<>% {.[, , 1, 1]}
+  if (ld == 3) img %<>% {.[, , 1]}
   checkmate::assert_matrix(img)
   img %<>% {t(.[rev(seq_len(nrow(.))), ])}
   dots <- list(...)

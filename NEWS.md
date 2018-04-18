@@ -3,6 +3,7 @@
 #### MINOR IMPROVEMENTS
 * Now includes citation information.
 * C code is more readable.
+* `display()` is more flexible, accepting 3 and 4-dimensional arrays, just displaying the first frame from the first channel.
 
 ## 1.0.0
 

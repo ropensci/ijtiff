@@ -175,3 +175,7 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
   if (msg) message("\b Done.")
   out
 }
+
+read_tags <- function(source, all = 1) {
+  .Call("read_tags_c", path.expand(source), all, PACKAGE="ijtiff")
+}

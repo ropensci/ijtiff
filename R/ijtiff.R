@@ -8,6 +8,10 @@ if (getRversion() >= "2.15.1") {
   utils::globalVariables(c("."))
 }
 
+.onUnload <- function (libpath) {
+  library.dynam.unload("ijtiff", libpath)
+}
+
 #' `ijtiff`: TIFF I/O for _ImageJ_ users
 #'
 #' Correctly import TIFF files that were saved from ImageJ and write TIFF files

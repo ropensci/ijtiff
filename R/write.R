@@ -18,7 +18,7 @@
 #' @author Simon Urbanek wrote most of this code for the 'tiff' package. Rory
 #'   Nolan lifted it from there and changed it around a bit for this 'ijtiff'
 #'   package. Credit should be directed towards Lord Urbanek.
-#' @seealso \code{\link{read_tif}}
+#' @seealso [read_tif()]
 #' @examples
 #'
 #' img <- read_tif(system.file("img", "Rlogo.tif", package="ijtiff"))
@@ -123,7 +123,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
             ifelse(floats, "floating point", "unsigned integer"),
             " type with ", d[3],
             " ", "channel", ifelse(d[3] > 1, "s", ""), " and ",
-            d[4], " frame", ifelse(d[4] > 1, "s", ""), " to '", path,"' . . .")
+            d[4], " frame", ifelse(d[4] > 1, "s", ""), " . . .")
   }
   what <- enlist_img(img)
   written <- .Call("write_tif_c", what, path, bits_per_sample, compression,
