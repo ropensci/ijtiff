@@ -10,7 +10,7 @@
 #include <Rversion.h>
 
 
-SEXP write_tif_c(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats) {
+SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats) {
   check_type_sizes();
   SEXP dims, img_list = 0;
   tiff_job_t rj;

@@ -40,3 +40,35 @@ extract_desired_plane <- function(arr) {
   }
   arr
 }
+
+#' Count the number of images in a TIFF file.
+#'
+#' TIFF files can hold many images. Often this is sensible, e.g. each image
+#' could be a time-point in a video or a slice of a z-stack. Sometimes
+#' ImageJ-written images have one image per channel per slice.
+#'
+#' For those familiar with TIFF files, this function counts the number of
+#' directories in a TIFF file.
+#'
+#' @inheritParams read_tif
+#'
+#' @return A number.
+#'
+#' @examples
+#' count_imgs(system.file("img", "Rlogo.tif", package="ijtiff"))
+#' count_imgs(system.file("img", "2ch_ij.tif", package="ijtiff"))
+#'
+#' @export
+count_imgs <- function(path) {
+  checkmate::assert_string(path)
+  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/")  # windows safe
+  checkmate::assert_file_exists(path)
+  if (stringr::str_detect(path, "/")) {
+    init_wd <- setwd(filesstrings::str_before_last(path, "/"))
+    on.exit(setwd(init_wd))
+    path %<>% filesstrings::str_after_last("/")
+    # `read_tif()` sometimes fails when writing to far away directories.
+  }
+  .Call("count_directories_C", path, PACKAGE = "ijtiff")
+}
+

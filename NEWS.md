@@ -1,5 +1,9 @@
 ### 1.1.0 
 
+#### NEW FEATURES
+* `count_imgs()` counts the number of images in a TIFF file without reading the images themselves.
+* `read_tags()` reads the tags from TIFF images without reading the images themselves.
+
 #### MINOR IMPROVEMENTS
 * Now includes citation information.
 * C code is more readable.

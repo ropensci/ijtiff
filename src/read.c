@@ -161,14 +161,14 @@ static void TIFF_add_tags(TIFF *tiff, SEXP res) {
   }
 }
 
-SEXP read_tif_c(SEXP sFn /*filename*/) {
-  uint64_t to_unprotect = 0;
+SEXP read_tif_C(SEXP sFn /*filename*/) {
   check_type_sizes();
+  uint64_t to_unprotect = 0;
   SEXP res = PROTECT(R_NilValue), multi_res = PROTECT(R_NilValue);
   to_unprotect += 2;  // res and multi_res
   SEXP multi_tail = multi_res, dim;
   const char *fn;  // file name
-  int n_img = 0;
+  uint64_t n_img = 0;
   tiff_job_t rj;
   TIFF *tiff;
   FILE *f;
@@ -486,7 +486,8 @@ SEXP read_tif_c(SEXP sFn /*filename*/) {
   return res;
 }
 
-SEXP read_tags_c(SEXP sFn /*FileName*/, SEXP sAll) {
+SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sAll) {
+  check_type_sizes();
   uint64_t to_unprotect = 0;
   SEXP pre_res = PROTECT(R_NilValue), multi_res = PROTECT(R_NilValue);
   to_unprotect += 2;
@@ -507,14 +508,16 @@ SEXP read_tags_c(SEXP sFn /*FileName*/, SEXP sAll) {
   uint64_t cur_dir = 0; /* 1-based image number */
   while (1) { /* loop over separate image in a directory if desired */
     cur_dir++;
-    SEXP m = PROTECT(Rf_match(sAll, ScalarInteger(cur_dir), 0));
-    int cur_dir_in_m = asInteger(m) == 0;
-    UNPROTECT(1);  // UNPROTECT m as it's no longer needed
-    if (cur_dir_in_m) {  /* No match */
-      if (TIFFReadDirectory(tiff)) {
-        continue;
-      } else {
-        break;
+    if (!isLogical(sAll)) {
+      SEXP m = PROTECT(Rf_match(sAll, ScalarInteger(cur_dir), 0));
+      int cur_dir_in_m = asInteger(m) == 0;
+      UNPROTECT(1);  // UNPROTECT m as it's no longer needed
+      if (cur_dir_in_m) {  /* No match */
+        if (TIFFReadDirectory(tiff)) {
+          continue;
+        } else {
+          break;
+        }
       }
     }
     PROTECT(pre_res = allocVector(VECSXP, 0));
@@ -548,6 +551,34 @@ SEXP read_tags_c(SEXP sFn /*FileName*/, SEXP sAll) {
     to_unprotect--;
     multi_next = CDR(multi_next);
   }
+  UNPROTECT(to_unprotect);
+  return res;
+}
+
+SEXP count_directories_C(SEXP sFn /*FileName*/) {
+  check_type_sizes();
+  uint64_t to_unprotect = 0;
+  SEXP res = PROTECT(allocVector(REALSXP, 1));
+  to_unprotect++;
+  const char *fn;
+  tiff_job_t rj;
+  TIFF *tiff;
+  FILE *f;
+  if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) < 1) Rf_error("invalid filename");
+  fn = CHAR(STRING_ELT(sFn, 0));
+  f = fopen(fn, "rb");
+  if (!f) Rf_error("unable to open %s", fn);
+  rj.f = f;
+  tiff = TIFF_Open("rmc", &rj); /* no mmap, no chopping */
+  if (!tiff)
+    Rf_error("Unable to open TIFF");
+  uint64_t cur_dir = 0; /* 1-based image number */
+  while (1) { /* loop over separate image in a directory if desired */
+    cur_dir++;
+    if (!TIFFReadDirectory(tiff)) break;
+  }
+  TIFFClose(tiff);
+  REAL(res)[0] = cur_dir;
   UNPROTECT(to_unprotect);
   return res;
 }

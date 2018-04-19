@@ -126,7 +126,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
             d[4], " frame", ifelse(d[4] > 1, "s", ""), " . . .")
   }
   what <- enlist_img(img)
-  written <- .Call("write_tif_c", what, path, bits_per_sample, compression,
+  written <- .Call("write_tif_C", what, path, bits_per_sample, compression,
                    floats, PACKAGE="ijtiff")
   if (msg) message("\b Done.")
   invisible(to_invisibly_return)

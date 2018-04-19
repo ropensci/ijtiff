@@ -55,17 +55,17 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
   checkmate::assert_string(path)
   path %<>% stringr::str_replace_all(stringr::coll("\\"), "/")  # windows safe
   checkmate::assert_file_exists(path)
-  if (stringr::str_detect(path, "/")) {  # I've noticed that read_tif()
-    init_wd <- getwd()                   # sometimes fails when writing to
-    on.exit(setwd(init_wd))              # far away directories.
-    setwd(filesstrings::str_before_last(path, "/"))
+  if (stringr::str_detect(path, "/")) {
+    init_wd <- setwd(filesstrings::str_before_last(path, "/"))
+    on.exit(setwd(init_wd))
     path %<>% filesstrings::str_after_last("/")
+    # `read_tif()` sometimes fails when writing to far away directories.
   }
   checkmate::assert_logical(msg, max.len = 1)
   checkmate::assert_string(list_safety)
   list_safety %<>% filesstrings::match_arg(c("error", "warning", "none"),
                                            ignore_case = TRUE)
-  out <- .Call("read_tif_c", path.expand(path), PACKAGE = "ijtiff")
+  out <- .Call("read_tif_C", path.expand(path), PACKAGE = "ijtiff")
   checkmate::assert_list(out)
   ds <- dims(out)
   if (filesstrings::all_equal(ds)) {
@@ -176,6 +176,56 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
   out
 }
 
-read_tags <- function(source, all = 1) {
-  .Call("read_tags_c", path.expand(source), all, PACKAGE="ijtiff")
+#' Read TIFF tag information without actually reading the image array.
+#'
+#' TIFF files contain metadata about images in their _TIFF tags_. This function
+#' is for reading this information without reading the actual image.
+#'
+#' @inheritParams read_tif
+#' @param all TIFF files can contain multiple images. With `all = TRUE`, the
+#'   information about all images is returned in a list of lists. To just get
+#'   the information about some images, pass those image numbers to the `all`
+#'   parameter (see examples). `all = FALSE` is equivalent to `all = 1`.
+#'
+#' @return A list of lists.
+#'
+#' @author Simon Urbanek, Kent Johnson, Rory Nolan.
+#'
+#' @seealso [read_tif()]
+#'
+#' @examples
+#' read_tags(system.file("img", "Rlogo.tif", package="ijtiff"))
+#' read_tags(system.file("img", "2ch_ij.tif", package="ijtiff"))
+#' read_tags(system.file("img", "2ch_ij.tif", package="ijtiff"), all = c(2, 4))
+#'
+#' @export
+read_tags <- function(path, all = TRUE) {
+  checkmate::assert_string(path)
+  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/")  # windows safe
+  checkmate::assert_file_exists(path)
+  if (stringr::str_detect(path, "/")) {
+    init_wd <- setwd(filesstrings::str_before_last(path, "/"))
+    on.exit(setwd(init_wd))
+    path %<>% filesstrings::str_after_last("/")
+    # `read_tags()` sometimes fails when writing to far away directories.
+  }
+  checkmate::assert(checkmate::check_flag(all),
+                    checkmate::check_integerish(all, lower = 1))
+  if (is.numeric(all)) {
+    n_tiff_dirs <- count_imgs(path)
+    all_max <- max(all)
+    if (all_max > n_tiff_dirs) {
+      stop("Cannot access image ", all_max, ".", "\n",
+           "    * You have tried to access information from image ",
+           all_max, ", but there are only ", n_tiff_dirs, " images in total.")
+    }
+  }
+  if (rlang::is_false(all)) all <- 1
+  out <- .Call("read_tags_C", path, all, PACKAGE = "ijtiff")
+  if (rlang::is_true(all)) {
+    names(out) <- paste0("img", seq_along(out))
+  } else {
+    names(out) <- paste0("img", all)
+  }
+  out
 }

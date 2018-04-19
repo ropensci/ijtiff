@@ -36,7 +36,8 @@ Imports: checkmate,
     Rcpp,
     fields,
     grDevices,
-    readr
+    readr,
+    rlang
 Suggests: knitr,
     testthat,
     rmarkdown,
