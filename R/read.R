@@ -20,7 +20,7 @@
 #' COMPRESSION, THRESHHOLDING, XRESOLUTION, YRESOLUTION, RESOLUTIONUNIT, INDEXED
 #' and ORIENTATION. More tags should be added in a subsequent version of this
 #' package. You can read about TIFF tags at
-#' \url{https://www.awaresystems.be/imaging/tiff/tifftags.html}.
+#' https://www.awaresystems.be/imaging/tiff/tifftags.html.
 #'
 #' TIFF images can have a wide range of internal representations, but only the
 #' most common in image processing are supported (8-bit, 16-bit and 32-bit
@@ -43,7 +43,7 @@
 #'   Nolan lifted it from there and changed it around a bit for this 'ijtiff'
 #'   package. Credit should be directed towards Lord Urbanek.
 #'
-#' @seealso \code{\link{write_tif}}
+#' @seealso [write_tif()]
 #'
 #' @examples
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))

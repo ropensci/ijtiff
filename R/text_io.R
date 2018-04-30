@@ -5,7 +5,7 @@
 #'
 #' @param img An image, represented by a 4-dimensional array, like an
 #'   [ijtiff_img].
-#' @param path The name of the input/output output file(s), \emph{without} a
+#' @param path The name of the input/output output file(s), *without* a
 #'   file extension.
 #' @param rds In addition to writing a text file, save the image as an RDS (a
 #'   single R object) file?

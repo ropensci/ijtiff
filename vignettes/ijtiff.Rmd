@@ -20,7 +20,7 @@ original_files <- dir()
 
 ## TL;DR
 
-_ImageJ_ sometimes writes channel information in TIFF files in a peculiar way, meaning that most ordinary TIFF reading softwares don't read this channel information correctly. `ijtiff` knows about _ImageJ_'s peculiarities, so it can be relied upon to read _ImageJ_-written TIFF files correctly.
+This is a general purpose TIFF I/O utility for R. The `tiff` package already exists but `ijtiff` is necessary because _ImageJ_ sometimes writes channel information in TIFF files in a peculiar way, meaning that most ordinary TIFF reading softwares (e.g. `tiff`) don't read this channel information correctly. `ijtiff` knows about _ImageJ_'s peculiarities, so it can be relied upon to read _ImageJ_-written TIFF files correctly.
 
 ## Introduction
 

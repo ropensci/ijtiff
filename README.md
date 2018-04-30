@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ijtiff
+# ijtiff <img src="junk/sticker.png" height="200" align="right">
 
 [![Travis-CI Build
 Status](https://travis-ci.org/ropensci/ijtiff.svg?branch=master)](https://travis-ci.org/ropensci/ijtiff)
@@ -24,9 +24,11 @@ developed.](http://www.repostatus.org/badges/latest/active.svg)
 
 ## TL;DR
 
-*ImageJ* sometimes writes channel information in TIFF files in a
-peculiar way, meaning that most ordinary TIFF reading softwares don’t
-read this channel information correctly. `ijtiff` knows about *ImageJ*’s
+This is a general purpose tiff I/O utility for R. The `tiff` package
+already exists but `ijtiff` is necessary because *ImageJ* sometimes
+writes channel information in TIFF files in a peculiar way, meaning that
+most ordinary TIFF reading softwares (e.g. `tiff`) don’t read this
+channel information correctly. `ijtiff` knows about *ImageJ*’s
 peculiarities, so it can be relied upon to read *ImageJ*-written TIFF
 files correctly.
 

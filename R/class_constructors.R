@@ -12,9 +12,7 @@
 #' @param ... Named arguments which are set as attributes.
 #'
 #' @return A 4 dimensional array representing an image, indexed by `img[y, x,
-#'   channel, frame]` (this is consistent with the `EBImage` package
-#'   (\url{https://bioconductor.org/packages/EBImage/})) with selected
-#'   attributes.
+#'   channel, frame]`, with selected attributes.
 #'
 #' @export
 #'
