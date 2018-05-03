@@ -40,7 +40,7 @@ are IMAGEDEPTH, BITSPERSAMPLE, SAMPLESPERPIXEL, SAMPLEFORMAT, PLANARCONFIG,
 COMPRESSION, THRESHHOLDING, XRESOLUTION, YRESOLUTION, RESOLUTIONUNIT, INDEXED
 and ORIENTATION. More tags should be added in a subsequent version of this
 package. You can read about TIFF tags at
-\url{https://www.awaresystems.be/imaging/tiff/tifftags.html}.
+https://www.awaresystems.be/imaging/tiff/tifftags.html.
 
 TIFF images can have a wide range of internal representations, but only the
 most common in image processing are supported (8-bit, 16-bit and 32-bit
@@ -58,7 +58,7 @@ str(img)  # we see that `ijtiff` correctly recognises this image's 2 channels
 
 }
 \seealso{
-\code{\link{write_tif}}
+\code{\link[=write_tif]{write_tif()}}
 }
 \author{
 Simon Urbanek wrote most of this code for the 'tiff' package. Rory

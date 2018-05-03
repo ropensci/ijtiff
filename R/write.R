@@ -74,7 +74,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
   if (!floats) if (!filesstrings::all_equal(img, floor(img))) floats <- TRUE
   if (!floats) {
     if (any(img < 0)) {
-      if (min(img) < - float_max()) {
+      if (min(img) < -float_max()) {
         stop("The lowest allowable negative value in 'img' is ",
              -float_max(), ".")
       }
@@ -127,7 +127,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
   }
   what <- enlist_img(img)
   written <- .Call("write_tif_C", what, path, bits_per_sample, compression,
-                   floats, PACKAGE="ijtiff")
+                   floats, PACKAGE = "ijtiff")
   if (msg) message("\b Done.")
   invisible(to_invisibly_return)
 }

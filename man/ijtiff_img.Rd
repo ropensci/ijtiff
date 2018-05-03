@@ -18,9 +18,7 @@ use a 4-dimensional array \code{img[y, x, channel, plane]}.}}
 \item{...}{Named arguments which are set as attributes.}
 }
 \value{
-A 4 dimensional array representing an image, indexed by \code{img[y, x, channel, frame]} (this is consistent with the \code{EBImage} package
-(\url{https://bioconductor.org/packages/EBImage/})) with selected
-attributes.
+A 4 dimensional array representing an image, indexed by \code{img[y, x, channel, frame]}, with selected attributes.
 }
 \description{
 A class for images which are read or to be written by the \code{ijtiff} package.

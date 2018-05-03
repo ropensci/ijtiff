@@ -9,13 +9,13 @@
 \item{code_hex}{hexadecimal numeric code of the TIFF tag} \item{name}{the name
 of the TIFF tag} \item{short_description}{a short description of the TIFF
 tag} \item{tag_type}{the type of TIFF tag: either baseline or extended}
-\item{url}{the URL of the TIFF tag at \url{https://www.awaresystems.be}}
+\item{url}{the URL of the TIFF tag at https://www.awaresystems.be}
 \item{libtiff_name}{the TIFF tag name in the libtiff C library}
 \item{c_type}{the C type of the TIFF tag data in libtiff} \item{count}{the
 number of elements in the TIFF tag data} \item{default}{the default value
 of the data held in the TIFF tag} }}
 \source{
-\url{https://www.awaresystems.be}
+https://www.awaresystems.be
 }
 \usage{
 tiff_tag_data
