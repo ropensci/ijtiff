@@ -3,6 +3,7 @@
 #### MINOR IMPROVEMENTS
 * Improved the description of the package in DESCRIPTION, vignette and README.
 * Added a hex sticker.
+* Limited support for tiled images thanks to new author Kent Johnson.
 
 
 ### 1.1.0 
