@@ -17,7 +17,9 @@ static void TIFFWarningHandler_(const char* module, const char* fmt, va_list ap)
   if (strstr(txtbuf,
              "Unknown field with tag 50838 (0xc696) encountered") == NULL &&
         strstr(txtbuf,
-               "Unknown field with tag 50839 (0xc697) encountered") == NULL) {
+               "Unknown field with tag 50839 (0xc697) encountered") == NULL &&
+        strstr(txtbuf,
+               "Defining non-color channels as ExtraSamples.") == NULL) {
   Rf_warning("%s: %s", module, txtbuf);
   }
 }

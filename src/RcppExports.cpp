@@ -5,6 +5,16 @@
 
 using namespace Rcpp;
 
+// float_max
+double float_max();
+RcppExport SEXP _ijtiff_float_max() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(float_max());
+    return rcpp_result_gen;
+END_RCPP
+}
 // dims_cpp
 List dims_cpp(List lst);
 RcppExport SEXP _ijtiff_dims_cpp(SEXP lstSEXP) {
@@ -16,13 +26,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// float_max
-double float_max();
-RcppExport SEXP _ijtiff_float_max() {
+// enlist_img_cpp
+List enlist_img_cpp(NumericVector arr4d);
+RcppExport SEXP _ijtiff_enlist_img_cpp(SEXP arr4dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(float_max());
+    Rcpp::traits::input_parameter< NumericVector >::type arr4d(arr4dSEXP);
+    rcpp_result_gen = Rcpp::wrap(enlist_img_cpp(arr4d));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -33,12 +44,13 @@ RcppExport SEXP read_tif_C(SEXP);
 RcppExport SEXP write_tif_C(SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_ijtiff_dims_cpp", (DL_FUNC) &_ijtiff_dims_cpp, 1},
     {"_ijtiff_float_max", (DL_FUNC) &_ijtiff_float_max, 0},
-    {"count_directories_C", (DL_FUNC) &count_directories_C, 1},
-    {"read_tags_C",         (DL_FUNC) &read_tags_C,         2},
-    {"read_tif_C",          (DL_FUNC) &read_tif_C,          1},
-    {"write_tif_C",         (DL_FUNC) &write_tif_C,         5},
+    {"_ijtiff_dims_cpp", (DL_FUNC) &_ijtiff_dims_cpp, 1},
+    {"_ijtiff_enlist_img_cpp", (DL_FUNC) &_ijtiff_enlist_img_cpp, 1},
+    {"count_directories_C",    (DL_FUNC) &count_directories_C,    1},
+    {"read_tags_C",            (DL_FUNC) &read_tags_C,            2},
+    {"read_tif_C",             (DL_FUNC) &read_tif_C,             1},
+    {"write_tif_C",            (DL_FUNC) &write_tif_C,            5},
     {NULL, NULL, 0}
 };
 

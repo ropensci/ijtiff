@@ -86,7 +86,9 @@ test_that("Float (real-numbered) TIFF I/O works", {
   expect_equal(dim(in_tif), v2345)
   expect_equal(as.vector(in_tif), as.vector(a2345), check.attributes = FALSE)
   a2345[9] <- NA
-  write_tif(a2345, tmptif)
+  expect_error(write_tif(a2345, tmptif),
+               "To enable overwriting, use `overwrite = TRUE`")
+  write_tif(a2345, tmptif, overwrite = TRUE)
   in_tif <- read_tif(tmptif)
   expect_equal(dim(in_tif), v2345)
   expect_equal(as.vector(in_tif), as.vector(a2345), check.attributes = FALSE)

@@ -11,6 +11,8 @@
 #'   789 is greater than 2 ^ 8 - 1 but less than or equal to 2 ^ 16 - 1.
 #' @param compression A string, the desired compression algorithm. Must be one
 #'   of `"LZW"`, `"none"`, `PackBits`", `"RLE"`, `"JPEG"`, or `"deflate"`.
+#' @param overwrite If writing the image would overwrite a file, do you want to
+#'   proceed?
 #' @param msg Print an informative message about the image being written?
 #'
 #' @return The input `img` (invisibly).
@@ -30,13 +32,15 @@
 #'
 #' @export
 write_tif <- function(img, path, bits_per_sample = "auto",
-                      compression = "none", msg = TRUE) {
+                      compression = "none", overwrite = FALSE, msg = TRUE) {
   checkmate::assert_string(path)
   path %<>% stringr::str_replace_all(stringr::coll("\\"), "/")  # windows safe
   if (stringr::str_detect(path, "/")) {  # I've noticed that write_tif()
     init_wd <- getwd()                   # sometimes fails when writing to
     on.exit(setwd(init_wd))              # far away directories.
-    setwd(filesstrings::str_before_last(path, "/"))
+    tiff_dir <- filesstrings::str_before_last(path, "/")
+    checkmate::assert_directory_exists(tiff_dir)
+    setwd(tiff_dir)
     path %<>% filesstrings::str_after_last("/")
   }
   to_invisibly_return <- img
@@ -59,6 +63,11 @@ write_tif <- function(img, path, bits_per_sample = "auto",
   if (endsWith(tolower(path), ".tiff") || endsWith(tolower(path), ".tif"))
     path <- paste0(filesstrings::before_last_dot(path), ".tif")
   path %<>% filesstrings::give_ext("tif")
+  if (file.exists(path) && overwrite == FALSE) {
+    stop("The file ", path, " already exists and `overwrite` is set to ",
+         "`FALSE`.", "\n",
+         "    * To enable overwriting, use `overwrite = TRUE`.")
+  }
   checkmate::assert_array(img)
   checkmate::assert_array(img, min.d = 2, max.d = 4)
   checkmate::assert_numeric(img)
@@ -119,7 +128,12 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     }
   }
   if (msg) {
-    message("Writing ", path, ": a ", d[1], "x", d[2], " pixel image of ",
+    bps <- bits_per_sample %>%
+      {dplyr::case_when(. == 8 ~ "an 8-bit, ",
+                      . == 16 ~ "a 16-bit, ",
+                      . == 32 ~ "a 32-bit, ",
+                      TRUE ~ "a 0-bit, ")}
+    message("Writing ", path, ": ", bps, d[1], "x", d[2], " pixel image of ",
             ifelse(floats, "floating point", "unsigned integer"),
             " type with ", d[3],
             " ", "channel", ifelse(d[3] > 1, "s", ""), " and ",

@@ -27,6 +27,11 @@
 #' ijtiff_img(img, software = "R")
 ijtiff_img <- function(img, ...) {
   checkmate::assert_array(img, min.d = 2, max.d = 4)
+  if (is.logical(img)) {
+    atts <- attributes(img)
+    img %<>% as.numeric()
+    attributes(img) <- atts
+  }
   checkmate::assert_numeric(img)
   if (length(dim(img)) == 2) dim(img) %<>% c(1, 1)
   if (length(dim(img)) == 3) dim(img) %<>% {c(.[1:2], 1, .[3])}

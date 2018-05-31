@@ -56,7 +56,9 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
   path %<>% stringr::str_replace_all(stringr::coll("\\"), "/")  # windows safe
   checkmate::assert_file_exists(path)
   if (stringr::str_detect(path, "/")) {
-    init_wd <- setwd(filesstrings::str_before_last(path, "/"))
+    tiff_dir <- filesstrings::str_before_last(path, "/")
+    checkmate::assert_directory_exists(tiff_dir)
+    init_wd <- setwd(tiff_dir)
     on.exit(setwd(init_wd))
     path %<>% filesstrings::str_after_last("/")
     # `read_tif()` sometimes fails when writing to far away directories.
@@ -165,8 +167,13 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
     }
   } else if (msg) {
     ints <- attr(out, "sample_format") == "uint"
+    bps <- attr(out, "bits_per_sample") %>%
+      {dplyr::case_when(. == 8 ~ "an 8-bit, ",
+                        . == 16 ~ "a 16-bit, ",
+                        . == 32 ~ "a 32-bit, ",
+                        TRUE ~ "a 0-bit, ")}
     dim(out) %>% {
-      message("Reading ", path, ": a ", .[1], "x", .[2], " pixel image of ",
+      message("Reading ", path, ": ", bps, .[1], "x", .[2], " pixel image of ",
               ifelse(ints, "unsigned integer", "floating point"), " type with ",
               .[3], " channel", ifelse(.[3] > 1, "s", ""), " and ", .[4],
               " frame", ifelse(.[4] > 1, "s", ""), " . . .")

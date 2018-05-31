@@ -1,7 +1,7 @@
 Package: ijtiff
 Type: Package
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files
-Version: 1.2.0
+Version: 1.3.0
 Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com", 
                     role = c("aut", "cre"), 
                     comment = c(ORCID = "0000-0002-5239-4043")),
@@ -34,19 +34,23 @@ VignetteBuilder: knitr
 Depends: R (>= 2.10)
 Imports: checkmate,
     magrittr,
-    filesstrings (>= 2.1.0),
+    filesstrings (>= 2.5.0),
     stringr,
     purrr,
     Rcpp,
     fields,
     grDevices,
     readr,
-    rlang
+    rlang,
+    dplyr,
+    methods,
+    lattice
 Suggests: knitr,
     testthat,
     rmarkdown,
     covr,
     magick,
     abind,
-    tiff
+    tiff,
+    EBImage
 LinkingTo: Rcpp

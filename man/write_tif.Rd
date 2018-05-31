@@ -5,7 +5,7 @@
 \title{Write images in TIFF format}
 \usage{
 write_tif(img, path, bits_per_sample = "auto", compression = "none",
-  msg = TRUE)
+  overwrite = FALSE, msg = TRUE)
 }
 \arguments{
 \item{img}{An array representing the image. \itemize{\item For a
@@ -26,6 +26,9 @@ if the maximum element in \code{img} is 789, then 16-bit will be chosen because
 
 \item{compression}{A string, the desired compression algorithm. Must be one
 of \code{"LZW"}, \code{"none"}, \code{PackBits}", \code{"RLE"}, \code{"JPEG"}, or \code{"deflate"}.}
+
+\item{overwrite}{If writing the image would overwrite a file, do you want to
+proceed?}
 
 \item{msg}{Print an informative message about the image being written?}
 }

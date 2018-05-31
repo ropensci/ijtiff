@@ -4,6 +4,8 @@
 * Improved the description of the package in DESCRIPTION, vignette and README.
 * Added a hex sticker.
 * Limited support for tiled images thanks to new author Kent Johnson.
+* `write_tif()` is now slightly (<10%) faster.
+* `write_tif()` messages are now more informative.
 
 
 ### 1.1.0 
