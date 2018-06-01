@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ijtiff <img src="junk/sticker.png" height="200" align="right">
+# ijtiff <img src="man/figures/sticker.png" height="200" align="right">
 
 [![Travis-CI Build
 Status](https://travis-ci.org/ropensci/ijtiff.svg?branch=master)](https://travis-ci.org/ropensci/ijtiff)
@@ -24,7 +24,7 @@ developed.](http://www.repostatus.org/badges/latest/active.svg)
 
 ## TL;DR
 
-This is a general purpose tiff I/O utility for R. The `tiff` package
+This is a general purpose TIFF I/O utility for R. The `tiff` package
 already exists but `ijtiff` is necessary because *ImageJ* sometimes
 writes channel information in TIFF files in a peculiar way, meaning that
 most ordinary TIFF reading softwares (e.g. `tiff`) don’t read this
@@ -135,7 +135,7 @@ Here’s the full gif:
 Here are the red and green channels of the first, third and fifth frames
 of the TIFF:
 
-![](README-red%20and%20green%20banana-1.png)<!-- -->
+![](man/figures/red-and-green-banana-1.png)<!-- -->
 
 ### The original `tiff` package
 
@@ -195,7 +195,7 @@ When we import the same image with the `ijtiff` package:
 
 ``` r
 img <- ijtiff::read_tif(path_2ch_ij)
-#> Reading Rlogo-banana-red_green.tif: a 155x200 pixel image of unsigned integer type with 2 channels and 3 frames . . .
+#> Reading Rlogo-banana-red_green.tif: an 8-bit, 155x200 pixel image of unsigned integer type with 2 channels and 3 frames . . .
 #>  Done.
 dim(img)  # 2 channels, 3 frames
 #> [1] 155 200   2   3

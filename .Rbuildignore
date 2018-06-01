@@ -3,7 +3,7 @@
 ^todo\.txt$
 ^junk$
 ^todo\.md$
-^README.*$
+^README.Rmd$
 ^CONDUCT\.md$
 ^appveyor\.yml$
 ^\.travis\.yml$

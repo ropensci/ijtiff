@@ -8,12 +8,12 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-"
+  fig.path = "man/figures/"
 )
 original_files <- dir()
 ```
 
-# ijtiff  <img src="junk/sticker.png" height="200" align="right">
+# ijtiff  <img src="man/figures/sticker.png" height="200" align="right">
 
 [![Travis-CI Build Status](https://travis-ci.org/ropensci/ijtiff.svg?branch=master)](https://travis-ci.org/ropensci/ijtiff)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/ropensci/ijtiff?branch=master&svg=true)](https://ci.appveyor.com/project/ropensci/ijtiff)
@@ -70,20 +70,20 @@ _Note_: These peculiar _ImageJ_-written TIFF files are still bona fide TIFF file
 ### Installing the release version of the `ijtiff` R package
 
 You can install `ijtiff` from CRAN (recommended) with:
-```{r CRAN installation, eval=FALSE}
+```{r CRAN-installation, eval=FALSE}
 install.packages("ijtiff")
 ```
 
 ### Installing the development version of the `ijtiff` R package
 
 You can install the development version from GitHub with:
-```{r GitHub installation, eval=FALSE}
+```{r GitHub-installation, eval=FALSE}
 if (!require(devtools)) install.packages("devtools")
 devtools::install_github("rorynolan/ijtiff")
 ```
 ## Reading _ImageJ_ TIFF files
 
-```{r 2 channel path}
+```{r 2-channel-path}
 path_2ch_ij <- system.file("img", "Rlogo-banana-red_green.tif", 
                            package = "ijtiff")
 ```
@@ -93,7 +93,7 @@ path_2ch_ij <- system.file("img", "Rlogo-banana-red_green.tif",
 
 Here are the red and green channels of the first, third and fifth frames of the TIFF:
 
-```{r red and green banana, echo=FALSE, message=FALSE}
+```{r red-and-green-banana, echo=FALSE, message=FALSE}
 library(magrittr)
 rgbanana_tif <- system.file("img", "Rlogo-banana-red_green.tif",
                             package = "ijtiff") %>% 
@@ -112,7 +112,7 @@ plot(as.raster(cbind(rgbanana_reds, rgbanana_greens)))
 ### The original `tiff` package
 
 When we import it with the original `tiff` package:
-```{r original tiff import}
+```{r original-tiff-import}
 img <- tiff::readTIFF(path_2ch_ij, all = TRUE)
 str(img)  # 10 images
 img[[1]][100:110, 50:60]  # print a section of the first image in the series
@@ -125,7 +125,7 @@ img[[1]][100:110, 50:60]  # print a section of the first image in the series
 ### The `ijtiff` package
 
 When we import the same image with the `ijtiff` package:
-```{r ijtiff import}
+```{r ijtiff-import}
 img <- ijtiff::read_tif(path_2ch_ij)
 dim(img)  # 2 channels, 3 frames
 img[100:110, 50:60, 1, 1]  # print a section of the first channel, first frame
@@ -146,7 +146,7 @@ Base _ImageJ_ (similar to the `tiff` R package) does not properly open some perf
 
 ## Text Images
 TIFF files are limited in which numbers they can represent (they can't go outside the 32-bit range). Real-numbered TIFFs can also lack precision, having only the precision of a 32-bit floating point number. If TIFF isn't good enough, you can use text images. Text images are just plain text files which are tab-separated arrays of pixel values^[`read_txt_img()` and `write_txt_img()` are just wrappers of `readr::read_tsv()` and `readr::write_tsv()`.]. Hence, they are unconstrained in the precision they can offer (but are very inefficient with memory). 
-```{r text images, error=TRUE}
+```{r text-images, error=TRUE}
 library(ijtiff)
 img[1] <- 2 ^ 99  # too high for TIFF
 write_tif(img, "img")  # errors
