@@ -179,3 +179,50 @@ ebimg_install_msg <- function() {
          "    - Install devtools with `install.packages('devtools')`.", "\n",
          "    - Then run `devtools::install_bioc('EBImage')`.")
 }
+
+#' Rejig linescan images.
+#'
+#' `ijtiff` has the fourth dimension of an [ijtiff_img] as its time dimension.
+#' However, some linescan images (images where a single line of pixels is
+#' acquired over and over) have the time dimension as the y dimension, (to avoid
+#' the need for an image stack). These functions allow one to convert this type
+#' of image into a conventional [ijtiff_img] (with time in the fourth dimension)
+#' and to convert back.
+#'
+#' @param linescan_img A 4-dimensional array in which the time axis is the first
+#'   axis. Dimension 4 must be 1 i.e. `dim(linescan_img)[4] == 1`.
+#' @param img A conventional [ijtiff_img], to be turned into a linescan image.
+#'   Dimension 1 must be 1 i.e. `dim(img)[1] == 1`.
+#'
+#' @return The converted image, an object of class [ijtiff_img].
+#'
+#' @name linescan-conversion
+NULL
+
+#' @rdname linescan-conversion
+#' @export
+linescan_to_stack <- function(linescan_img) {
+  linescan_img %<>% ijtiff_img()
+  if (dim(linescan_img)[4] != 1) {
+    stop("The fourth dimension of `linescan_img` should be equal to 1 ",
+         "(or else it's not a linescan image).", "\n",
+         "    * Yours has dim(linescan_img)[4] == ", dim(linescan_img)[4], ".")
+  }
+  linescan_img %>%
+    aperm(c(4, 2, 3, 1)) %>%
+    ijtiff_img()
+}
+
+#' @rdname linescan-conversion
+#' @export
+stack_to_linescan <- function(img) {
+  img %<>% ijtiff_img()
+  if (dim(img)[1] != 1) {
+    stop("The first dimension of `linescan_img` should be equal to 1 ",
+         "(or else it's not a linescan image).", "\n",
+         "    * Yours has dim(linescan_img)[1] == ", dim(linescan_img)[1], ".")
+  }
+  img %>%
+    aperm(c(4, 2, 3, 1)) %>%
+    ijtiff_img()
+}

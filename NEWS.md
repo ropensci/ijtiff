@@ -1,3 +1,9 @@
+### 1.3.0
+
+#### NEW FEATURES
+* Conversion functions `linescan_to_stack()` and `stack_to_linescan()` useful for FCS data.
+
+
 ### 1.2.0
 
 #### MINOR IMPROVEMENTS
