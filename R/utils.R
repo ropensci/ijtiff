@@ -218,9 +218,9 @@ linescan_to_stack <- function(linescan_img) {
 stack_to_linescan <- function(img) {
   img %<>% ijtiff_img()
   if (dim(img)[1] != 1) {
-    stop("The first dimension of `linescan_img` should be equal to 1 ",
+    stop("The first dimension of `img` should be equal to 1 ",
          "(or else it's not a linescan image).", "\n",
-         "    * Yours has dim(linescan_img)[1] == ", dim(linescan_img)[1], ".")
+         "    * Yours has dim(img)[1] == ", dim(img)[1], ".")
   }
   img %>%
     aperm(c(4, 2, 3, 1)) %>%
