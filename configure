@@ -1,0 +1,64 @@
+#!/bin/bash
+# Anticonf script by Rory Nolan (2017). Hacked from Jeroen Ooms' script in his
+# magick package. The purpose of this is to check for libtiff. It does this by
+# trying to #include<tiff.h> and seeing if there are any errors.
+# There are bits of this script whose function I don't know.
+
+# Library settings
+PKG_NAME="libtiff"
+PKG_DEB_NAME="libtiff5-dev"
+PKG_RPM_NAME="libtiff5-dev"
+PKG_CSW_NAME="libtiff_dev"
+PKG_BREW_NAME="libtiff"
+PKG_TEST_HEADER="<tiff.h>"
+PKG_LIBS="-ltiff -ljpeg"
+
+
+# Hack for CRAN server
+if [ -e "/Builds/CRAN-QA-Simon" ] || [ -e "/Volumes/SSD-Data/Builds" ]; then
+  unset PKGCONFIG_CFLAGS
+  unset PKGCONFIG_LIBS
+fi
+
+# I don't know what's going on here
+if [ "$INCLUDE_DIR" ] || [ "$LIB_DIR" ]; then
+  echo "Found INCLUDE_DIR and/or LIB_DIR!"
+  PKG_CFLAGS="-I$INCLUDE_DIR $PKG_CFLAGS"
+  PKG_LIBS="-L$LIB_DIR $PKG_LIBS"
+elif [ "$PKGCONFIG_CFLAGS" ] || [ "$PKGCONFIG_LIBS" ]; then
+  echo "Found pkg-config cflags and libs :-)"
+  PKG_CFLAGS=${PKGCONFIG_CFLAGS}
+  PKG_LIBS=${PKGCONFIG_LIBS}
+fi
+
+# Find compiler
+CXXCPP=$(${R_HOME}/bin/R CMD config CXXCPP)
+CXXFLAGS=$(${R_HOME}/bin/R CMD config CXXFLAGS)
+CPPFLAGS=$(${R_HOME}/bin/R CMD config CPPFLAGS)
+
+# For debugging
+echo "Using PKG_CFLAGS=$PKG_CFLAGS"
+echo "Using PKG_LIBS=$PKG_LIBS"
+
+# Test configuration: this tests for the presence of <tiff.h> somehow
+echo "#include $PKG_TEST_HEADER" | ${CXXCPP} ${CPPFLAGS} ${PKG_CFLAGS} ${CXXFLAGS} -xc++ - >/dev/null 2>&1
+
+# Customize the error
+if [ $? -ne 0 ]; then
+  echo "------------------------- $PKG_NAME not found: ERROR ------------------"
+  echo "Configuration failed because $PKG_NAME was not found. Try installing:"
+  echo " - deb: '$PKG_DEB_NAME' (Debian, Ubuntu)"
+  echo " - rpm: '$PKG_RPM_NAME' (Fedora, CentOS, RHEL)"
+  echo " - csw: '$PKG_CSW_NAME' (Solaris)"
+  echo "On MacOS it is recommended to install $PKG_NAME with homebrew:"
+  echo "   brew install $PKG_BREW_NAME"
+  echo "For Ubuntu (16.04 or later), install $PKG_NAME with:"
+  echo "   sudo apt-get install $PKG_DEB_NAME"
+  echo "---------------------------------------------------------------------"
+  exit 1;
+else
+  echo "$PKG_NAME was found :-)"
+fi
+
+
+exit 0
