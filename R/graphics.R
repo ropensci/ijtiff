@@ -26,12 +26,24 @@
 display <- function(img, method = NULL, basic = FALSE, normalize = TRUE) {
   if (basic) {
     ld <- length(dim(img))
-    if (ld == 4) img %<>% {.[, , 1, 1]}
-    if (ld == 3) img %<>% {.[, , 1]}
+    if (ld == 4) {
+      img %<>% {
+        .[, , 1, 1]
+      }
+    }
+    if (ld == 3) {
+      img %<>% {
+        .[, , 1]
+      }
+    }
     checkmate::assert_matrix(img)
-    img %<>% {t(.[rev(seq_len(nrow(.))), ])}
-    fields::image.plot(img, col = grDevices::grey.colors(999, 0, 1),
-                       axes = FALSE)
+    img %<>% {
+      t(.[rev(seq_len(nrow(.))), ])
+    }
+    fields::image.plot(img,
+      col = grDevices::grey.colors(999, 0, 1),
+      axes = FALSE
+    )
   } else {
     if (is_installed("EBImage")) {
       if (!methods::is(img, "Image")) img %<>% as_EBImage()
@@ -41,16 +53,18 @@ display <- function(img, method = NULL, basic = FALSE, normalize = TRUE) {
       } else {
         checkmate::check_string(method)
         method %<>% filesstrings::match_arg(c("browser", "raster"),
-                                            ignore_case = TRUE)
+          ignore_case = TRUE
+        )
         EBImage::display(img, method = method)
       }
     } else {
-      message("Using basic display functionality.", "\n",
-              "  * For better display functionality, ",
-              "install the EBImage package.", "\n",
-              ebimg_install_msg())
+      message(
+        "Using basic display functionality.", "\n",
+        "  * For better display functionality, ",
+        "install the EBImage package.", "\n",
+        ebimg_install_msg()
+      )
       display(img, basic = TRUE)
     }
   }
 }
-

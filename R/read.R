@@ -53,7 +53,7 @@
 #' @export
 read_tif <- function(path, list_safety = "error", msg = TRUE) {
   checkmate::assert_string(path)
-  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/")  # windows safe
+  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/") # windows safe
   checkmate::assert_file_exists(path)
   if (stringr::str_detect(path, "/")) {
     tiff_dir <- filesstrings::str_before_last(path, "/")
@@ -66,7 +66,8 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
   checkmate::assert_logical(msg, max.len = 1)
   checkmate::assert_string(list_safety)
   list_safety %<>% filesstrings::match_arg(c("error", "warning", "none"),
-                                           ignore_case = TRUE)
+    ignore_case = TRUE
+  )
   out <- .Call("read_tif_C", path.expand(path), PACKAGE = "ijtiff")
   checkmate::assert_list(out)
   ds <- dims(out)
@@ -102,33 +103,37 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
             filesstrings::str_after_first("frames=") %>%
             filesstrings::first_number()
           if (!is.na(n_slices)) {
-            stop("The ImageJ-written image you're trying to read says it has ",
-                 n_frames, " frames AND ", n_slices, " slices. To be read by ",
-                 "the 'ijtiff' package, the number of slices OR the number ",
-                 "of frames should be specified in the description tiff tag ",
-                 "(and they're interpreted as the same thing), but not both. ")
+            stop(
+              "The ImageJ-written image you're trying to read says it has ",
+              n_frames, " frames AND ", n_slices, " slices. To be read by ",
+              "the 'ijtiff' package, the number of slices OR the number ",
+              "of frames should be specified in the description tiff tag ",
+              "(and they're interpreted as the same thing), but not both. "
+            )
           }
           n_slices <- n_frames
         }
         if (!is.na(n_slices) && !is.na(n_imgs)) {
           if (ij_n_ch) {
             if (n_imgs != n_ch * n_slices) {
-              stop("The ImageJ-written image you're trying to read says in its",
-                   " TIFFTAG_DESSCRIPTION that it has ", n_imgs, " images of ",
-                   n_slices, " slices of ", n_ch,
-                   " channels. However, with ", n_slices, " slices of ", n_ch,
-                   " channels, one would expect there to be ", n_slices, "x",
-                   n_ch, "=", n_ch * n_slices, " images. ",
-                   "This discrepancy means that the ",
-                   "'ijtiff' package can't read your image correctly. One ",
-                   "possible source of this kind of error is that your image ",
-                   "is temporal and volumetric. 'ijtiff' can handle either ",
-                   "time-based or volumetric stacks, but not both.")
+              stop(
+                "The ImageJ-written image you're trying to read says in its",
+                " TIFFTAG_DESSCRIPTION that it has ", n_imgs, " images of ",
+                n_slices, " slices of ", n_ch,
+                " channels. However, with ", n_slices, " slices of ", n_ch,
+                " channels, one would expect there to be ", n_slices, "x",
+                n_ch, "=", n_ch * n_slices, " images. ",
+                "This discrepancy means that the ",
+                "'ijtiff' package can't read your image correctly. One ",
+                "possible source of this kind of error is that your image ",
+                "is temporal and volumetric. 'ijtiff' can handle either ",
+                "time-based or volumetric stacks, but not both."
+              )
             }
           }
         }
         if ((isTRUE(length(out) == n_imgs) && ij_n_ch) ||
-             ((!ij_n_ch) && n_ch == 1)) {
+          ((!ij_n_ch) && n_ch == 1)) {
           if (length(d) > 2) out %<>% purrr::map(extract_desired_plane)
         }
       }
@@ -137,19 +142,21 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
     if (attrs1$sample_format == "uint") {
       bps <- attrs1$bits_per_sample
       checkmate::assert_int(bps, lower = 8, upper = 32)
-      max_allowed <- 2 ^ bps - 1
+      max_allowed <- 2^bps - 1
       if (any(out > max_allowed)) {
         biggest_offender <- max(out)
-        while (all(out %% (2 ^ bps) == 0))
-          out <- out / 2 ^ bps
+        while (all(out %% (2^bps) == 0))
+          out <- out / 2^bps
         if (any(out > max_allowed)) {
-          stop("ijtiff encountered a fatal error trying to read your image.\n",
-               "* Your image is ", bps, "-bit, meaning that the maximum ",
-               "possible value in it is ", 2 ^ bps - 1, ", however ijtiff has ",
-               "managed to read values up to ", biggest_offender,
-               "which is clearly wrong. \n", "Please file a bug at ",
-               "https://github.com/rorynolan/ijtiff/issues ",
-               "and attach the offending image. Sorry and thanks.")
+          stop(
+            "ijtiff encountered a fatal error trying to read your image.\n",
+            "* Your image is ", bps, "-bit, meaning that the maximum ",
+            "possible value in it is ", 2^bps - 1, ", however ijtiff has ",
+            "managed to read values up to ", biggest_offender,
+            "which is clearly wrong. \n", "Please file a bug at ",
+            "https://github.com/rorynolan/ijtiff/issues ",
+            "and attach the offending image. Sorry and thanks."
+          )
         }
       }
     }
@@ -162,21 +169,27 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
     if (list_safety == "error") stop("`read_tif()` tried to return a list.")
     if (list_safety == "warning") warning("`read_tif()` is returning a list.")
     if (list_safety == "none") {
-      if (msg)
+      if (msg) {
         message("Reading a list of images with differing dimensions . . .")
+      }
     }
   } else if (msg) {
     ints <- attr(out, "sample_format") == "uint"
-    bps <- attr(out, "bits_per_sample") %>%
-      {dplyr::case_when(. == 8 ~ "an 8-bit, ",
-                        . == 16 ~ "a 16-bit, ",
-                        . == 32 ~ "a 32-bit, ",
-                        TRUE ~ "a 0-bit, ")}
+    bps <- attr(out, "bits_per_sample") %>% {
+      dplyr::case_when(
+        . == 8 ~ "an 8-bit, ",
+        . == 16 ~ "a 16-bit, ",
+        . == 32 ~ "a 32-bit, ",
+        TRUE ~ "a 0-bit, "
+      )
+    }
     dim(out) %>% {
-      message("Reading ", path, ": ", bps, .[1], "x", .[2], " pixel image of ",
-              ifelse(ints, "unsigned integer", "floating point"), " type with ",
-              .[3], " channel", ifelse(.[3] > 1, "s", ""), " and ", .[4],
-              " frame", ifelse(.[4] > 1, "s", ""), " . . .")
+      message(
+        "Reading ", path, ": ", bps, .[1], "x", .[2], " pixel image of ",
+        ifelse(ints, "unsigned integer", "floating point"), " type with ",
+        .[3], " channel", ifelse(.[3] > 1, "s", ""), " and ", .[4],
+        " frame", ifelse(.[4] > 1, "s", ""), " . . ."
+      )
     }
   }
   if (msg) message("\b Done.")
@@ -208,7 +221,7 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
 #' @export
 read_tags <- function(path, all = TRUE) {
   checkmate::assert_string(path)
-  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/")  # windows safe
+  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/") # windows safe
   checkmate::assert_file_exists(path)
   if (stringr::str_detect(path, "/")) {
     init_wd <- setwd(filesstrings::str_before_last(path, "/"))
@@ -216,15 +229,21 @@ read_tags <- function(path, all = TRUE) {
     path %<>% filesstrings::str_after_last("/")
     # `read_tags()` sometimes fails when writing to far away directories.
   }
-  checkmate::assert(checkmate::check_flag(all),
-                    checkmate::check_integerish(all, lower = 1))
+  checkmate::assert(
+    checkmate::check_flag(all),
+    checkmate::check_integerish(all, lower = 1)
+  )
   if (is.numeric(all)) {
     n_tiff_dirs <- count_imgs(path)
     all_max <- max(all)
     if (all_max > n_tiff_dirs) {
-      stop("Cannot access image ", all_max, ".", "\n",
-           "    * You have tried to access information from image ",
-           all_max, ", but there are only ", n_tiff_dirs, " images in total.")
+      custom_stop(
+        "Cannot access image {all_max}.",
+        "
+         You have tried to access information from image {all_max},
+         but there are only {n_tiff_dirs} images in total.
+        "
+      )
     }
   }
   if (rlang::is_false(all)) all <- 1

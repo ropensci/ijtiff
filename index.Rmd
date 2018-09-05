@@ -1,0 +1,49 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# ijtiff <img src="man/figures/logo.png" align="right" height=140/>
+
+This is a general purpose TIFF I/O utility for R. The [`tiff` package](https://cran.r-project.org/package=tiff) already exists for this purpose but `ijtiff` adds some functionality and overcomes some bugs therein. 
+
+* `ijtiff` can write TIFF files whose pixel values are real (floating-point) numbers; `tiff` cannot. 
+* `ijtiff` can read and write _text images_; `tiff` cannot.
+* `tiff` struggles to interpret channel information and gives cryptic errors when reading TIFF files written by the _ImageJ_ software; `ijtiff` works smoothly with these images.
+
+The github repo of `ijtiff` is at https://github.com/ropensci/ijtiff.
+
+## Installation
+
+You can install the released version of ijtiff from [CRAN](https://CRAN.R-project.org) with:
+
+```{r, eval=FALSE}
+install.packages("ijtiff")
+```
+
+You can install the released version of ijtiff from [GitHub](https://github.com/ropensci/ijtiff) with:
+
+```{r, eval=FALSE}
+devtools::install_github("ropensci/ijtiff")
+```
+
+
+## How to use `ijtiff`
+
+The [Reading and Writing Images](https://ropensci.github.io/ijtiff/articles/reading-and-writing-images.html) article is probably all you need to know.
+
+
+## More about `ijtiff`
+
+* [Text Images](https://ropensci.github.io/ijtiff/articles/text-images.html) tells you more about what _text images_ are and why you might ever use them.
+* [The _ImageJ_ Problem](https://ropensci.github.io/ijtiff/articles/the-imagej-problem.html) explains the problem that `tiff` has when reading TIFF files written by _ImageJ_ and how `ijtiff` fixes this problem.

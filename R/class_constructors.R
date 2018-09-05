@@ -34,12 +34,20 @@ ijtiff_img <- function(img, ...) {
   }
   checkmate::assert_numeric(img)
   if (length(dim(img)) == 2) dim(img) %<>% c(1, 1)
-  if (length(dim(img)) == 3) dim(img) %<>% {c(.[1:2], 1, .[3])}
+  if (length(dim(img)) == 3) {
+    dim(img) %<>% {
+      c(.[1:2], 1, .[3])
+    }
+  }
   dots <- list(...)
   if (length(dots)) {
     namez <- names(dots)
-    if (is.null(namez) || any(namez == ""))
-      stop("All arguments in ... must be named.")
+    if (is.null(namez) || any(namez == "")) {
+      custom_stop(
+        "All arguments in ... must be named.",
+        "Your argument {dots[[1]]} is not named."
+      )
+    }
     do_call_args <- c(list(img), dots)
     img <- do.call(structure, do_call_args)
   }

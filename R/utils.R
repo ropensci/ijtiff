@@ -9,33 +9,36 @@ dims <- function(lst) {
   dims_cpp(lst)
 }
 
-enlist_cols <- function(mat) {
-  checkmate::assert_matrix(mat)
-  purrr::map(seq_len(ncol(mat)), ~ mat[, .])
-}
-enlist_rows <- function(mat) {
-  checkmate::assert_matrix(mat)
-  purrr::map(seq_len(nrow(mat)), ~ mat[., ])
-}
 enlist_planes <- function(arr) {
   checkmate::assert_array(arr, d = 3)
-  purrr::map(seq_len(dim(arr)[3]), ~ arr[, , .])
+  purrr::map(seq_len(dim(arr)[3]), ~arr[, , .])
 }
 
 extract_desired_plane <- function(arr) {
   checkmate::assert_array(arr, min.d = 2, max.d = 3)
   d <- dim(arr)
   if (length(d) == 3) {
-    nonzero_planes <- !purrr::map_lgl(seq_len(d[3]),
-                                      ~ filesstrings::all_equal(arr[, , .], 0))
-    if (sum(nonzero_planes) == 0) {
-      arr <- arr[, , 1]
-    } else if (sum(nonzero_planes) == 1) {
+    nonzero_planes <- !purrr::map_lgl(
+      seq_len(d[3]),
+      ~filesstrings::all_equal(arr[, , .], 0)
+    )
+    if (sum(nonzero_planes) == 1) {
       arr <- arr[, , nonzero_planes]
     } else if (filesstrings::all_equal(enlist_planes(arr))) {
       arr <- arr[, , 1]
     } else {
-      stop("Cannot extract the desired plane.")
+      n_nonzero_unique_planes <- arr %>%
+        enlist_planes() %>%
+        unique() %>%
+        length()
+      custom_stop(
+        "Cannot extract the desired plane.",
+        "
+                   There are {n_nonzero_unique_planes} unique nonzero planes,
+                   so it is impossible to decipher which is the correct one
+                   to extract.
+                  "
+      )
     }
   }
   arr
@@ -61,7 +64,7 @@ extract_desired_plane <- function(arr) {
 #' @export
 count_imgs <- function(path) {
   checkmate::assert_string(path)
-  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/")  # windows safe
+  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/") # windows safe
   checkmate::assert_file_exists(path)
   if (stringr::str_detect(path, "/")) {
     init_wd <- setwd(filesstrings::str_before_last(path, "/"))
@@ -114,8 +117,10 @@ can_be_intish <- function(x) {
 #' @export
 as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
   if (!is_installed("EBImage")) {
-    stop(paste0("To use this function, you need to have the EBImage package ",
-                "installed.", "\n", ebimg_install_msg()))
+    stop(paste0(
+      "To use this function, you need to have the `EBImage` package ",
+      "installed.", "\n", ebimg_install_msg()
+    ))
   }
   checkmate::assert_flag(scale)
   checkmate::assert_flag(force)
@@ -126,18 +131,21 @@ as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
       if (force) {
         img %<>% ijtiff_img()
       } else {
-        stop("This function expects the input `img` to be of class ",
-             "'ijtiff_img', however the `img` you have supplied is not.", "\n",
-             "    * To force your array through this function, ",
-             "use `force = TRUE`, but take care to check that the result ",
-             "is what you'd like it to be.")
+        custom_stop("
+          This function expects the input `img` to be of class 'ijtiff_img',
+          however the `img` you have supplied is not.
+         ", "
+          To force your array through this function, use `force = TRUE`, but
+          take care to check that the result is what you'd like it to be.
+         ")
       }
     }
   }
   if (is.null(colormode)) {
     if ("color_space" %in% names(attributes(img))) {
-      if (attr(img, "color_space") == "RGB")
+      if (attr(img, "color_space") == "RGB") {
         colormode <- "c"
+      }
     }
   }
   if (is.null(colormode)) {
@@ -148,25 +156,38 @@ as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
     }
   }
   checkmate::assert_string(colormode)
-  if (tolower(colormode) %in% c("g", "gr"))
+  if (tolower(colormode) %in% c("g", "gr")) {
     colormode <- "greyscale"
-  if (startsWith("colo", tolower(colormode)))
+  }
+  if (startsWith("colo", tolower(colormode))) {
     colormode <- "colour"
-  colormode %<>% filesstrings::match_arg(c("Color", "Colour",
-                                           "Grayscale", "Greyscale"),
-                                         ignore_case = TRUE)
+  }
+  colormode %<>% filesstrings::match_arg(c(
+    "Color", "Colour",
+    "Grayscale", "Greyscale"
+  ),
+  ignore_case = TRUE
+  )
   if (colormode == "Colour") colormode <- "Color"
   if (colormode == "Greyscale") colormode <- "Grayscale"
   if (scale && (!all(is.na(img)))) {
     if (can_be_intish(img)) {
-      if (all(img < 2 ^ 8, na.rm = TRUE)) {
-        img %<>% {. / (2 ^ 8 - 1)}
-      } else if (all(img < 2 ^ 16, na.rm = TRUE)) {
-        img %<>% {. / (2 ^ 16 - 1)}
-      } else if (all(img < 2 ^ 32, na.rm = TRUE)) {
-        img %<>% {. / (2 ^ 32 - 1)}
+      if (all(img < 2^8, na.rm = TRUE)) {
+        img %<>% {
+          . / (2^8 - 1)
+        }
+      } else if (all(img < 2^16, na.rm = TRUE)) {
+        img %<>% {
+          . / (2^16 - 1)
+        }
+      } else if (all(img < 2^32, na.rm = TRUE)) {
+        img %<>% {
+          . / (2^32 - 1)
+        }
       } else {
-        img %<>% {. / max(.)}
+        img %<>% {
+          . / max(.)
+        }
       }
     }
   }
@@ -175,9 +196,11 @@ as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
 }
 
 ebimg_install_msg <- function() {
-  paste0("  * To install EBImage:", "\n",
-         "    - Install devtools with `install.packages('devtools')`.", "\n",
-         "    - Then run `devtools::install_bioc('EBImage')`.")
+  paste0(
+    "  * To install `EBImage`:", "\n",
+    "    - Install `BiocManager` with `install.packages(\"BiocManager\")`.\n",
+    "    - Then run `BiocManager::install(\"EBImage\")`."
+  )
 }
 
 #' Rejig linescan images.
@@ -196,6 +219,14 @@ ebimg_install_msg <- function() {
 #'
 #' @return The converted image, an object of class [ijtiff_img].
 #'
+#' @examples
+#' linescan <- ijtiff_img(array(rep(1:4, each = 4), dim = c(4, 4, 1, 1)))
+#' print(linescan)
+#' stack <- linescan_to_stack(linescan)
+#' print(stack)
+#' linescan <- stack_to_linescan(stack)
+#' print(linescan)
+#'
 #' @name linescan-conversion
 NULL
 
@@ -204,9 +235,13 @@ NULL
 linescan_to_stack <- function(linescan_img) {
   linescan_img %<>% ijtiff_img()
   if (dim(linescan_img)[4] != 1) {
-    stop("The fourth dimension of `linescan_img` should be equal to 1 ",
-         "(or else it's not a linescan image).", "\n",
-         "    * Yours has dim(linescan_img)[4] == ", dim(linescan_img)[4], ".")
+    custom_stop(
+      "
+       The fourth dimension of `linescan_img` should be equal to 1
+       (or else it's not a linescan image).
+      ",
+      "Yours has dim(linescan_img)[4] == {dim(linescan_img)[4]}."
+    )
   }
   linescan_img %>%
     aperm(c(4, 2, 3, 1)) %>%
@@ -218,11 +253,66 @@ linescan_to_stack <- function(linescan_img) {
 stack_to_linescan <- function(img) {
   img %<>% ijtiff_img()
   if (dim(img)[1] != 1) {
-    stop("The first dimension of `img` should be equal to 1 ",
-         "(or else it's not a linescan image).", "\n",
-         "    * Yours has dim(img)[1] == ", dim(img)[1], ".")
+    custom_stop(
+      "
+       The first dimension of `img` should be equal to 1
+       (or else it's not a stack that can be converted to a linescan).
+      ",
+      "Yours has dim(img)[1] == {dim(img)[1]}."
+    )
   }
   img %>%
     aperm(c(4, 2, 3, 1)) %>%
     ijtiff_img()
+}
+
+#' Construct the bullet point bits for `custom_stop()`.
+#'
+#' @param string The message for the bullet point.
+#'
+#' @return A string with the bullet-pointed message nicely formatted for the
+#'   console.
+#'
+#' @noRd
+custom_stop_bullet <- function(string) {
+  checkmate::assert_string(string)
+  string %<>% strwrap(width = 57)
+  string[1] %<>% {
+    glue::glue("    * {.}")
+  }
+  if (length(string) > 1) {
+    string[-1] %<>% {
+      glue::glue("      {.}")
+    }
+  }
+  glue::glue_collapse(string, sep = "\n")
+}
+
+#' Nicely formatted error message.
+#'
+#' Format an error message with bullet-pointed sub-messages with nice
+#' line-breaks.
+#'
+#' Arguments should be entered as `glue`-style strings.
+#'
+#' @param main_message The main error message.
+#' @param ... Bullet-pointed sub-messages.
+#'
+#' @noRd
+custom_stop <- function(main_message, ..., .envir = parent.frame()) {
+  checkmate::assert_string(main_message)
+  main_message %<>% glue::glue(.envir = .envir)
+  out <- strwrap(main_message, width = 63)
+  dots <- unlist(list(...))
+  if (length(dots)) {
+    if (!is.character(dots)) {
+      stop("\nThe arguments in ... must all be of character type.")
+    }
+    dots %<>% purrr::map_chr(glue::glue, .envir = .envir) %>%
+      purrr::map_chr(custom_stop_bullet)
+    out %<>% {
+      glue::glue_collapse(c(., dots), sep = "\n")
+    }
+  }
+  rlang::abort(glue::glue("{out}"))
 }

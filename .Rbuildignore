@@ -1,3 +1,5 @@
+^docs$
+^_pkgdown\.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^todo\.txt$
@@ -15,3 +17,5 @@
 ^\.github$
 ^blog$
 ^Makevars$
+^index\.Rmd$
+^index\.md$

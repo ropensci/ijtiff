@@ -6,9 +6,9 @@
 \alias{read_txt_img}
 \title{Read/write an image array to/from disk as text file(s).}
 \usage{
-write_txt_img(img, path, rds = FALSE)
+write_txt_img(img, path, rds = FALSE, msg = TRUE)
 
-read_txt_img(path)
+read_txt_img(path, msg = TRUE)
 }
 \arguments{
 \item{img}{An image, represented by a 4-dimensional array, like an
@@ -19,15 +19,19 @@ file extension.}
 
 \item{rds}{In addition to writing a text file, save the image as an RDS (a
 single R object) file?}
+
+\item{msg}{Print an informative message about the image being read?}
 }
 \description{
 Write images (arrays) as tab-separated \code{.txt} files on disk. Each
 channel-frame pair gets its own file.
 }
 \examples{
-\dontrun{
 img <- read_tif(system.file('img', 'Rlogo.tif', package = 'ijtiff'))
-write_txt_img(img, 'temp')
-img <- read_txt_img('temp_ch1.txt')}
+tmptxt <- tempfile(pattern = "img", fileext = ".txt")
+write_txt_img(img, tmptxt)
+tmptxt_ch1_path <- paste0(filesstrings::before_last_dot(tmptxt), "_ch1.txt")
+print(tmptxt_ch1_path)
+txt_img <- read_txt_img(tmptxt_ch1_path)
 
 }

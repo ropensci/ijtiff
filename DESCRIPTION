@@ -1,7 +1,7 @@
 Package: ijtiff
 Type: Package
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files
-Version: 1.3.0
+Version: 1.4.0
 Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com", 
                     role = c("aut", "cre"), 
                     comment = c(ORCID = "0000-0002-5239-4043")),
@@ -11,7 +11,7 @@ Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com",
                     role = "ctb"),
              person("Sergi", "Padilla-Parra", email = "spadilla@well.ox.ac.uk", 
                     role = "ths", comment = c(ORCID = "0000-0002-8010-9481")),
-             person("Jeroen", "Ooms", role = "rev", 
+             person("Jeroen", "Ooms", role = c("rev", "ctb"), 
                     comment = c(ORCID = "0000-0002-4035-0289")),
              person("Jon", "Clayden", 
                     role = "rev", comment = c(ORCID = "0000-0002-6608-0619")))
@@ -26,15 +26,16 @@ License: GPL-3
 SystemRequirements: libtiff
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 URL: https://www.github.com/ropensci/ijtiff
 BugReports: https://www.github.com/ropensci/ijtiff/issues
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
-Imports: checkmate,
+Imports: 
+    checkmate,
     magrittr,
-    filesstrings (>= 2.5.0),
+    filesstrings (>= 2.7.0),
     stringr,
     purrr,
     Rcpp,
@@ -44,13 +45,18 @@ Imports: checkmate,
     rlang,
     dplyr,
     methods,
-    lattice
-Suggests: knitr,
+    lattice,
+    glue,
+    BBmisc,
+    tibble
+Suggests: 
+    knitr,
     testthat,
     rmarkdown,
     covr,
     magick,
     abind,
     tiff,
-    EBImage
+    EBImage,
+    rprojroot
 LinkingTo: Rcpp

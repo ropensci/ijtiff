@@ -28,3 +28,12 @@ the need for an image stack). These functions allow one to convert this type
 of image into a conventional \link{ijtiff_img} (with time in the fourth dimension)
 and to convert back.
 }
+\examples{
+linescan <- ijtiff_img(array(rep(1:4, each = 4), dim = c(4, 4, 1, 1)))
+print(linescan)
+stack <- linescan_to_stack(linescan)
+print(stack)
+linescan <- stack_to_linescan(stack)
+print(linescan)
+
+}

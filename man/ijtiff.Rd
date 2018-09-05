@@ -4,7 +4,6 @@
 \name{ijtiff}
 \alias{ijtiff}
 \alias{ijtiff-package}
-\alias{ijtiff-package}
 \title{\code{ijtiff}: TIFF I/O for \emph{ImageJ} users}
 \description{
 Correctly import TIFF files that were saved from ImageJ and write TIFF files

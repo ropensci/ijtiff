@@ -9,7 +9,7 @@ if (getRversion() >= "2.15.1") {
   utils::globalVariables(c("."))
 }
 
-.onUnload <- function (libpath) {
+.onUnload <- function(libpath) {
   library.dynam.unload("ijtiff", libpath)
 }
 
