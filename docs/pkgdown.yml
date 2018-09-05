@@ -2,7 +2,6 @@ pandoc: 2.1.2
 pkgdown: 1.1.0.9000
 pkgdown_sha: b2798656f04ce282edea3e12734ba5588c6acd6e
 articles:
-  ijtiff: ijtiff.html
   reading-and-writing-images: reading-and-writing-images.html
   text-images: text-images.html
   the-imagej-problem: the-imagej-problem.html

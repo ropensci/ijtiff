@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -75,9 +75,6 @@ channel-frame pair gets its own file." />
     <span class="fa fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/ijtiff.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -162,8 +159,8 @@ single R object) file?</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_tif.html'>read_tif</a></span>(<span class='fu'>system.file</span>(<span class='st'>'img'</span>, <span class='st'>'Rlogo.tif'</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>'ijtiff'</span>))</div><div class='output co'>#&gt; <span class='message'>Reading Rlogo.tif: an 8-bit, 76x100 pixel image of unsigned integer type with 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='no'>tmptxt</span> <span class='kw'>&lt;-</span> <span class='fu'>tempfile</span>(<span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"img"</span>, <span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".txt"</span>)
-<span class='fu'>write_txt_img</span>(<span class='no'>img</span>, <span class='no'>tmptxt</span>)</div><div class='output co'>#&gt; <span class='message'>Writing img122135386f452_ch1.txt, img122135386f452_ch2.txt, img122135386f452_ch3.txt and img122135386f452_ch4.txt: a 76x100 pixel text image with 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='no'>tmptxt_ch1_path</span> <span class='kw'>&lt;-</span> <span class='fu'>paste0</span>(<span class='kw pkg'>filesstrings</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/filesstrings/topics/before_last_dot'>before_last_dot</a></span>(<span class='no'>tmptxt</span>), <span class='st'>"_ch1.txt"</span>)
-<span class='fu'>print</span>(<span class='no'>tmptxt_ch1_path</span>)</div><div class='output co'>#&gt; [1] "/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T//RtmpdqU4ij/img122135386f452_ch1.txt"</div><div class='input'><span class='no'>txt_img</span> <span class='kw'>&lt;-</span> <span class='fu'>read_txt_img</span>(<span class='no'>tmptxt_ch1_path</span>)</div><div class='output co'>#&gt; <span class='message'>Reading 76x100 pixel text image 'img122135386f452_ch1.txt' . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'>
+<span class='fu'>write_txt_img</span>(<span class='no'>img</span>, <span class='no'>tmptxt</span>)</div><div class='output co'>#&gt; <span class='message'>Writing img1262a7c44ceb3_ch1.txt, img1262a7c44ceb3_ch2.txt, img1262a7c44ceb3_ch3.txt and img1262a7c44ceb3_ch4.txt: a 76x100 pixel text image with 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='no'>tmptxt_ch1_path</span> <span class='kw'>&lt;-</span> <span class='fu'>paste0</span>(<span class='kw pkg'>filesstrings</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/filesstrings/topics/before_last_dot'>before_last_dot</a></span>(<span class='no'>tmptxt</span>), <span class='st'>"_ch1.txt"</span>)
+<span class='fu'>print</span>(<span class='no'>tmptxt_ch1_path</span>)</div><div class='output co'>#&gt; [1] "/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T//Rtmpkd3lld/img1262a7c44ceb3_ch1.txt"</div><div class='input'><span class='no'>txt_img</span> <span class='kw'>&lt;-</span> <span class='fu'>read_txt_img</span>(<span class='no'>tmptxt_ch1_path</span>)</div><div class='output co'>#&gt; <span class='message'>Reading 76x100 pixel text image 'img1262a7c44ceb3_ch1.txt' . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
