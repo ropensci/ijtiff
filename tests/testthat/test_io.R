@@ -266,7 +266,7 @@ test_that("text-image-io works", {
   skip_if_not_installed("abind")
   mmm <- abind::abind(mm, mm, along = 3)
   write_txt_img(mmm, tmpfl, rds = TRUE)
-  expect_equal(readRDS(filesstrings::give_ext(tmpfl, "RDS")), ijtiff_img(mmm))
+  expect_equal(readRDS(filesstrings::give_ext(tmpfl, "rds")), ijtiff_img(mmm))
   tmpfl_txts <- paste0(tmpfl, "_ch", 1:2, ".txt")
   expect_equal(dir(filesstrings::str_before_last(tmpfl, "/"),
     pattern = paste0(
