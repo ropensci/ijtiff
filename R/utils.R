@@ -316,3 +316,19 @@ custom_stop <- function(main_message, ..., .envir = parent.frame()) {
   }
   rlang::abort(glue::glue("{out}"))
 }
+
+#' Wrap messages to make them prettier.
+#'
+#' Format messages with line breaks so that single words don't appear on multiple lines.
+#'
+#' @param ... Bits of the message to be pasted together.
+#'
+#' @noRd
+pretty_msg <- function(...) {
+  dots <- unlist(list(...))
+  checkmate::assert_character(dots)
+  glue::glue_collapse(dots) %>%
+    strwrap(width = 63) %>%
+    glue::glue_collapse(sep = "\n") %>%
+    message()
+}

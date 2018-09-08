@@ -184,7 +184,7 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
       )
     }
     dim(out) %>% {
-      message(
+      pretty_msg(
         "Reading ", path, ": ", bps, .[1], "x", .[2], " pixel image of ",
         ifelse(ints, "unsigned integer", "floating point"), " type with ",
         .[3], " channel", ifelse(.[3] > 1, "s", ""), " and ", .[4],
@@ -192,7 +192,7 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
       )
     }
   }
-  if (msg) message("\b Done.")
+  if (msg) pretty_msg("\b Done.")
   out
 }
 

@@ -182,7 +182,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
         TRUE ~ "a 0-bit, "
       )
     }
-    message(
+    pretty_msg(
       "Writing ", path, ": ", bps, d[1], "x", d[2], " pixel image of ",
       ifelse(floats, "floating point", "unsigned integer"),
       " type with ", d[3],
@@ -195,6 +195,6 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     floats,
     PACKAGE = "ijtiff"
   )
-  if (msg) message("\b Done.")
+  if (msg) pretty_msg("\b Done.")
   invisible(to_invisibly_return)
 }
