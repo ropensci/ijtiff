@@ -45,7 +45,6 @@ Imports:
     rlang,
     dplyr,
     methods,
-    lattice,
     glue,
     BBmisc,
     tibble
