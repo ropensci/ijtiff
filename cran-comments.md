@@ -2,9 +2,9 @@
 
 ### Test environments
 
-* local OS X install, R 3.4.4
-* ubuntu 14.04 (on travis-ci), R 3.4.4
-* Windows Server 2012 (on AppVeyor), R 3.4.4
+* local OS X install, R 3.5.1
+* ubuntu 14.04 (on travis-ci), R 3.5.1
+* Windows Server 2012 (on AppVeyor), R 3.5.1
 * win-builder (devel and release)
 
 
@@ -15,5 +15,5 @@
 
 ### Reverse dependencies
 
-* There are 2 reverse dependencies: `detrendr` and `autothresholdr`. This update breaks neither :-)
-  - See https://github.com/ropensci/ijtiff/blob/master/revdep/checks.rds for full check results.
+* There are 3 reverse dependencies: `detrendr`, `nandb` and `autothresholdr`. This update does not break any of these.
+    - See https://github.com/ropensci/ijtiff/blob/master/revdep/checks.rds for full check results.
