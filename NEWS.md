@@ -1,3 +1,9 @@
+## `ijtiff` 1.4.1
+
+#### NEW FEATURES
+* The package is now lighter in appearance because it doesn't explicitly depend on `tibble`.
+
+
 ## `ijtiff` 1.4.0
 
 #### NEW FEATURES

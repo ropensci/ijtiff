@@ -1,7 +1,7 @@
 Package: ijtiff
 Type: Package
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files
-Version: 1.4.0
+Version: 1.4.1
 Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com", 
                     role = c("aut", "cre"), 
                     comment = c(ORCID = "0000-0002-5239-4043")),
@@ -27,7 +27,7 @@ SystemRequirements: libtiff
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
-URL: https://www.github.com/ropensci/ijtiff
+URL: https://ropensci.github.io/ijtiff
 BugReports: https://www.github.com/ropensci/ijtiff/issues
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
@@ -46,8 +46,7 @@ Imports:
     dplyr,
     methods,
     glue,
-    BBmisc,
-    tibble
+    BBmisc
 Suggests: 
     knitr,
     testthat,

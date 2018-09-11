@@ -301,7 +301,7 @@ test_that("text-image-io works", {
   expect_equal(unlist(lapply(tmpfl_txts, read_txt_img)), as.vector(mmmm),
     check.attributes = FALSE
   )
-  bad_txt_img <- tibble::tribble(
+  bad_txt_img <- dplyr::tribble(
     ~col1, ~col2,
     1, 5,
     8, "y"
