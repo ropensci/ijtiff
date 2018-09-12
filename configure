@@ -27,6 +27,7 @@ if [ "$INCLUDE_DIR" ] || [ "$LIB_DIR" ]; then
 elif [ "$PKGCONFIG_CFLAGS" ] && [ "$PKGCONFIG_LIBS" ]; then
   echo "Found pkg-config cflags and libs!"
   PKG_CFLAGS=${PKGCONFIG_CFLAGS}
+  # pkg-config may miss -ljpeg and -lz, in which case it needs static libs
   if [[ ${PKGCONFIG_LIBS} != *"ltiff"* ]] || \
      [[ ${PKGCONFIG_LIBS} != *"ljpeg"* ]] || \
      [[ ${PKGCONFIG_LIBS} != *"lz"* ]]; then
@@ -38,8 +39,6 @@ elif [ "$PKGCONFIG_CFLAGS" ] && [ "$PKGCONFIG_LIBS" ]; then
     PKG_LIBS=${PKGCONFIG_LIBS}
   fi
 fi
-
-# pkg-config may miss -ljpeg and -lz, in which case it needs to use static libs
 
 
 # For debugging
