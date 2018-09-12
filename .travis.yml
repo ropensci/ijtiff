@@ -17,6 +17,8 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew reinstall imagemagick@6 --with-fontconfig --with-librsvg; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link --force imagemagick@6; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install libtiff; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install libtiff; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask uninstall oclint; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install fftw; fi
 
 
