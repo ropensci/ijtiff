@@ -4,19 +4,25 @@ language: R
 sudo: true
 cache: packages
 
+os:
+  - linux
+  - osx
+
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libmagick++-dev
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then sudo apt-get -qq update; fi
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then sudo apt-get install -y libmagick++-dev; fi
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then sudo apt-get install libtiff4-dev; fi
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then sudo apt-get install libfftw3-dev; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew reinstall imagemagick@6 --with-fontconfig --with-librsvg; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link --force imagemagick@6; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install libtiff; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install fftw; fi
+
 
 bioc_packages:
   - EBImage
 
-r_github_packages:
-  - rorynolan/filesstrings
-
 after_success:
   - travis_wait 30 Rscript -e 'covr::codecov()'
 
-apt_packages:
-  - libtiff4-dev
-  - libfftw3-dev
