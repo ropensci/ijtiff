@@ -56,5 +56,6 @@ Suggests:
     abind,
     tiff,
     EBImage,
-    rprojroot
+    spelling
 LinkingTo: Rcpp
+Language: en-US

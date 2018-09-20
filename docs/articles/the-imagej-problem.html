@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.4.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.4.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@
     <div class="page-header toc-ignore">
       <h1>The <em>ImageJ</em> Problem</h1>
             
-            <h4 class="date">2018-09-05</h4>
+            <h4 class="date">2018-09-20</h4>
       
       
       <div class="hidden name"><code>the-imagej-problem.Rmd</code></div>
@@ -107,7 +107,7 @@
 <h3 class="hasAnchor">
 <a href="#the-peculiarity-of-imagej-tiff-files" class="anchor"></a>The Peculiarity of <em>ImageJ</em> TIFF files</h3>
 <p>It is common to use <code>TIFFTAG_SAMPLESPERPIXEL</code> to record the number of channels in a TIFF image, however <em>ImageJ</em> sometimes leaves <code>TIFFTAG_SAMPLESPERPIXEL</code> with a value of 1 and instead encodes the number of channels in <code>TIFFTAG_IMAGEDESCRIPTION</code> which might look something like<br><code>"ImageJ=1.51 images=16 channels=2 slices=8"</code>.</p>
-<p>A conventional TIFF reader would miss this channel information (becaus it is in an unusual place). <code>ijtiff</code> does not miss it. We’ll see an example below.</p>
+<p>A conventional TIFF reader would miss this channel information (because it is in an unusual place). <code>ijtiff</code> does not miss it. We’ll see an example below.</p>
 <p><em>Note</em>: These peculiar <em>ImageJ</em>-written TIFF files are still bona fide TIFF files according to the TIFF specification. They just break with common conventions of encoding channel information.</p>
 </div>
 </div>
@@ -173,23 +173,25 @@
 <a href="#the-ijtiff-package" class="anchor"></a>The <code>ijtiff</code> package</h3>
 <p>When we import the same image with the <code>ijtiff</code> package:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">img &lt;-<span class="st"> </span>ijtiff<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ijtiff/topics/read_tif">read_tif</a></span>(path_2ch_ij)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt; Reading Rlogo-banana-red_green.tif: an 8-bit, 155x200 pixel image of unsigned integer type with 2 channels and 3 frames . . .</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt;  Done.</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="kw">dim</span>(img)  <span class="co"># 2 channels, 3 frames</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; [1] 155 200   2   3</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">img[<span class="dv">100</span><span class="op">:</span><span class="dv">110</span>, <span class="dv">50</span><span class="op">:</span><span class="dv">60</span>, <span class="dv">1</span>, <span class="dv">1</span>]  <span class="co"># print a section of the first channel, first frame</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt;       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11]</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt;  [1,]  169  169  167  169  180  235  255  255  255   255   255</span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt;  [2,]  172  164  172  164  164  172  222  255  255   255   255</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt;  [3,]  167  169  164  169  169  164  169  199  255   255   255</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;  [4,]  164  164  169  164  169  164  169  164  180   231   255</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt;  [5,]  172  172  164  169  164  169  164  169  164   164   205</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt;  [6,]  172  164  164  164  167  167  167  164  164   167   164</span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt;  [7,]  167  167  164  167  167  164  164  167  164   164   164</span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt;  [8,]  164  167  164  167  164  164  167  164  167   164   164</span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt;  [9,]  164  172  164  164  164  167  164  164  164   164   164</span></a>
-<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt; [10,]  164  167  164  167  164  164  164  164  164   164   164</span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt; [11,]  164  164  164  164  164  164  167  164  164   164   164</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt; Reading Rlogo-banana-red_green.tif: an 8-bit, 155x200 pixel</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt; image of unsigned integer type with 2 channels and 3 frames .</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt; . .</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt;  Done.</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="kw">dim</span>(img)  <span class="co"># 2 channels, 3 frames</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; [1] 155 200   2   3</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">img[<span class="dv">100</span><span class="op">:</span><span class="dv">110</span>, <span class="dv">50</span><span class="op">:</span><span class="dv">60</span>, <span class="dv">1</span>, <span class="dv">1</span>]  <span class="co"># print a section of the first channel, first frame</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt;       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11]</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt;  [1,]  169  169  167  169  180  235  255  255  255   255   255</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;  [2,]  172  164  172  164  164  172  222  255  255   255   255</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt;  [3,]  167  169  164  169  169  164  169  199  255   255   255</span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt;  [4,]  164  164  169  164  169  164  169  164  180   231   255</span></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt;  [5,]  172  172  164  169  164  169  164  169  164   164   205</span></a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt;  [6,]  172  164  164  164  167  167  167  164  164   167   164</span></a>
+<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt;  [7,]  167  167  164  167  167  164  164  167  164   164   164</span></a>
+<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt;  [8,]  164  167  164  167  164  164  167  164  167   164   164</span></a>
+<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt;  [9,]  164  172  164  164  164  167  164  164  164   164   164</span></a>
+<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt; [10,]  164  167  164  167  164  164  164  164  164   164   164</span></a>
+<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#&gt; [11,]  164  164  164  164  164  164  167  164  164   164   164</span></a></code></pre></div>
 <ul>
 <li>We see the image nicely represented as an array of channels of frames.</li>
 <li>We get no needless warnings.</li>

@@ -32,7 +32,7 @@ One goal of the `ijtiff` R package is to correctly import TIFF files that were s
 It is common to use `TIFFTAG_SAMPLESPERPIXEL` to record the number of channels in a TIFF image, however _ImageJ_ sometimes leaves `TIFFTAG_SAMPLESPERPIXEL` with a value of 1 and instead encodes the number of channels in `TIFFTAG_IMAGEDESCRIPTION` which might look something like  
 `"ImageJ=1.51 images=16 channels=2 slices=8"`.
 
-A conventional TIFF reader would miss this channel information (becaus it is in an unusual place). `ijtiff` does not miss it. We'll see an example below. 
+A conventional TIFF reader would miss this channel information (because it is in an unusual place). `ijtiff` does not miss it. We'll see an example below. 
 
 _Note_: These peculiar _ImageJ_-written TIFF files are still bona fide TIFF files according to the TIFF specification. They just break with common conventions of encoding channel information.
 
