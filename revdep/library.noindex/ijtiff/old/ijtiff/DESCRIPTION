@@ -1,7 +1,7 @@
 Package: ijtiff
 Type: Package
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files
-Version: 1.4.2
+Version: 1.4.1
 Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com", 
                     role = c("aut", "cre"), 
                     comment = c(ORCID = "0000-0002-5239-4043")),
@@ -29,33 +29,24 @@ LazyData: true
 RoxygenNote: 6.1.0
 URL: https://ropensci.github.io/ijtiff
 BugReports: https://www.github.com/ropensci/ijtiff/issues
-Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
-Imports: 
-    checkmate,
-    magrittr,
-    filesstrings (>= 2.7.0),
-    stringr,
-    purrr,
-    Rcpp,
-    fields,
-    grDevices,
-    readr,
-    rlang,
-    dplyr,
-    methods,
-    glue,
-    BBmisc
-Suggests: 
-    knitr,
-    testthat,
-    rmarkdown,
-    covr,
-    magick,
-    abind,
-    tiff,
-    EBImage,
-    spelling
+Imports: checkmate, magrittr, filesstrings (>= 2.7.0), stringr, purrr,
+        Rcpp, fields, grDevices, readr, rlang, dplyr, methods, glue,
+        BBmisc
+Suggests: knitr, testthat, rmarkdown, covr, magick, abind, tiff,
+        EBImage, spelling
 LinkingTo: Rcpp
 Language: en-US
+NeedsCompilation: yes
+Packaged: 2018-09-24 10:14:40 UTC; rnolan
+Author: Rory Nolan [aut, cre] (<https://orcid.org/0000-0002-5239-4043>),
+  Kent Johnson [aut],
+  Simon Urbanek [ctb],
+  Sergi Padilla-Parra [ths] (<https://orcid.org/0000-0002-8010-9481>),
+  Jeroen Ooms [rev, ctb] (<https://orcid.org/0000-0002-4035-0289>),
+  Jon Clayden [rev] (<https://orcid.org/0000-0002-6608-0619>)
+Repository: CRAN
+Date/Publication: 2018-09-24 10:40:02 UTC
+Built: R 3.5.0; x86_64-apple-darwin15.6.0; 2018-09-26 21:26:36 UTC; unix
+Archs: ijtiff.so.dSYM

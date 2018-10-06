@@ -1,0 +1,13 @@
+as_EBImage              Convert an ijtiff_img to an EBImage::Image.
+count_imgs              Count the number of images in a TIFF file.
+display                 Basic image display.
+ijtiff                  'ijtiff': TIFF I/O for _ImageJ_ users
+ijtiff_img              'ijtiff_img' class.
+linescan-conversion     Rejig linescan images.
+read_tags               Read TIFF tag information without actually
+                        reading the image array.
+read_tif                Read an image stored in the TIFF format
+text-image-io           Read/write an image array to/from disk as text
+                        file(s).
+tiff_tag_data           TIFF tag information.
+write_tif               Write images in TIFF format
