@@ -221,7 +221,7 @@ test_that("write_tif() errors correctly", {
   expect_error(
     read_tif(system.file("img", "bad_ij1.tif", package = "ijtiff")),
     paste0("The ImageJ-written image you're trying to read says in its ",
-           "TIFFTAG_DESSCRIPTION that it has 13 images of 5 slices of 2 ",
+           "TIFFTAG_DESCRIPTION that it has 13 images of 5 slices of 2 ",
            "channels. However, with 5 slices of 2 channels, one would expect ",
            "there to be 5x2=10 images. This discrepancy means that the ",
            "'ijtiff' package can't read your image correctly. ",
@@ -231,17 +231,6 @@ test_that("write_tif() errors correctly", {
   )
   expect_error(
     read_tif(system.file("img", "bad_ij2.tif", package = "ijtiff")),
-    paste0("The ImageJ-written image you're trying to read says in its ",
-           "TIFFTAG_DESSCRIPTION that it has 13 images of 5 slices of 2 ",
-           "channels. However, with 5 slices of 2 channels, one would expect ",
-           "there to be 5x2=10 images. This discrepancy means that the ",
-           "'ijtiff' package can't read your image correctly. ",
-           "One possible source of this kind of error is that your image is ",
-           "temporal and volumetric. 'ijtiff' can handle either time-based or ",
-           "volumetric stacks, but not both.")
-  )
-  expect_error(
-    read_tif(system.file("img", "bad_ij3.tif", package = "ijtiff")),
     paste0("The ImageJ-written image you're trying to read says it has ",
            "8 frames AND 5 slices. To be read by the 'ijtiff' package, ",
            "the number of slices OR the number of frames should be specified ",

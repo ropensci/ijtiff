@@ -8,7 +8,7 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-",
+  fig.path = "man/figures/index-",
   out.width = "100%"
 )
 ```
@@ -25,13 +25,13 @@ The github repo of `ijtiff` is at https://github.com/ropensci/ijtiff.
 
 ## Installation
 
-You can install the released version of ijtiff from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of `ijtiff` from [CRAN](https://CRAN.R-project.org/package=ijtiff) with:
 
 ```{r, eval=FALSE}
 install.packages("ijtiff")
 ```
 
-You can install the released version of ijtiff from [GitHub](https://github.com/ropensci/ijtiff) with:
+You can install the released version of `ijtiff` from [GitHub](https://github.com/ropensci/ijtiff) with:
 
 ```{r, eval=FALSE}
 devtools::install_github("ropensci/ijtiff")

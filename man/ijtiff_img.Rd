@@ -2,9 +2,12 @@
 % Please edit documentation in R/class_constructors.R
 \name{ijtiff_img}
 \alias{ijtiff_img}
+\alias{as_ijtiff_img}
 \title{\code{ijtiff_img} class.}
 \usage{
 ijtiff_img(img, ...)
+
+as_ijtiff_img(img, ...)
 }
 \arguments{
 \item{img}{An array representing the image. \itemize{\item For a

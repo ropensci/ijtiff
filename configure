@@ -28,18 +28,23 @@ elif [ "$PKGCONFIG_CFLAGS" ] && [ "$PKGCONFIG_LIBS" ]; then
   echo "Found pkg-config cflags and libs!"
   PKG_CFLAGS=${PKGCONFIG_CFLAGS}
   # pkg-config may miss -ljpeg and -lz, in which case it needs static libs
-  if [[ ${PKGCONFIG_LIBS} != *"ltiff"* ]] || \
-     [[ ${PKGCONFIG_LIBS} != *"ljpeg"* ]] || \
-     [[ ${PKGCONFIG_LIBS} != *"lz"* ]]; then
+  if [[ ${PKGCONFIG_LIBS} != *"-ltiff"* ]] || \
+     [[ ${PKGCONFIG_LIBS} != *"-ljpeg"* ]] || \
+     [[ ${PKGCONFIG_LIBS} != *"-lz"* ]]; then
     PKGCONFIG_LIBS=$(pkg-config --libs --static ${PKG_CONFIG_NAME})
   fi
-  if [[ ${PKGCONFIG_LIBS} == *"ltiff"* ]] && \
-     [[ ${PKGCONFIG_LIBS} == *"ljpeg"* ]] && \
-     [[ ${PKGCONFIG_LIBS} == *"lz"* ]]; then
+  if [[ ${PKGCONFIG_LIBS} == *"-ltiff"* ]] && \
+     [[ ${PKGCONFIG_LIBS} == *"-ljpeg"* ]] && \
+     [[ ${PKGCONFIG_LIBS} == *"-lz"* ]]; then
     PKG_LIBS=${PKGCONFIG_LIBS}
   fi
 fi
 
+# Hack for CRAN Solaris which lacks ljbig
+if [[ $(uname) == *"SunOS"* ]] && \
+   [[ ${PKG_LIBS} == *"-ljbig"* ]]; then
+   PKG_LIBS=$(echo $PKG_LIBS | sed 's/ -ljbig//')
+fi
 
 # For debugging
 echo "Using PKG_CFLAGS=$PKG_CFLAGS"

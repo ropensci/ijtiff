@@ -118,7 +118,7 @@ read_tif <- function(path, list_safety = "error", msg = TRUE) {
             if (n_imgs != n_ch * n_slices) {
               stop(
                 "The ImageJ-written image you're trying to read says in its",
-                " TIFFTAG_DESSCRIPTION that it has ", n_imgs, " images of ",
+                " TIFFTAG_DESCRIPTION that it has ", n_imgs, " images of ",
                 n_slices, " slices of ", n_ch,
                 " channels. However, with ", n_slices, " slices of ", n_ch,
                 " channels, one would expect there to be ", n_slices, "x",

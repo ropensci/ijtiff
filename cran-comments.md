@@ -29,4 +29,5 @@ There are 3 reverse dependencies: `detrendr`, `nandb` and `autothresholdr`. This
 ### Fix
 
 
-This is a fix for the `configure` script which was prone to failure on mac.
+* This is a fix for Solaris which lacks `-ljbig`.
+* It also trims the package extdata to ensure the package is below 5MB on all platforms, eliminating NOTEs.

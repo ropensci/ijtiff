@@ -54,3 +54,7 @@ ijtiff_img <- function(img, ...) {
   class(img) %<>% c("ijtiff_img", .)
   img
 }
+
+#' @rdname ijtiff_img
+#' @export
+as_ijtiff_img <- ijtiff_img

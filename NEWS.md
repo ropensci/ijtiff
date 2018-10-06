@@ -1,3 +1,10 @@
+## `ijtiff` 1.4.2
+
+#### BUG FIXES
+* Hacky fix for `configure` script to deal with lack of `-ljbig` on Solaris.
+* Trim the package to below 5MB by compressing a few TIFF files.
+
+
 ## `ijtiff` 1.4.1
 
 #### NEW FEATURES

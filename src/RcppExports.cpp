@@ -47,10 +47,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ijtiff_float_max", (DL_FUNC) &_ijtiff_float_max, 0},
     {"_ijtiff_dims_cpp", (DL_FUNC) &_ijtiff_dims_cpp, 1},
     {"_ijtiff_enlist_img_cpp", (DL_FUNC) &_ijtiff_enlist_img_cpp, 1},
-    {"count_directories_C",    (DL_FUNC) &count_directories_C,    1},
-    {"read_tags_C",            (DL_FUNC) &read_tags_C,            2},
-    {"read_tif_C",             (DL_FUNC) &read_tif_C,             1},
-    {"write_tif_C",            (DL_FUNC) &write_tif_C,            5},
+    {"count_directories_C", (DL_FUNC) &count_directories_C, 1},
+    {"read_tags_C",         (DL_FUNC) &read_tags_C,         2},
+    {"read_tif_C",          (DL_FUNC) &read_tif_C,          1},
+    {"write_tif_C",         (DL_FUNC) &write_tif_C,         5},
     {NULL, NULL, 0}
 };
 

@@ -4,8 +4,9 @@
 # ijtiff <img src="man/figures/logo.png" align="right" height=140/>
 
 This is a general purpose TIFF I/O utility for R. The [`tiff`
-package](https://cran.r-project.org/package=tiff) already exists but
-`ijtiff` adds some functionality and overcomes some bugs therein.
+package](https://cran.r-project.org/package=tiff) already exists for
+this purpose but `ijtiff` adds some functionality and overcomes some
+bugs therein.
 
   - `ijtiff` can write TIFF files whose pixel values are real
     (floating-point) numbers; `tiff` cannot.
@@ -18,41 +19,33 @@ The github repo of `ijtiff` is at <https://github.com/ropensci/ijtiff>.
 
 ## Installation
 
-You can install the released version of strex from
-[CRAN](https://CRAN.R-project.org) with:
+You can install the released version of `ijtiff` from
+[CRAN](https://CRAN.R-project.org/package=ijtiff) with:
 
 ``` r
-install.packages("strex")
+install.packages("ijtiff")
 ```
 
-You can install the released version of strex from
-[CRAN](https://CRAN.R-project.org) with:
+You can install the released version of `ijtiff` from
+[GitHub](https://github.com/ropensci/ijtiff) with:
 
 ``` r
-devtools::install_github("rorynolan/strex")
+devtools::install_github("ropensci/ijtiff")
 ```
 
-## How to use the package
+## How to use `ijtiff`
 
-The following articles contain all you need to get going:
+The [Reading and Writing
+Images](https://ropensci.github.io/ijtiff/articles/reading-and-writing-images.html)
+article is probably all you need to know.
 
-  - [Alphordering
-    Numbers](https://rorynolan.github.io/strex/articles/alphordering-numbers.html)
-    tells you how to fix the pesky problem of numbers in file names not
-    complying with alphabetical order.
-  - [Argument
-    Matching](https://rorynolan.github.io/strex/articles/argument-matching.html)
-    showcases `strex::match_arg()`, an improvement on
-    `base::match.arg()` which allows one to ignore case during argument
-    matching.
-  - [Before and
-    After](https://rorynolan.github.io/strex/articles/before-and-after.html)
-    is for the common problem where you want to get the bit of a string
-    before or after an occurrence of a pattern.
-  - [Numbers Within
-    Strings](https://rorynolan.github.io/strex/articles/numbers-in-strings.html)
-    shows how to deal with the common problem of extracting numeric
-    information contained within larger strings.
-  - [Important
-    Miscellany](https://rorynolan.github.io/strex/articles/important-miscellany.html)
-    is the rest, and there’s a lot.
+## More about `ijtiff`
+
+  - [Text
+    Images](https://ropensci.github.io/ijtiff/articles/text-images.html)
+    tells you more about what *text images* are and why you might ever
+    use them.
+  - [The *ImageJ*
+    Problem](https://ropensci.github.io/ijtiff/articles/the-imagej-problem.html)
+    explains the problem that `tiff` has when reading TIFF files written
+    by *ImageJ* and how `ijtiff` fixes this problem.

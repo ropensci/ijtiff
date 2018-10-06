@@ -10,7 +10,9 @@
 #'   if the maximum element in `img` is 789, then 16-bit will be chosen because
 #'   789 is greater than 2 ^ 8 - 1 but less than or equal to 2 ^ 16 - 1.
 #' @param compression A string, the desired compression algorithm. Must be one
-#'   of `"LZW"`, `"none"`, `PackBits`", `"RLE"`, `"JPEG"`, or `"deflate"`.
+#'   of `"none"`, `"LZW"`, `"PackBits"`, `"RLE"`, `"JPEG"`, or `"deflate"`. If
+#'   you want compression but don't know which one to go for, I recommend
+#'   `"LZW"`, it gives a large file size reduction without much loss of quality.
 #' @param overwrite If writing the image would overwrite a file, do you want to
 #'   proceed?
 #' @param msg Print an informative message about the image being written?
@@ -84,7 +86,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
   img %<>% ijtiff_img()
   d <- dim(img)
   compressions <- c(
-    none = 1L, rle = 2L, packbits = 32773L, jpeg = 7L,
+    none = 1L, RLE = 2L, LZW = 5L, PackBits = 32773L, JPEG = 7L,
     deflate = 8L
   )
   compression %<>% filesstrings::match_arg(names(compressions),
