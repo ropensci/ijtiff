@@ -115,6 +115,7 @@ test_that("Negative-numbered TIFF I/O works", {
 })
 
 test_that("List returning works", {
+  skip_if_not_installed("tiff")
   context("List returning")
   img1 <- matrix(0.5, nrow = 2, ncol = 2)
   img2 <- matrix(0.7, nrow = 3, ncol = 7)

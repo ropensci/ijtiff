@@ -334,3 +334,30 @@ pretty_msg <- function(...) {
     glue::glue_collapse(sep = "\n") %>%
     message()
 }
+
+#' TIFF tag reference.
+#'
+#' A dataset containing the information on all known baseline and extended TIFF
+#' tags.
+#'
+#' A data frame with 96 rows and 10 variables: \describe{
+#' \item{code_dec}{decimal numeric code of the TIFF tag}
+#' \item{code_hex}{hexadecimal numeric code of the TIFF tag} \item{name}{the
+#' name of the TIFF tag} \item{short_description}{a short description of the
+#' TIFF tag} \item{tag_type}{the type of TIFF tag: either "baseline" or
+#' "extended"} \item{url}{the URL of the TIFF tag at
+#' \url{https://www.awaresystems.be}} \item{libtiff_name}{the TIFF tag name in
+#' the libtiff C library} \item{c_type}{the C type of the TIFF tag data in
+#' libtiff} \item{count}{the number of elements in the TIFF tag data}
+#' \item{default}{the default value of the data held in the TIFF tag} }
+#' @source \url{https://www.awaresystems.be}
+#'
+#' @examples
+#' get_tiff_tags_reference()
+#'
+#' @export
+get_tiff_tags_reference <- function() {
+  "TIFF_tags.csv" %>%
+    system.file("extdata", ., package = "ijtiff") %>%
+    {suppressMessages(readr::read_csv(.))}
+}

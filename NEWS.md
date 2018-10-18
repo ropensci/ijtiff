@@ -1,4 +1,7 @@
-## `ijtiff` 1.4.2
+## `ijtiff` 1.5.0
+
+#### NEW FEATURES
+* Allow ZIP compression (which seems to be the best).
 
 #### BUG FIXES
 * Hacky fix for `configure` script to deal with lack of `-ljbig` on Solaris.

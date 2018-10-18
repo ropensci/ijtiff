@@ -25,9 +25,11 @@ if the maximum element in \code{img} is 789, then 16-bit will be chosen because
 789 is greater than 2 ^ 8 - 1 but less than or equal to 2 ^ 16 - 1.}
 
 \item{compression}{A string, the desired compression algorithm. Must be one
-of \code{"none"}, \code{"LZW"}, \code{"PackBits"}, \code{"RLE"}, \code{"JPEG"}, or \code{"deflate"}. If
-you want compression but don't know which one to go for, I recommend
-\code{"LZW"}, it gives a large file size reduction without much loss of quality.}
+of \code{"none"}, \code{"LZW"}, \code{"PackBits"}, \code{"RLE"}, \code{"JPEG"}, \code{"deflate"} or
+\code{"Zip"}. If you want compression but don't know which one to go for, I
+recommend \code{"Zip"}, it gives a large file size reduction and it's lossless.
+Note that \code{"deflate"} and \code{"Zip"} are the same thing. Avoid using \code{"JPEG"}
+compression in a TIFF file if you can; I've noticed it can be buggy.}
 
 \item{overwrite}{If writing the image would overwrite a file, do you want to
 proceed?}

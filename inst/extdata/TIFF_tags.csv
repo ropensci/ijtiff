@@ -1,4 +1,4 @@
-code_dec,code_hex,name,short_description,type,url,libtiff_name,type1,count,default
+code_dec,code_hex,name,short_description,type,url,libtiff_name,c_type,count,default
 254,00FE,NewSubfileType,A general indication of the kind of data contained in this subfile.,baseline,https://www.awaresystems.be/imaging/tiff/tifftags/newsubfiletype.html,TIFFTAG_SUBFILETYPE,LONG,1,0
 255,00FF,SubfileType,A general indication of the kind of data contained in this subfile.,baseline,https://www.awaresystems.be/imaging/tiff/tifftags/subfiletype.html,TIFFTAG_OSUBFILETYPE,SHORT,1,None
 256,0100,ImageWidth,"The number of columns in the image, i.e., the number of pixels per row.",baseline,https://www.awaresystems.be/imaging/tiff/tifftags/imagewidth.html,TIFFTAG_IMAGEWIDTH,SHORT or LONG,1,None
