@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.4.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.5.0</span>
       </span>
     </div>
 
@@ -117,12 +117,31 @@
       
     </div>
 
-    <div id="ijtiff-1-4-2" class="section level2">
+    <div id="ijtiff-1-5-0" class="section level2">
 <h2 class="hasAnchor">
-<a href="#ijtiff-1-4-2" class="anchor"></a><code>ijtiff</code> 1.4.2</h2>
+<a href="#ijtiff-1-5-0" class="anchor"></a><code>ijtiff</code> 1.5.0</h2>
+<div id="new-features" class="section level4">
+<h4 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>NEW FEATURES</h4>
+<ul>
+<li>Allow ZIP compression (which seems to be the best).</li>
+</ul>
+</div>
 <div id="bug-fixes" class="section level4">
 <h4 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>BUG FIXES</h4>
+<ul>
+<li>
+<code><a href="../reference/text-image-io.html">write_txt_img()</a></code> was using decimal points for integers (e.g. 3.000 instead of just 3).</li>
+</ul>
+</div>
+</div>
+    <div id="ijtiff-1-4-2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#ijtiff-1-4-2" class="anchor"></a><code>ijtiff</code> 1.4.2</h2>
+<div id="bug-fixes-1" class="section level4">
+<h4 class="hasAnchor">
+<a href="#bug-fixes-1" class="anchor"></a>BUG FIXES</h4>
 <ul>
 <li>Hacky fix for <code>configure</code> script to deal with lack of <code>-ljbig</code> on Solaris.</li>
 <li>Trim the package to below 5MB by compressing a few TIFF files.</li>
@@ -132,16 +151,16 @@
     <div id="ijtiff-1-4-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ijtiff-1-4-1" class="anchor"></a><code>ijtiff</code> 1.4.1</h2>
-<div id="new-features" class="section level4">
+<div id="new-features-1" class="section level4">
 <h4 class="hasAnchor">
-<a href="#new-features" class="anchor"></a>NEW FEATURES</h4>
+<a href="#new-features-1" class="anchor"></a>NEW FEATURES</h4>
 <ul>
 <li>The package is now lighter in appearance because it doesn’t explicitly depend on <code>tibble</code>.</li>
 </ul>
 </div>
-<div id="bug-fixes-1" class="section level4">
+<div id="bug-fixes-2" class="section level4">
 <h4 class="hasAnchor">
-<a href="#bug-fixes-1" class="anchor"></a>BUG FIXES</h4>
+<a href="#bug-fixes-2" class="anchor"></a>BUG FIXES</h4>
 <ul>
 <li>The configure script now allows for needing <code>--static</code> with <code>pkg-config</code>.</li>
 </ul>
@@ -150,9 +169,9 @@
     <div id="ijtiff-1-4-0" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ijtiff-1-4-0" class="anchor"></a><code>ijtiff</code> 1.4.0</h2>
-<div id="new-features-1" class="section level4">
+<div id="new-features-2" class="section level4">
 <h4 class="hasAnchor">
-<a href="#new-features-1" class="anchor"></a>NEW FEATURES</h4>
+<a href="#new-features-2" class="anchor"></a>NEW FEATURES</h4>
 <ul>
 <li>A <code>pkgdown</code> website.</li>
 </ul>
@@ -169,9 +188,9 @@
     <div id="ijtiff-1-3-0" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ijtiff-1-3-0" class="anchor"></a><code>ijtiff</code> 1.3.0</h2>
-<div id="new-features-2" class="section level4">
+<div id="new-features-3" class="section level4">
 <h4 class="hasAnchor">
-<a href="#new-features-2" class="anchor"></a>NEW FEATURES</h4>
+<a href="#new-features-3" class="anchor"></a>NEW FEATURES</h4>
 <ul>
 <li>Conversion functions <code><a href="../reference/linescan-conversion.html">linescan_to_stack()</a></code> and <code><a href="../reference/linescan-conversion.html">stack_to_linescan()</a></code> useful for FCS data.</li>
 </ul>
@@ -197,9 +216,9 @@
     <div id="ijtiff-1-1-0" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ijtiff-1-1-0" class="anchor"></a><code>ijtiff</code> 1.1.0</h2>
-<div id="new-features-3" class="section level4">
+<div id="new-features-4" class="section level4">
 <h4 class="hasAnchor">
-<a href="#new-features-3" class="anchor"></a>NEW FEATURES</h4>
+<a href="#new-features-4" class="anchor"></a>NEW FEATURES</h4>
 <ul>
 <li>
 <code><a href="../reference/count_imgs.html">count_imgs()</a></code> counts the number of images in a TIFF file without reading the images themselves.</li>
@@ -239,9 +258,9 @@
 <li>Improve README and vignette with more tangible and fun example.</li>
 </ul>
 </div>
-<div id="bug-fixes-2" class="section level4">
+<div id="bug-fixes-3" class="section level4">
 <h4 class="hasAnchor">
-<a href="#bug-fixes-2" class="anchor"></a>BUG FIXES</h4>
+<a href="#bug-fixes-3" class="anchor"></a>BUG FIXES</h4>
 <ul>
 <li>Fix windows <code>libtiff</code> issues (thanks to Jeroen Ooms).</li>
 <li>Found some ImageJ-written TIFFs that weren’t being read correctly and fixed that.</li>
@@ -277,6 +296,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#ijtiff-1-5-0">1.5.0</a></li>
         <li><a href="#ijtiff-1-4-2">1.4.2</a></li>
         <li><a href="#ijtiff-1-4-1">1.4.1</a></li>
         <li><a href="#ijtiff-1-4-0">1.4.0</a></li>

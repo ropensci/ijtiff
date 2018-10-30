@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.4.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.5.0</span>
       </span>
     </div>
 
@@ -159,9 +159,11 @@ if the maximum element in <code>img</code> is 789, then 16-bit will be chosen be
     <tr>
       <th>compression</th>
       <td><p>A string, the desired compression algorithm. Must be one
-of <code>"none"</code>, <code>"LZW"</code>, <code>"PackBits"</code>, <code>"RLE"</code>, <code>"JPEG"</code>, or <code>"deflate"</code>. If
-you want compression but don't know which one to go for, I recommend
-<code>"LZW"</code>, it gives a large file size reduction without much loss of quality.</p></td>
+of <code>"none"</code>, <code>"LZW"</code>, <code>"PackBits"</code>, <code>"RLE"</code>, <code>"JPEG"</code>, <code>"deflate"</code> or
+<code>"Zip"</code>. If you want compression but don't know which one to go for, I
+recommend <code>"Zip"</code>, it gives a large file size reduction and it's lossless.
+Note that <code>"deflate"</code> and <code>"Zip"</code> are the same thing. Avoid using <code>"JPEG"</code>
+compression in a TIFF file if you can; I've noticed it can be buggy.</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
