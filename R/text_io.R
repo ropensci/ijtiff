@@ -59,6 +59,9 @@ write_txt_img <- function(img, path, rds = FALSE, msg = TRUE) {
   }
   dfs <- purrr::map(BBmisc::convertRowsToList(grid), ~img[, , .[1], .[2]]) %>%
     purrr::map(as.data.frame)
+  for (i in seq_along(dfs)) {
+    dfs[[i]] %<>% dplyr::mutate_if(can_be_intish, as.integer)
+  }
   purrr::map2(dfs, paths, ~readr::write_tsv(.x, .y, col_names = FALSE))
   if (msg) message("\b Done.")
   invisible(img)

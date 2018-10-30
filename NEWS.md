@@ -4,6 +4,12 @@
 * Allow ZIP compression (which seems to be the best).
 
 #### BUG FIXES
+* `write_txt_img()` was using decimal points for integers (e.g. 3.000 instead of just 3).
+
+
+## `ijtiff` 1.4.2
+
+#### BUG FIXES
 * Hacky fix for `configure` script to deal with lack of `-ljbig` on Solaris.
 * Trim the package to below 5MB by compressing a few TIFF files.
 

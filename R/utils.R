@@ -361,3 +361,4 @@ get_tiff_tags_reference <- function() {
     system.file("extdata", ., package = "ijtiff") %>%
     {suppressMessages(readr::read_csv(.))}
 }
+
