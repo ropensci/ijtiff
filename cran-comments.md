@@ -21,13 +21,7 @@
 ### Reverse dependencies
 
 
-There are 3 reverse dependencies: `detrendr`, `nandb` and `autothresholdr`. This update does not break any of these.
-  * See https://github.com/ropensci/ijtiff/blob/master/revdep/checks.rds for full check results.
+There are 3 reverse dependencies: `detrendr`, `nandb` and `autothresholdr`. This update does not break any of these. However, `nandb` is currently broken. It has undergone a rewrite which depends on new versions of `filesstrings` (already submitted), `ijtiff` (this package), `autothresholdr` and `detrendr`. This new image analysis ecosystem is ready and being submitted in order.
+  * See https://github.com/ropensci/ijtiff/blob/master/revdep/problems.md for more.
     
     
-
-### Fix
-
-
-* This is a fix for Solaris which lacks `-ljbig`.
-* It also trims the package extdata to ensure the package is below 5MB on all platforms, eliminating NOTEs.

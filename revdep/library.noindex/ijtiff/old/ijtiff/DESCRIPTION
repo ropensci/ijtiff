@@ -1,7 +1,7 @@
 Package: ijtiff
 Type: Package
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files
-Version: 1.4.1
+Version: 1.4.2
 Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com", 
                     role = c("aut", "cre"), 
                     comment = c(ORCID = "0000-0002-5239-4043")),
@@ -39,7 +39,7 @@ Suggests: knitr, testthat, rmarkdown, covr, magick, abind, tiff,
 LinkingTo: Rcpp
 Language: en-US
 NeedsCompilation: yes
-Packaged: 2018-09-24 10:14:40 UTC; rnolan
+Packaged: 2018-10-06 22:57:10 UTC; rnolan
 Author: Rory Nolan [aut, cre] (<https://orcid.org/0000-0002-5239-4043>),
   Kent Johnson [aut],
   Simon Urbanek [ctb],
@@ -47,6 +47,6 @@ Author: Rory Nolan [aut, cre] (<https://orcid.org/0000-0002-5239-4043>),
   Jeroen Ooms [rev, ctb] (<https://orcid.org/0000-0002-4035-0289>),
   Jon Clayden [rev] (<https://orcid.org/0000-0002-6608-0619>)
 Repository: CRAN
-Date/Publication: 2018-09-24 10:40:02 UTC
-Built: R 3.5.0; x86_64-apple-darwin15.6.0; 2018-09-26 21:26:36 UTC; unix
+Date/Publication: 2018-10-07 04:40:03 UTC
+Built: R 3.5.0; x86_64-apple-darwin15.6.0; 2018-10-08 14:41:35 UTC; unix
 Archs: ijtiff.so.dSYM

@@ -1,5 +1,6 @@
 ijtiff-package	ijtiff
 as_EBImage	as_EBImage
+as_ijtiff_img	ijtiff_img
 count_imgs	count_imgs
 display	display
 ijtiff	ijtiff

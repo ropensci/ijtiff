@@ -6,7 +6,6 @@ clang++  -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I"/Use
 clang++  -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I"/Users/rnolan/Dropbox/DPhil/Misc/RStuff/ijtiff/revdep/library.noindex/nandb/Rcpp/include" -I/usr/local/include   -fPIC  -Wall -g -O2  -c cross_var.cpp -o cross_var.o
 clang++  -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I"/Users/rnolan/Dropbox/DPhil/Misc/RStuff/ijtiff/revdep/library.noindex/nandb/Rcpp/include" -I/usr/local/include   -fPIC  -Wall -g -O2  -c float.cpp -o float.o
 clang++ -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -single_module -multiply_defined suppress -L/Library/Frameworks/R.framework/Resources/lib -L/usr/local/lib -o nandb.so ImageFilters.o RcppExports.o cross_var.o float.o -F/Library/Frameworks/R.framework/.. -framework R -Wl,-framework -Wl,CoreFoundation
-ld: warning: text-based stub file /System/Library/Frameworks//CoreFoundation.framework/CoreFoundation.tbd and library file /System/Library/Frameworks//CoreFoundation.framework/CoreFoundation are out of sync. Falling back to library file for linking.
 installing to /Users/rnolan/Dropbox/DPhil/Misc/RStuff/ijtiff/revdep/checks.noindex/nandb/new/nandb.Rcheck/nandb/libs
 ** R
 ** inst

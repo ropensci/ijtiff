@@ -143,7 +143,7 @@ xlive/2016/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2
 dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts
 /type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw
 /times/utmri8a.pfb>
-Output written on Rd2.pdf (10 pages, 112277 bytes).
+Output written on Rd2.pdf (10 pages, 112265 bytes).
 Transcript written on Rd2.log.
 This is makeindex, version 2.15 [TeX Live 2016] (kpathsea + Thai support).
 Scanning input file Rd2.idx....done (38 entries accepted, 0 rejected).
@@ -301,7 +301,7 @@ xlive/2016/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2
 dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts
 /type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw
 /times/utmri8a.pfb>
-Output written on Rd2.pdf (11 pages, 117066 bytes).
+Output written on Rd2.pdf (11 pages, 117054 bytes).
 Transcript written on Rd2.log.
 This is makeindex, version 2.15 [TeX Live 2016] (kpathsea + Thai support).
 Scanning input file Rd2.idx....done (38 entries accepted, 0 rejected).
@@ -454,8 +454,8 @@ xlive/2016/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2
 dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts
 /type1/urw/times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw
 /times/utmri8a.pfb>
-Output written on Rd2.pdf (11 pages, 117285 bytes).
+Output written on Rd2.pdf (11 pages, 117273 bytes).
 Transcript written on Rd2.log.
 Saving output to ‘autothresholdr-manual.pdf’ ...
 Done
-You may want to clean up by 'rm -Rf /var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T//RtmpQPu98r/Rd2pdf27d8574908bf'
+You may want to clean up by 'rm -Rf /var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T//Rtmp7DJak5/Rd2pdf129983cc3d5a3'

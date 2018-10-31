@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-<meta name="date" content="2018-09-24" />
+<meta name="date" content="2018-10-06" />
 
 <title>Reading and Writing Images</title>
 
@@ -278,7 +278,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 <h1 class="title toc-ignore">Reading and Writing Images</h1>
-<h4 class="date"><em>2018-09-24</em></h4>
+<h4 class="date"><em>2018-10-06</em></h4>
 
 
 
@@ -290,7 +290,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">path_dancing_banana &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;img&quot;</span>, <span class="st">&quot;Rlogo-banana.tif&quot;</span>,</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">                                   <span class="dt">package =</span> <span class="st">&quot;ijtiff&quot;</span>)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">print</span>(path_dancing_banana)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#&gt; [1] &quot;/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/Rtmp2g3Dfk/Rinst27bb16e8fd46/ijtiff/img/Rlogo-banana.tif&quot;</span></a></code></pre></div>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#&gt; [1] &quot;/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/RtmpWqzJ3S/Rinstcd9925586db3/ijtiff/img/Rlogo-banana.tif&quot;</span></a></code></pre></div>
 <p>To read it in, you just need <code>read_tif()</code> and the path to the image.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(ijtiff)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">img_dancing_banana &lt;-<span class="st"> </span><span class="kw">read_tif</span>(path_dancing_banana)</a>
@@ -307,8 +307,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt;  - attr(*, &quot;sample_format&quot;)= chr &quot;uint&quot;</span></a>
 <a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt;  - attr(*, &quot;planar_config&quot;)= chr &quot;contiguous&quot;</span></a>
 <a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt;  - attr(*, &quot;rows_per_strip&quot;)= int 155</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt;  - attr(*, &quot;compression&quot;)= chr &quot;none&quot;</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;  - attr(*, &quot;description&quot;)= chr &quot;ImageJ=1.52e\nimages=8\nslices=8\nloop=false\n&quot;</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt;  - attr(*, &quot;compression&quot;)= chr &quot;LZW&quot;</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;  - attr(*, &quot;software&quot;)= chr &quot;tiff package, R 3.5.0&quot;</span></a>
 <a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt;  - attr(*, &quot;color_space&quot;)= chr &quot;RGB&quot;</span></a></code></pre></div>
 <p>You can see it’s a 4-dimensional array. The last two dimensions are 3 and 8; this is because these are the channel and frame slots respectively: the image has 3 channels (red, green and blue) and 8 frames. The first two dimensions tell us that the images in the video are 155 pixels tall and 200 pixels wide. The image object is of class <code>ijtiff_img</code>. This guarantees that it is a 4-dimensional array with this structure. The attributes of the <code>ijtiff_img</code> give information on the various TIFF tags that were part of the TIFF image. You can read more about various TIFF tags at <a href="https://www.awaresystems.be/imaging/tiff/tifftags.html" class="uri">https://www.awaresystems.be/imaging/tiff/tifftags.html</a>. To read just the tags and not the image, use the <code>read_tags()</code> function.</p>
 <p>That’s it really as far as reading TIFF files goes; it’s that simple. Let’s visualize the constituent parts of that 8-frame, colour TIFF.</p>
@@ -345,11 +345,11 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>To write an image, you need an object in the style of an <code>ijtiff_img</code> object. You can read about those <a href="https://ropensci.github.io/ijtiff/reference/ijtiff_img.html">here</a>. The basic idea is to have your image in a 4-dimensional array with the structure <code>img[y, x, channel, frame]</code>. Then, to write this image to the location <code>path</code>, you just type <code>write_tif(img, path)</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">path &lt;-<span class="st"> </span><span class="kw">tempfile</span>(<span class="dt">pattern =</span> <span class="st">&quot;dancing-banana&quot;</span>, <span class="dt">fileext =</span> <span class="st">&quot;.tif&quot;</span>)</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">print</span>(path)</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#&gt; [1] &quot;/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T//RtmpirKqxx/dancing-banana2833268b36d.tif&quot;</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#&gt; [1] &quot;/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T//RtmpHQrLA6/dancing-bananace202801b3a2.tif&quot;</span></a>
 <a class="sourceLine" id="cb6-4" data-line-number="4"><span class="kw">write_tif</span>(img_dancing_banana, path)</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">#&gt; Writing dancing-banana2833268b36d.tif: an 8-bit, 155x200 pixel</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">#&gt; image of unsigned integer type with 3 channels and 8 frames .</span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">#&gt; . .</span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">#&gt; Writing dancing-bananace202801b3a2.tif: an 8-bit, 155x200</span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">#&gt; pixel image of unsigned integer type with 3 channels and 8</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">#&gt; frames . . .</span></a>
 <a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">#&gt;  Done.</span></a></code></pre></div>
 </div>
 <div id="reading-text-images" class="section level2">
@@ -364,7 +364,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <h2>Writing text images</h2>
 <p>Writing a text image works as you’d expect.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">write_txt_img</span>(txt_img, <span class="dt">path =</span> <span class="kw">tempfile</span>(<span class="dt">pattern =</span> <span class="st">&quot;txtimg&quot;</span>, <span class="dt">fileext =</span> <span class="st">&quot;.txt&quot;</span>))</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co">#&gt; Writing txtimg283380a4ee8.txt: a 76x100 pixel text image with 1 channel and 1 frame . . .</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co">#&gt; Writing txtimgce20552acb80.txt: a 76x100 pixel text image with 1 channel and 1 frame . . .</span></a>
 <a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">#&gt;  Done.</span></a></code></pre></div>
 </div>
 <div class="footnotes">
