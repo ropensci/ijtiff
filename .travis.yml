@@ -12,7 +12,6 @@ matrix:
       apt:
         update: true
         packages:
-          - libmagick++-dev
           - libtiff5-dev
           - libfftw3-dev
       after_success: Rscript -e 'covr::codecov()'
