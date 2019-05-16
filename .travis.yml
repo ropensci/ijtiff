@@ -4,18 +4,10 @@ language: R
 sudo: true
 cache: packages
 
-bioc_packages:
-  - EBImage
-
 matrix:
   include:
     - os: linux
       dist: xenial
-      before_install:
-        - sudo apt-get -qq update
-        - sudo apt-get install -y libmagick++-dev
-        - sudo apt-get install libtiff4-dev
-        - sudo apt-get install libfftw3-dev
       after_success: Rscript -e 'covr::codecov()'
       before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
       deploy:
@@ -27,11 +19,13 @@ matrix:
       r_build_args: --no-build-vignettes --no-manual
       r_check_args: --no-build-vignettes --no-manual
       warnings_are_errors: false
-      before_install:
-        - brew update
-        - brew reinstall imagemagick@6 --with-fontconfig --with-librsvg
-        - brew link --force imagemagick@6
-        - brew install libtiff
-        - brew cask uninstall oclint
-        - brew install gcc || brew link --overwrite gcc
-        - brew install fftw
+
+addons:
+  apt:
+    update: true
+    packages:
+      - libmagick++-dev
+      - libtiff5-dev
+      - libfftw3-dev
+
+bioc_packages: EBImage
