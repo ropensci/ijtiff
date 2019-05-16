@@ -57,7 +57,10 @@ write_txt_img <- function(img, path, rds = FALSE, msg = TRUE) {
       d[4], " frame", ifelse(d[4] > 1, "s", ""), " . . ."
     )
   }
-  dfs <- purrr::map(BBmisc::convertRowsToList(grid), ~img[, , .[1], .[2]]) %>%
+  dfs <- purrr::map(
+    purrr::map(seq_len(nrow(grid)), ~ grid[., ]),
+    ~img[, , .[1], .[2]]
+  ) %>%
     purrr::map(as.data.frame)
   for (i in seq_along(dfs)) {
     dfs[[i]] %<>% dplyr::mutate_if(can_be_intish, as.integer)

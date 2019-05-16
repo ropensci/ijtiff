@@ -8,6 +8,13 @@ matrix:
   include:
     - os: linux
       dist: xenial
+      addons:
+      apt:
+        update: true
+        packages:
+          - libmagick++-dev
+          - libtiff5-dev
+          - libfftw3-dev
       after_success: Rscript -e 'covr::codecov()'
       before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
       deploy:
@@ -19,13 +26,5 @@ matrix:
       r_build_args: --no-build-vignettes --no-manual
       r_check_args: --no-build-vignettes --no-manual
       warnings_are_errors: false
-
-addons:
-  apt:
-    update: true
-    packages:
-      - libmagick++-dev
-      - libtiff5-dev
-      - libfftw3-dev
 
 bioc_packages: EBImage

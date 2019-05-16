@@ -40,9 +40,9 @@ display <- function(img, method = NULL, basic = FALSE, normalize = TRUE) {
     img %<>% {
       t(.[rev(seq_len(nrow(.))), ])
     }
-    fields::image.plot(img,
+    graphics::image(img,
       col = grDevices::grey.colors(999, 0, 1),
-      axes = FALSE
+      xaxt = "n", yaxt = "n"
     )
   } else {
     if (is_installed("EBImage")) {
