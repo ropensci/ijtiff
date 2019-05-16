@@ -1,0 +1,8 @@
+pandoc: '2.2'
+pkgdown: 1.3.0
+pkgdown_sha: ~
+articles:
+  reading-and-writing-images: reading-and-writing-images.html
+  text-images: text-images.html
+  the-imagej-problem: the-imagej-problem.html
+
