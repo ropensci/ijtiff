@@ -10,8 +10,8 @@ test_that("auto_thresh works", {
                x %T>% {attr(., "ignore_white") <- TRUE})
   expect_equal(auto_thresh(img, "huang", ignore_white = 255),
                x %T>% {attr(., "ignore_white") <- 255})
-  expect_error(auto_thresh(img, "huang", ignore_white = "rory"))
-  expect_error(auto_thresh(img, "huang", ignore_white = "rory"))
+  expect_equal(auto_thresh(img, "otsu")[[1]], 13)
+  expect_equal(auto_thresh(img, "otsu", ignore_black = TRUE)[[1]], 21)
   x <- th(3L, FALSE, FALSE, FALSE, "Triangle")
   expect_equal(auto_thresh(img, "tri"), x)
   x <- th(13L, FALSE, FALSE, FALSE, "Otsu")
@@ -25,15 +25,31 @@ test_that("auto_thresh works", {
   expect_equal(masked, threshed_arr(img %T>% {.[. < thresh] <- NA}, thresh))
   img_neg <- img %T>% {.[1] <- -1}
   expect_error(auto_thresh(img_neg, "huang"))
-  expect_error(auto_thresh(matrix(1, nrow = 2, ncol = 2), "huang"))
-  expect_error(auto_thresh(c(1, NA), method = "tri"), "input int_arr has NA ")
+  expect_error(auto_thresh(matrix(1, nrow = 2, ncol = 2), "huang"),
+               paste0(
+                 "Cannot threshold.+array with only one unique value.+Your\\s?",
+                 "`int_arr` has only one unique value which is 1."
+               ))
+  expect_error(auto_thresh(c(1, NA), method = "tri"),
+               paste0(
+                 "The input `int_arr` has NA values, but you have\\s?",
+                 "`ignore_na =.+FALSE`, so the function\\s?",
+                 "`auto_thresh\\(\\)` has errored.+To tell\\s?",
+                 "`auto_thresh\\(\\)` to ignore `NA` values, set\\s?",
+                 "the.+argument `ignore_na = TRUE`."
+               ))
   x <- th(13L, FALSE, FALSE, TRUE, "Otsu")
   expect_equal(auto_thresh(img %T>% {.[1] <- NA}, "Otsu", ignore_na = TRUE), x)
-  expect_error(auto_thresh(NA, "tri"), "all NAs")
+  expect_error(auto_thresh(NA, "tri"),
+               paste0(
+                 "`int_arr` must not be all `NA`s.+Every element of your\\s?",
+                 "`int_arr` is `NA`."
+               ))
+  img[[1]] <- 2 ^ 8 - 1
+  expect_equal(auto_thresh(img, "otsu", ignore_white = TRUE)[[1]], 13)
 })
 
 test_that("auto_thresh works with matrices", {
-  suppressPackageStartupMessages(library(magrittr, quietly = TRUE))
   img <- system.file("extdata", "eg.tif", package = "autothresholdr") %>%
     ijtiff::read_tif() %>%
     {.[, , 1, 1]}
@@ -44,8 +60,6 @@ test_that("auto_thresh works with matrices", {
                x %T>% {attr(., "ignore_white") <- TRUE})
   expect_equal(auto_thresh(img, "huang", ignore_white = 255),
                x %T>% {attr(., "ignore_white") <- 255})
-  expect_error(auto_thresh(img, "huang", ignore_white = "rory"))
-  expect_error(auto_thresh(img, "huang", ignore_white = "rory"))
   x <- th(3L, FALSE, FALSE, FALSE, "Triangle")
   expect_equal(auto_thresh(img, "tri"), x)
   x <- th(13L, FALSE, FALSE, FALSE, "Otsu")
@@ -59,8 +73,20 @@ test_that("auto_thresh works with matrices", {
   expect_equal(masked, threshed_arr(img %T>% {.[. < thresh] <- NA}, thresh))
   img_neg <- img %T>% {.[1] <- -1}
   expect_error(auto_thresh(img_neg, "huang"))
-  expect_error(auto_thresh(matrix(1, nrow = 2, ncol = 2), "huang"))
-  expect_error(auto_thresh(c(1, NA), method = "tri"), "input int_arr has NA ")
+  expect_error(auto_thresh(matrix(1, nrow = 2, ncol = 2), "huang"),
+               paste0(
+                 "Cannot threshold an array with only one unique\\s?",
+                 "value.+Your `int_arr` has only one unique value which\\s?",
+                 "is 1."
+               ))
+  expect_error(auto_thresh(c(1, NA), method = "tri"),
+               paste0(
+                 "The input `int_arr` has NA values, but you have\\s?",
+                 "`ignore_na =.+FALSE`, so the function\\s?",
+                 "`auto_thresh\\(\\)` has errored.+To tell\\s?",
+                 "`auto_thresh\\(\\)` to ignore `NA` values, set\\s?",
+                 "the.+argument `ignore_na = TRUE`."
+               ))
   x <- th(13L, FALSE, FALSE, TRUE, "Otsu")
   expect_equal(auto_thresh(img %T>% {.[1] <- NA}, "Otsu", ignore_na = TRUE), x)
 })

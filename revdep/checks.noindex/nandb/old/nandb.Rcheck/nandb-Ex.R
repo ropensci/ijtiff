@@ -19,8 +19,8 @@ flush(stderr()); flush(stdout())
 
 img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = 'nandb'))
 ijtiff::display(img[, , 1, 1])
-b <- brightness(img, "e", tau = NA, thresh = "Huang")
-b <- brightness(img, "B", tau = 10, thresh = "tri")
+b <- brightness(img, "e", thresh = "Huang")
+b <- brightness(img, "B", thresh = "tri")
 
 
 
@@ -41,7 +41,7 @@ flush(stderr()); flush(stdout())
 ##D img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = 'nandb'))
 ##D ijtiff::write_tif(img, 'img1.tif')
 ##D ijtiff::write_tif(img, 'img2.tif')
-##D brightness_folder(def = "B", tau = NA, thresh = "Huang", parallel = 2)
+##D brightness_folder(def = "B", thresh = "Huang")
 ## End(Not run)
 
 
@@ -59,8 +59,7 @@ flush(stderr()); flush(stdout())
 ### ** Examples
 
 img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = 'nandb'))
-bts <- brightness_timeseries(img, "e", frames_per_set = 20,
-                              tau = NA, thresh = "Huang", parallel = 2)
+bts <- brightness_timeseries(img, "e", frames_per_set = 20, thresh = "Huang")
 
 
 
@@ -81,8 +80,7 @@ flush(stderr()); flush(stdout())
 ##D img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = 'nandb'))
 ##D ijtiff::write_tif(img, 'img1.tif')
 ##D ijtiff::write_tif(img, 'img2.tif')
-##D brightness_timeseries_folder(def = "e", tau = NA, thresh = "Huang",
-##D                               frames_per_set = 20, parallel = 2)
+##D brightness_timeseries_folder(def = "e", thresh = "tri", frames_per_set = 20)
 ## End(Not run)
 
 
@@ -106,7 +104,7 @@ ijtiff::display(detrendr::mean_pillars(img[, , 2, ]))
 b <- brightness(img, def = "e", thresh = "Huang", filt = "median")
 ijtiff::display(b[, , 1, 1])
 ijtiff::display(b[, , 2, 1])
-cc_b <- cc_brightness(img, tau = "auto", thresh = "Huang")
+cc_b <- cc_brightness(img, thresh = "Huang")
 ijtiff::display(cc_b[, , 1, 1])
 
 
@@ -197,7 +195,7 @@ ijtiff::display(detrendr::mean_pillars(img[, , 2, ]))
 n <- number(img, def = "n", thresh = "Huang", filt = "median")
 ijtiff::display(n[, , 1, 1])
 ijtiff::display(n[, , 2, 1])
-cc_n <- cc_number(img, tau = "auto", thresh = "Huang")
+cc_n <- cc_number(img, thresh = "Huang")
 ijtiff::display(cc_n[, , 1, 1])
 
 
@@ -307,6 +305,47 @@ cross_var_pillars(x, y)
 
 
 cleanEx()
+nameEx("matrix_raster_plot")
+### * matrix_raster_plot
+
+flush(stderr()); flush(stdout())
+
+### Name: matrix_raster_plot
+### Title: Make a raster plot of a matrix.
+### Aliases: matrix_raster_plot
+
+### ** Examples
+
+img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = 'nandb'))
+ijtiff::display(img[, , 1, 1])
+matrix_raster_plot(img[, , 1, 1])
+b <- brightness(img, def = "B", detrend = FALSE, thresh = "Huang")
+matrix_raster_plot(b, scale_name = 'brightness')
+matrix_raster_plot(b, scale_name = 'brightness', log_trans = TRUE)
+matrix_raster_plot(b, scale_name = 'brightness', log_trans = TRUE,
+                   include_breaks = 1.35)
+matrix_raster_plot(b, scale_name = 'brightness', log_trans = TRUE,
+                   breaks = 1:3)
+matrix_raster_plot(b, scale_name = 'brightness',
+                   ranges = seq(0.5, 3, length.out = 6),
+                   range_names = paste0(1:5, 'mer'))
+matrix_raster_plot(b, scale_name = "brightness",
+                   ranges = seq(0.5, 3, length.out = 6),
+                   range_names = paste0(1:5, "mer"), log_trans = TRUE)
+matrix_raster_plot(b, scale_name = "brightness",
+                   include_breaks = 1.25, range_names = NULL,
+                   log_trans = FALSE)
+matrix_raster_plot(b, scale_name = "brightness",
+                   include_breaks = 1.25, log_trans = TRUE)
+matrix_raster_plot(b, scale_name = "brightness",
+                   limits = c(1, 1.25), clip = TRUE)
+matrix_raster_plot(b, scale_name = "brightness",
+                   include_breaks = 1.25)
+
+
+
+
+cleanEx()
 nameEx("median_filter")
 ### * median_filter
 
@@ -346,8 +385,8 @@ flush(stderr()); flush(stdout())
 
 img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = 'nandb'))
 ijtiff::display(img[, , 1, 1])
-num <- number(img, "N", tau = NA, thresh = "Huang")
-num <- number(img, "n", tau = 10, thresh = "tri")
+num <- number(img, "N", thresh = "Huang")
+num <- number(img, "n", thresh = "tri")
 
 
 
@@ -367,7 +406,7 @@ flush(stderr()); flush(stdout())
 ##D setwd(tempdir())
 ##D img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = 'nandb'))
 ##D ijtiff::write_tif(img, 'img2.tif')
-##D number_folder(def = "n", tau = NA, thresh = "Huang", parallel = 2)
+##D number_folder(def = "n", thresh = "Huang", parallel = 2)
 ## End(Not run)
 
 
@@ -384,9 +423,8 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
-img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = 'nandb'))
-nts <- number_timeseries(img, "n", frames_per_set = 20,
-                          tau = NA, thresh = "Huang", parallel = 2)
+img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = "nandb"))
+nts <- number_timeseries(img, "n", frames_per_set = 20, thresh = "Huang")
 
 
 
@@ -407,8 +445,7 @@ flush(stderr()); flush(stdout())
 ##D img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = 'nandb'))
 ##D ijtiff::write_tif(img, 'img1.tif')
 ##D ijtiff::write_tif(img, 'img2.tif')
-##D number_timeseries_folder(def = "n", tau = NA, thresh = "Huang",
-##D                           frames_per_set = 20, parallel = 2)
+##D number_timeseries_folder(def = "n", thresh = "Huang", frames_per_set = 20)
 ## End(Not run)
 
 

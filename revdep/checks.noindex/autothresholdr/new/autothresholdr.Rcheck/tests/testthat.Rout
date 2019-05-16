@@ -1,6 +1,6 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -19,9 +19,9 @@ Type 'q()' to quit R.
 > library(autothresholdr)
 > 
 > test_check("autothresholdr")
-══ testthat results  ═══════════════════════════════════════════════════════════════════════════════
-OK: 67 SKIPPED: 0 FAILED: 0
+══ testthat results  ═══════════════════════════════════════════════════════════════════════════
+OK: 69 SKIPPED: 1 WARNINGS: 0 FAILED: 0
 > 
 > proc.time()
    user  system elapsed 
-  1.611   0.148   1.748 
+  4.170   0.282   6.511 

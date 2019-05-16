@@ -12,7 +12,7 @@ nameEx("auto_thresh")
 flush(stderr()); flush(stdout())
 
 ### Name: auto_thresh
-### Title: Automatically threshold an image
+### Title: Automatically threshold an array of non-negative integers.
 ### Aliases: auto_thresh auto_thresh_mask auto_thresh_apply_mask mask
 ###   apply_mask
 

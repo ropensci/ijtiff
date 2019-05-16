@@ -28,4 +28,14 @@ test_that("mean_stack_thresh works", {
   expect_equal(sum(var_pillars(const_arr)), 0)
   real_arr <- array(seq(2, 3, length.out = 8), dim = rep(2, 3))
   expect_error(med_stack_thresh(real_arr, "tri"), "integer")
+  expect_error(mean_stack_thresh(img %T>% {.[] <- NA}, "otsu"),
+               paste0(
+                 "`img` cannot be all `NA`s.+Every element of your `img`\\s?",
+                 "is `NA`."
+               ))
+  expect_error(med_stack_thresh(img %T>% {.[] <- NA}, "otsu"),
+               paste0(
+                 "`img` cannot be all `NA`s.+Every element of your `img`\\s?",
+                 "is `NA`."
+               ))
 })

@@ -1,6 +1,6 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -31,7 +31,7 @@ Type 'q()' to quit R.
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: auto_thresh
-> ### Title: Automatically threshold an image
+> ### Title: Automatically threshold an array of non-negative integers.
 > ### Aliases: auto_thresh auto_thresh_mask auto_thresh_apply_mask mask
 > ###   apply_mask
 > 
@@ -159,7 +159,7 @@ integer type with 1 channel and 50 frames . . .
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  2.044 0.184 3.098 0 0 
+Time elapsed:  3.013 0.251 4.474 0 0 
 > grDevices::dev.off()
 null device 
           1 

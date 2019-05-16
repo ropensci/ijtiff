@@ -23,7 +23,6 @@ developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repo
 
 [![](https://badges.ropensci.org/164_status.svg)](https://github.com/ropensci/onboarding/issues/164)
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00633/status.svg)](https://doi.org/10.21105/joss.00633)
-[![DOI](https://zenodo.org/badge/122435081.svg)](https://zenodo.org/badge/latestdoi/122435081)
 
 ## Introduction
 

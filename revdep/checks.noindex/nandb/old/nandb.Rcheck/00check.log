@@ -1,10 +1,12 @@
 * using log directory ‘/Users/rnolan/Dropbox/DPhil/Misc/RStuff/ijtiff/revdep/checks.noindex/nandb/old/nandb.Rcheck’
-* using R version 3.5.1 (2018-07-02)
+* using R version 3.6.0 (2019-04-26)
 * using platform: x86_64-apple-darwin15.6.0 (64-bit)
 * using session charset: UTF-8
+* using options ‘--no-manual --no-build-vignettes’
 * checking for file ‘nandb/DESCRIPTION’ ... OK
 * checking extension type ... Package
-* this is package ‘nandb’ version ‘1.0.1’
+* this is package ‘nandb’ version ‘2.0.0’
+* package encoding: UTF-8
 * checking package namespace information ... OK
 * checking package dependencies ... OK
 * checking if this is a source package ... OK
@@ -29,7 +31,11 @@
 * checking whether the package can be unloaded cleanly ... OK
 * checking whether the namespace can be loaded with stated dependencies ... OK
 * checking whether the namespace can be unloaded cleanly ... OK
-* checking dependencies in R code ... OK
+* checking loading without being on the library search path ... OK
+* checking dependencies in R code ... NOTE
+Namespaces in Imports field not imported from:
+  ‘MASS’ ‘stats’
+  All declared Imports should be used.
 * checking S3 generic/method consistency ... OK
 * checking replacement functions ... OK
 * checking foreign function calls ... OK
@@ -48,29 +54,18 @@
 * checking files in ‘vignettes’ ... OK
 * checking examples ... OK
 * checking for unstated dependencies in ‘tests’ ... OK
-* checking tests ... ERROR
+* checking tests ... OK
+  Running ‘spelling.R’
+  Comparing ‘spelling.Rout’ to ‘spelling.Rout.save’ ...6,10d5
+< Potential spelling errors:
+<   WORD        FOUND IN
+< Kmer        NEWS.md:36
+< linux       NEWS.md:20
+< tidyverse   NEWS.md:27
   Running ‘testthat.R’
-Running the tests in ‘tests/testthat.R’ failed.
-Last 13 lines of output:
-  1: expect_equal(deduplicate_cc_nb_filename(path), paste0("detrended_exponential_thresh=4,3_tau=1,2", "_brightness_filt=NA,NA.tif")) at testthat/test-utils.R:65
-  2: quasi_label(enquo(object), label)
-  3: eval_bare(get_expr(quo), get_env(quo))
-  4: deduplicate_cc_nb_filename(path)
-  5: filesstrings::count_matches(path, thresh_pattern)
-  6: .Defunct("stringr::str_count()", "filesstrings")
-  7: stop(paste(msg, collapse = ""), call. = FALSE, domain = NA)
-  
-  ══ testthat results  ═══════════════════════════════════════════════════════════════════════════════
-  OK: 96 SKIPPED: 0 FAILED: 2
-  1. Error: deduplicate_nb_filename() works correctly (@test-utils.R#26) 
-  2. Error: deduplicate_cc_nb_filename() works correctly (@test-utils.R#65) 
-  
-  Error: testthat unit tests failed
-  Execution halted
 * checking for unstated dependencies in vignettes ... OK
 * checking package vignettes in ‘inst/doc’ ... OK
 * checking running R code from vignettes ... NONE
-* checking re-building of vignette outputs ... OK
-* checking PDF version of manual ... OK
+* checking re-building of vignette outputs ... SKIPPED
 * DONE
-Status: 1 ERROR
+Status: 1 NOTE

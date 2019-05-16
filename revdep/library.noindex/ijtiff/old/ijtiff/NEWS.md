@@ -1,3 +1,12 @@
+## `ijtiff` 1.5.0
+
+#### NEW FEATURES
+* Allow ZIP compression (which seems to be the best).
+
+#### BUG FIXES
+* `write_txt_img()` was using decimal points for integers (e.g. 3.000 instead of just 3).
+
+
 ## `ijtiff` 1.4.2
 
 #### BUG FIXES
