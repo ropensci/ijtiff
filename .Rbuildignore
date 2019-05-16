@@ -21,3 +21,4 @@
 ^index\.Rmd$
 ^index\.md$
 ^pkgdown$
+^codemeta\.json$
