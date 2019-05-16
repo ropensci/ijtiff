@@ -1,3 +1,15 @@
+## `ijtiff` 1.5.2
+
+#### BUG FIXES
+* Fix dimension-related bug in `as_EBImage()`.
+
+
+## `ijtiff` 1.5.1
+
+#### BUG FIXES
+* Require necessary version of `glue`.
+
+
 ## `ijtiff` 1.5.0
 
 #### NEW FEATURES

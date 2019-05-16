@@ -194,6 +194,7 @@ as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
     }
   }
   img %<>% aperm(c(2, 1, 3, 4))
+  if (length(dim(img)) == 4 && dim(img)[3] == 1) dim(img) <- dim(img)[-3]
   EBImage::Image(img, colormode = colormode)
 }
 

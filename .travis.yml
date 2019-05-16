@@ -4,6 +4,28 @@ language: R
 sudo: true
 cache: packages
 
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+      before_install:
+        - sudo apt-get -qq update
+        - sudo apt-get install -y libmagick++-dev
+        - sudo apt-get install libtiff4-dev
+        - sudo apt-get install libfftw3-dev
+      after_success: Rscript -e 'covr::codecov()'
+      before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
+      deploy:
+        provider: script
+        script: Rscript -e 'pkgdown::deploy_site_github()'
+        skip_cleanup: true
+    - os: osx
+      env: _R_CHECK_LENGTH_1_CONDITION_=true _R_CHECK_LENGTH_1_LOGIC2_=true
+      r_build_args: --no-build-vignettes --no-manual
+      r_check_args: --no-build-vignettes --no-manual
+      warnings_are_errors: false
+
+
 os:
   - linux
   - osx

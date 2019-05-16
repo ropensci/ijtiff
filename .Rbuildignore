@@ -20,3 +20,4 @@
 ^Makevars$
 ^index\.Rmd$
 ^index\.md$
+^pkgdown$
