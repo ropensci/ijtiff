@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • ijtiff</title>
+<title>TIFF tag reference. — tif_tags_reference • ijtiff</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -37,7 +37,10 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="TIFF tag reference. — tif_tags_reference" />
+
+<meta property="og:description" content="A dataset containing the information on all known baseline and extended TIFF
+tags." />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -57,7 +60,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -120,102 +123,68 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>TIFF tag reference.</h1>
+    
+    <div class="hidden name"><code>tif_tags_reference.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    
+    <p>A dataset containing the information on all known baseline and extended TIFF
+tags.</p>
+    
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>tif_tags_reference</span>()</pre>
+        
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="as_EBImage.html">as_EBImage()</a></code> </p>
-        </td>
-        <td><p>Convert an ijtiff_img to an <a href='https://www.rdocumentation.org/packages/EBImage/topics/Image'>EBImage::Image</a>.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="count_frames.html">count_frames()</a></code> </p>
-        </td>
-        <td><p>Count the number of frames in a TIFF file.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="display.html">display()</a></code> </p>
-        </td>
-        <td><p>Basic image display.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ijtiff.html">ijtiff</a></code> </p>
-        </td>
-        <td><p><code>ijtiff</code>: TIFF I/O for <em>ImageJ</em> users</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ijtiff_img.html">ijtiff_img()</a></code> <code><a href="ijtiff_img.html">as_ijtiff_img()</a></code> </p>
-        </td>
-        <td><p><code>ijtiff_img</code> class.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="linescan-conversion.html">linescan_to_stack()</a></code> <code><a href="linescan-conversion.html">stack_to_linescan()</a></code> </p>
-        </td>
-        <td><p>Rejig linescan images.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="read_tags.html">read_tags()</a></code> <code><a href="read_tags.html">tags_read()</a></code> </p>
-        </td>
-        <td><p>Read TIFF tag information without actually reading the image array.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="read_tif.html">read_tif()</a></code> <code><a href="read_tif.html">tif_read()</a></code> </p>
-        </td>
-        <td><p>Read an image stored in the TIFF format</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="text-image-io.html">write_txt_img()</a></code> <code><a href="text-image-io.html">read_txt_img()</a></code> </p>
-        </td>
-        <td><p>Read/write an image array to/from disk as text file(s).</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tif_tags_reference.html">tif_tags_reference()</a></code> </p>
-        </td>
-        <td><p>TIFF tag reference.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="write_tif.html">write_tif()</a></code> </p>
-        </td>
-        <td><p>Write images in TIFF format</p></td>
-      </tr>
-    </tbody>
-    </table>
+    <p><a href='https://www.awaresystems.be'>https://www.awaresystems.be</a></p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>A data frame with 96 rows and 10 variables:</p><dl class='dl-horizontal'>
+<dt>code_dec</dt><dd><p>decimal numeric code of the TIFF tag</p></dd>
+<dt>code_hex</dt><dd><p>hexadecimal numeric code of the TIFF tag</p></dd> <dt>name</dt><dd><p>the
+name of the TIFF tag</p></dd> <dt>short_description</dt><dd><p>a short description of the
+TIFF tag</p></dd> <dt>tag_type</dt><dd><p>the type of TIFF tag: either "baseline" or
+"extended"</p></dd> <dt>url</dt><dd><p>the URL of the TIFF tag at
+<a href='https://www.awaresystems.be'>https://www.awaresystems.be</a></p></dd> <dt>libtiff_name</dt><dd><p>the TIFF tag name in
+the libtiff C library</p></dd> <dt>c_type</dt><dd><p>the C type of the TIFF tag data in
+libtiff</p></dd> <dt>count</dt><dd><p>the number of elements in the TIFF tag data</p></dd>
+<dt>default</dt><dd><p>the default value of the data held in the TIFF tag</p></dd> </dl>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>tif_tags_reference</span>()</div><div class='output co'>#&gt; # A tibble: 96 x 10
+#&gt;    code_dec code_hex name  short_descripti… type  url   libtiff_name c_type
+#&gt;       &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt; 
+#&gt;  1      254 00FE     NewS… A general indic… base… http… TIFFTAG_SUB… LONG  
+#&gt;  2      255 00FF     Subf… A general indic… base… http… TIFFTAG_OSU… SHORT 
+#&gt;  3      256 0100     Imag… The number of c… base… http… TIFFTAG_IMA… SHORT…
+#&gt;  4      257 0101     Imag… The number of r… base… http… TIFFTAG_IMA… SHORT…
+#&gt;  5      258 0102     Bits… Number of bits … base… http… TIFFTAG_BIT… SHORT 
+#&gt;  6      259 0103     Comp… Compression sch… base… http… TIFFTAG_COM… SHORT 
+#&gt;  7      262 0106     Phot… The color space… base… http… TIFFTAG_PHO… SHORT 
+#&gt;  8      263 0107     Thre… For black and w… base… http… TIFFTAG_THR… SHORT 
+#&gt;  9      264 0108     Cell… The width of th… base… http… TIFFTAG_CEL… SHORT 
+#&gt; 10      265 0109     Cell… The length of t… base… http… TIFFTAG_CEL… SHORT 
+#&gt; # … with 86 more rows, and 2 more variables: count &lt;chr&gt;, default &lt;chr&gt;</div><div class='input'>
+</div></pre>
   </div>
-
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      
+      <li><a href="#source">Source</a></li>
+
+      <li><a href="#details">Details</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
     </ul>
+
   </div>
 </div>
 

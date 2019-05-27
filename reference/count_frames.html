@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Read TIFF tag information without actually reading the image array. — read_tags • ijtiff</title>
+<title>Count the number of frames in a TIFF file. — count_frames • ijtiff</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -37,10 +37,10 @@
 
 
 
-<meta property="og:title" content="Read TIFF tag information without actually reading the image array. — read_tags" />
+<meta property="og:title" content="Count the number of frames in a TIFF file. — count_frames" />
 
-<meta property="og:description" content="TIFF files contain metadata about images in their TIFF tags. This function
-is for reading this information without reading the actual image." />
+<meta property="og:description" content="TIFF files can hold many frames. Often this is sensible, e.g. each frame
+could be a time-point in a video or a slice of a z-stack." />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -125,21 +125,19 @@ is for reading this information without reading the actual image." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Read TIFF tag information without actually reading the image array.</h1>
+    <h1>Count the number of frames in a TIFF file.</h1>
     
-    <div class="hidden name"><code>read_tags.Rd</code></div>
+    <div class="hidden name"><code>count_frames.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>TIFF files contain metadata about images in their <em>TIFF tags</em>. This function
-is for reading this information without reading the actual image.</p>
+    <p>TIFF files can hold many frames. Often this is sensible, e.g. each frame
+could be a time-point in a video or a slice of a z-stack.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>read_tags</span>(<span class='no'>path</span>, <span class='kw'>frames</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-
-<span class='fu'>tags_read</span>(<span class='no'>path</span>, <span class='kw'>frames</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>count_frames</span>(<span class='no'>path</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -148,160 +146,27 @@ is for reading this information without reading the actual image.</p>
       <th>path</th>
       <td><p>A string. The path to the tiff file to read.</p></td>
     </tr>
-    <tr>
-      <th>frames</th>
-      <td><p>Which frames do you want to read tags from. Default first frame
-only. To read from the 2nd and 7th frames, use <code>frames = c(2, 7)</code>, to read
-from all frames, use <code>frames = "all"</code>.</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of lists.</p>
+    <p>A number, the number of frames in the TIFF file. This has an
+attribute <code>n_dirs</code> which holds the true number of directories in the TIFF
+file, making no allowance for the way ImageJ may write TIFF files.</p>
     
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <div class='dont-index'><p><code><a href='read_tif.html'>read_tif()</a></code></p></div>
+    <p>For those familiar with TIFF files, this function counts the number of
+directories in a TIFF file. There is an adjustment made for some
+ImageJ-written TIFF files.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>read_tags</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"ijtiff"</span>))</div><div class='output co'>#&gt; $frame1
-#&gt; $frame1$width
-#&gt; [1] 100
-#&gt; 
-#&gt; $frame1$length
-#&gt; [1] 76
-#&gt; 
-#&gt; $frame1$bits_per_sample
-#&gt; [1] 8
-#&gt; 
-#&gt; $frame1$samples_per_pixel
-#&gt; [1] 4
-#&gt; 
-#&gt; $frame1$sample_format
-#&gt; [1] "uint"
-#&gt; 
-#&gt; $frame1$planar_config
-#&gt; [1] "contiguous"
-#&gt; 
-#&gt; $frame1$rows_per_strip
-#&gt; [1] 76
-#&gt; 
-#&gt; $frame1$compression
-#&gt; [1] "LZW"
-#&gt; 
-#&gt; $frame1$x_resolution
-#&gt; [1] 299.99
-#&gt; 
-#&gt; $frame1$y_resolution
-#&gt; [1] 299.99
-#&gt; 
-#&gt; $frame1$resolution_unit
-#&gt; [1] "inch"
-#&gt; 
-#&gt; $frame1$orientation
-#&gt; [1] "top_left"
-#&gt; 
-#&gt; $frame1$color_space
-#&gt; [1] "RGB"
-#&gt; 
-#&gt; </div><div class='input'><span class='fu'>read_tags</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"2ch_ij.tif"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"ijtiff"</span>))</div><div class='output co'>#&gt; $frame1
-#&gt; $frame1$width
-#&gt; [1] 6
-#&gt; 
-#&gt; $frame1$length
-#&gt; [1] 15
-#&gt; 
-#&gt; $frame1$bits_per_sample
-#&gt; [1] 8
-#&gt; 
-#&gt; $frame1$samples_per_pixel
-#&gt; [1] 1
-#&gt; 
-#&gt; $frame1$sample_format
-#&gt; [1] "uint"
-#&gt; 
-#&gt; $frame1$planar_config
-#&gt; [1] "contiguous"
-#&gt; 
-#&gt; $frame1$rows_per_strip
-#&gt; [1] 15
-#&gt; 
-#&gt; $frame1$compression
-#&gt; [1] "none"
-#&gt; 
-#&gt; $frame1$description
-#&gt; [1] "ImageJ=1.51s\nimages=10\nchannels=2\nframes=5\nhyperstack=true\nmode=composite\nloop=false\n"
-#&gt; 
-#&gt; $frame1$color_space
-#&gt; [1] "black is zero"
-#&gt; 
-#&gt; </div><div class='input'><span class='fu'>read_tags</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"2ch_ij.tif"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"ijtiff"</span>),
-          <span class='kw'>frames</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>4</span>))</div><div class='output co'>#&gt; $frame2
-#&gt; $frame2$width
-#&gt; [1] 6
-#&gt; 
-#&gt; $frame2$length
-#&gt; [1] 15
-#&gt; 
-#&gt; $frame2$bits_per_sample
-#&gt; [1] 8
-#&gt; 
-#&gt; $frame2$samples_per_pixel
-#&gt; [1] 1
-#&gt; 
-#&gt; $frame2$sample_format
-#&gt; [1] "uint"
-#&gt; 
-#&gt; $frame2$planar_config
-#&gt; [1] "contiguous"
-#&gt; 
-#&gt; $frame2$rows_per_strip
-#&gt; [1] 15
-#&gt; 
-#&gt; $frame2$compression
-#&gt; [1] "none"
-#&gt; 
-#&gt; $frame2$description
-#&gt; [1] "ImageJ=1.51s\nimages=10\nchannels=2\nframes=5\nhyperstack=true\nmode=composite\nloop=false\n"
-#&gt; 
-#&gt; $frame2$color_space
-#&gt; [1] "black is zero"
-#&gt; 
-#&gt; 
-#&gt; $frame4
-#&gt; $frame4$width
-#&gt; [1] 6
-#&gt; 
-#&gt; $frame4$length
-#&gt; [1] 15
-#&gt; 
-#&gt; $frame4$bits_per_sample
-#&gt; [1] 8
-#&gt; 
-#&gt; $frame4$samples_per_pixel
-#&gt; [1] 1
-#&gt; 
-#&gt; $frame4$sample_format
-#&gt; [1] "uint"
-#&gt; 
-#&gt; $frame4$planar_config
-#&gt; [1] "contiguous"
-#&gt; 
-#&gt; $frame4$rows_per_strip
-#&gt; [1] 15
-#&gt; 
-#&gt; $frame4$compression
-#&gt; [1] "none"
-#&gt; 
-#&gt; $frame4$description
-#&gt; [1] "ImageJ=1.51s\nimages=10\nchannels=2\nframes=5\nhyperstack=true\nmode=composite\nloop=false\n"
-#&gt; 
-#&gt; $frame4$color_space
-#&gt; [1] "black is zero"
-#&gt; 
-#&gt; </div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'>count_frames</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"ijtiff"</span>))</div><div class='output co'>#&gt; [1] 1
+#&gt; attr(,"n_dirs")
+#&gt; [1] 1</div><div class='input'><span class='fu'>count_frames</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"2ch_ij.tif"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"ijtiff"</span>))</div><div class='output co'>#&gt; [1] 5
+#&gt; attr(,"n_dirs")
+#&gt; [1] 10</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -311,13 +176,11 @@ from all frames, use <code>frames = "all"</code>.</p></td>
       
       <li><a href="#value">Value</a></li>
 
-      <li><a href="#see-also">See also</a></li>
+      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
 
-    <h2>Author</h2>
-    <p>Simon Urbanek, Kent Johnson, Rory Nolan.</p>
   </div>
 </div>
 
