@@ -1,3 +1,14 @@
+# `ijtiff` 2.0.0
+
+## BREAKING CHANGES
+* `get_tiff_tags_reference()` is now `tif_tags_reference()`.
+* `count_imgs()` is now `count_frames()`.
+
+## NEW FEATURES
+* It is now possible to read only certain frames of a TIFF image thanks to the `frames` argument of `read_tif()`.
+* `read_tif()` and `read_tags()` now have the aliases `tif_read()` and `tags_read()` to comply with the rOpenSci `objevt_verb()` style.
+
+
 # `ijtiff` 1.5.1
 
 ## BUG FIXES

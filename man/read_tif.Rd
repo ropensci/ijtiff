@@ -2,12 +2,18 @@
 % Please edit documentation in R/read.R
 \name{read_tif}
 \alias{read_tif}
+\alias{tif_read}
 \title{Read an image stored in the TIFF format}
 \usage{
-read_tif(path, list_safety = "error", msg = TRUE)
+read_tif(path, frames = "all", list_safety = "error", msg = TRUE)
+
+tif_read(path, frames = "all", list_safety = "error", msg = TRUE)
 }
 \arguments{
 \item{path}{A string. The path to the tiff file to read.}
+
+\item{frames}{Which frames do you want to read. Default all. To read the 2nd
+and 7th frames, use \code{frames = c(2, 7)}.}
 
 \item{list_safety}{A string. This is for type safety of this function. Since
 returning a list is unlikely and probably unexpected, the default is to
@@ -55,6 +61,8 @@ packing}.
 img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
 str(img)  # we see that `ijtiff` correctly recognises this image's 2 channels
+img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"),
+                frames = c(1, 3))
 
 }
 \seealso{

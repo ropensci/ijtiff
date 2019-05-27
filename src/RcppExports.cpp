@@ -40,7 +40,7 @@ END_RCPP
 
 RcppExport SEXP count_directories_C(SEXP);
 RcppExport SEXP read_tags_C(SEXP, SEXP);
-RcppExport SEXP read_tif_C(SEXP);
+RcppExport SEXP read_tif_C(SEXP, SEXP);
 RcppExport SEXP write_tif_C(SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
@@ -49,7 +49,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ijtiff_enlist_img_cpp", (DL_FUNC) &_ijtiff_enlist_img_cpp, 1},
     {"count_directories_C", (DL_FUNC) &count_directories_C, 1},
     {"read_tags_C",         (DL_FUNC) &read_tags_C,         2},
-    {"read_tif_C",          (DL_FUNC) &read_tif_C,          1},
+    {"read_tif_C",          (DL_FUNC) &read_tif_C,          2},
     {"write_tif_C",         (DL_FUNC) &write_tif_C,         5},
     {NULL, NULL, 0}
 };

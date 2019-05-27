@@ -44,35 +44,34 @@ extract_desired_plane <- function(arr) {
   arr
 }
 
-#' Count the number of images in a TIFF file.
+#' Count the number of frames in a TIFF file.
 #'
-#' TIFF files can hold many images. Often this is sensible, e.g. each image
-#' could be a time-point in a video or a slice of a z-stack. Sometimes
-#' ImageJ-written images have one image per channel per slice.
+#' TIFF files can hold many frames. Often this is sensible, e.g. each frame
+#' could be a time-point in a video or a slice of a z-stack.
 #'
 #' For those familiar with TIFF files, this function counts the number of
-#' directories in a TIFF file.
+#' directories in a TIFF file. There is an adjustment made for some
+#' ImageJ-written TIFF files.
 #'
 #' @inheritParams read_tif
 #'
-#' @return A number.
+#' @return A number, the number of frames in the TIFF file. This has an
+#'   attribute `n_dirs` which holds the true number of directories in the TIFF
+#'   file, making no allowance for the way ImageJ may write TIFF files.
 #'
 #' @examples
-#' count_imgs(system.file("img", "Rlogo.tif", package="ijtiff"))
-#' count_imgs(system.file("img", "2ch_ij.tif", package="ijtiff"))
+#' count_frames(system.file("img", "Rlogo.tif", package="ijtiff"))
+#' count_frames(system.file("img", "2ch_ij.tif", package="ijtiff"))
 #'
 #' @export
-count_imgs <- function(path) {
-  checkmate::assert_string(path)
-  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/") # windows safe
-  checkmate::assert_file_exists(path)
-  if (stringr::str_detect(path, "/")) {
-    init_wd <- setwd(filesstrings::str_before_last(path, "/"))
-    on.exit(setwd(init_wd))
-    path %<>% filesstrings::str_after_last("/")
-    # `read_tif()` sometimes fails when writing to far away directories.
-  }
-  .Call("count_directories_C", path, PACKAGE = "ijtiff")
+count_frames <- function(path) {
+  path %<>% prep_path()
+  withr::local_dir(attr(path, "path_dir"))  # setwd(attr(path, "path_dir"))
+  prep <- prep_read(path, frames = "all",
+                    tags1 = read_tags(path, frames = 1)[[1]])
+  out <- ifelse(is.na(prep$n_slices), prep$n_dirs, prep$n_slices)
+  attr(out, "n_dirs") <- prep$n_dirs
+  out
 }
 
 is_installed <- function(package) {
@@ -279,16 +278,10 @@ stack_to_linescan <- function(img) {
 #' @noRd
 custom_stop_bullet <- function(string) {
   checkmate::assert_string(string)
-  string %<>% strwrap(width = 57)
-  string[1] %<>% {
-    glue::glue("    * {.}")
-  }
-  if (length(string) > 1) {
-    string[-1] %<>% {
-      glue::glue("      {.}")
+  string %>%
+    stringr::str_replace_all("\\s+", " ") %>% {
+      glue::glue("    * {.}")
     }
-  }
-  glue::glue_collapse(string, sep = "\n")
 }
 
 #' Nicely formatted error message.
@@ -304,20 +297,23 @@ custom_stop_bullet <- function(string) {
 #' @noRd
 custom_stop <- function(main_message, ..., .envir = parent.frame()) {
   checkmate::assert_string(main_message)
-  main_message %<>% glue::glue(.envir = .envir)
-  out <- strwrap(main_message, width = 63)
+  main_message %<>%
+    stringr::str_replace_all("\\s+", " ") %>%
+    glue::glue(.envir = .envir)
+  out <- main_message
   dots <- unlist(list(...))
   if (length(dots)) {
     if (!is.character(dots)) {
       stop("\nThe arguments in ... must all be of character type.")
     }
-    dots %<>% purrr::map_chr(glue::glue, .envir = .envir) %>%
+    dots %<>%
+      purrr::map_chr(glue::glue, .envir = .envir) %>%
       purrr::map_chr(custom_stop_bullet)
     out %<>% {
       glue::glue_collapse(c(., dots), sep = "\n")
     }
   }
-  rlang::abort(glue::glue("{out}"))
+  rlang::abort(glue::glue_collapse(out, sep = "\n"))
 }
 
 #' Wrap messages to make them prettier.
@@ -354,12 +350,192 @@ pretty_msg <- function(...) {
 #' @source \url{https://www.awaresystems.be}
 #'
 #' @examples
-#' get_tiff_tags_reference()
+#' tif_tags_reference()
 #'
 #' @export
-get_tiff_tags_reference <- function() {
+tif_tags_reference <- function() {
   "TIFF_tags.csv" %>%
     system.file("extdata", ., package = "ijtiff") %>%
     {suppressMessages(readr::read_csv(.))}
 }
 
+#' Check that the `frames` argument has been passed correctly.
+#'
+#' @param frames An integerish vector. The requested frames.
+#'
+#' @return `TRUE` invisibly if everything is OK. The function errors otherwise.
+#'
+#' @noRd
+prep_frames <- function(frames) {
+  checkmate::assert(
+    checkmate::check_string(frames),
+    checkmate::check_integerish(frames, lower = 1)
+  )
+  all_frames <- FALSE
+  if (is.character(frames)) {
+    frames %<>% tolower()
+    if (!startsWith("all", frames)) {
+      custom_stop("If `frames` is a string, it must be 'all'.",
+                  "You have `frames = '{frames}'`.")
+    }
+    frames <- "all"
+  }
+  frames
+}
+
+#' Get information necessary for reading the image.
+#'
+#' While doing so, perform a check to see if the requested frames exist.
+#'
+#' @param path The path to the TIFF file.
+#' @param frames An integerish vector. The requested frames.
+#' @param tags1 The tags from the first image (directory) in the TIFF file. The
+#'   first element of an output from [read_tags()].
+#' @param tags Are we prepping the read of just tags (`TRUE`) or an image
+#'   (`FALSE`).
+#'
+#' @return A list with seven elements. \itemize{\item{`frames` is the adjusted
+#'   frame numbers (allowing for _ImageJ_  stuff), unique and sorted.}
+#'   \item{`back_map` is a mapping from `frames` back to its non-unique,
+#'   unsorted original; that would be `frames[back_map]`.} \item{`n_ch` is the
+#'   number of channels} \item{`n_dirs` is the number of directories in the TIFF
+#'   image.} \item{`n_slices` is the number of slices in the TIFF file. For
+#'   most, this is the same as `n_dirs` but for ImageJ-written images it can be
+#'   different.} \item{`n_imgs` is the number of images according to the ImageJ
+#'   `TIFFTAG_DESCRIPTION`. If not specified, it's `NA`.} \item{`ij_n_ch` is
+#'   `TRUE` if the number of channels was specified in the ImageJ
+#'   `TIFFTAG_DESCRIPTION`, otherwise `FALSE`.}}
+#'
+#' @noRd
+prep_read <- function(path, frames, tags1, tags = FALSE) {
+  frames %<>% prep_frames()
+  frames_max <- max(frames)
+  n_imgs <- NA_integer_
+  n_slices <- NA_integer_
+  n_ch <- 1
+  ij_n_ch <- FALSE
+  if ("samples_per_pixel" %in% names(tags1)) n_ch <- tags1$samples_per_pixel
+  if ("description" %in% names(tags1)) {
+    description <- tags1$description
+    if (startsWith(description, "ImageJ")) {
+      if (stringr::str_detect(description, "channels=")) {
+        n_ch <- filesstrings::first_number_after_first(description, "channels=")
+        ij_n_ch <- TRUE
+      }
+      n_imgs <- filesstrings::first_number_after_first(description, "images=")
+      n_slices <- filesstrings::first_number_after_first(description, "slices=")
+      if (stringr::str_detect(description, "frames=")) {
+        n_frames <- description %>%
+          filesstrings::str_after_first("frames=") %>%
+          filesstrings::first_number()
+        if (!is.na(n_slices)) {
+          custom_stop(
+            "
+            The ImageJ-written image you're trying to read says it has
+            {n_frames} frames AND {n_slices} slices.
+            ", "
+            To be read by the `ijtiff` package, the number of slices OR the
+            number of frames should be specified in the TIFFTAG_DESCRIPTION
+            (they're interpreted as the same thing), but not both.
+            "
+          )
+        }
+        n_slices <- n_frames
+      }
+      if (!is.na(n_slices) && !is.na(n_imgs)) {
+        if (ij_n_ch) {
+          if (n_imgs != n_ch * n_slices) {
+            custom_stop(
+              "
+              The ImageJ-written image you're trying to read says in its
+              TIFFTAG_DESCRIPTION that it has {n_imgs} images of
+              {n_slices} slices of {n_ch} channels. However, with {n_slices}
+              slices of {n_ch} channels, one would expect there to be
+              {n_slices} x {n_ch} = {n_ch * n_slices} images.
+              ", "
+              This discrepancy means that the `ijtiff` package can't read your
+              image correctly.
+              ", "
+              One possible source of this kind of error is that your image
+              is temporal and volumetric. `ijtiff` can handle either
+              time-based or volumetric stacks, but not both."
+            )
+          }
+        }
+      }
+    }
+  }
+  path %<>% prep_path()
+  withr::local_dir(attr(path, "path_dir"))
+  n_dirs <- .Call("count_directories_C", path, PACKAGE = "ijtiff")
+  if (!is.na(n_slices)) {
+    if (frames[[1]] == "all") {
+      frames <- seq_len(n_slices)
+      frames_max <- n_slices
+    }
+    if (frames_max > n_slices) {
+      custom_stop("
+      You have requested frame number {frames_max} but there
+      are only {n_slices} frames in total.
+                ")
+    }
+    if (ij_n_ch) {
+      if (n_dirs != n_slices) {
+        if (!is.na(n_imgs) && n_dirs != n_imgs) {
+          custom_stop(
+            "
+          If TIFFTAG_DESCRIPTION specifies the number of images, this must be
+          equal to the number of directories in the TIFF file.
+          ",
+            "Your TIFF file has {n_dirs} directories."  ,
+            "Its TIFFTAG_DESCRIPTION indicates that it holds {n_imgs} images.")
+        }
+        framesxnch <- frames * n_ch
+        if (tags) {
+          frames <- frames * n_ch - (n_ch - 1)
+        } else {
+          frames <- purrr::map(framesxnch, ~ .x - rev((seq_len(n_ch) - 1))) %>%
+            unlist()
+        }
+      }
+    }
+  } else {
+    if (frames[[1]] == "all") {
+      frames <- seq_len(n_dirs)
+      frames_max <- n_dirs
+    }
+    if (frames_max > n_dirs) {
+      custom_stop("
+      You have requested frame number {frames_max} but there
+      are only {n_dirs} frames in total.
+                ")
+    }
+  }
+  good_frames <- sort(unique(frames))
+  back_map <- match(frames, good_frames)
+  list(frames = as.integer(good_frames),
+       back_map = back_map,
+       n_ch = n_ch,
+       n_dirs = n_dirs,
+       n_slices = ifelse(is.na(n_slices), n_dirs, n_slices),
+       n_imgs = n_imgs,
+       ij_n_ch = ij_n_ch)
+}
+
+#' Prepare the path to a TIFF file for a function that will read from that file.
+#'
+#' The [fs::path_file()] is returned. The calling function is expected to call
+#' `withr::local_dir(fs::path_dir())`.
+#'
+#' @param path A string. The path to a TIFF file.
+#'
+#' @return A string. The [fs::path_file()]. This has an attribute `path_dir`
+#'   with the path to be passed to [withr::local_dir()].
+#'
+#' @noRd
+prep_path <- function(path) {
+  checkmate::assert_string(path)
+  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/") # windows safe
+  checkmate::assert_file_exists(path)
+  structure(fs::path_file(path), path_dir = fs::path_dir(path))
+}

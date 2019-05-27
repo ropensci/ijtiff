@@ -161,14 +161,13 @@ static void TIFF_add_tags(TIFF *tiff, SEXP res) {
   }
 }
 
-SEXP read_tif_C(SEXP sFn /*filename*/) {
+SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
   check_type_sizes();
   uint64_t to_unprotect = 0;
   SEXP res = PROTECT(R_NilValue), multi_res = PROTECT(R_NilValue);
   to_unprotect += 2;  // res and multi_res
   SEXP multi_tail = multi_res, dim;
   const char *fn;  // file name
-  uint64_t n_img = 0;
   tiff_job_t rj;
   TIFF *tiff;
   FILE *f;
@@ -177,12 +176,26 @@ SEXP read_tif_C(SEXP sFn /*filename*/) {
 	f = fopen(fn, "rb");
 	if (!f) Rf_error("unable to open %s", fn);
 	rj.f = f;
-  tiff = TIFF_Open("rmc", &rj); /* no mmap, no chopping */
+  tiff = TIFF_Open("rmc", &rj); // no mmap, no chopping
   if (!tiff) {
     TIFFClose(tiff);
     Rf_error("Unable to open TIFF");
   }
-  while (true) { /* loop over separate image in a directory if desired */
+  int cur_dir = 0; // 1-based image number
+  int *sDirs_intptr = INTEGER(sDirs), cur_sDir_index = 0;
+  int sDirs_len = LENGTH(sDirs);
+  while (cur_sDir_index != sDirs_len) {  // read only from images in desired directories
+    ++cur_dir;
+    bool is_match = cur_dir == sDirs_intptr[cur_sDir_index];
+    if (is_match) {
+      ++cur_sDir_index;
+    } else {
+      if (TIFFReadDirectory(tiff)) {
+        continue;
+      } else {
+        break;  // safety net: I don't expect this line to ever be needed
+      }
+    }
   	uint32_t imageWidth = 0, imageLength = 0, imageDepth;
   	uint32_t tileWidth, tileLength;
   	uint32_t x, y;
@@ -465,7 +478,6 @@ SEXP read_tif_C(SEXP sFn /*filename*/) {
     TIFF_add_tags(tiff, res);
   	UNPROTECT(1);  // UNPROTECT `dim`
   	to_unprotect--;
-  	n_img++;
   	if (multi_res == R_NilValue) {  // first image in stack
   	  multi_res = multi_tail = PROTECT(Rf_list1(res));
   	  to_unprotect++;  // `multi_res` needs to be UNPROTECTed later
@@ -477,7 +489,8 @@ SEXP read_tif_C(SEXP sFn /*filename*/) {
   	  UNPROTECT(2);  // removing explit PROTECTion of `q` UNPROTECTing `res`
   	  to_unprotect -= 2;
   	}
-  	if (!TIFFReadDirectory(tiff)) break;
+  	if (!TIFFReadDirectory(tiff))
+  	  break;
   }
   TIFFClose(tiff);
   res = PROTECT(PairToVectorList(multi_res));  // convert LISTSXP into VECSXP
@@ -486,7 +499,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/) {
   return res;
 }
 
-SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sAll) {
+SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
   check_type_sizes();
   uint64_t to_unprotect = 0;
   SEXP pre_res = PROTECT(R_NilValue), multi_res = PROTECT(R_NilValue);
@@ -502,22 +515,22 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sAll) {
   f = fopen(fn, "rb");
   if (!f) Rf_error("unable to open %s", fn);
   rj.f = f;
-  tiff = TIFF_Open("rmc", &rj); /* no mmap, no chopping */
+  tiff = TIFF_Open("rmc", &rj); // no mmap, no chopping
   if (!tiff)
     Rf_error("Unable to open TIFF");
-  uint64_t cur_dir = 0; /* 1-based image number */
-  while (1) { /* loop over separate image in a directory if desired */
-    cur_dir++;
-    if (!isLogical(sAll)) {
-      SEXP m = PROTECT(Rf_match(sAll, ScalarInteger(cur_dir), 0));
-      int cur_dir_in_m = asInteger(m) == 0;
-      UNPROTECT(1);  // UNPROTECT m as it's no longer needed
-      if (cur_dir_in_m) {  /* No match */
-        if (TIFFReadDirectory(tiff)) {
-          continue;
-        } else {
-          break;
-        }
+  int cur_dir = 0; // 1-based image number
+  int *sDirs_intptr = INTEGER(sDirs), cur_sDir_index = 0;
+  int sDirs_len = LENGTH(sDirs);
+  while (cur_sDir_index != sDirs_len) {  // read only from images in desired directories
+    ++cur_dir;
+    bool is_match = cur_dir == sDirs_intptr[cur_sDir_index];
+    if (is_match) {
+      ++cur_sDir_index;
+    } else {
+      if (TIFFReadDirectory(tiff)) {
+        continue;
+      } else {
+        break;  // safety net: I don't expect this line to ever be needed
       }
     }
     PROTECT(pre_res = allocVector(VECSXP, 0));
@@ -569,11 +582,11 @@ SEXP count_directories_C(SEXP sFn /*FileName*/) {
   f = fopen(fn, "rb");
   if (!f) Rf_error("unable to open %s", fn);
   rj.f = f;
-  tiff = TIFF_Open("rmc", &rj); /* no mmap, no chopping */
+  tiff = TIFF_Open("rmc", &rj); // no mmap, no chopping
   if (!tiff)
     Rf_error("Unable to open TIFF");
-  uint64_t cur_dir = 0; /* 1-based image number */
-  while (1) { /* loop over separate image in a directory if desired */
+  R_xlen_t cur_dir = 0; // 1-based image number
+  while (1) {  // loop over TIFF directories
     cur_dir++;
     if (!TIFFReadDirectory(tiff)) break;
   }

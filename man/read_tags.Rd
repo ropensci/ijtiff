@@ -2,17 +2,19 @@
 % Please edit documentation in R/read.R
 \name{read_tags}
 \alias{read_tags}
+\alias{tags_read}
 \title{Read TIFF tag information without actually reading the image array.}
 \usage{
-read_tags(path, all = TRUE)
+read_tags(path, frames = 1)
+
+tags_read(path, frames = 1)
 }
 \arguments{
 \item{path}{A string. The path to the tiff file to read.}
 
-\item{all}{TIFF files can contain multiple images. With \code{all = TRUE}, the
-information about all images is returned in a list of lists. To just get
-the information about some images, pass those image numbers to the \code{all}
-parameter (see examples). \code{all = FALSE} is equivalent to \code{all = 1}.}
+\item{frames}{Which frames do you want to read tags from. Default first frame
+only. To read from the 2nd and 7th frames, use \code{frames = c(2, 7)}, to read
+from all frames, use \code{frames = "all"}.}
 }
 \value{
 A list of lists.
@@ -24,7 +26,8 @@ is for reading this information without reading the actual image.
 \examples{
 read_tags(system.file("img", "Rlogo.tif", package="ijtiff"))
 read_tags(system.file("img", "2ch_ij.tif", package="ijtiff"))
-read_tags(system.file("img", "2ch_ij.tif", package="ijtiff"), all = c(2, 4))
+read_tags(system.file("img", "2ch_ij.tif", package="ijtiff"),
+          frames = c(2, 4))
 
 }
 \seealso{
