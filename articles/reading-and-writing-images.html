@@ -176,9 +176,9 @@
 <p>To write an image, you need an object in the style of an <code>ijtiff_img</code> object. You can read about those <a href="https://ropensci.github.io/ijtiff/reference/ijtiff_img.html">here</a>. The basic idea is to have your image in a 4-dimensional array with the structure <code>img[y, x, channel, frame]</code>. Then, to write this image to the location <code>path</code>, you just type <code><a href="../reference/write_tif.html">write_tif(img, path)</a></code>.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">path &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/tempfile">tempfile</a></span>(<span class="dt">pattern =</span> <span class="st">"dancing-banana"</span>, <span class="dt">fileext =</span> <span class="st">".tif"</span>)</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(path)</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt; [1] "/tmp/RtmpdxpXlR/dancing-banana39cf5b55e7ea.tif"</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt; [1] "/tmp/RtmpWXYtDD/dancing-banana3a2e35fae3b0.tif"</span></a>
 <a class="sourceLine" id="cb7-4" data-line-number="4"><span class="kw"><a href="../reference/write_tif.html">write_tif</a></span>(img_dancing_banana, path)</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">#&gt; Writing dancing-banana39cf5b55e7ea.tif: an 8-bit, 155x200</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">#&gt; Writing dancing-banana3a2e35fae3b0.tif: an 8-bit, 155x200</span></a>
 <a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">#&gt; pixel image of unsigned integer type with 3 channels and 8</span></a>
 <a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co">#&gt; frames . . .</span></a>
 <a class="sourceLine" id="cb7-8" data-line-number="8"><span class="co">#&gt;  Done.</span></a></code></pre></div>
@@ -197,7 +197,7 @@
 <a href="#writing-text-images" class="anchor"></a>Writing text images</h2>
 <p>Writing a text image works as you’d expect.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="../reference/text-image-io.html">write_txt_img</a></span>(txt_img, <span class="dt">path =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/tempfile">tempfile</a></span>(<span class="dt">pattern =</span> <span class="st">"txtimg"</span>, <span class="dt">fileext =</span> <span class="st">".txt"</span>))</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">#&gt; Writing txtimg39cf1f2c5b88.txt: a 76x100 pixel text image with 1 channel and 1 frame . . .</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">#&gt; Writing txtimg3a2e7acad567.txt: a 76x100 pixel text image with 1 channel and 1 frame . . .</span></a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">#&gt;  Done.</span></a></code></pre></div>
 </div>
 <div class="footnotes">
