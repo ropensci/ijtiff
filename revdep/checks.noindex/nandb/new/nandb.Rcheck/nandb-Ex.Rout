@@ -38,7 +38,7 @@ Type 'q()' to quit R.
 > 
 > img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = 'nandb'))
 Reading 50.tif: an 8-bit, 50x50 pixel image of unsigned
-integer type with 1 channel and 50 frames . . .
+integer type. Reading 1 channel and 50 frames . . .
  Done.
 > ijtiff::display(img[, , 1, 1])
 > b <- brightness(img, "e", thresh = "Huang")
@@ -82,7 +82,7 @@ integer type with 1 channel and 50 frames . . .
 > 
 > img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = 'nandb'))
 Reading 50.tif: an 8-bit, 50x50 pixel image of unsigned
-integer type with 1 channel and 50 frames . . .
+integer type. Reading 1 channel and 50 frames . . .
  Done.
 > bts <- brightness_timeseries(img, "e", frames_per_set = 20, thresh = "Huang")
 > 
@@ -125,7 +125,7 @@ integer type with 1 channel and 50 frames . . .
 > img <- ijtiff::read_tif(system.file("extdata", "two_ch.tif",
 +                                     package = "nandb"))
 Reading two_ch.tif: an 8-bit, 30x28 pixel image of unsigned
-integer type with 2 channels and 100 frames . . .
+integer type. Reading 2 channels and 100 frames . . .
  Done.
 > ijtiff::display(detrendr::mean_pillars(img[, , 1, ]))
 > ijtiff::display(detrendr::mean_pillars(img[, , 2, ]))
@@ -175,7 +175,7 @@ integer type with 2 channels and 100 frames . . .
 > img <- ijtiff::read_tif(system.file('extdata', 'two_ch.tif',
 +                         package = 'nandb'))
 Reading two_ch.tif: an 8-bit, 30x28 pixel image of unsigned
-integer type with 2 channels and 100 frames . . .
+integer type. Reading 2 channels and 100 frames . . .
  Done.
 > cc_bts <- cc_brightness_timeseries(img, 10, thresh = "Huang",
 +                                     filt = 'median', parallel = 2)
@@ -222,7 +222,7 @@ integer type with 2 channels and 100 frames . . .
 > img <- ijtiff::read_tif(system.file("extdata", "two_ch.tif",
 +                                     package = "nandb"))
 Reading two_ch.tif: an 8-bit, 30x28 pixel image of unsigned
-integer type with 2 channels and 100 frames . . .
+integer type. Reading 2 channels and 100 frames . . .
  Done.
 > ijtiff::display(detrendr::mean_pillars(img[, , 1, ]))
 > ijtiff::display(detrendr::mean_pillars(img[, , 2, ]))
@@ -272,7 +272,7 @@ integer type with 2 channels and 100 frames . . .
 > img <- ijtiff::read_tif(system.file('extdata', 'two_ch.tif',
 +                                     package = 'nandb'))
 Reading two_ch.tif: an 8-bit, 30x28 pixel image of unsigned
-integer type with 2 channels and 100 frames . . .
+integer type. Reading 2 channels and 100 frames . . .
  Done.
 > cc_nts <- cc_number_timeseries(img, 10, thresh = "Huang",
 +                                filt = 'median', parallel = 2)
@@ -360,7 +360,7 @@ integer type with 2 channels and 100 frames . . .
 > 
 > img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = 'nandb'))
 Reading 50.tif: an 8-bit, 50x50 pixel image of unsigned
-integer type with 1 channel and 50 frames . . .
+integer type. Reading 1 channel and 50 frames . . .
  Done.
 > ijtiff::display(img[, , 1, 1])
 > matrix_raster_plot(img[, , 1, 1])
@@ -458,7 +458,7 @@ integer type with 1 channel and 50 frames . . .
 > 
 > img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = 'nandb'))
 Reading 50.tif: an 8-bit, 50x50 pixel image of unsigned
-integer type with 1 channel and 50 frames . . .
+integer type. Reading 1 channel and 50 frames . . .
  Done.
 > ijtiff::display(img[, , 1, 1])
 > num <- number(img, "N", thresh = "Huang")
@@ -501,7 +501,7 @@ integer type with 1 channel and 50 frames . . .
 > 
 > img <- ijtiff::read_tif(system.file('extdata', '50.tif', package = "nandb"))
 Reading 50.tif: an 8-bit, 50x50 pixel image of unsigned
-integer type with 1 channel and 50 frames . . .
+integer type. Reading 1 channel and 50 frames . . .
  Done.
 > nts <- number_timeseries(img, "n", frames_per_set = 20, thresh = "Huang")
 > 
@@ -534,7 +534,7 @@ integer type with 1 channel and 50 frames . . .
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  9.937 0.627 12.885 0.139 0.135 
+Time elapsed:  10.493 0.554 13.465 0.146 0.141 
 > grDevices::dev.off()
 null device 
           1 

@@ -87,15 +87,17 @@ If you’re authoring a package which is to depend on `ijtiff` and you’re
 using AppVeyor, be sure to force AppVeyor to use 64-bit architecture.
 This avoids some peculiarities of 32-bit AppVeyor which cause `ijtiff`
 installations to fail. You can see how to do this in the
-[appveyor.yml](appveyor.yml) file in this repository.
+[`appveyor.yml`](https://github.com/ropensci/ijtiff/blob/master/appveyor.yml)
+file in this repository.
 
 ## Contribution
 
 Contributions to this package are welcome. The preferred method of
 contribution is through a github pull request. Feel free to contact me
 by creating an issue. Please note that this project is released with a
-[Contributor Code of Conduct](CONDUCT.md). By participating in this
-project you agree to abide by its
+[Contributor Code of
+Conduct](https://github.com/ropensci/ijtiff/blob/master/CONDUCT.md). By
+participating in this project you agree to abide by its
 terms.
 
 [![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)

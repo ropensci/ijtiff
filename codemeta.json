@@ -10,7 +10,7 @@
   "codeRepository": "https://ropensci.github.io/ijtiff",
   "issueTracker": "https://www.github.com/ropensci/ijtiff/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -88,6 +88,7 @@
       "@type": "SoftwareApplication",
       "identifier": "testthat",
       "name": "testthat",
+      "version": ">= 2.1.0",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -232,7 +233,7 @@
       "@type": "SoftwareApplication",
       "identifier": "checkmate",
       "name": "checkmate",
-      "version": ">= 1.9.1",
+      "version": ">= 1.9.3",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -374,7 +375,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/ijtiff/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/ijtiff/blob/master/README.md",
-  "fileSize": "498.42KB",
+  "fileSize": "498.797KB",
   "contIntegration": [
     "https://travis-ci.org/ropensci/ijtiff",
     "https://ci.appveyor.com/project/ropensci/ijtiff",

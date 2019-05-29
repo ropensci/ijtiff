@@ -10,14 +10,13 @@
 |collate  |en_GB.UTF-8                  |
 |ctype    |en_GB.UTF-8                  |
 |tz       |Europe/London                |
-|date     |2019-05-16                   |
+|date     |2019-05-27                   |
 
 # Dependencies
 
 |package |old   |new   |Δ  |
 |:-------|:-----|:-----|:--|
-|ijtiff  |1.5.0 |1.5.2 |*  |
-|dplyr   |NA    |0.8.1 |*  |
+|ijtiff  |1.5.1 |1.5.1 |NA |
 
 # Revdeps
 
