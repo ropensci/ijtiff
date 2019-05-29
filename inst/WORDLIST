@@ -1,5 +1,4 @@
 Acknowledgement
-appveyor
 AppVeyor
 awaresystems
 BioFormats
@@ -42,6 +41,7 @@ README
 repo
 RESOLUTIONUNIT
 ropensci
+rOpenSci
 ROpenSci
 RStudio
 SAMPLEFORMAT
@@ -54,5 +54,4 @@ TIFFs
 tifftags
 www
 XRESOLUTION
-yml
 YRESOLUTION
