@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <sys/types.h>
+
 #include <Rinternals.h>
 
 static int need_init = 1;
