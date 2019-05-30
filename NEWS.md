@@ -8,6 +8,9 @@
 * It is now possible to read only certain frames of a TIFF image thanks to the `frames` argument of `read_tif()`.
 * `read_tif()` and `read_tags()` now have the aliases `tif_read()` and `tags_read()` to comply with the rOpenSci `objevt_verb()` style.
 
+## BUG FIXES
+* Include `sys/types.h` for greater type compatibility.
+
 
 # `ijtiff` 1.5.1
 
