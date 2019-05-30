@@ -268,54 +268,6 @@ stack_to_linescan <- function(img) {
     ijtiff_img()
 }
 
-#' Construct the bullet point bits for `custom_stop()`.
-#'
-#' @param string The message for the bullet point.
-#'
-#' @return A string with the bullet-pointed message nicely formatted for the
-#'   console.
-#'
-#' @noRd
-custom_stop_bullet <- function(string) {
-  checkmate::assert_string(string)
-  string %>%
-    stringr::str_replace_all("\\s+", " ") %>% {
-      glue::glue("    * {.}")
-    }
-}
-
-#' Nicely formatted error message.
-#'
-#' Format an error message with bullet-pointed sub-messages with nice
-#' line-breaks.
-#'
-#' Arguments should be entered as `glue`-style strings.
-#'
-#' @param main_message The main error message.
-#' @param ... Bullet-pointed sub-messages.
-#'
-#' @noRd
-custom_stop <- function(main_message, ..., .envir = parent.frame()) {
-  checkmate::assert_string(main_message)
-  main_message %<>%
-    stringr::str_replace_all("\\s+", " ") %>%
-    glue::glue(.envir = .envir)
-  out <- main_message
-  dots <- unlist(list(...))
-  if (length(dots)) {
-    if (!is.character(dots)) {
-      stop("\nThe arguments in ... must all be of character type.")
-    }
-    dots %<>%
-      purrr::map_chr(glue::glue, .envir = .envir) %>%
-      purrr::map_chr(custom_stop_bullet)
-    out %<>% {
-      glue::glue_collapse(c(., dots), sep = "\n")
-    }
-  }
-  rlang::abort(glue::glue_collapse(out, sep = "\n"))
-}
-
 #' Wrap messages to make them prettier.
 #'
 #' Format messages with line breaks so that single words don't appear on multiple lines.
@@ -538,4 +490,53 @@ prep_path <- function(path) {
   path %<>% stringr::str_replace_all(stringr::coll("\\"), "/") # windows safe
   checkmate::assert_file_exists(path)
   structure(fs::path_file(path), path_dir = fs::path_dir(path))
+}
+
+
+#' Construct the bullet point bits for `custom_stop()`.
+#'
+#' @param string The message for the bullet point.
+#'
+#' @return A string with the bullet-pointed message nicely formatted for the
+#'   console.
+#'
+#' @noRd
+custom_stop_bullet <- function(string) {
+  checkmate::assert_string(string)
+  string %>%
+    stringr::str_replace_all("\\s+", " ") %>% {
+      glue::glue("    * {.}")
+    }
+}
+
+#' Nicely formatted error message.
+#'
+#' Format an error message with bullet-pointed sub-messages with nice
+#' line-breaks.
+#'
+#' Arguments should be entered as `glue`-style strings.
+#'
+#' @param main_message The main error message.
+#' @param ... Bullet-pointed sub-messages.
+#'
+#' @noRd
+custom_stop <- function(main_message, ..., .envir = parent.frame()) {
+  checkmate::assert_string(main_message)
+  main_message %<>%
+    stringr::str_replace_all("\\s+", " ") %>%
+    glue::glue(.envir = .envir)
+  out <- main_message
+  dots <- unlist(list(...))
+  if (length(dots)) {
+    if (!is.character(dots)) {
+      stop("\nThe arguments in ... must all be of character type.")
+    }
+    dots %<>%
+      purrr::map_chr(glue::glue, .envir = .envir) %>%
+      purrr::map_chr(custom_stop_bullet)
+    out %<>% {
+      glue::glue_collapse(c(., dots), sep = "\n")
+    }
+  }
+  rlang::abort(glue::glue_collapse(out, sep = "\n"))
 }
