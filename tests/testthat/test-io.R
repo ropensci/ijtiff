@@ -95,7 +95,6 @@ test_that("32-bit unsigned integer TIFF I/O works", {
 
 test_that("Float (real-numbered) TIFF I/O works", {
   set.seed(5)
-  withr::local_dir(tempdir())
   v2345 <- 2:5
   a2345 <- array(sample.int(prod(v2345)), dim = v2345) + 0.5
   tmptif <- tempfile(fileext = ".tif") %>%
