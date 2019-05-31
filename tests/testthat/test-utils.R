@@ -14,9 +14,12 @@ test_that("extract_desired_plane() works", {
 })
 
 test_that("tif_tags_reference() works", {
-  expect_equal(tif_tags_reference(),
-               readr::read_csv(system.file("extdata",
-                                           "TIFF_tags.csv",
-                                           package = "ijtiff")))
+  expect_equal(
+    tif_tags_reference(),
+    readr::read_csv(system.file("extdata",
+      "TIFF_tags.csv",
+      package = "ijtiff"
+    ))
+  )
   expect_s3_class(tif_tags_reference(), "tbl_df")
 })

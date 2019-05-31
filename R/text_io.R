@@ -17,13 +17,12 @@ NULL
 #' @rdname text-image-io
 #'
 #' @examples
-#' img <- read_tif(system.file('img', 'Rlogo.tif', package = 'ijtiff'))
+#' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' tmptxt <- tempfile(pattern = "img", fileext = ".txt")
 #' write_txt_img(img, tmptxt)
 #' tmptxt_ch1_path <- paste0(filesstrings::before_last_dot(tmptxt), "_ch1.txt")
 #' print(tmptxt_ch1_path)
 #' txt_img <- read_txt_img(tmptxt_ch1_path)
-#'
 #' @export
 write_txt_img <- function(img, path, rds = FALSE, msg = TRUE) {
   checkmate::assert_array(img, min.d = 2, max.d = 4)
@@ -59,13 +58,13 @@ write_txt_img <- function(img, path, rds = FALSE, msg = TRUE) {
   }
   dfs <- purrr::map(
     purrr::map(seq_len(nrow(grid)), ~ grid[., ]),
-    ~img[, , .[1], .[2]]
+    ~ img[, , .[1], .[2]]
   ) %>%
     purrr::map(as.data.frame)
   for (i in seq_along(dfs)) {
     dfs[[i]] %<>% dplyr::mutate_if(can_be_intish, as.integer)
   }
-  purrr::map2(dfs, paths, ~readr::write_tsv(.x, .y, col_names = FALSE))
+  purrr::map2(dfs, paths, ~ readr::write_tsv(.x, .y, col_names = FALSE))
   if (msg) message("\b Done.")
   invisible(img)
 }

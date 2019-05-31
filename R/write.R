@@ -27,25 +27,24 @@
 #' @seealso [read_tif()]
 #' @examples
 #'
-#' img <- read_tif(system.file("img", "Rlogo.tif", package="ijtiff"))
+#' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' temp_dir <- tempdir()
 #' write_tif(img, paste0(temp_dir, "/", "Rlogo"))
 #' img <- matrix(1:4, nrow = 2)
 #' write_tif(img, paste0(temp_dir, "/", "tiny2x2"))
 #' list.files(temp_dir, pattern = "tif$")
-#'
 #' @export
 write_tif <- function(img, path, bits_per_sample = "auto",
                       compression = "none", overwrite = FALSE, msg = TRUE) {
   checkmate::assert_string(path)
   path %<>% stringr::str_replace_all(stringr::coll("\\"), "/") # windows safe
-  if (stringr::str_detect(path, "/")) { # I've noticed that write_tif()
-    init_wd <- getwd() # sometimes fails when writing to
-    on.exit(setwd(init_wd)) # far away directories.
+  if (stringr::str_detect(path, "/")) {
+    # write_tif() sometimes fails when writing to far away directories
+    if (endsWith(path, "/")) path %<>% filesstrings::after_last("/+$")
     tiff_dir <- filesstrings::str_before_last(path, "/")
     checkmate::assert_directory_exists(tiff_dir)
-    setwd(tiff_dir)
     path %<>% filesstrings::str_after_last("/")
+    withr::local_dir(tiff_dir)
   }
   to_invisibly_return <- img
   checkmate::assert_scalar(bits_per_sample)
@@ -57,7 +56,8 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     if (startsWith("auto", tolower(bits_per_sample))) {
       bits_per_sample <- "auto"
     } else {
-      custom_stop("
+      custom_stop(
+        "
          If `bits_per_sample` is a string, then 'auto' is the only
          allowable value.
         ",
@@ -68,7 +68,8 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     if (!bits_per_sample %in% c(8, 16, 32)) {
       custom_stop(
         "If specifying `bits_per_sample`, it must be one of 8, 16 or 32.",
-        "You have used `bits_per_sample = {bits_per_sample}`.")
+        "You have used `bits_per_sample = {bits_per_sample}`."
+      )
     }
   }
   checkmate::assert_string(compression)
@@ -112,7 +113,8 @@ write_tif <- function(img, path, bits_per_sample = "auto",
         )
       }
       if (max(img) > float_max()) {
-        custom_stop("
+        custom_stop(
+          "
            If `img` has negative values (which the input `img` does),
            then the maximum allowed positive value is {float_max()}.
           ",
@@ -137,7 +139,8 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     )
     if (bits_per_sample == "auto") bits_per_sample <- 32
     if (bits_per_sample != 32) {
-      custom_stop("
+      custom_stop(
+        "
          Your image needs to be written as floating point numbers
          (not integers). For this, it is necessary to have 32 bits per
          sample.
@@ -149,7 +152,8 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     ideal_bps <- 8
     mx <- floor(max(img))
     if (mx > 2^32 - 1) {
-      custom_stop("
+      custom_stop(
+        "
          The maximum value in 'img' is {mx} which is greater than 2 ^ 32 - 1 and
          therefore too high to be written to a TIFF file.
         ",
@@ -173,8 +177,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
         ", "
          To write your `img` to a TIFF file, you need at least {ideal_bps}
          bits per sample.
-        "
-      )
+        ")
     }
   }
   if (msg) {

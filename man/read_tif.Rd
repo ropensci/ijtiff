@@ -60,10 +60,10 @@ packing}.
 \examples{
 img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
-str(img)  # we see that `ijtiff` correctly recognises this image's 2 channels
+str(img) # we see that `ijtiff` correctly recognises this image's 2 channels
 img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"),
-                frames = c(1, 3))
-
+  frames = c(1, 3)
+)
 }
 \seealso{
 \code{\link[=write_tif]{write_tif()}}

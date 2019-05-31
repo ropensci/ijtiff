@@ -11,7 +11,7 @@ dims <- function(lst) {
 
 enlist_planes <- function(arr) {
   checkmate::assert_array(arr, d = 3)
-  purrr::map(seq_len(dim(arr)[3]), ~arr[, , .])
+  purrr::map(seq_len(dim(arr)[3]), ~ arr[, , .])
 }
 
 extract_desired_plane <- function(arr) {
@@ -20,7 +20,7 @@ extract_desired_plane <- function(arr) {
   if (length(d) == 3) {
     nonzero_planes <- !purrr::map_lgl(
       seq_len(d[3]),
-      ~filesstrings::all_equal(arr[, , .], 0)
+      ~ filesstrings::all_equal(arr[, , .], 0)
     )
     if (sum(nonzero_planes) == 1) {
       arr <- arr[, , nonzero_planes]
@@ -60,15 +60,16 @@ extract_desired_plane <- function(arr) {
 #'   file, making no allowance for the way ImageJ may write TIFF files.
 #'
 #' @examples
-#' count_frames(system.file("img", "Rlogo.tif", package="ijtiff"))
-#' count_frames(system.file("img", "2ch_ij.tif", package="ijtiff"))
-#'
+#' count_frames(system.file("img", "Rlogo.tif", package = "ijtiff"))
+#' count_frames(system.file("img", "2ch_ij.tif", package = "ijtiff"))
 #' @export
 count_frames <- function(path) {
   path %<>% prep_path()
-  withr::local_dir(attr(path, "path_dir"))  # setwd(attr(path, "path_dir"))
-  prep <- prep_read(path, frames = "all",
-                    tags1 = read_tags(path, frames = 1)[[1]])
+  withr::local_dir(attr(path, "path_dir"))
+  prep <- prep_read(path,
+    frames = "all",
+    tags1 = read_tags(path, frames = 1)[[1]]
+  )
   out <- ifelse(is.na(prep$n_slices), prep$n_dirs, prep$n_slices)
   attr(out, "n_dirs") <- prep$n_dirs
   out
@@ -228,7 +229,6 @@ ebimg_install_msg <- function() {
 #' print(stack)
 #' linescan <- stack_to_linescan(stack)
 #' print(linescan)
-#'
 #' @name linescan-conversion
 NULL
 
@@ -303,12 +303,13 @@ pretty_msg <- function(...) {
 #'
 #' @examples
 #' tif_tags_reference()
-#'
 #' @export
 tif_tags_reference <- function() {
   "TIFF_tags.csv" %>%
     system.file("extdata", ., package = "ijtiff") %>%
-    {suppressMessages(readr::read_csv(.))}
+    {
+      suppressMessages(readr::read_csv(.))
+    }
 }
 
 #' Check that the `frames` argument has been passed correctly.
@@ -327,8 +328,10 @@ prep_frames <- function(frames) {
   if (is.character(frames)) {
     frames %<>% tolower()
     if (!startsWith("all", frames)) {
-      custom_stop("If `frames` is a string, it must be 'all'.",
-                  "You have `frames = '{frames}'`.")
+      custom_stop(
+        "If `frames` is a string, it must be 'all'.",
+        "You have `frames = '{frames}'`."
+      )
     }
     frames <- "all"
   }
@@ -439,8 +442,9 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
           If TIFFTAG_DESCRIPTION specifies the number of images, this must be
           equal to the number of directories in the TIFF file.
           ",
-            "Your TIFF file has {n_dirs} directories."  ,
-            "Its TIFFTAG_DESCRIPTION indicates that it holds {n_imgs} images.")
+            "Your TIFF file has {n_dirs} directories.",
+            "Its TIFFTAG_DESCRIPTION indicates that it holds {n_imgs} images."
+          )
         }
         framesxnch <- frames * n_ch
         if (tags) {
@@ -465,13 +469,15 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
   }
   good_frames <- sort(unique(frames))
   back_map <- match(frames, good_frames)
-  list(frames = as.integer(good_frames),
-       back_map = back_map,
-       n_ch = n_ch,
-       n_dirs = n_dirs,
-       n_slices = ifelse(is.na(n_slices), n_dirs, n_slices),
-       n_imgs = n_imgs,
-       ij_n_ch = ij_n_ch)
+  list(
+    frames = as.integer(good_frames),
+    back_map = back_map,
+    n_ch = n_ch,
+    n_dirs = n_dirs,
+    n_slices = ifelse(is.na(n_slices), n_dirs, n_slices),
+    n_imgs = n_imgs,
+    ij_n_ch = ij_n_ch
+  )
 }
 
 #' Prepare the path to a TIFF file for a function that will read from that file.
@@ -504,7 +510,8 @@ prep_path <- function(path) {
 custom_stop_bullet <- function(string) {
   checkmate::assert_string(string)
   string %>%
-    stringr::str_replace_all("\\s+", " ") %>% {
+    stringr::str_replace_all("\\s+", " ") %>%
+    {
       glue::glue("    * {.}")
     }
 }

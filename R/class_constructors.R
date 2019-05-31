@@ -17,13 +17,13 @@
 #' @export
 #'
 #' @examples
-#' img <- matrix(1:4, nrow = 2)  # to be a single-channel, grayscale image
+#' img <- matrix(1:4, nrow = 2) # to be a single-channel, grayscale image
 #' ijtiff_img(img, description = "single-channel, grayscale")
-#' img <- array(seq_len(2 ^ 3), dim = rep(2, 3))  # 1 channel, 2 frame
+#' img <- array(seq_len(2^3), dim = rep(2, 3)) # 1 channel, 2 frame
 #' ijtiff_img(img, description = "blah blah blah")
-#' img <- array(seq_len(2 ^ 3), dim = c(2, 2, 2, 1))  #  2 channel, 1 frame
+#' img <- array(seq_len(2^3), dim = c(2, 2, 2, 1)) #  2 channel, 1 frame
 #' ijtiff_img(img, description = "blah blah")
-#' img <- array(seq_len(2 ^ 4), dim = rep(2, 4))  # 2 channel, 2 frame
+#' img <- array(seq_len(2^4), dim = rep(2, 4)) # 2 channel, 2 frame
 #' ijtiff_img(img, software = "R")
 ijtiff_img <- function(img, ...) {
   checkmate::assert_array(img, min.d = 2, max.d = 4)

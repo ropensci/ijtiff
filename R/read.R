@@ -50,15 +50,15 @@
 #' @examples
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
-#' str(img)  # we see that `ijtiff` correctly recognises this image's 2 channels
+#' str(img) # we see that `ijtiff` correctly recognises this image's 2 channels
 #' img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"),
-#'                 frames = c(1, 3))
-#'
+#'   frames = c(1, 3)
+#' )
 #' @export
 read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
   path %<>% prep_path()
   frames %<>% prep_frames()
-  withr::local_dir(attr(path, "path_dir"))  # setwd(attr(path, "path_dir"))
+  withr::local_dir(attr(path, "path_dir"))
   checkmate::assert_logical(msg, max.len = 1)
   checkmate::assert_string(list_safety)
   list_safety %<>% filesstrings::match_arg(c("error", "warning", "none"),
@@ -67,15 +67,17 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
   tags1 <- read_tags(path, frames = 1)[[1]]
   prep <- prep_read(path, frames, tags1, tags = FALSE)
   out <- .Call("read_tif_C", path.expand(path), prep$frames,
-               PACKAGE = "ijtiff") %>%
-    {.[prep$back_map]}
+    PACKAGE = "ijtiff"
+  ) %>% {
+    .[prep$back_map]
+  }
   checkmate::assert_list(out)
   ds <- dims(out)
   if (filesstrings::all_equal(ds)) {
     d <- ds[[1]]
     attrs1 <- attributes(out[[1]])
     if ((isTRUE(length(out) == prep$n_imgs) && prep$ij_n_ch) ||
-        ((!prep$ij_n_ch) && prep$n_ch == 1)) {
+      (!prep$ij_n_ch && prep$n_ch == 1)) {
       if (length(d) > 2) out %<>% purrr::map(extract_desired_plane)
     }
     out %<>% unlist()
@@ -85,8 +87,9 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
       max_allowed <- 2^bps - 1
       if (any(out > max_allowed)) {
         biggest_offender <- max(out)
-        while (all(out %% (2^bps) == 0))
+        while (all(out %% (2^bps) == 0)) {
           out <- out / 2^bps
+        }
         if (any(out > max_allowed)) {
           stop(
             "ijtiff encountered a fatal error trying to read your image.\n",
@@ -158,29 +161,32 @@ tif_read <- read_tif
 #' @seealso [read_tif()]
 #'
 #' @examples
-#' read_tags(system.file("img", "Rlogo.tif", package="ijtiff"))
-#' read_tags(system.file("img", "2ch_ij.tif", package="ijtiff"))
-#' read_tags(system.file("img", "2ch_ij.tif", package="ijtiff"),
-#'           frames = c(2, 4))
-#'
+#' read_tags(system.file("img", "Rlogo.tif", package = "ijtiff"))
+#' read_tags(system.file("img", "2ch_ij.tif", package = "ijtiff"))
+#' read_tags(system.file("img", "2ch_ij.tif", package = "ijtiff"),
+#'   frames = c(2, 4)
+#' )
 #' @export
 read_tags <- function(path, frames = 1) {
   frames %<>% prep_frames()
   path %<>% prep_path()
-  withr::local_dir(attr(path, "path_dir"))  # setwd(attr(path, "path_dir"))
+  withr::local_dir(attr(path, "path_dir"))
   if (isTRUE(all.equal(frames, 1,
-                       check.attributes = FALSE, check.names = FALSE))) {
+    check.attributes = FALSE, check.names = FALSE
+  ))) {
     return(
       list(frame1 = .Call("read_tags_C", path, 1L, PACKAGE = "ijtiff")[[1]])
     )
   }
   tags1 <- read_tags(path, frames = 1)[[1]]
   prep <- prep_read(path, frames, tags1, tags = TRUE)
-  out <- .Call("read_tags_C", path, prep$frames, PACKAGE = "ijtiff") %>%
-    {.[prep$back_map]}
+  out <- .Call("read_tags_C", path, prep$frames, PACKAGE = "ijtiff") %>% {
+    .[prep$back_map]
+  }
   frame_nums <- prep$frames[prep$back_map]
-  if (!is.na(prep$n_slices) && prep$n_dirs != prep$n_slices)
+  if (!is.na(prep$n_slices) && prep$n_dirs != prep$n_slices) {
     frame_nums <- ceiling(frame_nums / prep$n_ch)
+  }
   names(out) <- paste0("frame", filesstrings::nice_nums(frame_nums))
   out
 }
