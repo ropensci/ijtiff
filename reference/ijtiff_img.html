@@ -166,7 +166,7 @@ use a 4-dimensional array <code>img[y, x, channel, plane]</code>.</p></li>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fl'>1</span>:<span class='fl'>4</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>2</span>)  <span class='co'># to be a single-channel, grayscale image</span>
+    <pre class="examples"><div class='input'><span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fl'>1</span>:<span class='fl'>4</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>2</span>) <span class='co'># to be a single-channel, grayscale image</span>
 <span class='fu'>ijtiff_img</span>(<span class='no'>img</span>, <span class='kw'>description</span> <span class='kw'>=</span> <span class='st'>"single-channel, grayscale"</span>)</div><div class='output co'>#&gt; , , 1, 1
 #&gt; 
 #&gt;      [,1] [,2]
@@ -176,7 +176,7 @@ use a 4-dimensional array <code>img[y, x, channel, plane]</code>.</p></li>
 #&gt; attr(,"description")
 #&gt; [1] "single-channel, grayscale"
 #&gt; attr(,"class")
-#&gt; [1] "ijtiff_img" "array"     </div><div class='input'><span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/array'>array</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq_len</a></span>(<span class='fl'>2</span> ^ <span class='fl'>3</span>), <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>3</span>))  <span class='co'># 1 channel, 2 frame</span>
+#&gt; [1] "ijtiff_img" "array"     </div><div class='input'><span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/array'>array</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq_len</a></span>(<span class='fl'>2</span>^<span class='fl'>3</span>), <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>3</span>)) <span class='co'># 1 channel, 2 frame</span>
 <span class='fu'>ijtiff_img</span>(<span class='no'>img</span>, <span class='kw'>description</span> <span class='kw'>=</span> <span class='st'>"blah blah blah"</span>)</div><div class='output co'>#&gt; , , 1, 1
 #&gt; 
 #&gt;      [,1] [,2]
@@ -192,7 +192,7 @@ use a 4-dimensional array <code>img[y, x, channel, plane]</code>.</p></li>
 #&gt; attr(,"description")
 #&gt; [1] "blah blah blah"
 #&gt; attr(,"class")
-#&gt; [1] "ijtiff_img" "array"     </div><div class='input'><span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/array'>array</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq_len</a></span>(<span class='fl'>2</span> ^ <span class='fl'>3</span>), <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>1</span>))  <span class='co'>#  2 channel, 1 frame</span>
+#&gt; [1] "ijtiff_img" "array"     </div><div class='input'><span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/array'>array</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq_len</a></span>(<span class='fl'>2</span>^<span class='fl'>3</span>), <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>1</span>)) <span class='co'>#  2 channel, 1 frame</span>
 <span class='fu'>ijtiff_img</span>(<span class='no'>img</span>, <span class='kw'>description</span> <span class='kw'>=</span> <span class='st'>"blah blah"</span>)</div><div class='output co'>#&gt; , , 1, 1
 #&gt; 
 #&gt;      [,1] [,2]
@@ -208,7 +208,7 @@ use a 4-dimensional array <code>img[y, x, channel, plane]</code>.</p></li>
 #&gt; attr(,"description")
 #&gt; [1] "blah blah"
 #&gt; attr(,"class")
-#&gt; [1] "ijtiff_img" "array"     </div><div class='input'><span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/array'>array</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq_len</a></span>(<span class='fl'>2</span> ^ <span class='fl'>4</span>), <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>4</span>))  <span class='co'># 2 channel, 2 frame</span>
+#&gt; [1] "ijtiff_img" "array"     </div><div class='input'><span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/array'>array</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq_len</a></span>(<span class='fl'>2</span>^<span class='fl'>4</span>), <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>4</span>)) <span class='co'># 2 channel, 2 frame</span>
 <span class='fu'>ijtiff_img</span>(<span class='no'>img</span>, <span class='kw'>software</span> <span class='kw'>=</span> <span class='st'>"R"</span>)</div><div class='output co'>#&gt; , , 1, 1
 #&gt; 
 #&gt;      [,1] [,2]
