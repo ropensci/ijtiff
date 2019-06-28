@@ -1,3 +1,9 @@
+# `ijtiff` 2.0.1
+
+## BUG FIXES
+* Insist on latest, bug-fixed `filesstrings` 3.1.5.
+
+
 # `ijtiff` 2.0.0
 
 ## BREAKING CHANGES
