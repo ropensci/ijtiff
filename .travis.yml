@@ -14,8 +14,6 @@ matrix:
           packages:
             - libtiff5-dev
             - libfftw3-dev
-      r_check_args: '--ignore-vignettes'
-      r_build_args: '--no-build-vignettes'
       after_success: Rscript -e 'covr::codecov()'
       before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
       deploy:

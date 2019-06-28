@@ -123,18 +123,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "magick",
-      "name": "magick",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=magick"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "abind",
       "name": "abind",
       "provider": {
@@ -376,7 +364,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/ijtiff/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/ijtiff/blob/master/README.md",
-  "fileSize": "498.708KB",
+  "fileSize": "498.666KB",
   "contIntegration": [
     "https://travis-ci.org/ropensci/ijtiff",
     "https://ci.appveyor.com/project/ropensci/ijtiff",
@@ -425,6 +413,18 @@
       }
     }
   ],
-  "relatedLink": ["https://CRAN.R-project.org/package=ijtiff", "https://ropensci.github.io/ijtiff"],
-  "keywords": ["r", "rstats", "tiff-files", "imagej", "tiff-images", "image-manipulation", "r-package", "peer-reviewed"]
+  "relatedLink": [
+    "https://CRAN.R-project.org/package=ijtiff",
+    "https://ropensci.github.io/ijtiff"
+  ],
+  "keywords": [
+    "r",
+    "rstats",
+    "tiff-files",
+    "imagej",
+    "tiff-images",
+    "image-manipulation",
+    "r-package",
+    "peer-reviewed"
+  ]
 }
