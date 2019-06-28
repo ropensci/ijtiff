@@ -7,7 +7,7 @@
   "identifier": "ijtiff",
   "description": "General purpose TIFF file I/O for R users. Currently the only such \n    package with read and write support for TIFF files with floating point \n    (real-numbered) pixels, and the only package that can correctly import TIFF \n    files that were saved from 'ImageJ' and write TIFF files than can be \n    correctly read by 'ImageJ' <https://imagej.nih.gov/ij/>.\n    Also supports text image I/O.",
   "name": "ijtiff: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files",
-  "codeRepository": "https://ropensci.github.io/ijtiff",
+  "codeRepository": "https://www.github.com/ropensci/ijtiff",
   "issueTracker": "https://www.github.com/ropensci/ijtiff/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
   "version": "2.0.1",
@@ -376,7 +376,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/ijtiff/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/ijtiff/blob/master/README.md",
-  "fileSize": "498.705KB",
+  "fileSize": "498.708KB",
   "contIntegration": [
     "https://travis-ci.org/ropensci/ijtiff",
     "https://ci.appveyor.com/project/ropensci/ijtiff",
@@ -425,5 +425,6 @@
       }
     }
   ],
-  "relatedLink": "https://CRAN.R-project.org/package=ijtiff"
+  "relatedLink": ["https://CRAN.R-project.org/package=ijtiff", "https://ropensci.github.io/ijtiff"],
+  "keywords": ["r", "rstats", "tiff-files", "imagej", "tiff-images", "image-manipulation", "r-package", "peer-reviewed"]
 }

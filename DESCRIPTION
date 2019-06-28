@@ -27,7 +27,7 @@ SystemRequirements: libtiff
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-URL: https://ropensci.github.io/ijtiff
+URL: https://ropensci.github.io/ijtiff, https://www.github.com/ropensci/ijtiff
 BugReports: https://www.github.com/ropensci/ijtiff/issues
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
