@@ -383,7 +383,7 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
         n_frames <- description %>%
           filesstrings::str_after_first("frames=") %>%
           filesstrings::first_number()
-        if (!is.na(n_slices)) {
+        if (!is.na(n_slices) && (n_frames != n_slices)) {
           custom_stop(
             "
             The ImageJ-written image you're trying to read says it has
