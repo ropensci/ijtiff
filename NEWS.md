@@ -1,3 +1,9 @@
+# `ijtiff` 2.0.2
+
+## BUG FIXES
+* For _ImageJ_-written images, if `n_slices` and `n_frames` are both specified, that should be OK if they're equal.
+
+
 # `ijtiff` 2.0.1
 
 ## BUG FIXES

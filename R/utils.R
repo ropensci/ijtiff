@@ -383,7 +383,7 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
         n_frames <- description %>%
           filesstrings::str_after_first("frames=") %>%
           filesstrings::first_number()
-        if (!is.na(n_slices) && (n_frames != n_slices)) {
+        if (!is.na(n_slices) && rlang::is_false(n_frames == n_slices)) {
           custom_stop(
             "
             The ImageJ-written image you're trying to read says it has
@@ -391,7 +391,8 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
             ", "
             To be read by the `ijtiff` package, the number of slices OR the
             number of frames should be specified in the TIFFTAG_DESCRIPTION
-            (they're interpreted as the same thing), but not both.
+            and they're interpreted as the same thing. It does not make sense
+            for them to be different numbers.
             "
           )
         }
