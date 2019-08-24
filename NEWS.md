@@ -1,3 +1,9 @@
+# `ijtiff` 2.0.3
+
+## BUG FIXES
+* `libjpeg` needs to be in `SystemRequirements`.
+
+
 # `ijtiff` 2.0.2
 
 ## BUG FIXES
