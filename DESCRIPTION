@@ -2,7 +2,7 @@ Type: Package
 Package: ijtiff
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ'
     TIFF Files
-Version: 2.0.3
+Version: 2.0.4
 Authors@R: 
     c(person(given = "Rory",
              family = "Nolan",
@@ -39,7 +39,7 @@ Description: General purpose TIFF file I/O for R users.
     <https://imagej.nih.gov/ij/>.  Also supports text image I/O.
 License: GPL-3
 URL: https://docs.ropensci.org/ijtiff,
-    https://www.github.com/ropensci/ijtiff
+    https://www.github.com/ropensci/ijtiff#readme
 BugReports: https://www.github.com/ropensci/ijtiff/issues
 Depends: 
     R (>= 3.1)

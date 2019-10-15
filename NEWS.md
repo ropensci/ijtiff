@@ -1,3 +1,9 @@
+# `ijtiff` 2.0.4
+
+## MINOR IMPROVEMENTS
+* Include rOpenSci docs in `DESCRIPTION` as `URL`.
+
+
 # `ijtiff` 2.0.3
 
 ## BUG FIXES
