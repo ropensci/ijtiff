@@ -38,7 +38,7 @@ Description: General purpose TIFF file I/O for R users.
     write TIFF files than can be correctly read by 'ImageJ'
     <https://imagej.nih.gov/ij/>.  Also supports text image I/O.
 License: GPL-3
-URL: https://ropensci.github.io/ijtiff,
+URL: https://docs.ropensci.org/ijtiff,
     https://www.github.com/ropensci/ijtiff
 BugReports: https://www.github.com/ropensci/ijtiff/issues
 Depends: 
