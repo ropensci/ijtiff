@@ -40,9 +40,11 @@ elif [ "$PKGCONFIG_CFLAGS" ] && [ "$PKGCONFIG_LIBS" ]; then
   fi
 fi
 
-# Hack for CRAN Solaris which lacks ljbig
-if [[ $(uname) == *"SunOS"* ]] && \
-   [[ ${PKG_LIBS} == *"-ljbig"* ]]; then
+# pkg-config often says -ljbig is necessary but it seems not to be
+if [[ ${PKG_LIBS} == *"-ljbig "* ]]; then
+   PKG_LIBS=$(echo $PKG_LIBS | sed 's/-ljbig //')
+fi
+if [[ ${PKG_LIBS} == *" -ljbig"* ]]; then
    PKG_LIBS=$(echo $PKG_LIBS | sed 's/ -ljbig//')
 fi
 
