@@ -1,13 +1,10 @@
-# `ijtiff` 2.0.5
-
-## BUG FIXES
-* Sometimes `pkg-config` declares that `ijtiff` needs JBIG_KIT (compile flag `-ljbig`) at compile time. This is incorrect and it often causes users installation pain. This fix is a hack that removes this compile flag from the `pkg-config` output.
-
-
 # `ijtiff` 2.0.4
 
 ## MINOR IMPROVEMENTS
 * Include rOpenSci docs in `DESCRIPTION` as `URL`.
+
+## BUG FIXES
+* Sometimes `pkg-config` declares that `ijtiff` needs JBIG_KIT (compile flag `-ljbig`) at compile time. This is incorrect and it often causes users installation pain. This fix is a hack that removes this compile flag from the `pkg-config` output.
 
 
 # `ijtiff` 2.0.3
