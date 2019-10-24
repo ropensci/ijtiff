@@ -360,11 +360,15 @@
     {
       "@type": "SoftwareApplication",
       "identifier": "https://sysreqs.r-hub.io/get/libtiff"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "https://sysreqs.r-hub.io/get/zlib"
     }
   ],
   "releaseNotes": "https://github.com/ropensci/ijtiff/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/ijtiff/blob/master/README.md",
-  "fileSize": "498.977KB",
+  "fileSize": "498.979KB",
   "contIntegration": [
     "https://travis-ci.org/ropensci/ijtiff",
     "https://ci.appveyor.com/project/ropensci/ijtiff",
