@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The <em>ImageJ</em> Problem • ijtiff</title>
+<title>The _ImageJ_ Problem • ijtiff</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -13,9 +13,10 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="The &lt;em&gt;ImageJ&lt;/em&gt; Problem">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script><meta property="og:title" content="The _ImageJ_ Problem">
 <meta property="og:description" content="">
 <meta property="og:image" content="/logo.png">
 <meta name="twitter:card" content="summary">
@@ -37,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.4</span>
       </span>
     </div>
 
@@ -45,7 +46,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -83,12 +84,13 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>The <em>ImageJ</em> Problem</h1>
             
-            <h4 class="date">2019-08-24</h4>
+            <h4 class="date">2019-12-05</h4>
       
       
       <div class="hidden name"><code>the-imagej-problem.Rmd</code></div>
@@ -121,7 +123,7 @@
 <div id="reading-imagej-tiff-files" class="section level2">
 <h2 class="hasAnchor">
 <a href="#reading-imagej-tiff-files" class="anchor"></a>Reading <em>ImageJ</em> TIFF files</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">path_2ch_ij &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"img"</span>, <span class="st">"Rlogo-banana-red_green.tif"</span>, </a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">path_2ch_ij &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"img"</span>, <span class="st">"Rlogo-banana-red_green.tif"</span>, </a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">                           <span class="dt">package =</span> <span class="st">"ijtiff"</span>)</a></code></pre></div>
 <p><code>path_2ch_ij</code> is the path to a TIFF file which was made in <em>ImageJ</em> from the R logo dancing banana GIF used in the README of Jeroen Ooms’ <code>magick</code> package. The TIFF is a time-stack containing only the red and green channels of the first, third and fifth frames of the original GIF. Here’s the full gif:</p>
 <p><img src="../../../../R/Library/ijtiff/img/Rlogo-banana.gif"></p>
@@ -131,12 +133,12 @@
 <h3 class="hasAnchor">
 <a href="#the-original-tiff-package" class="anchor"></a>The original <code>tiff</code> package</h3>
 <p>When we import it with the original <code>tiff</code> package:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">img &lt;-<span class="st"> </span>tiff<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/tiff/topics/readTIFF">readTIFF</a></span>(path_2ch_ij, <span class="dt">all =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; Warning in tiff::readTIFF(path_2ch_ij, all = TRUE): TIFFReadDirectory:</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt; Unknown field with tag 50838 (0xc696) encountered</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; Warning in tiff::readTIFF(path_2ch_ij, all = TRUE): TIFFReadDirectory:</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; Unknown field with tag 50839 (0xc697) encountered</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(img)  <span class="co"># 10 images</span></a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">img &lt;-<span class="st"> </span>tiff<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/tiff/man/readTIFF.html">readTIFF</a></span>(path_2ch_ij, <span class="dt">all =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; Warning in tiff::readTIFF(path_2ch_ij, all = TRUE): TIFFReadDirectory: Unknown</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt; field with tag 50838 (0xc696) encountered</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; Warning in tiff::readTIFF(path_2ch_ij, all = TRUE): TIFFReadDirectory: Unknown</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; field with tag 50839 (0xc697) encountered</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(img)  <span class="co"># 10 images</span></a>
 <a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; List of 6</span></a>
 <a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt;  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
 <a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt;  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
@@ -145,30 +147,30 @@
 <a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt;  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
 <a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt;  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
 <a class="sourceLine" id="cb2-14" data-line-number="14">img[[<span class="dv">1</span>]][<span class="dv">100</span><span class="op">:</span><span class="dv">110</span>, <span class="dv">50</span><span class="op">:</span><span class="dv">60</span>]  <span class="co"># print a section of the first image in the series</span></a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt;            [,1]      [,2]      [,3]      [,4]      [,5]      [,6]</span></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt;  [1,] 0.6627451 0.6627451 0.6549020 0.6627451 0.7058824 0.9215686</span></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt;  [2,] 0.6745098 0.6431373 0.6745098 0.6431373 0.6431373 0.6745098</span></a>
-<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt;  [3,] 0.6549020 0.6627451 0.6431373 0.6627451 0.6627451 0.6431373</span></a>
-<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt;  [4,] 0.6431373 0.6431373 0.6627451 0.6431373 0.6627451 0.6431373</span></a>
-<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt;  [5,] 0.6745098 0.6745098 0.6431373 0.6627451 0.6431373 0.6627451</span></a>
-<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co">#&gt;  [6,] 0.6745098 0.6431373 0.6431373 0.6431373 0.6549020 0.6549020</span></a>
-<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="co">#&gt;  [7,] 0.6549020 0.6549020 0.6431373 0.6549020 0.6549020 0.6431373</span></a>
-<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co">#&gt;  [8,] 0.6431373 0.6549020 0.6431373 0.6549020 0.6431373 0.6431373</span></a>
-<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#&gt;  [9,] 0.6431373 0.6745098 0.6431373 0.6431373 0.6431373 0.6549020</span></a>
-<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co">#&gt; [10,] 0.6431373 0.6549020 0.6431373 0.6549020 0.6431373 0.6431373</span></a>
-<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="co">#&gt; [11,] 0.6431373 0.6431373 0.6431373 0.6431373 0.6431373 0.6431373</span></a>
-<a class="sourceLine" id="cb2-27" data-line-number="27"><span class="co">#&gt;            [,7]      [,8]      [,9]     [,10]     [,11]</span></a>
-<a class="sourceLine" id="cb2-28" data-line-number="28"><span class="co">#&gt;  [1,] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000</span></a>
-<a class="sourceLine" id="cb2-29" data-line-number="29"><span class="co">#&gt;  [2,] 0.8705882 1.0000000 1.0000000 1.0000000 1.0000000</span></a>
-<a class="sourceLine" id="cb2-30" data-line-number="30"><span class="co">#&gt;  [3,] 0.6627451 0.7803922 1.0000000 1.0000000 1.0000000</span></a>
-<a class="sourceLine" id="cb2-31" data-line-number="31"><span class="co">#&gt;  [4,] 0.6627451 0.6431373 0.7058824 0.9058824 1.0000000</span></a>
-<a class="sourceLine" id="cb2-32" data-line-number="32"><span class="co">#&gt;  [5,] 0.6431373 0.6627451 0.6431373 0.6431373 0.8039216</span></a>
-<a class="sourceLine" id="cb2-33" data-line-number="33"><span class="co">#&gt;  [6,] 0.6549020 0.6431373 0.6431373 0.6549020 0.6431373</span></a>
-<a class="sourceLine" id="cb2-34" data-line-number="34"><span class="co">#&gt;  [7,] 0.6431373 0.6549020 0.6431373 0.6431373 0.6431373</span></a>
-<a class="sourceLine" id="cb2-35" data-line-number="35"><span class="co">#&gt;  [8,] 0.6549020 0.6431373 0.6549020 0.6431373 0.6431373</span></a>
-<a class="sourceLine" id="cb2-36" data-line-number="36"><span class="co">#&gt;  [9,] 0.6431373 0.6431373 0.6431373 0.6431373 0.6431373</span></a>
-<a class="sourceLine" id="cb2-37" data-line-number="37"><span class="co">#&gt; [10,] 0.6431373 0.6431373 0.6431373 0.6431373 0.6431373</span></a>
-<a class="sourceLine" id="cb2-38" data-line-number="38"><span class="co">#&gt; [11,] 0.6549020 0.6431373 0.6431373 0.6431373 0.6431373</span></a></code></pre></div>
+<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt;            [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]</span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt;  [1,] 0.6627451 0.6627451 0.6549020 0.6627451 0.7058824 0.9215686 1.0000000</span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt;  [2,] 0.6745098 0.6431373 0.6745098 0.6431373 0.6431373 0.6745098 0.8705882</span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt;  [3,] 0.6549020 0.6627451 0.6431373 0.6627451 0.6627451 0.6431373 0.6627451</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt;  [4,] 0.6431373 0.6431373 0.6627451 0.6431373 0.6627451 0.6431373 0.6627451</span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt;  [5,] 0.6745098 0.6745098 0.6431373 0.6627451 0.6431373 0.6627451 0.6431373</span></a>
+<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co">#&gt;  [6,] 0.6745098 0.6431373 0.6431373 0.6431373 0.6549020 0.6549020 0.6549020</span></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="co">#&gt;  [7,] 0.6549020 0.6549020 0.6431373 0.6549020 0.6549020 0.6431373 0.6431373</span></a>
+<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co">#&gt;  [8,] 0.6431373 0.6549020 0.6431373 0.6549020 0.6431373 0.6431373 0.6549020</span></a>
+<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#&gt;  [9,] 0.6431373 0.6745098 0.6431373 0.6431373 0.6431373 0.6549020 0.6431373</span></a>
+<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co">#&gt; [10,] 0.6431373 0.6549020 0.6431373 0.6549020 0.6431373 0.6431373 0.6431373</span></a>
+<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="co">#&gt; [11,] 0.6431373 0.6431373 0.6431373 0.6431373 0.6431373 0.6431373 0.6549020</span></a>
+<a class="sourceLine" id="cb2-27" data-line-number="27"><span class="co">#&gt;            [,8]      [,9]     [,10]     [,11]</span></a>
+<a class="sourceLine" id="cb2-28" data-line-number="28"><span class="co">#&gt;  [1,] 1.0000000 1.0000000 1.0000000 1.0000000</span></a>
+<a class="sourceLine" id="cb2-29" data-line-number="29"><span class="co">#&gt;  [2,] 1.0000000 1.0000000 1.0000000 1.0000000</span></a>
+<a class="sourceLine" id="cb2-30" data-line-number="30"><span class="co">#&gt;  [3,] 0.7803922 1.0000000 1.0000000 1.0000000</span></a>
+<a class="sourceLine" id="cb2-31" data-line-number="31"><span class="co">#&gt;  [4,] 0.6431373 0.7058824 0.9058824 1.0000000</span></a>
+<a class="sourceLine" id="cb2-32" data-line-number="32"><span class="co">#&gt;  [5,] 0.6627451 0.6431373 0.6431373 0.8039216</span></a>
+<a class="sourceLine" id="cb2-33" data-line-number="33"><span class="co">#&gt;  [6,] 0.6431373 0.6431373 0.6549020 0.6431373</span></a>
+<a class="sourceLine" id="cb2-34" data-line-number="34"><span class="co">#&gt;  [7,] 0.6549020 0.6431373 0.6431373 0.6431373</span></a>
+<a class="sourceLine" id="cb2-35" data-line-number="35"><span class="co">#&gt;  [8,] 0.6431373 0.6549020 0.6431373 0.6431373</span></a>
+<a class="sourceLine" id="cb2-36" data-line-number="36"><span class="co">#&gt;  [9,] 0.6431373 0.6431373 0.6431373 0.6431373</span></a>
+<a class="sourceLine" id="cb2-37" data-line-number="37"><span class="co">#&gt; [10,] 0.6431373 0.6431373 0.6431373 0.6431373</span></a>
+<a class="sourceLine" id="cb2-38" data-line-number="38"><span class="co">#&gt; [11,] 0.6431373 0.6431373 0.6431373 0.6431373</span></a></code></pre></div>
 <ul>
 <li>We just get a list of 6 frames, with no information about the channels.</li>
 <li>We get annoying warnings about ImageJ’s private TIFF tags 50838 and 50839, which are of no interest to the <code>R</code> user.</li>
@@ -179,24 +181,24 @@
 <h3 class="hasAnchor">
 <a href="#the-ijtiff-package" class="anchor"></a>The <code>ijtiff</code> package</h3>
 <p>When we import the same image with the <code>ijtiff</code> package:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">img &lt;-<span class="st"> </span>ijtiff<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/ijtiff/topics/read_tif">read_tif</a></span>(path_2ch_ij)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt; Warning in read_tags(path, frames = 1): TIFFReadDirectory: Unknown field</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt; with tag 50838 (0xc696) encountered</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt; Warning in read_tags(path, frames = 1): TIFFReadDirectory: Unknown field</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; with tag 50839 (0xc697) encountered</span></a>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">img &lt;-<span class="st"> </span>ijtiff<span class="op">::</span><span class="kw"><a href="https://docs.ropensci.org/ijtiff/reference/read_tif.html">read_tif</a></span>(path_2ch_ij)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt; Warning in read_tags(path, frames = 1): TIFFReadDirectory: Unknown field with</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt; tag 50838 (0xc696) encountered</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt; Warning in read_tags(path, frames = 1): TIFFReadDirectory: Unknown field with</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; tag 50839 (0xc697) encountered</span></a>
 <a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt; Warning in prep_read(path, frames, tags1, tags = FALSE): TIFFReadDirectory:</span></a>
 <a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; Unknown field with tag 50838 (0xc696) encountered</span></a>
 <a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt; Warning in prep_read(path, frames, tags1, tags = FALSE): TIFFReadDirectory:</span></a>
 <a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt; Unknown field with tag 50839 (0xc697) encountered</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; Warning in eval(lhs, parent, parent): TIFFReadDirectory: Unknown field with</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt; tag 50838 (0xc696) encountered</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt; Warning in eval(lhs, parent, parent): TIFFReadDirectory: Unknown field with</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt; tag 50839 (0xc697) encountered</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; Warning in eval(lhs, parent, parent): TIFFReadDirectory: Unknown field with tag</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt; 50838 (0xc696) encountered</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt; Warning in eval(lhs, parent, parent): TIFFReadDirectory: Unknown field with tag</span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt; 50839 (0xc697) encountered</span></a>
 <a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt; Reading Rlogo-banana-red_green.tif: an 8-bit, 155x200 pixel</span></a>
 <a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt; image of unsigned integer type. Reading 2 channels and 3</span></a>
 <a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt; frames . . .</span></a>
 <a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt;  Done.</span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(img)  <span class="co"># 2 channels, 3 frames</span></a>
+<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(img)  <span class="co"># 2 channels, 3 frames</span></a>
 <a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt; [1] 155 200   2   3</span></a>
 <a class="sourceLine" id="cb3-20" data-line-number="20">img[<span class="dv">100</span><span class="op">:</span><span class="dv">110</span>, <span class="dv">50</span><span class="op">:</span><span class="dv">60</span>, <span class="dv">1</span>, <span class="dv">1</span>]  <span class="co"># print a section of the first channel, first frame</span></a>
 <a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#&gt;       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11]</span></a>
@@ -237,6 +239,7 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -252,17 +255,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Rory Nolan, Kent Johnson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>
