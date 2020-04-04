@@ -180,16 +180,48 @@ Else if <code>img</code> has 3 or 4 channels, then <code>colormode</code> is set
 Else <code>colormode</code> is set to "Grayscale".</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='kw'>if</span> (<span class='st'>"EBImage"</span> <span class='kw'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='kw pkg'>utils</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/utils/installed.packages.html'>installed.packages</a></span>())) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>EBImage</span>)) {
   <span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_tif.html'>read_tif</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"ijtiff"</span>))
   <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>img</span>)
   <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'>as_EBImage</span>(<span class='no'>img</span>))
   <span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_tif.html'>read_tif</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"2ch_ij.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"ijtiff"</span>))
   <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>img</span>)
   <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'>as_EBImage</span>(<span class='no'>img</span>))
-}
-}</div></pre>
+}</div><div class='output co'>#&gt; <span class='message'>Loading required package: EBImage</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘EBImage’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:ijtiff’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    display</span></div><div class='output co'>#&gt; <span class='message'>Reading Rlogo.tif: an 8-bit, 76x100 pixel image of unsigned</span>
+#&gt; <span class='message'>integer type. Reading 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='output co'>#&gt;  'ijtiff_img' num [1:76, 1:100, 1:4, 1] 0 0 0 0 0 0 0 0 0 0 ...
+#&gt;  - attr(*, "width")= int 100
+#&gt;  - attr(*, "length")= int 76
+#&gt;  - attr(*, "bits_per_sample")= int 8
+#&gt;  - attr(*, "samples_per_pixel")= int 4
+#&gt;  - attr(*, "sample_format")= chr "uint"
+#&gt;  - attr(*, "planar_config")= chr "contiguous"
+#&gt;  - attr(*, "rows_per_strip")= int 76
+#&gt;  - attr(*, "compression")= chr "LZW"
+#&gt;  - attr(*, "x_resolution")= num 300
+#&gt;  - attr(*, "y_resolution")= num 300
+#&gt;  - attr(*, "resolution_unit")= chr "inch"
+#&gt;  - attr(*, "orientation")= chr "top_left"
+#&gt;  - attr(*, "color_space")= chr "RGB"
+#&gt; Formal class 'Image' [package "EBImage"] with 2 slots
+#&gt;   ..@ .Data    : num [1:100, 1:76, 1:4, 1] 0 0 0 0 0 0 0 0 0 0 ...
+#&gt;   ..@ colormode: int 2</div><div class='output co'>#&gt; <span class='message'>Reading 2ch_ij.tif: an 8-bit, 15x6 pixel image of unsigned</span>
+#&gt; <span class='message'>integer type. Reading 2 channels and 5 frames . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='output co'>#&gt;  'ijtiff_img' num [1:15, 1:6, 1:2, 1:5] 0 0 0 1 0 0 1 0 1 1 ...
+#&gt;  - attr(*, "width")= int 6
+#&gt;  - attr(*, "length")= int 15
+#&gt;  - attr(*, "bits_per_sample")= int 8
+#&gt;  - attr(*, "samples_per_pixel")= int 1
+#&gt;  - attr(*, "sample_format")= chr "uint"
+#&gt;  - attr(*, "planar_config")= chr "contiguous"
+#&gt;  - attr(*, "rows_per_strip")= int 15
+#&gt;  - attr(*, "compression")= chr "none"
+#&gt;  - attr(*, "description")= chr "ImageJ=1.51s\nimages=10\nchannels=2\nframes=5\nhyperstack=true\nmode=composite\nloop=false\n"
+#&gt;  - attr(*, "color_space")= chr "black is zero"
+#&gt; Formal class 'Image' [package "EBImage"] with 2 slots
+#&gt;   ..@ .Data    : num [1:6, 1:15, 1:2, 1:5] 0 0.00392 0.00392 0 0 ...
+#&gt;   ..@ colormode: int 0</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
