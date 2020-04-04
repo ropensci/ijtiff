@@ -13,7 +13,7 @@ as_EBImage(img, colormode = NULL, scale = TRUE, force = TRUE)
 which can be either \code{"Grayscale"} or \code{"Color"}. If not specified, a guess
 is made. See 'Details'.}
 
-\item{scale}{Scale values in an integer image to the range \code{[0, 1]}? Has no
+\item{scale}{Scale values in an integer image to the range \verb{[0, 1]}? Has no
 effect on floating-point images.}
 
 \item{force}{This function is designed to take \link{ijtiff_img}s as input. To

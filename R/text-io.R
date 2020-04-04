@@ -47,7 +47,13 @@ write_txt_img <- function(img, path, rds = FALSE, msg = TRUE) {
       msg_paths[i] %<>% filesstrings::str_after_last("/")
     }
   }
-  msg_paths %<>% glue::glue_collapse(sep = ", ", last = " and ")
+  if (length(msg_paths) > 1) {
+    msg_paths <- stringr::str_c(
+      stringr::str_c(msg_paths[-length(msg_paths)], collapse = ", "),
+      " and ",
+      msg_paths[length(msg_paths)]
+    )
+  }
   if (msg) {
     message(
       "Writing ", msg_paths, ": a ", d[1], "x", d[2],

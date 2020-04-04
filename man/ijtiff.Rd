@@ -6,7 +6,7 @@
 \alias{ijtiff-package}
 \title{\code{ijtiff}: TIFF I/O for \emph{ImageJ} users}
 \description{
-This is a general purpose TIFF I/O utility for R. The \href{https://cran.r-project.org/package=tiff}{tiff package} already exists for this
+This is a general purpose TIFF I/O utility for R. The \href{https://cran.r-project.org/package=tiff}{\code{tiff} package} already exists for this
 purpose but \code{ijtiff} adds some functionality and overcomes some bugs therein.
 }
 \details{

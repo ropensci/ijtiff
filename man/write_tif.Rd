@@ -4,8 +4,14 @@
 \alias{write_tif}
 \title{Write images in TIFF format}
 \usage{
-write_tif(img, path, bits_per_sample = "auto", compression = "none",
-  overwrite = FALSE, msg = TRUE)
+write_tif(
+  img,
+  path,
+  bits_per_sample = "auto",
+  compression = "none",
+  overwrite = FALSE,
+  msg = TRUE
+)
 }
 \arguments{
 \item{img}{An array representing the image. \itemize{\item For a

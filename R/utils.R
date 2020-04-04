@@ -278,9 +278,9 @@ stack_to_linescan <- function(img) {
 pretty_msg <- function(...) {
   dots <- unlist(list(...))
   checkmate::assert_character(dots)
-  glue::glue_collapse(dots) %>%
+  stringr::str_c(dots, collapse = "") %>%
     strwrap(width = 63) %>%
-    glue::glue_collapse(sep = "\n") %>%
+    stringr::str_c(collapse = "\n") %>%
     message()
 }
 
@@ -513,7 +513,7 @@ custom_stop_bullet <- function(string) {
   string %>%
     stringr::str_replace_all("\\s+", " ") %>%
     {
-      glue::glue("    * {.}")
+      stringr::str_glue("    * {.}")
     }
 }
 
@@ -532,7 +532,7 @@ custom_stop <- function(main_message, ..., .envir = parent.frame()) {
   checkmate::assert_string(main_message)
   main_message %<>%
     stringr::str_replace_all("\\s+", " ") %>%
-    glue::glue(.envir = .envir)
+    stringr::str_glue(.envir = .envir)
   out <- main_message
   dots <- unlist(list(...))
   if (length(dots)) {
@@ -540,11 +540,11 @@ custom_stop <- function(main_message, ..., .envir = parent.frame()) {
       stop("\nThe arguments in ... must all be of character type.")
     }
     dots %<>%
-      purrr::map_chr(glue::glue, .envir = .envir) %>%
+      purrr::map_chr(stringr::str_glue, .envir = .envir) %>%
       purrr::map_chr(custom_stop_bullet)
     out %<>% {
-      glue::glue_collapse(c(., dots), sep = "\n")
+      stringr::str_c(c(., dots), collapse = "\n")
     }
   }
-  rlang::abort(glue::glue_collapse(out, sep = "\n"))
+  rlang::abort(stringr::str_c(out, collapse = "\n"))
 }
