@@ -39,7 +39,7 @@ bugs therein.
     `ijtiff` works smoothly with these images.
 
 To learn about `ijtiff` and how to use it, visit the package website at
-<https://ropensci.github.io/ijtiff>.
+<https://docs.ropensci.org/ijtiff>.
 
 ## Installation
 

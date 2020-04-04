@@ -39,7 +39,7 @@ This is a general purpose TIFF I/O utility for R. The [`tiff` package](https://c
 * `ijtiff` can read and write _text images_; `tiff` cannot.
 * `tiff` struggles to interpret channel information and gives cryptic errors when reading TIFF files written by the _ImageJ_ software; `ijtiff` works smoothly with these images.
 
-To learn about `ijtiff` and how to use it, visit the package website at https://ropensci.github.io/ijtiff.
+To learn about `ijtiff` and how to use it, visit the package website at https://docs.ropensci.org/ijtiff.
 
 
 ## Installation
