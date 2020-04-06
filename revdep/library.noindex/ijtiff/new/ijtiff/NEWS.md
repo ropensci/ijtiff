@@ -1,3 +1,30 @@
+# `ijtiff` 2.0.4
+
+## MINOR IMPROVEMENTS
+* Include rOpenSci docs in `DESCRIPTION` as `URL`.
+
+## BUG FIXES
+* Sometimes `pkg-config` declares that `ijtiff` needs JBIG_KIT (compile flag `-ljbig`) at compile time. This is incorrect and it often causes users installation pain. This fix is a hack that removes this compile flag from the `pkg-config` output.
+
+
+# `ijtiff` 2.0.3
+
+## BUG FIXES
+* `libjpeg` needs to be in `SystemRequirements`.
+
+
+# `ijtiff` 2.0.2
+
+## BUG FIXES
+* For _ImageJ_-written images, if `n_slices` and `n_frames` are both specified, that should be OK if they're equal.
+
+
+# `ijtiff` 2.0.1
+
+## BUG FIXES
+* Insist on latest, bug-fixed `filesstrings` 3.1.5.
+
+
 # `ijtiff` 2.0.0
 
 ## BREAKING CHANGES
@@ -6,7 +33,10 @@
 
 ## NEW FEATURES
 * It is now possible to read only certain frames of a TIFF image thanks to the `frames` argument of `read_tif()`.
-* `read_tif()` and `read_tags()` now have the aliases `tif_read()` and `tags_read()` to comply with the rOpenSci `objevt_verb()` style.
+* `read_tif()` and `read_tags()` now have the aliases `tif_read()` and `tags_read()` to comply with the rOpenSci `object_verb()` style.
+
+## BUG FIXES
+* Include `sys/types.h` for greater type compatibility.
 
 
 # `ijtiff` 1.5.1

@@ -1,53 +1,68 @@
-Package: ijtiff
 Type: Package
+Package: ijtiff
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files
-Version: 1.5.1
-Authors@R: c(person("Rory", "Nolan", email = "rorynoolan@gmail.com", 
-                    role = c("aut", "cre"), 
-                    comment = c(ORCID = "0000-0002-5239-4043")),
-             person("Kent", "Johnson", email = "kent.johnson@perkinelmer.com",
-                    role = "aut"),
-             person("Simon", "Urbanek", email = "Simon.Urbanek@r-project.org", 
-                    role = "ctb"),
-             person("Sergi", "Padilla-Parra", email = "spadilla@well.ox.ac.uk", 
-                    role = "ths", comment = c(ORCID = "0000-0002-8010-9481")),
-             person("Jeroen", "Ooms", role = c("rev", "ctb"), 
-                    comment = c(ORCID = "0000-0002-4035-0289")),
-             person("Jon", "Clayden", 
-                    role = "rev", comment = c(ORCID = "0000-0002-6608-0619")))
+Version: 2.0.5
+Authors@R: 
+    c(person(given = "Rory",
+             family = "Nolan",
+             role = c("aut", "cre"),
+             email = "rorynoolan@gmail.com",
+             comment = c(ORCID = "0000-0002-5239-4043")),
+      person(given = "Kent",
+             family = "Johnson",
+             role = "aut",
+             email = "kjohnson@akoyabio.com"),
+      person(given = "Simon",
+             family = "Urbanek",
+             role = "ctb",
+             email = "Simon.Urbanek@r-project.org"),
+      person(given = "Sergi",
+             family = "Padilla-Parra",
+             role = "ths",
+             email = "spadilla@well.ox.ac.uk",
+             comment = c(ORCID = "0000-0002-8010-9481")),
+      person(given = "Jeroen",
+             family = "Ooms",
+             role = c("rev", "ctb"),
+             comment = c(ORCID = "0000-0002-4035-0289")),
+      person(given = "Jon",
+             family = "Clayden",
+             role = "rev",
+             comment = c(ORCID = "0000-0002-6608-0619")))
 Maintainer: Rory Nolan <rorynoolan@gmail.com>
-Description: General purpose TIFF file I/O for R users. Currently the only such 
-    package with read and write support for TIFF files with floating point 
-    (real-numbered) pixels, and the only package that can correctly import TIFF 
-    files that were saved from 'ImageJ' and write TIFF files than can be 
-    correctly read by 'ImageJ' <https://imagej.nih.gov/ij/>.
-    Also supports text image I/O.
+Description: General purpose TIFF file I/O for R users.
+    Currently the only such package with read and write support for TIFF
+    files with floating point (real-numbered) pixels, and the only package
+    that can correctly import TIFF files that were saved from 'ImageJ' and
+    write TIFF files than can be correctly read by 'ImageJ'
+    <https://imagej.nih.gov/ij/>.  Also supports text image I/O.
 License: GPL-3
-SystemRequirements: libtiff
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 6.1.1
-URL: https://ropensci.github.io/ijtiff
+URL: https://docs.ropensci.org/ijtiff,
+        https://www.github.com/ropensci/ijtiff#readme
 BugReports: https://www.github.com/ropensci/ijtiff/issues
-Roxygen: list(markdown = TRUE)
-VignetteBuilder: knitr
 Depends: R (>= 3.1)
-Imports: graphics, grDevices, methods, Rcpp (>= 1.0.1), checkmate (>=
-        1.9.1), magrittr (>= 1.5), filesstrings (>= 3.1.1), stringr,
-        purrr, readr, rlang (>= 0.3.3), dplyr, glue (>= 1.3.0), fs (>=
-        1.3.1), withr (>= 2.1.0)
-Suggests: knitr, testthat, rmarkdown, covr, magick, abind, tiff,
-        EBImage, spelling, pacman
-LinkingTo: Rcpp
+Imports: checkmate (>= 1.9.3), dplyr, filesstrings (>= 3.1.5), fs (>=
+        1.3.1), graphics, grDevices, magrittr (>= 1.5), methods, purrr,
+        Rcpp (>= 1.0.1), readr, rlang (>= 0.3.3), stringr (>= 1.2.0),
+        withr (>= 2.1.0)
+Suggests: abind, covr, EBImage, knitr, pacman, rmarkdown, spelling,
+        testthat (>= 2.1.0), tiff
+LinkingTo: Rcpp (>= 1.0.1)
+VignetteBuilder: knitr
+Encoding: UTF-8
 Language: en-US
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+SystemRequirements: libtiff, libjpeg, zlib
 RemoteType: local
 RemoteUrl: /Users/rnolan/Dropbox/DPhil/Misc/RStuff/ijtiff
 NeedsCompilation: yes
-Packaged: 2019-05-27 15:47:03 UTC; rnolan
+Packaged: 2020-04-06 01:21:08 UTC; rnolan
 Author: Rory Nolan [aut, cre] (<https://orcid.org/0000-0002-5239-4043>),
   Kent Johnson [aut],
   Simon Urbanek [ctb],
   Sergi Padilla-Parra [ths] (<https://orcid.org/0000-0002-8010-9481>),
   Jeroen Ooms [rev, ctb] (<https://orcid.org/0000-0002-4035-0289>),
   Jon Clayden [rev] (<https://orcid.org/0000-0002-6608-0619>)
-Built: R 3.6.0; x86_64-apple-darwin15.6.0; 2019-05-27 15:47:04 UTC; unix
+Built: R 3.6.1; x86_64-apple-darwin15.6.0; 2020-04-06 01:21:09 UTC; unix
