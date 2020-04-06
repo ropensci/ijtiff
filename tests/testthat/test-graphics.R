@@ -1,4 +1,5 @@
 test_that("display works", {
+  skip_if(win32bit())
   img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
   grDevices::pdf(tempfile(fileext = ".pdf"))
   expect_null(display(img, method = "r"))

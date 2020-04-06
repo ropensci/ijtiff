@@ -48,14 +48,17 @@
 #' @seealso [write_tif()]
 #'
 #' @examples
+#' \dontrun{
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
 #' str(img) # we see that `ijtiff` correctly recognises this image's 2 channels
 #' img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"),
 #'   frames = c(1, 3)
 #' )
+#' }
 #' @export
 read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
+  err_on_win32bit("read_tif")
   path %<>% prep_path()
   frames %<>% prep_frames()
   withr::local_dir(attr(path, "path_dir"))
@@ -141,7 +144,10 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
 
 #' @rdname read_tif
 #' @export
-tif_read <- read_tif
+tif_read <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
+  err_on_win32bit("tif_read")
+  read_tif(path = path, frames = frames, list_safety = list_safety, msg = msg)
+}
 
 
 #' Read TIFF tag information without actually reading the image array.
@@ -161,13 +167,16 @@ tif_read <- read_tif
 #' @seealso [read_tif()]
 #'
 #' @examples
+#' \dontrun{
 #' read_tags(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' read_tags(system.file("img", "2ch_ij.tif", package = "ijtiff"))
 #' read_tags(system.file("img", "2ch_ij.tif", package = "ijtiff"),
 #'   frames = c(2, 4)
 #' )
+#' }
 #' @export
 read_tags <- function(path, frames = 1) {
+  err_on_win32bit("read_tags")
   frames %<>% prep_frames()
   path %<>% prep_path()
   withr::local_dir(attr(path, "path_dir"))
@@ -180,9 +189,8 @@ read_tags <- function(path, frames = 1) {
   }
   tags1 <- read_tags(path, frames = 1)[[1]]
   prep <- prep_read(path, frames, tags1, tags = TRUE)
-  out <- .Call("read_tags_C", path, prep$frames, PACKAGE = "ijtiff") %>% {
+  out <- .Call("read_tags_C", path, prep$frames, PACKAGE = "ijtiff") %>%
     .[prep$back_map]
-  }
   frame_nums <- prep$frames[prep$back_map]
   if (!is.na(prep$n_slices) && prep$n_dirs != prep$n_slices) {
     frame_nums <- ceiling(frame_nums / prep$n_ch)
@@ -193,4 +201,7 @@ read_tags <- function(path, frames = 1) {
 
 #' @rdname read_tags
 #' @export
-tags_read <- read_tags
+tags_read <- function(path, frames = 1) {
+  err_on_win32bit("tags_read")
+  read_tags(path = path, frames = frames)
+}

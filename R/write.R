@@ -25,22 +25,25 @@
 #'   Nolan lifted it from there and changed it around a bit for this 'ijtiff'
 #'   package. Credit should be directed towards Lord Urbanek.
 #' @seealso [read_tif()]
-#' @examples
 #'
+#' @examples
+#' \dontrun{
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' temp_dir <- tempdir()
 #' write_tif(img, paste0(temp_dir, "/", "Rlogo"))
 #' img <- matrix(1:4, nrow = 2)
 #' write_tif(img, paste0(temp_dir, "/", "tiny2x2"))
 #' list.files(temp_dir, pattern = "tif$")
+#' }
 #' @export
 write_tif <- function(img, path, bits_per_sample = "auto",
                       compression = "none", overwrite = FALSE, msg = TRUE) {
+  err_on_win32bit("write_tif")
   checkmate::assert_string(path)
   path %<>% stringr::str_replace_all(stringr::coll("\\"), "/") # windows safe
   if (stringr::str_detect(path, "/")) {
     # write_tif() sometimes fails when writing to far away directories
-    if (endsWith(path, "/")) path %<>% filesstrings::after_last("/+$")
+    if (endsWith(path, "/")) custom_stop("`path` cannot end with '/'.")
     tiff_dir <- filesstrings::str_before_last(path, "/")
     checkmate::assert_directory_exists(tiff_dir)
     path %<>% filesstrings::str_after_last("/")
@@ -204,4 +207,19 @@ write_tif <- function(img, path, bits_per_sample = "auto",
   )
   if (msg) pretty_msg("\b Done.")
   invisible(to_invisibly_return)
+}
+
+#' @rdname write_tif
+#' @export
+tif_write <- function(img, path, bits_per_sample = "auto",
+                      compression = "none", overwrite = FALSE, msg = TRUE) {
+  err_on_win32bit("tif_write")
+  write_tif(
+    img = img,
+    path = path,
+    bits_per_sample = bits_per_sample,
+    compression = compression,
+    overwrite = overwrite,
+    msg = msg
+  )
 }

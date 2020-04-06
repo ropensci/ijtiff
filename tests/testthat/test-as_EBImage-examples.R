@@ -1,4 +1,5 @@
 test_that("`as_EBImage()` works", {
+  skip_if(win32bit())
   skip_if_not_installed("EBImage")
   img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
   expect_equal(dim(img), c(76, 100, 4, 1))

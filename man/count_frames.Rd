@@ -2,9 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{count_frames}
 \alias{count_frames}
+\alias{frames_count}
 \title{Count the number of frames in a TIFF file.}
 \usage{
 count_frames(path)
+
+frames_count(path)
 }
 \arguments{
 \item{path}{A string. The path to the tiff file to read.}
@@ -24,6 +27,8 @@ directories in a TIFF file. There is an adjustment made for some
 ImageJ-written TIFF files.
 }
 \examples{
+\dontrun{
 count_frames(system.file("img", "Rlogo.tif", package = "ijtiff"))
 count_frames(system.file("img", "2ch_ij.tif", package = "ijtiff"))
+}
 }

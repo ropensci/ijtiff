@@ -1,4 +1,5 @@
 test_that("Package 2-channel example I/O works", {
+  skip_if(win32bit())
   set.seed(1)
   img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
   expect_equal(dim(img), c(15, 6, 2, 5))
@@ -53,11 +54,13 @@ test_that("Package 2-channel example I/O works", {
 })
 
 test_that("Package RGB I/O works", {
+  skip_if(win32bit())
   img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
   expect_equal(dim(img), c(76, 100, 4, 1))
 })
 
 test_that("8-bit unsigned integer TIFF I/O works", {
+  skip_if(win32bit())
   set.seed(2)
   v2345 <- 2:5
   a2345 <- array(sample.int(prod(v2345)), dim = v2345)
@@ -70,18 +73,20 @@ test_that("8-bit unsigned integer TIFF I/O works", {
 })
 
 test_that("16-bit unsigned integer TIFF I/O works", {
+  skip_if(win32bit())
   set.seed(3)
   v6789 <- 6:9
   a6789 <- array(sample.int(prod(v6789)), dim = v6789)
   tmptif <- tempfile(fileext = ".tif") %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
-  write_tif(a6789, tmptif)
+  tif_write(a6789, tmptif)
   in_tif <- read_tif(tmptif)
   expect_equal(dim(in_tif), v6789)
   expect_equal(as.vector(in_tif), as.vector(a6789), check.attributes = FALSE)
 })
 
 test_that("32-bit unsigned integer TIFF I/O works", {
+  skip_if(win32bit())
   set.seed(4)
   v1m <- c(20, 50, 10, 100)
   a1m <- array(sample.int(2^32 - 1, prod(v1m)), dim = v1m)
@@ -94,6 +99,7 @@ test_that("32-bit unsigned integer TIFF I/O works", {
 })
 
 test_that("Float (real-numbered) TIFF I/O works", {
+  skip_if(win32bit())
   set.seed(5)
   v2345 <- 2:5
   a2345 <- array(sample.int(prod(v2345)), dim = v2345) + 0.5
@@ -115,6 +121,7 @@ test_that("Float (real-numbered) TIFF I/O works", {
 })
 
 test_that("Negative-numbered TIFF I/O works", {
+  skip_if(win32bit())
   v2345 <- 2:5
   a2345 <- array(sample.int(prod(v2345)), dim = v2345)
   a2345[1] <- -1
@@ -128,6 +135,7 @@ test_that("Negative-numbered TIFF I/O works", {
 })
 
 test_that("List returning works", {
+  skip_if(win32bit())
   skip_if_not_installed("tiff")
   img1 <- matrix(0.5, nrow = 2, ncol = 2)
   img2 <- matrix(0.7, nrow = 3, ncol = 7)
@@ -148,14 +156,17 @@ test_that("List returning works", {
 })
 
 test_that("TIFFErrorHandler_ works", {
+  skip_if(win32bit())
   tmptxt <- tempfile(fileext = ".txt") %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
   writeLines(c("a", "b"), tmptxt)
-  expect_error(suppressWarnings(read_tif(tmptxt)), "Cannot read TIFF header")
+  expect_error(suppressWarnings(tif_read(tmptxt)), "Cannot read TIFF header")
 })
 
 test_that("write_tif() errors correctly", {
+  skip_if(win32bit())
   aaaa <- array(0, dim = rep(4, 4))
+  expect_error(tif_write(aaaa, "path/"), "path.+cannot end with.+/")
   expect_error(
     write_tif(aaaa, "a", bits_per_sample = "abc"),
     paste0(
@@ -271,14 +282,15 @@ test_that("write_tif() errors correctly", {
 })
 
 test_that("text-image-io works", {
+  skip_if(win32bit())
   mm <- matrix(1:60, nrow = 4)
   dim(mm) %<>% c(1, 1)
   tmpfl <- tempfile() %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
-  write_txt_img(mm, tmpfl)
+  txt_img_write(mm, tmpfl)
   tmpfl_txt <- filesstrings::give_ext(tmpfl, "txt")
   expect_true(file.exists(tmpfl_txt))
-  expect_equal(as.vector(mm), unlist(read_txt_img(tmpfl_txt)),
+  expect_equal(as.vector(mm), unlist(txt_img_read(tmpfl_txt)),
     check.attributes = FALSE
   )
   file.remove(tmpfl_txt)
@@ -342,6 +354,7 @@ test_that("text-image-io works", {
 })
 
 test_that("reading certain frames works", {
+  skip_if(win32bit())
   path <- system.file("img", "2ch_ij.tif", package = "ijtiff")
   img <- read_tif(path, "A")
   img12 <- read_tif(path, frames = 1:2)

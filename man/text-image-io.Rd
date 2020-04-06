@@ -4,11 +4,17 @@
 \alias{text-image-io}
 \alias{write_txt_img}
 \alias{read_txt_img}
+\alias{txt_img_write}
+\alias{txt_img_read}
 \title{Read/write an image array to/from disk as text file(s).}
 \usage{
 write_txt_img(img, path, rds = FALSE, msg = TRUE)
 
 read_txt_img(path, msg = TRUE)
+
+txt_img_write(img, path, rds = FALSE, msg = TRUE)
+
+txt_img_read(path, msg = TRUE)
 }
 \arguments{
 \item{img}{An image, represented by a 4-dimensional array, like an
@@ -27,10 +33,12 @@ Write images (arrays) as tab-separated \code{.txt} files on disk. Each
 channel-frame pair gets its own file.
 }
 \examples{
+\dontrun{
 img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 tmptxt <- tempfile(pattern = "img", fileext = ".txt")
 write_txt_img(img, tmptxt)
 tmptxt_ch1_path <- paste0(filesstrings::before_last_dot(tmptxt), "_ch1.txt")
 print(tmptxt_ch1_path)
 txt_img <- read_txt_img(tmptxt_ch1_path)
+}
 }

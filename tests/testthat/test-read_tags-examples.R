@@ -1,4 +1,5 @@
 test_that("`read_tags()` works", {
+  skip_if(win32bit())
   path <- system.file("img", "Rlogo.tif", package = "ijtiff")
   tags <- read_tags(path)
   ans <- list(frame1 = list(
@@ -20,7 +21,7 @@ test_that("`read_tags()` works", {
   path <- system.file("img", "2ch_ij.tif", package = "ijtiff")
   expect_equal(
     read_tags(path, "all")[c(2, 4)],
-    read_tags(path, frames = c(2, 4))
+    tags_read(path, frames = c(2, 4))
   )
   expect_error(
     read_tags(path, frames = c(11, 12)),
