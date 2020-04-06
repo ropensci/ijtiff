@@ -148,6 +148,15 @@
   <span class='kw'>compression</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
   <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>msg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
+
+<span class='fu'>tif_write</span>(
+  <span class='no'>img</span>,
+  <span class='no'>path</span>,
+  <span class='kw'>bits_per_sample</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
+  <span class='kw'>compression</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>msg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -205,13 +214,14 @@ proceed?</p></td>
     <div class='dont-index'><p><code><a href='read_tif.html'>read_tif()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_tif.html'>read_tif</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"ijtiff"</span>))</div><div class='output co'>#&gt; <span class='message'>Reading Rlogo.tif: an 8-bit, 76x100 pixel image of unsigned</span>
-#&gt; <span class='message'>integer type. Reading 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='no'>temp_dir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>()
-<span class='fu'>write_tif</span>(<span class='no'>img</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>temp_dir</span>, <span class='st'>"/"</span>, <span class='st'>"Rlogo"</span>))</div><div class='output co'>#&gt; <span class='message'>Writing Rlogo.tif: an 8-bit, 76x100 pixel image of unsigned</span>
-#&gt; <span class='message'>integer type with 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fl'>1</span>:<span class='fl'>4</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='fu'>write_tif</span>(<span class='no'>img</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>temp_dir</span>, <span class='st'>"/"</span>, <span class='st'>"tiny2x2"</span>))</div><div class='output co'>#&gt; <span class='message'>Writing tiny2x2.tif: an 8-bit, 2x2 pixel image of unsigned</span>
-#&gt; <span class='message'>integer type with 1 channel and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='no'>temp_dir</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"tif$"</span>)</div><div class='output co'>#&gt; [1] "Rlogo.tif"   "tiny2x2.tif"</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_tif.html'>read_tif</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"ijtiff"</span>))
+<span class='no'>temp_dir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>()
+<span class='fu'>write_tif</span>(<span class='no'>img</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>temp_dir</span>, <span class='st'>"/"</span>, <span class='st'>"Rlogo"</span>))
+<span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fl'>1</span>:<span class='fl'>4</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='fu'>write_tif</span>(<span class='no'>img</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>temp_dir</span>, <span class='st'>"/"</span>, <span class='st'>"tiny2x2"</span>))
+<span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='no'>temp_dir</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"tif$"</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
