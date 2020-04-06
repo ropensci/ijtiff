@@ -1,3 +1,9 @@
+# `ijtiff` 2.0.5
+
+## BUG FIXES
+* Fix a test that failed due to breaking changes in `tibble`.
+
+
 # `ijtiff` 2.0.4
 
 ## MINOR IMPROVEMENTS
