@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.6</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Reading and Writing Images</h1>
             
-            <h4 class="date">2020-04-06</h4>
+            <h4 class="date">2020-04-25</h4>
       
       
       <div class="hidden name"><code>reading-and-writing-images.Rmd</code></div>
@@ -178,11 +178,11 @@
 <p>To write an image, you need an object in the style of an <code>ijtiff_img</code> object. You can read about those <a href="https://ropensci.github.io/ijtiff/reference/ijtiff_img.html">here</a>. The basic idea is to have your image in a 4-dimensional array with the structure <code>img[y, x, channel, frame]</code>. Then, to write this image to the location <code>path</code>, you just type <code><a href="../reference/write_tif.html">write_tif(img, path)</a></code>.</p>
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">path</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(<span class="kw">pattern</span> <span class="kw">=</span> <span class="st">"dancing-banana"</span>, <span class="kw">fileext</span> <span class="kw">=</span> <span class="st">".tif"</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">path</span>)
-<span class="co">#&gt; [1] "/tmp/RtmpFXrrBv/dancing-banana445954a206d.tif"</span>
+<span class="co">#&gt; [1] "/tmp/RtmpNkSCG4/dancing-banana4af53aef8d20.tif"</span>
 <span class="fu"><a href="../reference/write_tif.html">write_tif</a></span>(<span class="no">img_dancing_banana</span>, <span class="no">path</span>)
-<span class="co">#&gt; Writing dancing-banana445954a206d.tif: an 8-bit, 155x200 pixel</span>
-<span class="co">#&gt; image of unsigned integer type with 3 channels and 8 frames .</span>
-<span class="co">#&gt; . .</span>
+<span class="co">#&gt; Writing dancing-banana4af53aef8d20.tif: an 8-bit, 155x200</span>
+<span class="co">#&gt; pixel image of unsigned integer type with 3 channels and 8</span>
+<span class="co">#&gt; frames . . .</span>
 <span class="co">#&gt;  Done.</span></pre></body></html></div>
 </div>
 <div id="reading-text-images" class="section level2">
@@ -199,7 +199,7 @@
 <a href="#writing-text-images" class="anchor"></a>Writing text images</h2>
 <p>Writing a text image works as you’d expect.</p>
 <div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="../reference/text-image-io.html">write_txt_img</a></span>(<span class="no">txt_img</span>, <span class="kw">path</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(<span class="kw">pattern</span> <span class="kw">=</span> <span class="st">"txtimg"</span>, <span class="kw">fileext</span> <span class="kw">=</span> <span class="st">".txt"</span>))
-<span class="co">#&gt; Writing txtimg445913e422b6.txt: a 76x100 pixel text image with 1 channel and 1 frame . . .</span>
+<span class="co">#&gt; Writing txtimg4af56e33f79d.txt: a 76x100 pixel text image with 1 channel and 1 frame . . .</span>
 <span class="co">#&gt;  Done.</span></pre></body></html></div>
 </div>
 <div class="footnotes">
@@ -225,7 +225,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>
