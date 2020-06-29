@@ -120,6 +120,14 @@ as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
     }
   }
   checkmate::assert_string(colormode)
+  colormode <- dplyr::if_else(
+    startsWith("colo", tolower(colormode)),
+    "Color", colormode
+  )
+  colormode <- dplyr::if_else(
+    startsWith("gr", tolower(colormode)),
+    "Gray", colormode
+  )
   colormode %<>% filesstrings::match_arg(c(
     "Color", "Colour",
     "Grayscale", "Greyscale"
