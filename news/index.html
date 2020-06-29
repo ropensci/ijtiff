@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.0</span>
       </span>
     </div>
 
@@ -135,6 +135,17 @@
       
     </div>
 
+    <div id="ijtiff-2-1-0" class="section level1">
+<h1 class="page-header" data-toc-text="2.1.0">
+<a href="#ijtiff-2-1-0" class="anchor"></a><small> Unreleased </small><code>ijtiff</code> 2.1.0</h1>
+<div id="new-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>NEW FEATURES</h2>
+<ul>
+<li>Add support for images with colormaps (also known as lookup tables (LUTs)).</li>
+</ul>
+</div>
+</div>
     <div id="ijtiff-2-0-5" class="section level1">
 <h1 class="page-header" data-toc-text="2.0.5">
 <a href="#ijtiff-2-0-5" class="anchor"></a><small> 2020-04-06 </small><code>ijtiff</code> 2.0.5</h1>
@@ -206,18 +217,18 @@
 <a href="#breaking-changes" class="anchor"></a>BREAKING CHANGES</h2>
 <ul>
 <li>
-<code>get_tiff_tags_reference()</code> is now <code><a href="../reference/tif_tags_reference.html">tif_tags_reference()</a></code>.</li>
+<code>get_tiff_tags_reference()</code> is now <code>tif_tags_reference()</code>.</li>
 <li>
-<code>count_imgs()</code> is now <code><a href="../reference/count_frames.html">count_frames()</a></code>.</li>
+<code>count_imgs()</code> is now <code>count_frames()</code>.</li>
 </ul>
 </div>
-<div id="new-features" class="section level2">
+<div id="new-features-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-1" class="anchor"></a>NEW FEATURES</h2>
 <ul>
-<li>It is now possible to read only certain frames of a TIFF image thanks to the <code>frames</code> argument of <code><a href="../reference/read_tif.html">read_tif()</a></code>.</li>
+<li>It is now possible to read only certain frames of a TIFF image thanks to the <code>frames</code> argument of <code>read_tif()</code>.</li>
 <li>
-<code><a href="../reference/read_tif.html">read_tif()</a></code> and <code><a href="../reference/read_tags.html">read_tags()</a></code> now have the aliases <code><a href="../reference/read_tif.html">tif_read()</a></code> and <code><a href="../reference/read_tags.html">tags_read()</a></code> to comply with the rOpenSci <code>object_verb()</code> style.</li>
+<code>read_tif()</code> and <code>read_tags()</code> now have the aliases <code>tif_read()</code> and <code>tags_read()</code> to comply with the rOpenSci <code>object_verb()</code> style.</li>
 </ul>
 </div>
 <div id="bug-fixes-5" class="section level2">
@@ -236,7 +247,7 @@
 <a href="#bug-fixes-6" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>Require necessary version of <code>glue</code>.</li>
-<li>Fix dimension-related bug in <code><a href="../reference/as_EBImage.html">as_EBImage()</a></code>.</li>
+<li>Fix dimension-related bug in <code>as_EBImage()</code>.</li>
 <li>Require latest (less-buggy) <code>filesstrings</code>.</li>
 </ul>
 </div>
@@ -244,9 +255,9 @@
     <div id="ijtiff-1-5-0" class="section level1">
 <h1 class="page-header" data-toc-text="1.5.0">
 <a href="#ijtiff-1-5-0" class="anchor"></a><small> 2018-10-31 </small><code>ijtiff</code> 1.5.0</h1>
-<div id="new-features-1" class="section level2">
+<div id="new-features-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-1" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-2" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>Allow ZIP compression (which seems to be the best).</li>
 </ul>
@@ -256,7 +267,7 @@
 <a href="#bug-fixes-7" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>
-<code><a href="../reference/text-image-io.html">write_txt_img()</a></code> was using decimal points for integers (e.g. 3.000 instead of just 3).</li>
+<code>write_txt_img()</code> was using decimal points for integers (e.g. 3.000 instead of just 3).</li>
 </ul>
 </div>
 </div>
@@ -275,9 +286,9 @@
     <div id="ijtiff-1-4-1" class="section level1">
 <h1 class="page-header" data-toc-text="1.4.1">
 <a href="#ijtiff-1-4-1" class="anchor"></a><small> 2018-09-24 </small><code>ijtiff</code> 1.4.1</h1>
-<div id="new-features-2" class="section level2">
+<div id="new-features-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-2" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-3" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>The package is now lighter in appearance because it doesn’t explicitly depend on <code>tibble</code>.</li>
 </ul>
@@ -293,9 +304,9 @@
     <div id="ijtiff-1-4-0" class="section level1">
 <h1 class="page-header" data-toc-text="1.4.0">
 <a href="#ijtiff-1-4-0" class="anchor"></a><small> 2018-09-10 </small><code>ijtiff</code> 1.4.0</h1>
-<div id="new-features-3" class="section level2">
+<div id="new-features-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-3" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-4" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>A <code>pkgdown</code> website.</li>
 </ul>
@@ -312,11 +323,11 @@
     <div id="ijtiff-1-3-0" class="section level1">
 <h1 class="page-header" data-toc-text="1.3.0">
 <a href="#ijtiff-1-3-0" class="anchor"></a><small> Unreleased </small><code>ijtiff</code> 1.3.0</h1>
-<div id="new-features-4" class="section level2">
+<div id="new-features-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-4" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-5" class="anchor"></a>NEW FEATURES</h2>
 <ul>
-<li>Conversion functions <code><a href="../reference/linescan-conversion.html">linescan_to_stack()</a></code> and <code><a href="../reference/linescan-conversion.html">stack_to_linescan()</a></code> useful for FCS data.</li>
+<li>Conversion functions <code>linescan_to_stack()</code> and <code>stack_to_linescan()</code> useful for FCS data.</li>
 </ul>
 </div>
 </div>
@@ -331,23 +342,23 @@
 <li>Added a hex sticker.</li>
 <li>Limited support for tiled images thanks to new author Kent Johnson.</li>
 <li>
-<code><a href="../reference/write_tif.html">write_tif()</a></code> is now slightly (&lt;10%) faster.</li>
+<code>write_tif()</code> is now slightly (&lt;10%) faster.</li>
 <li>
-<code><a href="../reference/write_tif.html">write_tif()</a></code> messages are now more informative.</li>
+<code>write_tif()</code> messages are now more informative.</li>
 </ul>
 </div>
 </div>
     <div id="ijtiff-1-1-0" class="section level1">
 <h1 class="page-header" data-toc-text="1.1.0">
 <a href="#ijtiff-1-1-0" class="anchor"></a><small> 2018-04-19 </small><code>ijtiff</code> 1.1.0</h1>
-<div id="new-features-5" class="section level2">
+<div id="new-features-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-5" class="anchor"></a>NEW FEATURES</h2>
+<a href="#new-features-6" class="anchor"></a>NEW FEATURES</h2>
 <ul>
 <li>
 <code>count_imgs()</code> counts the number of images in a TIFF file without reading the images themselves.</li>
 <li>
-<code><a href="../reference/read_tags.html">read_tags()</a></code> reads the tags from TIFF images without reading the images themselves.</li>
+<code>read_tags()</code> reads the tags from TIFF images without reading the images themselves.</li>
 </ul>
 </div>
 <div id="minor-improvements-3" class="section level2">
@@ -357,7 +368,7 @@
 <li>Now includes citation information.</li>
 <li>C code is more readable.</li>
 <li>
-<code><a href="../reference/display.html">display()</a></code> is more flexible, accepting 3 and 4-dimensional arrays, just displaying the first frame from the first channel.</li>
+<code>display()</code> is more flexible, accepting 3 and 4-dimensional arrays, just displaying the first frame from the first channel.</li>
 </ul>
 </div>
 <div id="ijtiff-1-0-0" class="section level2">

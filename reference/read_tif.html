@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.0</span>
       </span>
     </div>
 
@@ -141,9 +141,9 @@
     <p>Reads an image from a TIFF file/content into a numeric array or list.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>read_tif</span>(<span class='no'>path</span>, <span class='kw'>frames</span> <span class='kw'>=</span> <span class='st'>"all"</span>, <span class='kw'>list_safety</span> <span class='kw'>=</span> <span class='st'>"error"</span>, <span class='kw'>msg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="usage"><span class='fu'>read_tif</span>(<span class='kw'>path</span>, frames = <span class='st'>"all"</span>, list_safety = <span class='st'>"error"</span>, msg = <span class='fl'>TRUE</span>)
 
-<span class='fu'>tif_read</span>(<span class='no'>path</span>, <span class='kw'>frames</span> <span class='kw'>=</span> <span class='st'>"all"</span>, <span class='kw'>list_safety</span> <span class='kw'>=</span> <span class='st'>"error"</span>, <span class='kw'>msg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+<span class='fu'>tif_read</span>(<span class='kw'>path</span>, frames = <span class='st'>"all"</span>, list_safety = <span class='st'>"error"</span>, msg = <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -172,7 +172,7 @@ or to just return the list quietly (<code>list_safety = "none"</code>).</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class <a href='ijtiff_img.html'>ijtiff_img</a> or a list of <a href='ijtiff_img.html'>ijtiff_img</a>s.</p>
+    <p>An object of class ijtiff_img or a list of ijtiff_imgs.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>TIFF files have the capability to store multiple images, each having multiple
@@ -206,15 +206,20 @@ packing</p></li>
 </ul><p>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='write_tif.html'>write_tif()</a></code></p></div>
+    <div class='dont-index'><p><code>write_tif()</code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Simon Urbanek wrote most of this code for the 'tiff' package. Rory
+Nolan lifted it from there and changed it around a bit for this 'ijtiff'
+package. Credit should be directed towards Lord Urbanek.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'>read_tif</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"ijtiff"</span>))
-<span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'>read_tif</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"2ch_ij.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"ijtiff"</span>))
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>img</span>) <span class='co'># we see that `ijtiff` correctly recognises this image's 2 channels</span>
-<span class='no'>img</span> <span class='kw'>&lt;-</span> <span class='fu'>read_tif</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"2ch_ij.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"ijtiff"</span>),
-  <span class='kw'>frames</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>3</span>)
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>img</span> <span class='op'>&lt;-</span> <span class='fu'>read_tif</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, package = <span class='st'>"ijtiff"</span>))
+<span class='kw'>img</span> <span class='op'>&lt;-</span> <span class='fu'>read_tif</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"2ch_ij.tif"</span>, package = <span class='st'>"ijtiff"</span>))
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='kw'>img</span>) <span class='co'># we see that `ijtiff` correctly recognises this image's 2 channels</span>
+<span class='kw'>img</span> <span class='op'>&lt;-</span> <span class='fu'>read_tif</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"2ch_ij.tif"</span>, package = <span class='st'>"ijtiff"</span>),
+  frames = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>3</span>)
 )
 }</div></pre>
   </div>
