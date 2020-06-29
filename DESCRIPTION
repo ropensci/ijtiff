@@ -2,7 +2,7 @@ Type: Package
 Package: ijtiff
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ'
     TIFF Files
-Version: 2.0.5
+Version: 2.1.0
 Authors@R: 
     c(person(given = "Rory",
              family = "Nolan",
@@ -65,9 +65,11 @@ Suggests:
     knitr,
     pacman,
     rmarkdown,
+    rprojroot,
     spelling,
     testthat (>= 2.1.0),
-    tiff
+    tiff,
+    vdiffr
 LinkingTo: 
     Rcpp (>= 1.0.1)
 VignetteBuilder: 

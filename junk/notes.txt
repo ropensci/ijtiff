@@ -1,0 +1,1 @@
+vignettes: Rlogo-banana.gif, Rlogo-banana.tif, Rlogo.tif, Rlogo-grey.tif, Rlogo-banana-red-green.tif,

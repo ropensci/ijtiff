@@ -37,6 +37,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// match_pillar_to_row_3
+IntegerMatrix match_pillar_to_row_3(IntegerVector arr3d, IntegerMatrix mat);
+RcppExport SEXP _ijtiff_match_pillar_to_row_3(SEXP arr3dSEXP, SEXP matSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type arr3d(arr3dSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type mat(matSEXP);
+    rcpp_result_gen = Rcpp::wrap(match_pillar_to_row_3(arr3d, mat));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP count_directories_C(SEXP);
 RcppExport SEXP read_tags_C(SEXP, SEXP);
@@ -47,6 +59,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ijtiff_float_max", (DL_FUNC) &_ijtiff_float_max, 0},
     {"_ijtiff_dims_cpp", (DL_FUNC) &_ijtiff_dims_cpp, 1},
     {"_ijtiff_enlist_img_cpp", (DL_FUNC) &_ijtiff_enlist_img_cpp, 1},
+    {"_ijtiff_match_pillar_to_row_3", (DL_FUNC) &_ijtiff_match_pillar_to_row_3, 2},
     {"count_directories_C", (DL_FUNC) &count_directories_C, 1},
     {"read_tags_C",         (DL_FUNC) &read_tags_C,         2},
     {"read_tif_C",          (DL_FUNC) &read_tif_C,          2},

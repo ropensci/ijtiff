@@ -1,11 +1,11 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 library(magrittr)
 
-## ----2 channel path------------------------------------------------------
+## ----2 channel path-----------------------------------------------------------
 path_2ch_ij <- system.file("img", "Rlogo-banana-red_green.tif",
   package = "ijtiff"
 )
@@ -25,12 +25,12 @@ to_display[seq_len(nrow(reds)), , 1, ] <- reds
 to_display[seq_len(nrow(reds)) + nrow(reds), , 2, ] <- greens
 ijtiff::display(to_display)
 
-## ----original tiff import------------------------------------------------
+## ----original tiff import-----------------------------------------------------
 img <- tiff::readTIFF(path_2ch_ij, all = TRUE)
 str(img) # 10 images
 img[[1]][100:110, 50:60] # print a section of the first image in the series
 
-## ----ijtiff import-------------------------------------------------------
+## ----ijtiff import------------------------------------------------------------
 img <- ijtiff::read_tif(path_2ch_ij)
 dim(img) # 2 channels, 3 frames
 img[100:110, 50:60, 1, 1] # print a section of the first channel, first frame

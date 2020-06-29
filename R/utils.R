@@ -44,6 +44,16 @@ extract_desired_plane <- function(arr) {
   arr
 }
 
+compute_desired_plane <- function(arr) {
+  atts <- attributes(arr)
+  att_names <- names(atts)
+  if (all(c("color_space", "color_map") %in% att_names) &&
+    isTRUE(atts$color_space == "palette")) {
+    return(match_pillar_to_row_3(arr, attr(arr, "color_map", exact = TRUE)))
+  }
+  extract_desired_plane(arr)
+}
+
 #' Count the number of frames in a TIFF file.
 #'
 #' TIFF files can hold many frames. Often this is sensible, e.g. each frame
@@ -87,126 +97,11 @@ frames_count <- function(path) {
 
 is_installed <- function(package) {
   checkmate::assert_string(package)
-  installed_packages <- utils::installed.packages() %>%
-    rownames()
+  installed_packages <- rownames(utils::installed.packages())
   package %in% installed_packages
 }
 
-can_be_intish <- function(x) {
-  filesstrings::all_equal(x, floor(x))
-}
-
-#' Convert an [ijtiff_img] to an [EBImage::Image].
-#'
-#' This is for interoperability with the the `EBImage` package.
-#'
-#' The guess for the `colormode` is made as follows: * If `img` has an attribute
-#' `color_space` with value `"RGB"`, then `colormode` is set to `"Color"`. *
-#' Else if `img` has 3 or 4 channels, then `colormode` is set to `"Color"`. *
-#' Else `colormode` is set to "Grayscale".
-#'
-#' @param img An [ijtiff_img] object (or something coercible to one).
-#' @param colormode A numeric or a character string containing the color mode
-#'   which can be either `"Grayscale"` or `"Color"`. If not specified, a guess
-#'   is made. See 'Details'.
-#' @param scale Scale values in an integer image to the range `[0, 1]`? Has no
-#'   effect on floating-point images.
-#' @param force This function is designed to take [ijtiff_img]s as input. To
-#'   force any old array through this function, use `force = TRUE`, but take
-#'   care to check that the result is what you'd like it to be.
-#'
-#' @return An [EBImage::Image].
-#'
-#' @examples
-#' \dontrun{
-#' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
-#' str(img)
-#' str(as_EBImage(img))
-#' img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
-#' str(img)
-#' str(as_EBImage(img))
-#' }
-#' @export
-as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
-  if (!is_installed("EBImage")) {
-    stop(paste0(
-      "To use this function, you need to have the `EBImage` package ",
-      "installed.", "\n", ebimg_install_msg()
-    ))
-  }
-  checkmate::assert_flag(scale)
-  checkmate::assert_flag(force)
-  if (!methods::is(img, "ijtiff_img")) {
-    if (methods::is(img, "Image")) {
-      return(img)
-    } else {
-      if (force) {
-        img %<>% ijtiff_img()
-      } else {
-        custom_stop("
-          This function expects the input `img` to be of class 'ijtiff_img',
-          however the `img` you have supplied is not.
-         ", "
-          To force your array through this function, use `force = TRUE`, but
-          take care to check that the result is what you'd like it to be.
-         ")
-      }
-    }
-  }
-  if (is.null(colormode)) {
-    if ("color_space" %in% names(attributes(img))) {
-      if (attr(img, "color_space") == "RGB") {
-        colormode <- "c"
-      }
-    }
-  }
-  if (is.null(colormode)) {
-    if (dim(img)[3] %in% 3:4) {
-      colormode <- "c"
-    } else {
-      colormode <- "g"
-    }
-  }
-  checkmate::assert_string(colormode)
-  if (tolower(colormode) %in% c("g", "gr")) {
-    colormode <- "greyscale"
-  }
-  if (startsWith("colo", tolower(colormode))) {
-    colormode <- "colour"
-  }
-  colormode %<>% filesstrings::match_arg(c(
-    "Color", "Colour",
-    "Grayscale", "Greyscale"
-  ),
-  ignore_case = TRUE
-  )
-  if (colormode == "Colour") colormode <- "Color"
-  if (colormode == "Greyscale") colormode <- "Grayscale"
-  if (scale && (!all(is.na(img)))) {
-    if (can_be_intish(img)) {
-      if (all(img < 2^8, na.rm = TRUE)) {
-        img %<>% {
-          . / (2^8 - 1)
-        }
-      } else if (all(img < 2^16, na.rm = TRUE)) {
-        img %<>% {
-          . / (2^16 - 1)
-        }
-      } else if (all(img < 2^32, na.rm = TRUE)) {
-        img %<>% {
-          . / (2^32 - 1)
-        }
-      } else {
-        img %<>% {
-          . / max(.)
-        }
-      }
-    }
-  }
-  img %<>% aperm(c(2, 1, 3, 4))
-  if (length(dim(img)) == 4 && dim(img)[3] == 1) dim(img) <- dim(img)[-3]
-  EBImage::Image(img, colormode = colormode)
-}
+can_be_intish <- function(x) filesstrings::all_equal(x, floor(x))
 
 ebimg_install_msg <- function() {
   paste0(
@@ -280,7 +175,8 @@ stack_to_linescan <- function(img) {
 
 #' Wrap messages to make them prettier.
 #'
-#' Format messages with line breaks so that single words don't appear on multiple lines.
+#' Format messages with line breaks so that single words don't appear on
+#' multiple lines.
 #'
 #' @param ... Bits of the message to be pasted together.
 #'
@@ -334,7 +230,6 @@ prep_frames <- function(frames) {
     checkmate::check_string(frames),
     checkmate::check_integerish(frames, lower = 1)
   )
-  all_frames <- FALSE
   if (is.character(frames)) {
     frames %<>% tolower()
     if (!startsWith("all", frames)) {
@@ -394,17 +289,21 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
           filesstrings::str_after_first("frames=") %>%
           filesstrings::first_number()
         if (!is.na(n_slices) && rlang::is_false(n_frames == n_slices)) {
-          custom_stop(
-            "
-            The ImageJ-written image you're trying to read says it has
-            {n_frames} frames AND {n_slices} slices.
-            ", "
-            To be read by the `ijtiff` package, the number of slices OR the
-            number of frames should be specified in the TIFFTAG_DESCRIPTION
-            and they're interpreted as the same thing. It does not make sense
-            for them to be different numbers.
-            "
-          )
+          if (isTRUE(n_slices == 1) || isTRUE(n_frames) == 1) {
+            n_slices <- n_frames <- max(n_slices, n_frames)
+          } else {
+            custom_stop(
+              "
+              The ImageJ-written image you're trying to read says it has
+              {n_frames} frames AND {n_slices} slices.
+              ", "
+              To be read by the `ijtiff` package, the number of slices OR the
+              number of frames should be specified in the TIFFTAG_DESCRIPTION
+              and they're interpreted as the same thing. It does not make sense
+              for them to be different numbers.
+              "
+            )
+          }
         }
         n_slices <- n_frames
       }
@@ -557,6 +456,16 @@ custom_stop <- function(main_message, ..., .envir = parent.frame()) {
     }
   }
   rlang::abort(stringr::str_c(out, collapse = "\n"))
+}
+
+ebimg_check <- function() {
+  if (!is_installed("EBImage")) {
+    stop(paste0(
+      "To use this function, you need to have the `EBImage` package ",
+      "installed.", "\n", ebimg_install_msg()
+    ))
+  }
+  invisible(TRUE)
 }
 
 win32bit <- function() {

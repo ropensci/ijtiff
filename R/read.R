@@ -79,9 +79,9 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
   if (filesstrings::all_equal(ds)) {
     d <- ds[[1]]
     attrs1 <- attributes(out[[1]])
-    if ((isTRUE(length(out) == prep$n_imgs) && prep$ij_n_ch) ||
-      (!prep$ij_n_ch && prep$n_ch == 1)) {
-      if (length(d) > 2) out %<>% purrr::map(extract_desired_plane)
+    if (((isTRUE(length(out) == prep$n_imgs) && prep$ij_n_ch) ||
+      (!prep$ij_n_ch && prep$n_ch == 1)) && (length(d) > 2)) {
+      out %<>% purrr::map(compute_desired_plane)
     }
     out %<>% unlist()
     if (attrs1$sample_format == "uint") {

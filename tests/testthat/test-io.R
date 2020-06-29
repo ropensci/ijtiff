@@ -1,24 +1,25 @@
 test_that("Package 2-channel example I/O works", {
   skip_if(win32bit())
   set.seed(1)
-  img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
-  expect_equal(dim(img), c(15, 6, 2, 5))
-  img <- read_tif(system.file("img", "Rlogo-banana-red_green.tif",
+  img0 <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
+  expect_equal(dim(img0), c(15, 6, 2, 5))
+  img1 <- read_tif(system.file("img", "Rlogo-banana-red_green.tif",
     package = "ijtiff"
   ))
-  expect_equal(dim(img), c(155, 200, 2, 3))
-  img <- read_tif(system.file("img", "Rlogo-banana-1-2.tif",
+  expect_equal(dim(img1), c(155, 200, 2, 3))
+  img2 <- read_tif(system.file("img", "Rlogo-banana-1-2.tif",
     package = "ijtiff"
   ))
-  expect_equal(dim(img), c(155, 200, 3, 2))
-  img <- read_tif(system.file("img", "Rlogo-banana-red_green_blue.tif",
+  expect_equal(dim(img2), c(155, 200, 3, 2))
+  img3 <- read_tif(system.file("img", "Rlogo-banana-red_green_blue.tif",
     package = "ijtiff"
   ))
-  expect_equal(dim(img), c(155, 200, 3, 2))
-  img <- read_tif(system.file("img", "Rlogo-banana-red.tif",
+  expect_equal(dim(img3), c(155, 200, 3, 2))
+  img4 <- read_tif(system.file("img", "Rlogo-banana-red.tif",
     package = "ijtiff"
   ))
-  expect_equal(dim(img), c(155, 200, 1, 2))
+  expect_equal(dim(img4), c(155, 200, 1, 2))
+  expect_equal(img3[, , 1, 1], img4[, , 1, 1])
   v22 <- c(2, 2, 1, 1)
   a22 <- array(seq_len(prod(v22)), dim = v22)
   tmptif <- tempfile(fileext = ".tif") %>%

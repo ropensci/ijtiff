@@ -1,3 +1,15 @@
+# `ijtiff` 2.1.0
+
+## NEW FEATURES
+* Add support for images with colormaps (also known as lookup tables (LUTs)).
+
+
+# `ijtiff` 2.0.5
+
+## BUG FIXES
+* Fix a test that failed due to breaking changes in `tibble`.
+
+
 # `ijtiff` 2.0.4
 
 ## MINOR IMPROVEMENTS

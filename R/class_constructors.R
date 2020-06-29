@@ -58,3 +58,96 @@ ijtiff_img <- function(img, ...) {
 #' @rdname ijtiff_img
 #' @export
 as_ijtiff_img <- ijtiff_img
+
+#' Convert an [ijtiff_img] to an [EBImage::Image].
+#'
+#' This is for interoperability with the the `EBImage` package.
+#'
+#' The guess for the `colormode` is made as follows: * If `img` has an attribute
+#' `color_space` with value `"RGB"`, then `colormode` is set to `"Color"`. *
+#' Else if `img` has 3 or 4 channels, then `colormode` is set to `"Color"`. *
+#' Else `colormode` is set to "Grayscale".
+#'
+#' @param img An [ijtiff_img] object (or something coercible to one).
+#' @param colormode A numeric or a character string containing the color mode
+#'   which can be either `"Grayscale"` or `"Color"`. If not specified, a guess
+#'   is made. See 'Details'.
+#' @param scale Scale values in an integer image to the range `[0, 1]`? Has no
+#'   effect on floating-point images.
+#' @param force This function is designed to take [ijtiff_img]s as input. To
+#'   force any old array through this function, use `force = TRUE`, but take
+#'   care to check that the result is what you'd like it to be.
+#'
+#' @return An [EBImage::Image].
+#'
+#' @examples
+#' \dontrun{
+#' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
+#' str(img)
+#' str(as_EBImage(img))
+#' img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
+#' str(img)
+#' str(as_EBImage(img))
+#' }
+#' @export
+as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
+  ebimg_check()
+  checkmate::assert_flag(scale)
+  checkmate::assert_flag(force)
+  if (!methods::is(img, "ijtiff_img")) {
+    if (methods::is(img, "Image")) {
+      return(img)
+    } else {
+      if (force) {
+        img %<>% ijtiff_img()
+      } else {
+        custom_stop("
+          This function expects the input `img` to be of class 'ijtiff_img',
+          however the `img` you have supplied is not.
+         ", "
+          To force your array through this function, use `force = TRUE`, but
+          take care to check that the result is what you'd like it to be.
+         ")
+      }
+    }
+  }
+  if (is.null(colormode)) {
+    if (("color_space" %in% names(attributes(img))) &&
+      (attr(img, "color_space") == "RGB")) {
+      colormode <- "c"
+    } else {
+      colormode <- dplyr::if_else(dim(img)[3] %in% 3:4, "c", "g")
+    }
+  }
+  checkmate::assert_string(colormode)
+  colormode %<>% filesstrings::match_arg(c(
+    "Color", "Colour",
+    "Grayscale", "Greyscale"
+  ),
+  ignore_case = TRUE
+  )
+  colormode <- dplyr::if_else(colormode == "Colour", "Color", colormode)
+  colormode <- dplyr::if_else(colormode == "Greyscale", "Grayscale", colormode)
+  if (scale && (!all(is.na(img))) && can_be_intish(img)) {
+    if (all(img < 2^8, na.rm = TRUE)) {
+      img %<>% {
+        . / (2^8 - 1)
+      }
+    } else if (all(img < 2^16, na.rm = TRUE)) {
+      img %<>% {
+        . / (2^16 - 1)
+      }
+    } else if (all(img < 2^32, na.rm = TRUE)) {
+      img %<>% {
+        . / (2^32 - 1)
+      }
+    } else {
+      img %<>% {
+        . / max(.)
+      }
+    }
+  }
+  img %<>% aperm(c(2, 1, 3, 4))
+  if (length(dim(img)) == 4 && dim(img)[3] == 1) dim(img) <- dim(img)[-3]
+  EBImage::Image(img, colormode = colormode)
+}

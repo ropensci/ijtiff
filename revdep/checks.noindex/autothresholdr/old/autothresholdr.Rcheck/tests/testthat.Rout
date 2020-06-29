@@ -1,7 +1,7 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-apple-darwin15.6.0 (64-bit)
+R version 4.0.0 (2020-04-24) -- "Arbor Day"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin17.0 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -18,10 +18,10 @@ Type 'q()' to quit R.
 > library(testthat)
 > library(autothresholdr)
 > 
-> test_check("autothresholdr")
-══ testthat results  ═══════════════════════════════════════════════════════════════════════════════════════════════
+> if (!autothresholdr:::win32bit()) test_check("autothresholdr")
+══ testthat results  ═══════════════════════════════════════════════════════════
 [ OK: 69 | SKIPPED: 0 | WARNINGS: 0 | FAILED: 0 ]
 > 
 > proc.time()
    user  system elapsed 
-  3.702   0.273   4.495 
+  5.533   0.490   6.407 

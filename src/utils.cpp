@@ -34,3 +34,27 @@ List enlist_img_cpp(NumericVector arr4d) {
   }
   return out;
 }
+
+// [[Rcpp::export]]
+IntegerMatrix match_pillar_to_row_3(IntegerVector arr3d, IntegerMatrix mat) {
+  Dimension d = arr3d.attr("dim");
+  IntegerMatrix out(d[0], d[1]);
+  R_xlen_t out_len = out.length();
+  for (int i = 0; i != out_len; ++i) {
+    bool found = false;
+    for (int j = 0; j != mat.nrow(); ++j) {
+      if (arr3d[i] == mat(j, 0) &&
+          arr3d[i + out_len] == mat(j, 1) &&
+          arr3d[i + 2 * out_len] == mat(j, 2)) {
+        found = true;
+        out[i] = j;
+        break;
+        Rcout << "hurrah";
+      }
+    }
+    if (!found) {  // shouldn't happen
+      out[i] = NA_INTEGER;
+    }
+  }
+  return out;
+}

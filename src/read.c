@@ -33,19 +33,19 @@ static void TIFF_add_tags(TIFF *tiff, SEXP res) {
     setAttr(res, "bits_per_sample", ScalarInteger(i16));
   if (TIFFGetField(tiff, TIFFTAG_SAMPLESPERPIXEL, &i16))
     setAttr(res, "samples_per_pixel", ScalarInteger(i16));
+  const char *name = 0;
   if (TIFFGetField(tiff, TIFFTAG_SAMPLEFORMAT, &i16)) {
     char uv[24];
-    const char *name = 0;
     switch (i16) {
-    case 1: name = "uint"; break;
-    case 2: name = "int"; break;
-    case 3: name = "float"; break;
-    case 4: name = "undefined"; break;
-    case 5: name = "complex int"; break;
-    case 6: name = "complex float"; break;
-    default:
-      snprintf(uv, sizeof(uv), "unknown (%d)", i16);
-    name = uv;
+      case 1: name = "uint"; break;
+      case 2: name = "int"; break;
+      case 3: name = "float"; break;
+      case 4: name = "undefined"; break;
+      case 5: name = "complex int"; break;
+      case 6: name = "complex float"; break;
+      default:
+        snprintf(uv, sizeof(uv), "unknown (%d)", i16);
+      name = uv;
     }
     setAttr(res, "sample_format", mkString(name));
   } else {
@@ -71,22 +71,21 @@ static void TIFF_add_tags(TIFF *tiff, SEXP res) {
   }
   if (TIFFGetField(tiff, TIFFTAG_COMPRESSION, &i16)) {
     char uv[24];
-    const char *name = 0;
     switch (i16) {
-    case 1: name = "none"; break;
-    case 2: name = "CCITT RLE"; break;
-    case 32773: name = "PackBits"; break;
-    case 3: name = "CCITT Group 3 fax"; break;
-    case 4: name = "CCITT Group 4 fax"; break;
-    case 5: name = "LZW"; break;
-    case 6: name = "old JPEG"; break;
-    case 7: name = "JPEG"; break;
-    case 8: name = "deflate"; break;
-    case 9: name = "JBIG b/w"; break;
-    case 10: name = "JBIG color"; break;
-    default:
-      snprintf(uv, sizeof(uv), "unknown (%d)", i16);
-    name = uv;
+      case 1: name = "none"; break;
+      case 2: name = "CCITT RLE"; break;
+      case 3: name = "CCITT Group 3 fax"; break;
+      case 4: name = "CCITT Group 4 fax"; break;
+      case 5: name = "LZW"; break;
+      case 6: name = "old JPEG"; break;
+      case 7: name = "JPEG"; break;
+      case 8: name = "deflate"; break;
+      case 9: name = "JBIG b/w"; break;
+      case 10: name = "JBIG color"; break;
+      case 32773: name = "PackBits"; break;
+      default:
+        snprintf(uv, sizeof(uv), "unknown (%d)", i16);
+      name = uv;
     }
     setAttr(res, "compression", mkString(name));
   }
@@ -101,11 +100,11 @@ static void TIFF_add_tags(TIFF *tiff, SEXP res) {
   if (TIFFGetField(tiff, TIFFTAG_YPOSITION, &f))
     setAttr(res, "y_position", ScalarReal(f));
   if (TIFFGetField(tiff, TIFFTAG_RESOLUTIONUNIT, &i16)) {
-    const char *name = "unknown";
+    name = "unknown";
     switch (i16) {
-    case 1: name = "none"; break;
-    case 2: name = "inch"; break;
-    case 3: name = "cm"; break;
+      case 1: name = "none"; break;
+      case 2: name = "inch"; break;
+      case 3: name = "cm"; break;
     }
     setAttr(res, "resolution_unit", mkString(name));
   }
@@ -114,16 +113,16 @@ static void TIFF_add_tags(TIFF *tiff, SEXP res) {
     setAttr(res, "indexed", ScalarLogical(i16));
 #endif
   if (TIFFGetField(tiff, TIFFTAG_ORIENTATION, &i16)) {
-    const char *name = "<invalid>";
+    name = "<invalid>";
     switch (i16) {
-    case 1: name = "top_left"; break;
-    case 2: name = "top_right"; break;
-    case 3: name = "bottom_right"; break;
-    case 4: name = "bottom_left"; break;
-    case 5: name = "left_top"; break;
-    case 6: name = "right_top"; break;
-    case 7: name = "right_bottom"; break;
-    case 8: name = "left_bottom"; break;
+      case 1: name = "top_left"; break;
+      case 2: name = "top_right"; break;
+      case 3: name = "bottom_right"; break;
+      case 4: name = "bottom_left"; break;
+      case 5: name = "left_top"; break;
+      case 6: name = "right_top"; break;
+      case 7: name = "right_bottom"; break;
+      case 8: name = "left_bottom"; break;
     }
     setAttr(res, "orientation", mkString(name));
   }
@@ -141,23 +140,51 @@ static void TIFF_add_tags(TIFF *tiff, SEXP res) {
     setAttr(res, "software", mkString(c));
   if (TIFFGetField(tiff, TIFFTAG_PHOTOMETRIC, &i16)) {
     char uv[24];
-    const char *name = 0;
     switch (i16) {
-    case 0: name = "white is zero"; break;
-    case 1: name = "black is zero"; break;
-    case 2: name = "RGB"; break;
-    case 3: name = "palette"; break;
-    case 4: name = "mask"; break;
-    case 5: name = "separated"; break;
-    case 6: name = "YCbCr"; break;
-    case 8: name = "CIELAB"; break;
-    case 9: name = "ICCLab"; break;
-    case 10: name = "ITULab"; break;
-    default:
-      snprintf(uv, sizeof(uv), "unknown (%d)", i16);
-    name = uv;
+      case 0: name = "white is zero"; break;
+      case 1: name = "black is zero"; break;
+      case 2: name = "RGB"; break;
+      case 3: name = "palette"; break;
+      case 4: name = "mask"; break;
+      case 5: name = "separated"; break;
+      case 6: name = "YCbCr"; break;
+      case 8: name = "CIELAB"; break;
+      case 9: name = "ICCLab"; break;
+      case 10: name = "ITULab"; break;
+      default:
+        snprintf(uv, sizeof(uv), "unknown (%d)", i16);
+      name = uv;
     }
     setAttr(res, "color_space", mkString(name));
+  }
+  if (strcmp(name, "palette") == 0) {
+    uint16_t *colormap[3] = {0, 0, 0};
+    TIFFGetField(tiff, TIFFTAG_COLORMAP, colormap, colormap + 1, colormap + 2);
+    if (colormap[0] && colormap[1] && colormap[2]) {
+      SEXP bps_sxp = Rf_getAttrib(res, mkString("bits_per_sample"));
+      if (Rf_xlength(bps_sxp)) {
+        uint8_t bps = INTEGER(bps_sxp)[0];
+        uint32_t nvals = pow(2, bps) + 0.5;  // careful to avoid rounding error
+        if (bps < 32) {  // ImageJ only supports LUTS for 16-bit TIFFs
+          SEXP colormap_mat = PROTECT(allocMatrix(INTSXP, nvals, 3));
+          int *colormap_mat_intptr = INTEGER(colormap_mat);
+          for (int i = 0; i != 3; ++i) {
+            int jstart = i * nvals;
+            for (int j = 0; j != nvals; ++j) {
+              colormap_mat_intptr[jstart + j] = colormap[i][j];
+            }
+          }
+          SEXP colnames = PROTECT(allocVector(STRSXP, 3));
+          SET_STRING_ELT(colnames, 0, mkChar("red"));
+          SET_STRING_ELT(colnames, 1, mkChar("green"));
+          SET_STRING_ELT(colnames, 2, mkChar("blue"));
+          setAttrib(colormap_mat, R_DimNamesSymbol,
+                    Rf_list2(R_NilValue, colnames));
+          setAttr(res, "color_map", colormap_mat);
+          UNPROTECT(2);
+        }
+      }
+    }
   }
 }
 

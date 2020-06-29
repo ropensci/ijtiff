@@ -1,2 +1,5 @@
 package,old,new,delta
-ijtiff,2.0.4,2.0.5,*
+ijtiff,2.0.5,2.1.0,*
+backports,NA,1.1.8,*
+dplyr,NA,1.0.0,*
+vctrs,NA,0.3.1,*

@@ -1,0 +1,91 @@
+
+R version 4.0.0 (2020-04-24) -- "Arbor Day"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin17.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(testthat)
+> library(detrendr)
+> 
+> if (!detrendr:::win32bit()) test_check("detrendr")
+[31m──[39m [31m1. Failure: best_tau works (@test-best_params.R#25) [39m [31m────────────────────────[39m
+`t1` not equal to `t2`.
+1/2 mismatches
+[1] 20.7 - 20 == 0.684
+
+[31m──[39m [31m2. Failure: best_degree works (@test-best_params.R#101) [39m [31m────────────────────[39m
+`d1` not equal to `d2`.
+2/2 mismatches (average diff: 2)
+[1] 22 - 20 ==  2
+[2] 16 - 18 == -2
+
+[31m──[39m [31m3. Failure: detrending entire derectories works (@test-dir-detrend.R#61) [39m [31m───[39m
+unlist(detrendeds) not equal to unlist(detrendeds_dir).
+117085/375900 mismatches (average diff: 1.02)
+[923] 69 - 70 == -1
+[925] 72 - 73 == -1
+[934] 45 - 44 ==  1
+[935] 49 - 48 ==  1
+[937] 51 - 50 ==  1
+[939] 46 - 45 ==  1
+[949] 79 - 80 == -1
+[950] 94 - 95 == -1
+[957] 68 - 69 == -1
+...
+
+[31m──[39m [31m4. Failure: detrending entire derectories works (@test-dir-detrend.R#63) [39m [31m───[39m
+dir("detrended") not equal to paste0(...).
+1/2 mismatches
+x[2]: "bleached_detrended_thresh=Triangle=41.622_boxcar_for_FFS_l=auto=18.tif"
+y[2]: "bleached_detrended_thresh=Triangle=41.622_boxcar_for_FFS_l=auto=17.tif"
+
+[31m──[39m [31m5. Failure: detrending entire derectories works (@test-dir-detrend.R#116) [39m [31m──[39m
+unlist(detrendeds) not equal to unlist(detrendeds_dir).
+1381/375900 mismatches (average diff: 1)
+[186207] 43 - 44 == -1
+[186217] 67 - 66 ==  1
+[186220] 69 - 68 ==  1
+[186223] 89 - 90 == -1
+[186230] 36 - 37 == -1
+[186232] 54 - 55 == -1
+[186235] 66 - 67 == -1
+[186236] 63 - 62 ==  1
+[186241] 69 - 70 == -1
+...
+
+[31m──[39m [31m6. Failure: detrending entire derectories works (@test-dir-detrend.R#166) [39m [31m──[39m
+unlist(detrendeds) not equal to unlist(detrendeds_dir).
+650/375900 mismatches (average diff: 1)
+[756]     1 -  0 ==  1
+[759]     0 -  1 == -1
+[373707] 24 - 25 == -1
+[373708] 34 - 35 == -1
+[373709] 23 - 22 ==  1
+[373710] 26 - 27 == -1
+[373711] 36 - 35 ==  1
+[373715] 33 - 32 ==  1
+[373718] 35 - 36 == -1
+...
+
+══ testthat results  ═══════════════════════════════════════════════════════════
+[ OK: 209 | SKIPPED: 8 | WARNINGS: 0 | FAILED: 6 ]
+1. Failure: best_tau works (@test-best_params.R#25) 
+2. Failure: best_degree works (@test-best_params.R#101) 
+3. Failure: detrending entire derectories works (@test-dir-detrend.R#61) 
+4. Failure: detrending entire derectories works (@test-dir-detrend.R#63) 
+5. Failure: detrending entire derectories works (@test-dir-detrend.R#116) 
+6. Failure: detrending entire derectories works (@test-dir-detrend.R#166) 
+
+Error: testthat unit tests failed
+Execution halted

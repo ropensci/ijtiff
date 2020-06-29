@@ -1,0 +1,59 @@
+
+R version 4.0.0 (2020-04-24) -- "Arbor Day"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin17.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(testthat)
+> library(detrendr)
+> 
+> if (!detrendr:::win32bit()) test_check("detrendr")
+[31m──[39m [31m1. Failure: best_tau works (@test-best_params.R#25) [39m [31m────────────────────────[39m
+`t1` not equal to `t2`.
+1/2 mismatches
+[1] 20 - 20.7 == -0.684
+
+[31m──[39m [31m2. Failure: best_l works (@test-best_params.R#61) [39m [31m──────────────────────────[39m
+`l1` not equal to `l2`.
+1/2 mismatches
+[1] 16 - 18 == -2
+
+[31m──[39m [31m3. Failure: best_degree works (@test-best_params.R#101) [39m [31m────────────────────[39m
+`d1` not equal to `d2`.
+1/2 mismatches
+[2] 19 - 18 == 1
+
+[31m──[39m [31m4. Failure: detrending entire derectories works (@test-dir-detrend.R#116) [39m [31m──[39m
+unlist(detrendeds) not equal to unlist(detrendeds_dir).
+662/375900 mismatches (average diff: 1)
+[186207] 43 - 44 == -1
+[186217] 67 - 66 ==  1
+[186220] 69 - 68 ==  1
+[186223] 89 - 90 == -1
+[186230] 36 - 37 == -1
+[186232] 54 - 55 == -1
+[186235] 66 - 67 == -1
+[186236] 63 - 62 ==  1
+[186241] 69 - 70 == -1
+...
+
+══ testthat results  ═══════════════════════════════════════════════════════════
+[ OK: 211 | SKIPPED: 8 | WARNINGS: 0 | FAILED: 4 ]
+1. Failure: best_tau works (@test-best_params.R#25) 
+2. Failure: best_l works (@test-best_params.R#61) 
+3. Failure: best_degree works (@test-best_params.R#101) 
+4. Failure: detrending entire derectories works (@test-dir-detrend.R#116) 
+
+Error: testthat unit tests failed
+Execution halted

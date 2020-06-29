@@ -1,20 +1,20 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ----dancing-banana-path-------------------------------------------------
+## ----dancing-banana-path------------------------------------------------------
 path_dancing_banana <- system.file("img", "Rlogo-banana.tif",
   package = "ijtiff"
 )
 print(path_dancing_banana)
 
-## ----read-dancing-banana-------------------------------------------------
+## ----read-dancing-banana------------------------------------------------------
 pacman::p_load(ijtiff, magrittr)
 img_dancing_banana <- read_tif(path_dancing_banana)
 
-## ----peek----------------------------------------------------------------
+## ----peek---------------------------------------------------------------------
 str(img_dancing_banana)
 
 ## ----red-blue-green-banana, echo=FALSE, message=FALSE, out.width='100%', dpi=300, fig.height=0.9----
@@ -31,7 +31,7 @@ to_display[seq_len(nrow(reds)) + nrow(reds), , 2, ] <- greens
 to_display[seq_len(nrow(reds)) + 2 * nrow(reds), , 3, ] <- blues
 display(to_display)
 
-## ----threefiveseven------------------------------------------------------
+## ----threefiveseven-----------------------------------------------------------
 img_dancing_banana357 <- read_tif(path_dancing_banana, frames = c(3, 5, 7))
 
 ## ----red-bblue-green-banana357, echo=FALSE, message=FALSE, out.width='100%', dpi=300, fig.height=0.9----
@@ -48,27 +48,27 @@ to_display[seq_len(nrow(reds)) + nrow(reds), , 2, ] <- greens
 to_display[seq_len(nrow(reds)) + 2 * nrow(reds), , 3, ] <- blues
 display(to_display)
 
-## ----one-frame, dpi=300, fig.height=0.5, fig.width=0.5-------------------
+## ----one-frame, dpi=300, fig.height=0.5, fig.width=0.5------------------------
 path_rlogo <- system.file("img", "Rlogo.tif", package = "ijtiff")
 img_rlogo <- read_tif(path_rlogo)
 dim(img_rlogo) # 4 channels, 1 frame
 class(img_rlogo)
 display(img_rlogo)
 
-## ----one-channel, dpi=300, fig.height=0.5, fig.width=0.5-----------------
+## ----one-channel, dpi=300, fig.height=0.5, fig.width=0.5----------------------
 path_rlogo_grey <- system.file("img", "Rlogo-grey.tif", package = "ijtiff")
 img_rlogo_grey <- read_tif(path_rlogo_grey)
 dim(img_rlogo_grey) # 1 channel, 1 frame
 display(img_rlogo_grey)
 
-## ----write-tif-----------------------------------------------------------
+## ----write-tif----------------------------------------------------------------
 path <- tempfile(pattern = "dancing-banana", fileext = ".tif")
 print(path)
 write_tif(img_dancing_banana, path)
 
-## ----read-txt-img--------------------------------------------------------
+## ----read-txt-img-------------------------------------------------------------
 path_txt_img <- system.file("img", "Rlogo-grey.txt", package = "ijtiff")
 txt_img <- read_txt_img(path_txt_img)
 
-## ---- write-txt-img------------------------------------------------------
+## ---- write-txt-img-----------------------------------------------------------
 write_txt_img(txt_img, path = tempfile(pattern = "txtimg", fileext = ".txt"))

@@ -2,14 +2,17 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 float_max <- function() {
-    .Call('_ijtiff_float_max', PACKAGE = 'ijtiff')
+  .Call("_ijtiff_float_max", PACKAGE = "ijtiff")
 }
 
 dims_cpp <- function(lst) {
-    .Call('_ijtiff_dims_cpp', PACKAGE = 'ijtiff', lst)
+  .Call("_ijtiff_dims_cpp", PACKAGE = "ijtiff", lst)
 }
 
 enlist_img_cpp <- function(arr4d) {
-    .Call('_ijtiff_enlist_img_cpp', PACKAGE = 'ijtiff', arr4d)
+  .Call("_ijtiff_enlist_img_cpp", PACKAGE = "ijtiff", arr4d)
 }
 
+match_pillar_to_row_3 <- function(arr3d, mat) {
+  .Call("_ijtiff_match_pillar_to_row_3", PACKAGE = "ijtiff", arr3d, mat)
+}
