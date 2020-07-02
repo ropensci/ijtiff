@@ -138,6 +138,15 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
       )
     }
   }
+  if ("description" %in% names(attributes(out)) &&
+      startsWith(attr(out, "description"), "ImageJ") &&
+      (is.null(attr(out, "resolution_unit")) ||
+       attr(out, "resolution_unit") == "none") &&
+      stringr::str_detect(attr(out, "description"), "\\sunit=.+\\s")) {
+    attr(out, "resolution_unit") <- stringr::str_match(
+      attr(out, "description"), "\\sunit=([^\\s]+)"
+    )[1, 2]
+  }
   if (msg) pretty_msg("\b Done.")
   out
 }

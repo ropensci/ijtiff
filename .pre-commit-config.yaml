@@ -4,5 +4,4 @@ repos:
     hooks:
     - id: parsable-R
     - id: no-browser-statement
-    - id: roxygenize
     - id: use-tidy-description
