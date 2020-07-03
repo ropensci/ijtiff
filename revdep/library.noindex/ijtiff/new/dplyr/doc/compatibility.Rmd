@@ -99,7 +99,7 @@ with quosures and you can call tidyeval verbs with unquoted quosures:
 
 ```{r, eval = FALSE}
 quo <- quo(cyl)
-select(mtcars, !!quo)
+select(mtcars, !! quo)
 ```
 
 Symbolic expressions are also supported, but note that bare symbols
@@ -108,10 +108,10 @@ objects in the data frame, it's safe to omit specifying an enclosure:
 
 ```{r, results = "hide"}
 sym <- quote(cyl)
-select(mtcars, !!sym)
+select(mtcars, !! sym)
 
 call <- quote(mean(cyl))
-summarise(mtcars, cyl = !!call)
+summarise(mtcars, cyl = !! call)
 ```
 
 Transforming objects into quosures is generally straightforward. To
@@ -119,8 +119,8 @@ enclose with the current environment, you can unquote directly in
 `quo()` or you can use `as_quosure()`:
 
 ```{r}
-quo(!!sym)
-quo(!!call)
+quo(!! sym)
+quo(!! call)
 
 rlang::as_quosure(sym)
 rlang::as_quosure(call)
@@ -157,22 +157,22 @@ quasiquotation:
 
 ```{r}
 syms <- rlang::syms(c("foo", "bar", "baz"))
-quo(my_call(!!!syms))
+quo(my_call(!!! syms))
 
 fun <- rlang::sym("my_call")
-quo((!!fun)(!!!syms))
+quo((!!fun)(!!! syms))
 ```
 
 Or create the call with `call2()`:
 
 ```{r}
-call <- rlang::call2("my_call", !!!syms)
+call <- rlang::call2("my_call", !!! syms)
 call
 
 rlang::as_quosure(call)
 
 # Or equivalently:
-quo(!!rlang::call2("my_call", !!!syms))
+quo(!! rlang::call2("my_call", !!! syms))
 ```
 
 Note that idioms based on `interp()` should now generally be avoided
@@ -186,7 +186,7 @@ You would now unquote:
 
 ```{r, eval=FALSE}
 var <- "mpg"
-quo(mean(!!rlang::sym(var)))
+quo(mean(!! rlang::sym(var)))
 ```
 
 See also `vignette("programming")` for more about quasiquotation and
@@ -206,7 +206,7 @@ in dplyr 0.6:
 ```{r, eval = FALSE}
 filter_.tbl_df <- function(.data, ..., .dots = list()) {
   dots <- compat_lazy_dots(.dots, caller_env(), ...)
-  filter(.data, !!!dots)
+  filter(.data, !!! dots)
 }
 ```
 

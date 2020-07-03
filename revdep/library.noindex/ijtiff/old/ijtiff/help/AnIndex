@@ -8,6 +8,7 @@ ijtiff	ijtiff
 ijtiff_img	ijtiff_img
 linescan-conversion	linescan-conversion
 linescan_to_stack	linescan-conversion
+print.ijtiff_img	print.ijtiff_img
 read_tags	read_tags
 read_tif	read_tif
 read_txt_img	text-image-io

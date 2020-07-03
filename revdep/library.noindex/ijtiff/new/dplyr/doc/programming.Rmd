@@ -46,7 +46,7 @@ library(dplyr)
 Data masking makes data manipulation faster because it requires less typing. In most (but not all[^subset]) base R functions you need to refer to variables with `$`, leading to code that repeats the name of the data frame many times:
 
 ```{r, results = FALSE}
-starwars[starwars$homeworld == "Naboo" & starwars$species == "Human", , ]
+starwars[starwars$homeworld == "Naboo" & starwars$species == "Human", ,]
 ```
 
 [^subset]: dplyr's `filter()` is inspired by base R's `subset()`. `subset()` provides data masking, but not with tidy evaluation, so the techniques described in this chapter don't apply to it.
@@ -94,13 +94,13 @@ The main challenge of programming with functions that use data masking arises wh
     as well as the number of observations that were summarised:
 
     ```{r, results = FALSE}
-var_summary <- function(data, var) {
-  data %>%
-    summarise(n = n(), min = min({{ var }}), max = max({{ var }}))
-}
-mtcars %>%
-  group_by(cyl) %>%
-  var_summary(mpg)
+    var_summary <- function(data, var) {
+      data %>%
+        summarise(n = n(), min = min({{ var }}), max = max({{ var }}))
+    }
+    mtcars %>% 
+      group_by(cyl) %>% 
+      var_summary(mpg)
     ```
 
 *   When you have an env-variable that is a character vector, you need to index 
@@ -111,11 +111,9 @@ mtcars %>%
     each variable of `mtcars`:
 
     ```{r, results = FALSE}
-for (var in names(mtcars)) {
-  mtcars %>%
-    count(.data[[var]]) %>%
-    print()
-}
+    for (var in names(mtcars)) {
+      mtcars %>% count(.data[[var]]) %>% print()
+    }
     ```
 
     Note that `.data` is not a data frame; it's a special construct, a pronoun, 
@@ -157,12 +155,12 @@ As with data masking, tidy selection makes a common task easier at the cost of m
     the mean of all variables selected by the user:
 
     ```{r, results = FALSE}
-summarise_mean <- function(data, vars) {
-  data %>% summarise(n = n(), across({{ vars }}, mean))
-}
-mtcars %>%
-  group_by(cyl) %>%
-  summarise_mean(where(is.numeric))
+    summarise_mean <- function(data, vars) {
+      data %>% summarise(n = n(), across({{ vars }}, mean))
+    }
+    mtcars %>% 
+      group_by(cyl) %>% 
+      summarise_mean(where(is.numeric))
     ```
 
 *   When you have an env-variable that is a character vector, you need to use
@@ -174,9 +172,9 @@ mtcars %>%
     variables *not* found in a character vector:
 
     ```{r, results = FALSE}
-vars <- c("mpg", "vs")
-mtcars %>% select(all_of(vars))
-mtcars %>% select(!all_of(vars))
+    vars <- c("mpg", "vs")
+    mtcars %>% select(all_of(vars))
+    mtcars %>% select(!all_of(vars))
     ```
 
 ## How tos
@@ -199,9 +197,9 @@ If you're writing a package and you have a function that uses data-variables:
 
 ```{r}
 my_summary_function <- function(data) {
-  data %>%
-    filter(x > 0) %>%
-    group_by(grp) %>%
+  data %>% 
+    filter(x > 0) %>% 
+    group_by(grp) %>% 
     summarise(y = mean(y), n = n())
 }
 ```
@@ -220,9 +218,9 @@ You can eliminate this by using `.data$var` and importing `.data` from its sourc
 ```{r}
 #' @importFrom rlang .data
 my_summary_function <- function(data) {
-  data %>%
-    filter(.data$x > 0) %>%
-    group_by(.data$grp) %>%
+  data %>% 
+    filter(.data$x > 0) %>% 
+    group_by(.data$grp) %>% 
     summarise(y = mean(.data$y), n = n())
 }
 ```
@@ -255,7 +253,7 @@ If you want the user to provide multiple expressions, embrace each of them:
 
 ```{r}
 my_summarise3 <- function(data, mean_var, sd_var) {
-  data %>%
+  data %>% 
     summarise(mean = mean({{ mean_var }}), sd = mean({{ sd_var }}))
 }
 ```
@@ -271,9 +269,9 @@ my_summarise4 <- function(data, expr) {
   )
 }
 my_summarise5 <- function(data, mean_var, sd_var) {
-  data %>%
+  data %>% 
     summarise(
-      "mean_{{mean_var}}" := mean({{ mean_var }}),
+      "mean_{{mean_var}}" := mean({{ mean_var }}), 
       "sd_{{sd_var}}" := mean({{ sd_var }})
     )
 }
@@ -305,8 +303,8 @@ my_summarise <- function(data, summary_vars) {
   data %>%
     summarise(across({{ summary_vars }}, ~ mean(., na.rm = TRUE)))
 }
-starwars %>%
-  group_by(species) %>%
+starwars %>% 
+  group_by(species) %>% 
   my_summarise(c(mass, height))
 ```
 
@@ -315,7 +313,7 @@ You can use this same idea for multiple sets of input data-variables:
 ```{r}
 my_summarise <- function(data, group_var, summarise_var) {
   data %>%
-    group_by(across({{ group_var }})) %>%
+    group_by(across({{ group_var }})) %>% 
     summarise(across({{ group_var }}, mean))
 }
 ```
@@ -325,7 +323,7 @@ Use the `.names` argument to `across()` to control the names of the output.
 ```{r}
 my_summarise <- function(data, group_var, summarise_var) {
   data %>%
-    group_by(across({{ group_var }})) %>%
+    group_by(across({{ group_var }})) %>% 
     summarise(across({{ summarise_var }}, mean, .names = "mean_{col}"))
 }
 ```
@@ -336,17 +334,15 @@ If you have a character vector of variable names, and want to operate on them wi
 
 ```{r, results = FALSE}
 for (var in names(mtcars)) {
-  mtcars %>%
-    count(.data[[var]]) %>%
-    print()
+  mtcars %>% count(.data[[var]]) %>% print()
 }
 ```
 
 This same technique works with for loop alternatives like the base R `apply()` family and the purrr `map()` family:
 
 ```{r, results = FALSE}
-mtcars %>%
-  names() %>%
+mtcars %>% 
+  names() %>% 
   purrr::map(~ count(mtcars, .data[[.x]]))
 ```
 

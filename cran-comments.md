@@ -9,4 +9,5 @@
 ### Reverse dependencies
 There are 3 reverse dependencies: `detrendr`, `nandb` and `autothresholdr`. This update does not break any of these. 
     
-    
+### Recent resubmit
+The current version is failing on CRAN rchk. This is a fix for that.

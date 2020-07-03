@@ -17,29 +17,29 @@ set.seed(1014)
 library(dplyr, warn.conflicts = FALSE)
 
 ## -----------------------------------------------------------------------------
-starwars %>%
+starwars %>% 
   summarise(across(where(is.character), ~ length(unique(.x))))
 
-starwars %>%
-  group_by(species) %>%
-  filter(n() > 1) %>%
+starwars %>% 
+  group_by(species) %>% 
+  filter(n() > 1) %>% 
   summarise(across(c(sex, gender, homeworld), ~ length(unique(.x))))
 
-starwars %>%
-  group_by(homeworld) %>%
-  filter(n() > 1) %>%
+starwars %>% 
+  group_by(homeworld) %>% 
+  filter(n() > 1) %>% 
   summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
 
 ## -----------------------------------------------------------------------------
 df <- data.frame(g = c(1, 1, 2), x = c(-1, 1, 3), y = c(-1, -4, -9))
-df %>%
-  group_by(g) %>%
+df %>% 
+  group_by(g) %>% 
   summarise(across(where(is.numeric), sum))
 
 ## -----------------------------------------------------------------------------
 min_max <- list(
-  min = ~ min(.x, na.rm = TRUE),
-  max = ~ max(.x, na.rm = TRUE)
+  min = ~min(.x, na.rm = TRUE), 
+  max = ~max(.x, na.rm = TRUE)
 )
 starwars %>% summarise(across(where(is.numeric), min_max))
 
@@ -48,8 +48,8 @@ starwars %>% summarise(across(where(is.numeric), min_max, .names = "{fn}.{col}")
 
 ## -----------------------------------------------------------------------------
 starwars %>% summarise(
-  across(where(is.numeric), ~ min(.x, na.rm = TRUE), .names = "min_{col}"),
-  across(where(is.numeric), ~ max(.x, na.rm = TRUE), .names = "max_{col}")
+  across(where(is.numeric), ~min(.x, na.rm = TRUE), .names = "min_{col}"),
+  across(where(is.numeric), ~max(.x, na.rm = TRUE), .names = "max_{col}")
 )
 
 ## -----------------------------------------------------------------------------
@@ -61,15 +61,15 @@ df %>% mutate(across(all_of(names(mult)), ~ .x * mult[[cur_column()]]))
 ## -----------------------------------------------------------------------------
 df <- data.frame(x = c(1, 2, 3), y = c(1, 4, 9))
 
-df %>%
+df %>% 
   summarise(n = n(), across(where(is.numeric), sd))
 
 ## -----------------------------------------------------------------------------
-df %>%
+df %>% 
   summarise(across(where(is.numeric), sd), n = n())
 
 ## -----------------------------------------------------------------------------
-df %>%
+df %>% 
   summarise(n = n(), across(where(is.numeric) & !n, sd))
 
 ## -----------------------------------------------------------------------------
@@ -126,3 +126,4 @@ df <- tibble(x = 2, y = 4, z = 8)
 df %>% mutate_all(~ .x / y)
 
 df %>% mutate(across(everything(), ~ .x / y))
+

@@ -42,7 +42,7 @@ library("nycflights13")
 # Drop unimportant variables so it's easier to understand the join results.
 flights2 <- flights %>% select(year:day, hour, origin, dest, tailnum, carrier)
 
-flights2 %>%
+flights2 %>% 
   left_join(airlines)
 ```
 
@@ -56,7 +56,7 @@ As well as `x` and `y`, each mutating join takes an argument `by` that controls 
     origin.
     
     ```{r}
-flights2 %>% left_join(weather)
+    flights2 %>% left_join(weather)
     ```
 
   * A character vector, `by = "x"`. Like a natural join, but uses only 
@@ -65,7 +65,7 @@ flights2 %>% left_join(weather)
     `tailnum`.
     
     ```{r}
-flights2 %>% left_join(planes, by = "tailnum")
+    flights2 %>% left_join(planes, by = "tailnum")
     ```
     
     Note that the year columns in the output are disambiguated with a suffix.
@@ -78,8 +78,8 @@ flights2 %>% left_join(planes, by = "tailnum")
     which one we want to join to:
     
     ```{r}
-flights2 %>% left_join(airports, c("dest" = "faa"))
-flights2 %>% left_join(airports, c("origin" = "faa"))
+    flights2 %>% left_join(airports, c("dest" = "faa"))
+    flights2 %>% left_join(airports, c("origin" = "faa"))
     ```
 
 ### Types of join
@@ -94,9 +94,7 @@ df2 <- tibble(x = c(3, 1), a = 10, b = "a")
   * `inner_join(x, y)` only includes observations that match in both `x` and `y`.
     
     ```{r}
-df1 %>%
-  inner_join(df2) %>%
-  knitr::kable()
+    df1 %>% inner_join(df2) %>% knitr::kable()
     ```
     
   * `left_join(x, y)` includes all observations in `x`, regardless of whether
@@ -104,21 +102,21 @@ df1 %>%
     that you don't lose observations from your primary table.
   
     ```{r}
-df1 %>% left_join(df2)
+    df1 %>% left_join(df2)
     ```
   
   * `right_join(x, y)` includes all observations in `y`. It's equivalent to 
     `left_join(y, x)`, but the columns and rows will be ordered differently.
   
     ```{r}
-df1 %>% right_join(df2)
-df2 %>% left_join(df1)
+    df1 %>% right_join(df2)
+    df2 %>% left_join(df1)
     ```
 
 * `full_join()` includes all observations from `x` and `y`.
 
     ```{r}
-df1 %>% full_join(df2)
+    df1 %>% full_join(df2)
     ```
 
 The left, right and full joins are collectively know as __outer joins__. When a row doesn't match in an outer join, the new variables are filled in with missing values.
@@ -145,8 +143,8 @@ These are most useful for diagnosing join mismatches. For example, there are man
 
 ```{r}
 library("nycflights13")
-flights %>%
-  anti_join(planes, by = "tailnum") %>%
+flights %>% 
+  anti_join(planes, by = "tailnum") %>% 
   count(tailnum, sort = TRUE)
 ```
 
@@ -159,13 +157,9 @@ df2 <- tibble(x = c(1, 1, 2), z = c("a", "b", "a"))
 # Four rows to start with:
 df1 %>% nrow()
 # And we get four rows after the join
-df1 %>%
-  inner_join(df2, by = "x") %>%
-  nrow()
+df1 %>% inner_join(df2, by = "x") %>% nrow()
 # But only two rows actually match
-df1 %>%
-  semi_join(df2, by = "x") %>%
-  nrow()
+df1 %>% semi_join(df2, by = "x") %>% nrow()
 ```
 
 ## Set operations

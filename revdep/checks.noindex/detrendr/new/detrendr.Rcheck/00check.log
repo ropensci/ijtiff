@@ -62,18 +62,18 @@ GNU make is a SystemRequirements.
   Running ‘testthat.R’
 Running the tests in ‘tests/testthat.R’ failed.
 Last 13 lines of output:
-  [186232] 54 - 55 == -1
-  [186235] 66 - 67 == -1
-  [186236] 63 - 62 ==  1
-  [186241] 69 - 70 == -1
+  [186223] 105 - 106 == -1
+  [186224] 103 - 102 ==  1
+  [186225] 118 - 119 == -1
   ...
   
   ══ testthat results  ═══════════════════════════════════════════════════════════
-  [ OK: 211 | SKIPPED: 8 | WARNINGS: 0 | FAILED: 4 ]
+  [ OK: 210 | SKIPPED: 8 | WARNINGS: 0 | FAILED: 5 ]
   1. Failure: best_tau works (@test-best_params.R#25) 
   2. Failure: best_l works (@test-best_params.R#61) 
-  3. Failure: best_degree works (@test-best_params.R#101) 
+  3. Failure: detrending entire derectories works (@test-dir-detrend.R#61) 
   4. Failure: detrending entire derectories works (@test-dir-detrend.R#116) 
+  5. Failure: detrending entire derectories works (@test-dir-detrend.R#166) 
   
   Error: testthat unit tests failed
   Execution halted

@@ -46,12 +46,12 @@ vec_ptype_show(logical(), character())
 
 ## -----------------------------------------------------------------------------
 vec_ptype_show(
-  array(1, c(0, 1)),
+  array(1, c(0, 1)), 
   array(1, c(0, 2))
 )
 
 vec_ptype_show(
-  array(1, c(0, 1)),
+  array(1, c(0, 1)), 
   array(1, c(0, 3)),
   array(1, c(0, 3, 4)),
   array(1, c(0, 3, 4, 5))
@@ -59,7 +59,7 @@ vec_ptype_show(
 
 ## ---- error = TRUE------------------------------------------------------------
 vec_ptype_show(
-  array(1, c(0, 2)),
+  array(1, c(0, 2)), 
   array(1, c(0, 3))
 )
 
@@ -75,20 +75,20 @@ vec_ptype_show(new_date(), new_datetime())
 
 ## -----------------------------------------------------------------------------
 vec_ptype_show(
-  new_datetime(tzone = "US/Central"),
+  new_datetime(tzone = "US/Central"), 
   new_datetime(tzone = "Pacific/Auckland")
 )
 
 ## -----------------------------------------------------------------------------
 vec_ptype_show(
-  new_datetime(tzone = ""),
-  new_datetime(tzone = ""),
+  new_datetime(tzone = ""), 
+  new_datetime(tzone = ""), 
   new_datetime(tzone = "Pacific/Auckland")
 )
 
 ## -----------------------------------------------------------------------------
 vec_ptype_show(
-  data.frame(x = FALSE),
+  data.frame(x = FALSE), 
   data.frame(x = 1L),
   data.frame(x = 2.5)
 )
@@ -98,13 +98,13 @@ vec_ptype_show(data.frame(x = 1, y = 1), data.frame(y = 1, z = 1))
 
 ## -----------------------------------------------------------------------------
 str(vec_cast_common(
-  FALSE,
-  1:5,
+  FALSE, 
+  1:5, 
   2.5
 ))
 
 str(vec_cast_common(
-  factor("x"),
+  factor("x"), 
   factor("y")
 ))
 
@@ -193,3 +193,4 @@ paste(1:2, integer())
 
 # Errors
 data.frame(1:2, integer())
+

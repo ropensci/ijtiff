@@ -37,8 +37,8 @@ library(dplyr, warn.conflicts = FALSE)
 ```{r include = FALSE}
 nest_by <- function(df, ...) {
   df %>%
-    group_by(...) %>%
-    summarise(data = list(across())) %>%
+    group_by(...) %>% 
+    summarise(data = list(across())) %>% 
     rowwise(...)
 }
 # mtcars %>% nest_by(cyl)
@@ -57,9 +57,7 @@ Like `group_by()`, `rowwise()` doesn't really do anything itself; it just change
 
 ```{r}
 df %>% mutate(m = mean(c(x, y, z)))
-df %>%
-  rowwise() %>%
-  mutate(m = mean(c(x, y, z)))
+df %>% rowwise() %>% mutate(m = mean(c(x, y, z)))
 ```
 
 If you use `mutate()` with a regular data frame, it computes the mean of `x`, `y`, and `z` across all rows. If you apply it to a row-wise data frame, it computes the mean for each row.
@@ -69,12 +67,12 @@ You can optionally supply "identifier" variables in your call to `rowwise()`. Th
 ```{r}
 df <- tibble(name = c("Mara", "Hadley"), x = 1:2, y = 3:4, z = 5:6)
 
-df %>%
-  rowwise() %>%
+df %>% 
+  rowwise() %>% 
   summarise(m = mean(c(x, y, z)))
 
-df %>%
-  rowwise(name) %>%
+df %>% 
+  rowwise(name) %>% 
   summarise(m = mean(c(x, y, z)))
 ```
 
@@ -112,9 +110,9 @@ rf %>% mutate(total = sum(c_across(where(is.numeric))))
 You could combine this with column-wise operations (see `vignette("colwise")` for more details) to compute the proportion of the total for each column:
 
 ```{r}
-rf %>%
-  mutate(total = sum(c_across(w:z))) %>%
-  ungroup() %>%
+rf %>% 
+  mutate(total = sum(c_across(w:z))) %>% 
+  ungroup() %>% 
   mutate(across(w:z, ~ . / total))
 ```
 
@@ -174,8 +172,8 @@ df %>% mutate(l = purrr::map_int(x, length))
 But wouldn't it be nice if you could just write `length(x)` and dplyr would figure out that you wanted to compute the length of the element inside of `x`? Since you're here, you might already be guessing at the answer: this is just another application of the row-wise pattern.
 
 ```{r}
-df %>%
-  rowwise() %>%
+df %>% 
+  rowwise() %>% 
   mutate(l = length(x))
 ```
 
@@ -252,7 +250,7 @@ mods
 You could then summarise the model in a variety of ways:
 
 ```{r}
-mods %>% summarise(rmse = sqrt(mean((pred - data$mpg)^2)))
+mods %>% summarise(rmse = sqrt(mean((pred - data$mpg) ^ 2)))
 mods %>% summarise(rsq = summary(mod)$r.squared)
 mods %>% summarise(broom::glance(mod))
 ```
@@ -273,26 +271,26 @@ I think this is particularly elegant way to perform simulations, because it lets
 
 ```{r}
 df <- tribble(
-  ~n, ~min, ~max,
-  1, 0, 1,
-  2, 10, 100,
-  3, 100, 1000,
+  ~ n, ~ min, ~ max,
+    1,     0,     1,
+    2,    10,   100,
+    3,   100,  1000,
 )
 ```
 
 You can supply these parameters to `runif()` by using `rowwise()` and `mutate()`:
 
 ```{r}
-df %>%
-  rowwise() %>%
+df %>% 
+  rowwise() %>% 
   mutate(data = list(runif(n, min, max)))
 ```
 
 Note the use of `list()` here - `runif()` returns multiple values and a `mutate()` expression has to return something of length 1. `list()` means that we'll get a list column where each row is a list containing multiple values. If you forget to use `list()`, dplyr will you a hint:
 
 ```{r, error = TRUE}
-df %>%
-  rowwise() %>%
+df %>% 
+  rowwise() %>% 
   mutate(data = runif(n, min, max))
 ```
 
@@ -303,8 +301,8 @@ What if you want to call a function for every combination of inputs? You can use
 ```{r}
 df <- expand.grid(mean = c(-1, 0, 1), sd = c(1, 10, 100))
 
-df %>%
-  rowwise() %>%
+df %>% 
+  rowwise() %>% 
   mutate(data = list(rnorm(10, mean, sd)))
 ```
 
@@ -314,28 +312,28 @@ In more complicated problems, you might also want to vary the function being cal
 
 ```{r}
 df <- tribble(
-  ~rng, ~params,
-  "runif", list(n = 10),
-  "rnorm", list(n = 20),
-  "rpois", list(n = 10, lambda = 5),
+   ~rng,     ~params,
+   "runif",  list(n = 10), 
+   "rnorm",  list(n = 20),
+   "rpois",  list(n = 10, lambda = 5),
 ) %>%
   rowwise()
 
-df %>%
+df %>% 
   mutate(data = list(do.call(rng, params)))
 ```
 
 ```{r, include = FALSE, eval = FALSE}
 df <- rowwise(tribble(
-  ~rng, ~params,
-  "runif", list(min = -1, max = 1),
-  "rnorm", list(),
-  "rpois", list(lambda = 5),
+   ~rng,     ~params,
+   "runif",  list(min = -1, max = 1), 
+   "rnorm",  list(),
+   "rpois",  list(lambda = 5),
 ))
 
 # Has to happen in separate function to avoid eager unquoting
 f <- function(rng, params) purrr::exec(rng, n = 10, !!!params)
-df %>%
+df %>% 
   mutate(data = list(f(rng, params)))
 ```
 
@@ -358,36 +356,36 @@ We've questioned the need for `do()` for quite some time, because it never felt 
     following code gets the first row of each group:
   
     ```{r}
-mtcars %>%
-  group_by(cyl) %>%
-  do(head(., 1))
+    mtcars %>% 
+      group_by(cyl) %>% 
+      do(head(., 1))
     ```
   
     This has been superseded `cur_data()` plus the more permissive `summarise()` 
     which can now create multiple columns and multiple rows.
   
     ```{r}
-mtcars %>%
-  group_by(cyl) %>%
-  summarise(head(cur_data(), 1))
+    mtcars %>% 
+      group_by(cyl) %>% 
+      summarise(head(cur_data(), 1))
     ```
 
 *   With arguments: it worked like `mutate()` but automatically wrapped every
     element in a list:
   
     ```{r}
-mtcars %>%
-  group_by(cyl) %>%
-  do(nrows = nrow(.))
+    mtcars %>% 
+      group_by(cyl) %>% 
+      do(nrows = nrow(.))
     ```
 
     I now believe that behaviour is both too magical and not very useful, and 
     it can be replaced by `summarise()` and `cur_data()` . 
   
     ```{r}
-mtcars %>%
-  group_by(cyl) %>%
-  summarise(nrows = nrow(cur_data()))
+    mtcars %>% 
+      group_by(cyl) %>% 
+      summarise(nrows = nrow(cur_data()))
     ```
 
     If needed (unlike here), you can wrap the results in list yourself.

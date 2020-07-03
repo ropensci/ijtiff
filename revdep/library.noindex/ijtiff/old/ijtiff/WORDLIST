@@ -1,11 +1,11 @@
 Acknowledgement
 AppVeyor
 awaresystems
-BioFormats
 BITSPERSAMPLE
 bona
 codecov
 coercible
+colormaps
 colour
 colours
 DOI
@@ -13,13 +13,10 @@ EBImage
 FCS
 fide
 github
-gnuwin
 grayscale
 Grayscale
 Hacky
 Homebrew
-htm
-http
 https
 ij
 IMAGEDEPTH
@@ -33,6 +30,7 @@ JBIG
 libtiff
 lifecycle
 linescan
+LUTs
 Messasges
 nd
 nih
@@ -48,7 +46,6 @@ RStudio
 SAMPLEFORMAT
 SAMPLESPERPIXEL
 softwares
-sourceforge
 th
 THRESHHOLDING
 TIFFs

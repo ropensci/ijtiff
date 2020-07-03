@@ -22,26 +22,26 @@ Type 'q()' to quit R.
 [31m──[39m [31m1. Failure: best_tau works (@test-best_params.R#25) [39m [31m────────────────────────[39m
 `t1` not equal to `t2`.
 1/2 mismatches
-[1] 20.7 - 20 == 0.684
+[1] 20.7 - 19.3 == 1.37
 
-[31m──[39m [31m2. Failure: best_degree works (@test-best_params.R#101) [39m [31m────────────────────[39m
-`d1` not equal to `d2`.
+[31m──[39m [31m2. Failure: best_l works (@test-best_params.R#61) [39m [31m──────────────────────────[39m
+`l1` not equal to `l2`.
 2/2 mismatches (average diff: 2)
-[1] 22 - 20 ==  2
-[2] 16 - 18 == -2
+[1] 16 - 18 == -2
+[2] 17 - 19 == -2
 
 [31m──[39m [31m3. Failure: detrending entire derectories works (@test-dir-detrend.R#61) [39m [31m───[39m
 unlist(detrendeds) not equal to unlist(detrendeds_dir).
-117085/375900 mismatches (average diff: 1.02)
-[923] 69 - 70 == -1
-[925] 72 - 73 == -1
-[934] 45 - 44 ==  1
-[935] 49 - 48 ==  1
-[937] 51 - 50 ==  1
-[939] 46 - 45 ==  1
-[949] 79 - 80 == -1
-[950] 94 - 95 == -1
-[957] 68 - 69 == -1
+740/375900 mismatches (average diff: 1)
+[184007] 61 - 62 == -1
+[184009] 69 - 70 == -1
+[184010] 59 - 58 ==  1
+[184011] 58 - 59 == -1
+[184013] 66 - 65 ==  1
+[184019] 61 - 62 == -1
+[184022] 88 - 89 == -1
+[184023] 96 - 97 == -1
+[184028] 45 - 44 ==  1
 ...
 
 [31m──[39m [31m4. Failure: detrending entire derectories works (@test-dir-detrend.R#63) [39m [31m───[39m
@@ -52,40 +52,49 @@ y[2]: "bleached_detrended_thresh=Triangle=41.622_boxcar_for_FFS_l=auto=17.tif"
 
 [31m──[39m [31m5. Failure: detrending entire derectories works (@test-dir-detrend.R#116) [39m [31m──[39m
 unlist(detrendeds) not equal to unlist(detrendeds_dir).
-1381/375900 mismatches (average diff: 1)
-[186207] 43 - 44 == -1
-[186217] 67 - 66 ==  1
-[186220] 69 - 68 ==  1
-[186223] 89 - 90 == -1
-[186230] 36 - 37 == -1
-[186232] 54 - 55 == -1
-[186235] 66 - 67 == -1
-[186236] 63 - 62 ==  1
-[186241] 69 - 70 == -1
+80120/375900 mismatches (average diff: 1)
+[924] 79 - 78 ==  1
+[933] 55 - 54 ==  1
+[934] 45 - 46 == -1
+[937] 48 - 49 == -1
+[947] 65 - 64 ==  1
+[948] 83 - 82 ==  1
+[970] 74 - 73 ==  1
+[973] 88 - 87 ==  1
+[974] 94 - 93 ==  1
 ...
 
-[31m──[39m [31m6. Failure: detrending entire derectories works (@test-dir-detrend.R#166) [39m [31m──[39m
+[31m──[39m [31m6. Failure: detrending entire derectories works (@test-dir-detrend.R#118) [39m [31m──[39m
+dir("detrended") not equal to paste0(...).
+1/2 mismatches
+x[2]: "bleached_detrended_thresh=Triangle=41.622_exponential_for_FFS_tau=auto=20
+x[2]: .703125.tif"
+y[2]: "bleached_detrended_thresh=Triangle=41.622_exponential_for_FFS_tau=auto=22
+y[2]: .0703125.tif"
+
+[31m──[39m [31m7. Failure: detrending entire derectories works (@test-dir-detrend.R#166) [39m [31m──[39m
 unlist(detrendeds) not equal to unlist(detrendeds_dir).
-650/375900 mismatches (average diff: 1)
-[756]     1 -  0 ==  1
-[759]     0 -  1 == -1
-[373707] 24 - 25 == -1
-[373708] 34 - 35 == -1
-[373709] 23 - 22 ==  1
-[373710] 26 - 27 == -1
-[373711] 36 - 35 ==  1
-[373715] 33 - 32 ==  1
-[373718] 35 - 36 == -1
+1082/375900 mismatches (average diff: 1)
+[856]      0 -   1 == -1
+[873]      0 -   1 == -1
+[877]      1 -   0 ==  1
+[371508]  47 -  46 ==  1
+[371512]  89 -  88 ==  1
+[371514]  97 -  96 ==  1
+[371516]  70 -  69 ==  1
+[371525] 104 - 105 == -1
+[371529]  44 -  43 ==  1
 ...
 
 ══ testthat results  ═══════════════════════════════════════════════════════════
-[ OK: 209 | SKIPPED: 8 | WARNINGS: 0 | FAILED: 6 ]
+[ OK: 208 | SKIPPED: 8 | WARNINGS: 0 | FAILED: 7 ]
 1. Failure: best_tau works (@test-best_params.R#25) 
-2. Failure: best_degree works (@test-best_params.R#101) 
+2. Failure: best_l works (@test-best_params.R#61) 
 3. Failure: detrending entire derectories works (@test-dir-detrend.R#61) 
 4. Failure: detrending entire derectories works (@test-dir-detrend.R#63) 
 5. Failure: detrending entire derectories works (@test-dir-detrend.R#116) 
-6. Failure: detrending entire derectories works (@test-dir-detrend.R#166) 
+6. Failure: detrending entire derectories works (@test-dir-detrend.R#118) 
+7. Failure: detrending entire derectories works (@test-dir-detrend.R#166) 
 
 Error: testthat unit tests failed
 Execution halted

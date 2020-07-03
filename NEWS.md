@@ -1,3 +1,9 @@
+# `ijtiff` 2.1.1
+
+## BUG FIXES
+* Fix a protection error.
+
+
 # `ijtiff` 2.1.0
 
 ## NEW FEATURES

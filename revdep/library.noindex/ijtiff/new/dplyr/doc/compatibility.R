@@ -26,7 +26,7 @@ if (utils::packageVersion("dplyr") > "0.5.0") {
 
 ## ---- eval = FALSE------------------------------------------------------------
 #  wrap_dbplyr_obj("build_sql")
-#
+#  
 #  wrap_dbplyr_obj("base_agg")
 
 ## ---- eval = FALSE------------------------------------------------------------
@@ -35,14 +35,14 @@ if (utils::packageVersion("dplyr") > "0.5.0") {
 
 ## ---- results = "hide"--------------------------------------------------------
 sym <- quote(cyl)
-select(mtcars, !!sym)
+select(mtcars, !! sym)
 
 call <- quote(mean(cyl))
-summarise(mtcars, cyl = !!call)
+summarise(mtcars, cyl = !! call)
 
 ## -----------------------------------------------------------------------------
-quo(!!sym)
-quo(!!call)
+quo(!! sym)
+quo(!! call)
 
 rlang::as_quosure(sym)
 rlang::as_quosure(call)
@@ -58,19 +58,19 @@ rlang::syms(letters[1:3])
 
 ## -----------------------------------------------------------------------------
 syms <- rlang::syms(c("foo", "bar", "baz"))
-quo(my_call(!!!syms))
+quo(my_call(!!! syms))
 
 fun <- rlang::sym("my_call")
-quo((!!fun)(!!!syms))
+quo((!!fun)(!!! syms))
 
 ## -----------------------------------------------------------------------------
-call <- rlang::call2("my_call", !!!syms)
+call <- rlang::call2("my_call", !!! syms)
 call
 
 rlang::as_quosure(call)
 
 # Or equivalently:
-quo(!!rlang::call2("my_call", !!!syms))
+quo(!! rlang::call2("my_call", !!! syms))
 
 ## ---- eval=FALSE--------------------------------------------------------------
 #  lazyeval::interp(~ mean(var), var = rlang::sym("mpg"))
@@ -111,3 +111,4 @@ quo(!!rlang::call2("my_call", !!!syms))
 
 ## ---- eval = FALSE------------------------------------------------------------
 #  mutate_at(starwars, c("height", "mass"), as.character)
+

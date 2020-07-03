@@ -7,7 +7,7 @@ set.seed(1014)
 library(dplyr)
 
 ## ---- results = FALSE---------------------------------------------------------
-starwars[starwars$homeworld == "Naboo" & starwars$species == "Human", , ]
+starwars[starwars$homeworld == "Naboo" & starwars$species == "Human", ,]
 
 ## ---- results = FALSE---------------------------------------------------------
 starwars %>% filter(homeworld == "Naboo", species == "Human")
@@ -21,23 +21,21 @@ var_summary <- function(data, var) {
   data %>%
     summarise(n = n(), min = min({{ var }}), max = max({{ var }}))
 }
-mtcars %>%
-  group_by(cyl) %>%
+mtcars %>% 
+  group_by(cyl) %>% 
   var_summary(mpg)
 
 ## ---- results = FALSE---------------------------------------------------------
 for (var in names(mtcars)) {
-  mtcars %>%
-    count(.data[[var]]) %>%
-    print()
+  mtcars %>% count(.data[[var]]) %>% print()
 }
 
 ## ---- results = FALSE---------------------------------------------------------
 summarise_mean <- function(data, vars) {
   data %>% summarise(n = n(), across({{ vars }}, mean))
 }
-mtcars %>%
-  group_by(cyl) %>%
+mtcars %>% 
+  group_by(cyl) %>% 
   summarise_mean(where(is.numeric))
 
 ## ---- results = FALSE---------------------------------------------------------
@@ -52,18 +50,18 @@ mutate_y <- function(data) {
 
 ## -----------------------------------------------------------------------------
 my_summary_function <- function(data) {
-  data %>%
-    filter(x > 0) %>%
-    group_by(grp) %>%
+  data %>% 
+    filter(x > 0) %>% 
+    group_by(grp) %>% 
     summarise(y = mean(y), n = n())
 }
 
 ## -----------------------------------------------------------------------------
 #' @importFrom rlang .data
 my_summary_function <- function(data) {
-  data %>%
-    filter(.data$x > 0) %>%
-    group_by(.data$grp) %>%
+  data %>% 
+    filter(.data$x > 0) %>% 
+    group_by(.data$grp) %>% 
     summarise(y = mean(.data$y), n = n())
 }
 
@@ -85,7 +83,7 @@ my_summarise2 <- function(data, expr) {
 
 ## -----------------------------------------------------------------------------
 my_summarise3 <- function(data, mean_var, sd_var) {
-  data %>%
+  data %>% 
     summarise(mean = mean({{ mean_var }}), sd = mean({{ sd_var }}))
 }
 
@@ -98,9 +96,9 @@ my_summarise4 <- function(data, expr) {
   )
 }
 my_summarise5 <- function(data, mean_var, sd_var) {
-  data %>%
+  data %>% 
     summarise(
-      "mean_{{mean_var}}" := mean({{ mean_var }}),
+      "mean_{{mean_var}}" := mean({{ mean_var }}), 
       "sd_{{sd_var}}" := mean({{ sd_var }})
     )
 }
@@ -120,34 +118,32 @@ my_summarise <- function(data, summary_vars) {
   data %>%
     summarise(across({{ summary_vars }}, ~ mean(., na.rm = TRUE)))
 }
-starwars %>%
-  group_by(species) %>%
+starwars %>% 
+  group_by(species) %>% 
   my_summarise(c(mass, height))
 
 ## -----------------------------------------------------------------------------
 my_summarise <- function(data, group_var, summarise_var) {
   data %>%
-    group_by(across({{ group_var }})) %>%
+    group_by(across({{ group_var }})) %>% 
     summarise(across({{ group_var }}, mean))
 }
 
 ## -----------------------------------------------------------------------------
 my_summarise <- function(data, group_var, summarise_var) {
   data %>%
-    group_by(across({{ group_var }})) %>%
+    group_by(across({{ group_var }})) %>% 
     summarise(across({{ summarise_var }}, mean, .names = "mean_{col}"))
 }
 
 ## ---- results = FALSE---------------------------------------------------------
 for (var in names(mtcars)) {
-  mtcars %>%
-    count(.data[[var]]) %>%
-    print()
+  mtcars %>% count(.data[[var]]) %>% print()
 }
 
 ## ---- results = FALSE---------------------------------------------------------
-mtcars %>%
-  names() %>%
+mtcars %>% 
+  names() %>% 
   purrr::map(~ count(mtcars, .data[[.x]]))
 
 ## ---- eval = FALSE------------------------------------------------------------
@@ -160,3 +156,4 @@ mtcars %>%
 #    data <- reactive(filter(diamonds, .data[[input$var]] > 0))
 #    output$output <- renderTable(head(data()))
 #  }
+

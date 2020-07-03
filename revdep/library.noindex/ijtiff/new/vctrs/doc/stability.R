@@ -126,23 +126,23 @@ vec_c(m, 1)
 ## ---- eval = FALSE------------------------------------------------------------
 #  vec_c <- function(...) {
 #    args <- compact(list2(...))
-#
+#  
 #    ptype <- vec_ptype_common(!!!args)
 #    if (is.null(ptype))
 #      return(NULL)
-#
+#  
 #    ns <- map_int(args, vec_size)
 #    out <- vec_init(ptype, sum(ns))
-#
+#  
 #    pos <- 1
 #    for (i in seq_along(ns)) {
 #      n <- ns[[i]]
-#
+#  
 #      x <- vec_cast(args[[i]], to = ptype)
 #      vec_slice(out, pos:(pos + n - 1)) <- x
 #      pos <- pos + n
 #    }
-#
+#  
 #    out
 #  }
 
@@ -168,3 +168,4 @@ if_else(x > 2, Sys.Date(), Sys.Date() + 7)
 if_else(x > 2, data.frame(x = 1), data.frame(y = 2))
 
 if_else(x > 2, matrix(1:10, ncol = 2), cbind(30, 30))
+

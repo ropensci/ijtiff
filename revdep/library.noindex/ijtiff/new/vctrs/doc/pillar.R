@@ -186,3 +186,4 @@ verify_output("latlon.txt", {
 
 ## ----include = FALSE----------------------------------------------------------
 unlink("latlon.txt")
+

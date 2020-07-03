@@ -137,8 +137,8 @@ You can use them to:
 * Compute differences or percent changes.
 
     ```{r, results = "hide"}
-# Compute the relative change in games played
-mutate(players, G_delta = G - lag(G))
+    # Compute the relative change in games played
+    mutate(players, G_delta = G - lag(G))
     ```
     
     Using `lag()` is more convenient than `diff()` because for `n` inputs 
@@ -147,8 +147,8 @@ mutate(players, G_delta = G - lag(G))
 * Find out when a value changes.
   
     ```{r, results = "hide"}
-# Find when a player changed teams
-filter(players, teamID != lag(teamID))
+    # Find when a player changed teams
+    filter(players, teamID != lag(teamID))
     ```
 
 `lead()` and `lag()` have an optional argument `order_by`. If set, instead of using the row order to determine which value comes before another, they will use another variable. This is important if you have not already sorted the data, or you want to sort one way and lag another. 
@@ -156,7 +156,7 @@ filter(players, teamID != lag(teamID))
 Here's a simple example of what happens if you don't specify `order_by` when you need it:
 
 ```{r}
-df <- data.frame(year = 2000:2005, value = (0:5)^2)
+df <- data.frame(year = 2000:2005, value = (0:5) ^ 2)
 scrambled <- df[sample(nrow(df)), ]
 
 wrong <- mutate(scrambled, prev_value = lag(value))

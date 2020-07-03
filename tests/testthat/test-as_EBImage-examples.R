@@ -26,7 +26,7 @@ test_that("`as_EBImage()` works", {
   expect_equal(EBImage::colorMode(as_EBImage(arr)), 0)
   arr <- array(2^22, dim = rep(4, 4))
   expect_equal(EBImage::colorMode(as_EBImage(arr)), 2)
-  expect_true(mean(EBImage::imageData(as_EBImage(arr))) <
+  expect_lt(mean(EBImage::imageData(as_EBImage(arr))),
     mean(EBImage::imageData(as_EBImage(array(2^33, dim = rep(4, 4))))))
   expect_equal(ebimg_install_msg(), paste0(
     "  * To install `EBImage`:", "\n",

@@ -22,38 +22,63 @@ Type 'q()' to quit R.
 [31m──[39m [31m1. Failure: best_tau works (@test-best_params.R#25) [39m [31m────────────────────────[39m
 `t1` not equal to `t2`.
 1/2 mismatches
-[1] 20 - 20.7 == -0.684
+[1] 20 - 19.3 == 0.684
 
 [31m──[39m [31m2. Failure: best_l works (@test-best_params.R#61) [39m [31m──────────────────────────[39m
 `l1` not equal to `l2`.
-1/2 mismatches
-[1] 16 - 18 == -2
-
-[31m──[39m [31m3. Failure: best_degree works (@test-best_params.R#101) [39m [31m────────────────────[39m
-`d1` not equal to `d2`.
-1/2 mismatches
+2/2 mismatches (average diff: 1)
+[1] 16 - 15 == 1
 [2] 19 - 18 == 1
+
+[31m──[39m [31m3. Failure: detrending entire derectories works (@test-dir-detrend.R#61) [39m [31m───[39m
+unlist(detrendeds) not equal to unlist(detrendeds_dir).
+1137/375900 mismatches (average diff: 1)
+[371506]  69 -  68 ==  1
+[371507]  75 -  76 == -1
+[371509]  75 -  76 == -1
+[371512] 102 - 101 ==  1
+[371515]  83 -  82 ==  1
+[371516]  82 -  81 ==  1
+[371517]  93 -  94 == -1
+[371520]  85 -  84 ==  1
+[371521]  88 -  89 == -1
+...
 
 [31m──[39m [31m4. Failure: detrending entire derectories works (@test-dir-detrend.R#116) [39m [31m──[39m
 unlist(detrendeds) not equal to unlist(detrendeds_dir).
-662/375900 mismatches (average diff: 1)
-[186207] 43 - 44 == -1
-[186217] 67 - 66 ==  1
-[186220] 69 - 68 ==  1
-[186223] 89 - 90 == -1
-[186230] 36 - 37 == -1
-[186232] 54 - 55 == -1
-[186235] 66 - 67 == -1
-[186236] 63 - 62 ==  1
-[186241] 69 - 70 == -1
+4081/375900 mismatches (average diff: 1)
+[184007] 63 - 62 ==  1
+[184008] 60 - 59 ==  1
+[184009] 71 - 72 == -1
+[184012] 77 - 78 == -1
+[184013] 68 - 69 == -1
+[184014] 71 - 72 == -1
+[184016] 77 - 76 ==  1
+[184020] 73 - 74 == -1
+[184025] 95 - 96 == -1
+...
+
+[31m──[39m [31m5. Failure: detrending entire derectories works (@test-dir-detrend.R#166) [39m [31m──[39m
+unlist(detrendeds) not equal to unlist(detrendeds_dir).
+1347/375900 mismatches (average diff: 1)
+[756]      1 -   0 ==  1
+[759]      0 -   1 == -1
+[856]      0 -   1 == -1
+[186209]  69 -  70 == -1
+[186211]  57 -  58 == -1
+[186213]  62 -  61 ==  1
+[186223] 105 - 106 == -1
+[186224] 103 - 102 ==  1
+[186225] 118 - 119 == -1
 ...
 
 ══ testthat results  ═══════════════════════════════════════════════════════════
-[ OK: 211 | SKIPPED: 8 | WARNINGS: 0 | FAILED: 4 ]
+[ OK: 210 | SKIPPED: 8 | WARNINGS: 0 | FAILED: 5 ]
 1. Failure: best_tau works (@test-best_params.R#25) 
 2. Failure: best_l works (@test-best_params.R#61) 
-3. Failure: best_degree works (@test-best_params.R#101) 
+3. Failure: detrending entire derectories works (@test-dir-detrend.R#61) 
 4. Failure: detrending entire derectories works (@test-dir-detrend.R#116) 
+5. Failure: detrending entire derectories works (@test-dir-detrend.R#166) 
 
 Error: testthat unit tests failed
 Execution halted

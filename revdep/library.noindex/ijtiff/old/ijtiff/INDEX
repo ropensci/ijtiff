@@ -4,6 +4,7 @@ display                 Basic image display.
 ijtiff                  'ijtiff': TIFF I/O for _ImageJ_ users
 ijtiff_img              'ijtiff_img' class.
 linescan-conversion     Rejig linescan images.
+print.ijtiff_img        Print method for an 'ijtiff_img'.
 read_tags               Read TIFF tag information without actually
                         reading the image array.
 read_tif                Read an image stored in the TIFF format

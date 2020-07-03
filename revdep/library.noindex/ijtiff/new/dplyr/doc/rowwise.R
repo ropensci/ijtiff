@@ -8,8 +8,8 @@ library(dplyr, warn.conflicts = FALSE)
 ## ----include = FALSE----------------------------------------------------------
 nest_by <- function(df, ...) {
   df %>%
-    group_by(...) %>%
-    summarise(data = list(across())) %>%
+    group_by(...) %>% 
+    summarise(data = list(across())) %>% 
     rowwise(...)
 }
 # mtcars %>% nest_by(cyl)
@@ -20,19 +20,17 @@ df %>% rowwise()
 
 ## -----------------------------------------------------------------------------
 df %>% mutate(m = mean(c(x, y, z)))
-df %>%
-  rowwise() %>%
-  mutate(m = mean(c(x, y, z)))
+df %>% rowwise() %>% mutate(m = mean(c(x, y, z)))
 
 ## -----------------------------------------------------------------------------
 df <- tibble(name = c("Mara", "Hadley"), x = 1:2, y = 3:4, z = 5:6)
 
-df %>%
-  rowwise() %>%
+df %>% 
+  rowwise() %>% 
   summarise(m = mean(c(x, y, z)))
 
-df %>%
-  rowwise(name) %>%
+df %>% 
+  rowwise(name) %>% 
   summarise(m = mean(c(x, y, z)))
 
 ## -----------------------------------------------------------------------------
@@ -51,9 +49,9 @@ rf %>% mutate(total = sum(c_across(w:z)))
 rf %>% mutate(total = sum(c_across(where(is.numeric))))
 
 ## -----------------------------------------------------------------------------
-rf %>%
-  mutate(total = sum(c_across(w:z))) %>%
-  ungroup() %>%
+rf %>% 
+  mutate(total = sum(c_across(w:z))) %>% 
+  ungroup() %>% 
   mutate(across(w:z, ~ . / total))
 
 ## -----------------------------------------------------------------------------
@@ -84,8 +82,8 @@ df %>% mutate(l = sapply(x, length))
 df %>% mutate(l = purrr::map_int(x, length))
 
 ## -----------------------------------------------------------------------------
-df %>%
-  rowwise() %>%
+df %>% 
+  rowwise() %>% 
   mutate(l = length(x))
 
 ## -----------------------------------------------------------------------------
@@ -130,7 +128,7 @@ mods <- mods %>% mutate(pred = list(predict(mod, data)))
 mods
 
 ## -----------------------------------------------------------------------------
-mods %>% summarise(rmse = sqrt(mean((pred - data$mpg)^2)))
+mods %>% summarise(rmse = sqrt(mean((pred - data$mpg) ^ 2)))
 mods %>% summarise(rsq = summary(mod)$r.squared)
 mods %>% summarise(broom::glance(mod))
 
@@ -139,39 +137,39 @@ mods %>% summarise(broom::tidy(mod))
 
 ## -----------------------------------------------------------------------------
 df <- tribble(
-  ~n, ~min, ~max,
-  1, 0, 1,
-  2, 10, 100,
-  3, 100, 1000,
+  ~ n, ~ min, ~ max,
+    1,     0,     1,
+    2,    10,   100,
+    3,   100,  1000,
 )
 
 ## -----------------------------------------------------------------------------
-df %>%
-  rowwise() %>%
+df %>% 
+  rowwise() %>% 
   mutate(data = list(runif(n, min, max)))
 
 ## ---- error = TRUE------------------------------------------------------------
-df %>%
-  rowwise() %>%
+df %>% 
+  rowwise() %>% 
   mutate(data = runif(n, min, max))
 
 ## -----------------------------------------------------------------------------
 df <- expand.grid(mean = c(-1, 0, 1), sd = c(1, 10, 100))
 
-df %>%
-  rowwise() %>%
+df %>% 
+  rowwise() %>% 
   mutate(data = list(rnorm(10, mean, sd)))
 
 ## -----------------------------------------------------------------------------
 df <- tribble(
-  ~rng, ~params,
-  "runif", list(n = 10),
-  "rnorm", list(n = 20),
-  "rpois", list(n = 10, lambda = 5),
+   ~rng,     ~params,
+   "runif",  list(n = 10), 
+   "rnorm",  list(n = 20),
+   "rpois",  list(n = 10, lambda = 5),
 ) %>%
   rowwise()
 
-df %>%
+df %>% 
   mutate(data = list(do.call(rng, params)))
 
 ## ---- include = FALSE, eval = FALSE-------------------------------------------
@@ -181,28 +179,29 @@ df %>%
 #     "rnorm",  list(),
 #     "rpois",  list(lambda = 5),
 #  ))
-#
+#  
 #  # Has to happen in separate function to avoid eager unquoting
 #  f <- function(rng, params) purrr::exec(rng, n = 10, !!!params)
 #  df %>%
 #    mutate(data = list(f(rng, params)))
 
 ## -----------------------------------------------------------------------------
-mtcars %>%
-  group_by(cyl) %>%
+mtcars %>% 
+  group_by(cyl) %>% 
   do(head(., 1))
 
 ## -----------------------------------------------------------------------------
-mtcars %>%
-  group_by(cyl) %>%
+mtcars %>% 
+  group_by(cyl) %>% 
   summarise(head(cur_data(), 1))
 
 ## -----------------------------------------------------------------------------
-mtcars %>%
-  group_by(cyl) %>%
+mtcars %>% 
+  group_by(cyl) %>% 
   do(nrows = nrow(.))
 
 ## -----------------------------------------------------------------------------
-mtcars %>%
-  group_by(cyl) %>%
+mtcars %>% 
+  group_by(cyl) %>% 
   summarise(nrows = nrow(cur_data()))
+

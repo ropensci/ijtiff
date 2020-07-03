@@ -1,3 +1,10 @@
+# `ijtiff` 2.1.0
+
+## NEW FEATURES
+* Add support for images with colormaps (also known as lookup tables (LUTs)).
+* Add a print method for `ijtiff_img`s.
+
+
 # `ijtiff` 2.0.5
 
 ## BUG FIXES

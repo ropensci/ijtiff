@@ -1,16 +1,15 @@
 pkgname <- "detrendr"
 source(file.path(R.home("share"), "R", "examples-header.R"))
 options(warn = 1)
-library("detrendr")
+library('detrendr')
 
-base::assign(".oldSearch", base::search(), pos = "CheckExEnv")
-base::assign(".old_wd", base::getwd(), pos = "CheckExEnv")
+base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
 cleanEx()
 nameEx("best_degree")
 ### * best_degree
 
-flush(stderr())
-flush(stdout())
+flush(stderr()); flush(stdout())
 
 ### Name: best_degree
 ### Title: Find the best polynomial degree for polynomial detrending.
@@ -18,13 +17,13 @@ flush(stdout())
 
 ### ** Examples
 
-## Not run:
-## D ## These examples are not run on CRAN because they take too long.
-## D ## You can still try them for yourself.
-## D img <- ijtiff::read_tif(system.file("extdata", "bleached.tif",
-## D   package = "detrendr"
-## D ))
-## D best_degree(img, parallel = 2)
+## Not run: 
+##D ## These examples are not run on CRAN because they take too long.
+##D ## You can still try them for yourself.
+##D img <- ijtiff::read_tif(system.file("extdata", "bleached.tif",
+##D   package = "detrendr"
+##D ))
+##D best_degree(img, parallel = 2)
 ## End(Not run)
 
 
@@ -33,8 +32,7 @@ cleanEx()
 nameEx("best_l")
 ### * best_l
 
-flush(stderr())
-flush(stdout())
+flush(stderr()); flush(stdout())
 
 ### Name: best_l
 ### Title: Find the best length parameter for boxcar detrending.
@@ -42,13 +40,13 @@ flush(stdout())
 
 ### ** Examples
 
-## Not run:
-## D ## These examples are not run on CRAN because they take too long.
-## D ## You can still try them for yourself.
-## D img <- ijtiff::read_tif(system.file("extdata", "bleached.tif",
-## D   package = "detrendr"
-## D ))
-## D best_l(img, parallel = 2, purpose = "FFS")
+## Not run: 
+##D ## These examples are not run on CRAN because they take too long.
+##D ## You can still try them for yourself.
+##D img <- ijtiff::read_tif(system.file("extdata", "bleached.tif",
+##D   package = "detrendr"
+##D ))
+##D best_l(img, parallel = 2, purpose = "FFS")
 ## End(Not run)
 
 
@@ -58,8 +56,7 @@ cleanEx()
 nameEx("best_swaps")
 ### * best_swaps
 
-flush(stderr())
-flush(stdout())
+flush(stderr()); flush(stdout())
 
 ### Name: best_swaps
 ### Title: Find the best 'swaps' parameter for _Robin Hood_ detrending.
@@ -67,13 +64,13 @@ flush(stdout())
 
 ### ** Examples
 
-## Not run:
-## D ## These examples are not run on CRAN because they take too long.
-## D ## You can still try them for yourself.
-## D img <- ijtiff::read_tif(system.file("extdata", "bleached.tif",
-## D   package = "detrendr"
-## D ))
-## D best_swaps(img)
+## Not run: 
+##D ## These examples are not run on CRAN because they take too long.
+##D ## You can still try them for yourself.
+##D img <- ijtiff::read_tif(system.file("extdata", "bleached.tif",
+##D   package = "detrendr"
+##D ))
+##D best_swaps(img)
 ## End(Not run)
 
 
@@ -83,8 +80,7 @@ cleanEx()
 nameEx("best_tau")
 ### * best_tau
 
-flush(stderr())
-flush(stdout())
+flush(stderr()); flush(stdout())
 
 ### Name: best_tau
 ### Title: Find the best tau parameter for exponential smoothing
@@ -93,13 +89,13 @@ flush(stdout())
 
 ### ** Examples
 
-## Not run:
-## D ## These examples are not run on CRAN because they take too long.
-## D ## You can still try them for yourself.
-## D img <- ijtiff::read_tif(system.file("extdata", "bleached.tif",
-## D   package = "detrendr"
-## D ))[, , 1, ]
-## D best_tau(img, parallel = 2)
+## Not run: 
+##D ## These examples are not run on CRAN because they take too long.
+##D ## You can still try them for yourself.
+##D img <- ijtiff::read_tif(system.file("extdata", "bleached.tif",
+##D   package = "detrendr"
+##D ))[, , 1, ]
+##D best_tau(img, parallel = 2)
 ## End(Not run)
 
 
@@ -109,8 +105,7 @@ cleanEx()
 nameEx("brightness_pillars")
 ### * brightness_pillars
 
-flush(stderr())
-flush(stdout())
+flush(stderr()); flush(stdout())
 
 ### Name: brightness_pillars
 ### Title: Get the brightness of pillars of a 3d array.
@@ -127,8 +122,7 @@ cleanEx()
 nameEx("detrend-directory")
 ### * detrend-directory
 
-flush(stderr())
-flush(stdout())
+flush(stderr()); flush(stdout())
 
 ### Name: detrend-directory
 ### Title: Detrend all TIFF images in an entire folder.
@@ -137,19 +131,19 @@ flush(stdout())
 
 ### ** Examples
 
-## Not run:
-## D setwd(tempdir())
-## D file.copy(
-## D   c(
-## D     system.file("extdata", "bleached.tif", package = "detrendr"),
-## D     system.file("img", "2ch_ij.tif", package = "ijtiff")
-## D   ),
-## D   "."
-## D )
-## D dir_detrend_robinhood(thresh = "huang")
-## D dir_detrend_boxcar(l = "auto", thresh = "tri", purpose = "FFS")
-## D dir_detrend_exp(tau = "auto", thresh = "tri", purpose = "FCS")
-## D dir_detrend_polynom(degree = "auto", thresh = "huang", purpose = "FFS")
+## Not run: 
+##D setwd(tempdir())
+##D file.copy(
+##D   c(
+##D     system.file("extdata", "bleached.tif", package = "detrendr"),
+##D     system.file("img", "2ch_ij.tif", package = "ijtiff")
+##D   ),
+##D   "."
+##D )
+##D dir_detrend_robinhood(thresh = "huang")
+##D dir_detrend_boxcar(l = "auto", thresh = "tri", purpose = "FFS")
+##D dir_detrend_exp(tau = "auto", thresh = "tri", purpose = "FCS")
+##D dir_detrend_polynom(degree = "auto", thresh = "huang", purpose = "FFS")
 ## End(Not run)
 
 
@@ -158,8 +152,7 @@ cleanEx()
 nameEx("detrending")
 ### * detrending
 
-flush(stderr())
-flush(stdout())
+flush(stderr()); flush(stdout())
 
 ### Name: detrending
 ### Title: Detrend images.
@@ -168,22 +161,22 @@ flush(stdout())
 
 ### ** Examples
 
-## Not run:
-## D ## These examples are not run on CRAN because they take too long.
-## D ## You can still try them for yourself.
-## D
-## D img <- ijtiff::read_tif(system.file("extdata", "bleached.tif",
-## D   package = "detrendr"
-## D ))
-## D corrected <- img_detrend_rh(img)
-## D corrected <- img_detrend_boxcar(img, "auto", purpose = "fcs", parallel = 2)
-## D corrected10 <- img_detrend_boxcar(img, 10, purpose = "fcs", parallel = 2)
-## D corrected50 <- img_detrend_boxcar(img, 50, purpose = "fcs", parallel = 2)
-## D corrected <- img_detrend_exp(img, "auto", purpose = "ffs", parallel = 2)
-## D corrected10 <- img_detrend_exp(img, 10, purpose = "ffs", parallel = 2)
-## D corrected50 <- img_detrend_exp(img, 50, purpose = "fcs", parallel = 2)
-## D corrected <- img_detrend_polynom(img, "auto", purpose = "ffs", parallel = 2)
-## D corrected2 <- img_detrend_polynom(img, 2, purpose = "ffs", parallel = 2)
+## Not run: 
+##D ## These examples are not run on CRAN because they take too long.
+##D ## You can still try them for yourself.
+##D 
+##D img <- ijtiff::read_tif(system.file("extdata", "bleached.tif",
+##D   package = "detrendr"
+##D ))
+##D corrected <- img_detrend_rh(img)
+##D corrected <- img_detrend_boxcar(img, "auto", purpose = "fcs", parallel = 2)
+##D corrected10 <- img_detrend_boxcar(img, 10, purpose = "fcs", parallel = 2)
+##D corrected50 <- img_detrend_boxcar(img, 50, purpose = "fcs", parallel = 2)
+##D corrected <- img_detrend_exp(img, "auto", purpose = "ffs", parallel = 2)
+##D corrected10 <- img_detrend_exp(img, 10, purpose = "ffs", parallel = 2)
+##D corrected50 <- img_detrend_exp(img, 50, purpose = "fcs", parallel = 2)
+##D corrected <- img_detrend_polynom(img, "auto", purpose = "ffs", parallel = 2)
+##D corrected2 <- img_detrend_polynom(img, 2, purpose = "ffs", parallel = 2)
 ## End(Not run)
 
 
@@ -192,8 +185,7 @@ cleanEx()
 nameEx("mean_frames")
 ### * mean_frames
 
-flush(stderr())
-flush(stdout())
+flush(stderr()); flush(stdout())
 
 ### Name: mean_frames
 ### Title: Get the sums/means of frames in a 3-dimensional array.
@@ -211,8 +203,7 @@ cleanEx()
 nameEx("pillar-stats")
 ### * pillar-stats
 
-flush(stderr())
-flush(stdout())
+flush(stderr()); flush(stdout())
 
 ### Name: pillar-stats
 ### Title: Get the sums/means/medians/variances of pillars of an
@@ -234,8 +225,7 @@ cleanEx()
 nameEx("rfromboxes")
 ### * rfromboxes
 
-flush(stderr())
-flush(stdout())
+flush(stderr()); flush(stdout())
 
 ### Name: rfromboxes
 ### Title: Randomly draw balls from boxes.
@@ -253,8 +243,7 @@ cleanEx()
 nameEx("rtoboxes")
 ### * rtoboxes
 
-flush(stderr())
-flush(stdout())
+flush(stderr()); flush(stdout())
 
 ### Name: rtoboxes
 ### Title: Randomly place balls in boxes.
@@ -275,11 +264,11 @@ rtoboxes(30, 7,
 ###
 cleanEx()
 options(digits = 7L)
-base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = "CheckExEnv"), "\n")
+base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
 grDevices::dev.off()
 ###
 ### Local variables: ***
 ### mode: outline-minor ***
 ### outline-regexp: "\\(> \\)?### [*]+" ***
 ### End: ***
-quit("no")
+quit('no')

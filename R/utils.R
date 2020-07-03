@@ -54,6 +54,39 @@ compute_desired_plane <- function(arr) {
   extract_desired_plane(arr)
 }
 
+lowest_upper_bound <- function(x, possible_upper_bounds, na_rm = TRUE) {
+  checkmate::assert_numeric(x, min.len = 1)
+  checkmate::assert_numeric(possible_upper_bounds, min.len = 1)
+  checkmate::assert_flag(na_rm)
+  if (anyNA(x) && rlang::is_false(na_rm)) return(NA_real_)
+  mx <- suppressWarnings(max(as.vector(x), na.rm = na_rm))
+  if (is.na(mx) || is.infinite(mx)) return(NA_real_)
+  possible_upper_bounds <- sort(possible_upper_bounds)
+  for (pub in possible_upper_bounds) {
+    if (pub >= mx) return(pub)
+  }
+  return(NA_real_)
+}
+
+fix_res_unit <- function(x) {
+  if ("description" %in% names(attributes(x)) &&
+      startsWith(attr(x, "description"), "ImageJ") &&
+      (is.null(attr(x, "resolution_unit")) ||
+       attr(x, "resolution_unit") == "none") &&
+      stringr::str_detect(attr(x, "description"), "\\sunit=.+\\s")) {
+    attr(x, "resolution_unit") <- stringr::str_match(
+      attr(x, "description"), "\\sunit=([^\\s]+)"
+    )[1, 2]
+  }
+  x
+}
+
+colormap_or_ij_channels <- function(img_lst, prep, d) {
+  weird_ij_channels <- (isTRUE(length(img_lst) == prep$n_imgs) && prep$ij_n_ch)
+  colormap <- (!prep$ij_n_ch && prep$n_ch == 1) && (length(d) > 2)
+  colormap || weird_ij_channels
+}
+
 #' Count the number of frames in a TIFF file.
 #'
 #' TIFF files can hold many frames. Often this is sensible, e.g. each frame
@@ -272,9 +305,8 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
   frames_max <- max(frames)
   n_imgs <- NA_integer_
   n_slices <- NA_integer_
-  n_ch <- 1
   ij_n_ch <- FALSE
-  if ("samples_per_pixel" %in% names(tags1)) n_ch <- tags1$samples_per_pixel
+  n_ch <- tags1$samples_per_pixel %||% 1
   if ("description" %in% names(tags1)) {
     description <- tags1$description
     if (startsWith(description, "ImageJ")) {
@@ -285,11 +317,10 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
       n_imgs <- filesstrings::first_number_after_first(description, "images=")
       n_slices <- filesstrings::first_number_after_first(description, "slices=")
       if (stringr::str_detect(description, "frames=")) {
-        n_frames <- description %>%
-          filesstrings::str_after_first("frames=") %>%
-          filesstrings::first_number()
+        n_frames <- filesstrings::first_number_after_first(description,
+                                                           "frames=")
         if (!is.na(n_slices) && rlang::is_false(n_frames == n_slices)) {
-          if (isTRUE(n_slices == 1) || isTRUE(n_frames) == 1) {
+          if (isTRUE(n_slices == 1) || isTRUE(n_frames == 1)) {
             n_slices <- n_frames <- max(n_slices, n_frames)
           } else {
             custom_stop(

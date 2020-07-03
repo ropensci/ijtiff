@@ -112,8 +112,7 @@ as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
     }
   }
   if (is.null(colormode)) {
-    if (("color_space" %in% names(attributes(img))) &&
-      (attr(img, "color_space") == "RGB")) {
+    if (isTRUE(attr(img, "color_space") == "RGB")) {
       colormode <- "color"
     } else {
       colormode <- dplyr::if_else(dim(img)[3] %in% 3:4, "color", "gray")
@@ -136,24 +135,10 @@ as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
   )
   colormode <- dplyr::if_else(colormode == "Colour", "Color", colormode)
   colormode <- dplyr::if_else(colormode == "Greyscale", "Grayscale", colormode)
-  if (scale && (!all(is.na(img))) && can_be_intish(img)) {
-    if (all(img < 2^8, na.rm = TRUE)) {
-      img %<>% {
-        . / (2^8 - 1)
-      }
-    } else if (all(img < 2^16, na.rm = TRUE)) {
-      img %<>% {
-        . / (2^16 - 1)
-      }
-    } else if (all(img < 2^32, na.rm = TRUE)) {
-      img %<>% {
-        . / (2^32 - 1)
-      }
-    } else {
-      img %<>% {
-        . / max(.)
-      }
-    }
+  if (scale && can_be_intish(img)) {
+    lub <- max(lowest_upper_bound(img, c(2 ^ c(8, 16, 32) - 1)), max(img),
+               na.rm = TRUE)
+    if (!is.na(lub)) img <- img / lub
   }
   img %<>% aperm(c(2, 1, 3, 4))
   if (length(dim(img)) == 4 && dim(img)[3] == 1) dim(img) <- dim(img)[-3]

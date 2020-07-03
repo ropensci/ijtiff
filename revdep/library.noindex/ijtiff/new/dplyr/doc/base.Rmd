@@ -150,13 +150,13 @@ starwars[which(starwars$hair_color == "none" & starwars$eye_color == "black"), ,
 `dplyr::mutate()` creates new variables from existing variables:
 
 ```{r}
-df %>% mutate(z = x + y, z2 = z^2)
+df %>% mutate(z = x + y, z2 = z ^ 2)
 ```
 
 The closest base equivalent is `transform()`, but note that it cannot use freshly created variables:
 
 ```{r}
-head(transform(df, z = x + y, z2 = (x + y)^2))
+head(transform(df, z = x + y, z2 = (x + y) ^ 2))
 ```
 Alternatively, you can use `$<-`:
 
@@ -169,16 +169,16 @@ When applied to a grouped data frame, `dplyr::mutate()` computes new variable on
 
 ```{r}
 gf <- tibble(g = c(1, 1, 2, 2), x = c(0.5, 1.5, 2.5, 3.5))
-gf %>%
-  group_by(g) %>%
+gf %>% 
+  group_by(g) %>% 
   mutate(x_mean = mean(x), x_rank = rank(x))
 ```
 
 To replicate this in base R, you can use `ave()`:
 
 ```{r}
-transform(gf,
-  x_mean = ave(x, g, FUN = mean),
+transform(gf, 
+  x_mean = ave(x, g, FUN = mean), 
   x_rank = ave(x, g, FUN = rank)
 )
 ```
@@ -205,10 +205,10 @@ mtcars$cyl
 
 ```{r}
 # to front
-mtcars %>% relocate(gear, carb)
+mtcars %>% relocate(gear, carb) 
 
 # to back
-mtcars %>% relocate(mpg, cyl, .after = last_col())
+mtcars %>% relocate(mpg, cyl, .after = last_col()) 
 ```
 
 We can replicate this in base R with a little set manipulation:
@@ -300,8 +300,8 @@ Filter(is.factor, iris)
 `dplyr::summarise()` computes one or more summaries for each group:
 
 ```{r}
-mtcars %>%
-  group_by(cyl) %>%
+mtcars %>% 
+  group_by(cyl) %>% 
   summarise(mean = mean(disp), n = n())
 ```
 

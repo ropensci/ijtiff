@@ -49,10 +49,10 @@ starwars[which(starwars$mass > 1000), , drop = FALSE]
 starwars[which(starwars$hair_color == "none" & starwars$eye_color == "black"), , drop = FALSE]
 
 ## -----------------------------------------------------------------------------
-df %>% mutate(z = x + y, z2 = z^2)
+df %>% mutate(z = x + y, z2 = z ^ 2)
 
 ## -----------------------------------------------------------------------------
-head(transform(df, z = x + y, z2 = (x + y)^2))
+head(transform(df, z = x + y, z2 = (x + y) ^ 2))
 
 ## -----------------------------------------------------------------------------
 mtcars$cyl2 <- mtcars$cyl * 2
@@ -60,13 +60,13 @@ mtcars$cyl4 <- mtcars$cyl2 * 2
 
 ## -----------------------------------------------------------------------------
 gf <- tibble(g = c(1, 1, 2, 2), x = c(0.5, 1.5, 2.5, 3.5))
-gf %>%
-  group_by(g) %>%
+gf %>% 
+  group_by(g) %>% 
   mutate(x_mean = mean(x), x_rank = rank(x))
 
 ## -----------------------------------------------------------------------------
-transform(gf,
-  x_mean = ave(x, g, FUN = mean),
+transform(gf, 
+  x_mean = ave(x, g, FUN = mean), 
   x_rank = ave(x, g, FUN = rank)
 )
 
@@ -80,10 +80,10 @@ mtcars$cyl
 
 ## -----------------------------------------------------------------------------
 # to front
-mtcars %>% relocate(gear, carb)
+mtcars %>% relocate(gear, carb) 
 
 # to back
-mtcars %>% relocate(mpg, cyl, .after = last_col())
+mtcars %>% relocate(mpg, cyl, .after = last_col()) 
 
 ## -----------------------------------------------------------------------------
 mtcars[union(c("gear", "carb"), names(mtcars))]
@@ -128,8 +128,8 @@ iris[grep("^Petal", names(iris))]
 Filter(is.factor, iris)
 
 ## -----------------------------------------------------------------------------
-mtcars %>%
-  group_by(cyl) %>%
+mtcars %>% 
+  group_by(cyl) %>% 
   summarise(mean = mean(disp), n = n())
 
 ## -----------------------------------------------------------------------------
@@ -158,3 +158,4 @@ band_members %>% anti_join(band_instruments)
 ## -----------------------------------------------------------------------------
 band_members[band_members$name %in% band_instruments$name, , drop = FALSE]
 band_members[!band_members$name %in% band_instruments$name, , drop = FALSE]
+

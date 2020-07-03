@@ -9,12 +9,20 @@
 #include <Rinternals.h>
 
 // avoid protection issues with setAttrib
-// where new symbols may trigger GC probelms
 static void setAttr(SEXP x, const char *name, SEXP val) {
   PROTECT(val);
   setAttrib(x, Rf_install(name), val);
   UNPROTECT(1);  // UNPROTECT val
 }
+
+// avoid protection issues with setAttrib
+static SEXP getAttr(SEXP x, const char *name) {
+  SEXP attr_name = PROTECT(mkString(name));
+  SEXP out = PROTECT(getAttrib(x, attr_name));
+  UNPROTECT(2);  // UNPROTECT attr_name and out
+  return out;
+}
+
 
 // Add information attributes according to the TIFF tags.
 // Only a somewhat random set (albeit mostly baseline) is supported
@@ -161,7 +169,7 @@ static void TIFF_add_tags(TIFF *tiff, SEXP res) {
     uint16_t *colormap[3] = {0, 0, 0};
     TIFFGetField(tiff, TIFFTAG_COLORMAP, colormap, colormap + 1, colormap + 2);
     if (colormap[0] && colormap[1] && colormap[2]) {
-      SEXP bps_sxp = Rf_getAttrib(res, mkString("bits_per_sample"));
+      SEXP bps_sxp = PROTECT(getAttr(res, "bits_per_sample"));
       if (Rf_xlength(bps_sxp)) {
         uint8_t bps = INTEGER(bps_sxp)[0];
         uint32_t nvals = pow(2, bps) + 0.5;  // careful to avoid rounding error
@@ -184,6 +192,7 @@ static void TIFF_add_tags(TIFF *tiff, SEXP res) {
           UNPROTECT(2);
         }
       }
+      UNPROTECT(1);
     }
   }
 }

@@ -1,5 +1,5 @@
 Library: /Users/rnolan/Dropbox/DPhil/Misc/RStuff/ijtiff/revdep/library.noindex/ijtiff/old
-ijtiff (2.0.5)
+ijtiff (2.1.0)
 
 Library: /Users/rnolan/Dropbox/DPhil/Misc/RStuff/ijtiff/revdep/library.noindex/detrendr
 abind          (1.4-5)

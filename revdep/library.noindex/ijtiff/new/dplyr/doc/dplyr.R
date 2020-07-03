@@ -148,3 +148,4 @@ group_by(starwars, height_binned = cut(height, 3))
 
 ## -----------------------------------------------------------------------------
 group_by(df, "month")
+

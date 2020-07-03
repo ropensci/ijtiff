@@ -79,42 +79,21 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
   if (filesstrings::all_equal(ds)) {
     d <- ds[[1]]
     attrs1 <- attributes(out[[1]])
-    if (((isTRUE(length(out) == prep$n_imgs) && prep$ij_n_ch) ||
-      (!prep$ij_n_ch && prep$n_ch == 1)) && (length(d) > 2)) {
+    if (colormap_or_ij_channels(out, prep, d)) {
       out %<>% purrr::map(compute_desired_plane)
     }
     out %<>% unlist()
-    if (attrs1$sample_format == "uint") {
-      bps <- attrs1$bits_per_sample
-      checkmate::assert_int(bps, lower = 8, upper = 32)
-      max_allowed <- 2^bps - 1
-      if (any(out > max_allowed)) {
-        biggest_offender <- max(out)
-        while (all(out %% (2^bps) == 0)) {
-          out <- out / 2^bps
-        }
-        if (any(out > max_allowed)) {
-          stop(
-            "ijtiff encountered a fatal error trying to read your image.\n",
-            "* Your image is ", bps, "-bit, meaning that the maximum ",
-            "possible value in it is ", 2^bps - 1, ", however ijtiff has ",
-            "managed to read values up to ", biggest_offender,
-            "which is clearly wrong. \n", "Please file a bug at ",
-            "https://github.com/rorynolan/ijtiff/issues ",
-            "and attach the offending image. Sorry and thanks."
-          )
-        }
-      }
-    }
     dim(out) <- c(d[1:2], prep$n_ch, length(out) / prod(c(d[1:2], prep$n_ch)))
-    if ("dim" %in% names(attrs1)) attrs1$dim <- NULL
+    attrs1$dim <- NULL
     do_call_list <- c(list(img = out), attrs1)
     out <- do.call(ijtiff_img, do_call_list)
   }
   if (is.list(out)) {
-    if (list_safety == "error") stop("`read_tif()` tried to return a list.")
-    if (list_safety == "warning") warning("`read_tif()` is returning a list.")
-    if (list_safety == "none") {
+    if (list_safety == "error") {
+      stop("`read_tif()` tried to return a list.")
+    } else if (list_safety == "warning") {
+      warning("`read_tif()` is returning a list.")
+    } else {  # list_safety = "none"
       if (msg) {
         message("Reading a list of images with differing dimensions . . .")
       }
@@ -138,15 +117,7 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
       )
     }
   }
-  if ("description" %in% names(attributes(out)) &&
-      startsWith(attr(out, "description"), "ImageJ") &&
-      (is.null(attr(out, "resolution_unit")) ||
-       attr(out, "resolution_unit") == "none") &&
-      stringr::str_detect(attr(out, "description"), "\\sunit=.+\\s")) {
-    attr(out, "resolution_unit") <- stringr::str_match(
-      attr(out, "description"), "\\sunit=([^\\s]+)"
-    )[1, 2]
-  }
+  out <- fix_res_unit(out)
   if (msg) pretty_msg("\b Done.")
   out
 }

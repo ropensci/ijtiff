@@ -1,7 +1,8 @@
 Library: /Users/rnolan/Dropbox/DPhil/Misc/RStuff/ijtiff/revdep/library.noindex/ijtiff/new
 backports (1.1.8)
 dplyr     (1.0.0)
-ijtiff    (2.1.0)
+fs        (1.4.1)
+ijtiff    (2.1.1)
 vctrs     (0.3.1)
 
 Library: /Users/rnolan/Dropbox/DPhil/Misc/RStuff/ijtiff/revdep/library.noindex/autothresholdr
