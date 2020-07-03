@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Basic image display. — display • ijtiff</title>
+<title>Print method for an <code>ijtiff_img</code>. — print.ijtiff_img • ijtiff</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,10 +46,8 @@
 
 
 
-<meta property="og:title" content="Basic image display. — display" />
-<meta property="og:description" content="Display an image that has been read in by read_tif() as it would look in
-'ImageJ'. This function is really just EBImage::display() on the inside. If
-you do not have EBImage installed, a more basic display is offered." />
+<meta property="og:title" content="Print method for an <code>ijtiff_img</code>. — print.ijtiff_img" />
+<meta property="og:description" content="Print method for an ijtiff_img." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -134,55 +132,35 @@ you do not have EBImage installed, a more basic display is offered." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Basic image display.</h1>
+    <h1>Print method for an <code>ijtiff_img</code>.</h1>
     
-    <div class="hidden name"><code>display.Rd</code></div>
+    <div class="hidden name"><code>print.ijtiff_img.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Display an image that has been read in by <code>read_tif()</code> as it would look in
-'ImageJ'. This function is really just <code><a href='https://rdrr.io/pkg/EBImage/man/display.html'>EBImage::display()</a></code> on the inside. If
-you do not have <code>EBImage</code> installed, a more basic display is offered.</p>
+    <p>Print method for an <code>ijtiff_img</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>display</span>(<span class='kw'>img</span>, method = <span class='kw'>NULL</span>, basic = <span class='fl'>FALSE</span>, normalize = <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='co'># S3 method for ijtiff_img</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>img</th>
-      <td><p>An ijtiff_img object.</p></td>
+      <th>x</th>
+      <td><p>An object of class ijtiff_img.</p></td>
     </tr>
     <tr>
-      <th>method</th>
-      <td><p>The way of displaying images. Defaults to "browser" when R is
-used interactively, and to "raster" otherwise. The default behavior can be
-overridden by setting options("EBImage.display"). This has no effect when
-<code>basic = TRUE</code>.</p></td>
-    </tr>
-    <tr>
-      <th>basic</th>
-      <td><p>Force the basic (non-<code>EBImage</code>) display.</p></td>
-    </tr>
-    <tr>
-      <th>normalize</th>
-      <td><p>Normalize the image before displaying (for better contrast)?
-This only has an effect if the EBImage functionality is used. The basic
-display always normalizes.</p></td>
+      <th>...</th>
+      <td><p>Not currently used.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='kw'>img</span> <span class='op'>&lt;-</span> <span class='fu'>read_tif</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, package = <span class='st'>"ijtiff"</span>))
-<span class='fu'>display</span>(<span class='kw'>img</span>)
-<span class='fu'>display</span>(<span class='kw'>img</span>[, , <span class='fl'>1</span>, <span class='fl'>1</span>]) <span class='co'># first (red) channel, first frame</span>
-<span class='fu'>display</span>(<span class='kw'>img</span>[, , <span class='fl'>2</span>, ]) <span class='co'># second (green) channel, first frame</span>
-<span class='fu'>display</span>(<span class='kw'>img</span>[, , <span class='fl'>3</span>, ]) <span class='co'># third (blue) channel, first frame</span>
-<span class='fu'>display</span>(<span class='kw'>img</span>, basic = <span class='fl'>TRUE</span>) <span class='co'># displays first (red) channel, first frame</span>
-}</div></pre>
+    <p>The input (invisibly).</p>
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
