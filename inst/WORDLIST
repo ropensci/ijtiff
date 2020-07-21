@@ -25,7 +25,6 @@ ImageJ
 ImageJ's
 img
 imgs
-io
 JBIG
 libtiff
 lifecycle
@@ -35,6 +34,7 @@ Messasges
 nd
 nih
 PLANARCONFIG
+PROTECTion
 Rdocumentation
 README
 repo

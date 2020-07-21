@@ -1,7 +1,13 @@
+# `ijtiff` 2.1.2
+
+## BUG FIXES
+* Fix some typos in the vignettes.
+
+
 # `ijtiff` 2.1.1
 
 ## BUG FIXES
-* Fix a protection error.
+* Fix a PROTECTion error.
 
 
 # `ijtiff` 2.1.0
