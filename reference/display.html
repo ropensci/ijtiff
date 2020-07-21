@@ -82,7 +82,7 @@ you do not have EBImage installed, a more basic display is offered." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.2</span>
       </span>
     </div>
 
@@ -140,7 +140,7 @@ you do not have EBImage installed, a more basic display is offered." />
     </div>
 
     <div class="ref-description">
-    <p>Display an image that has been read in by <code>read_tif()</code> as it would look in
+    <p>Display an image that has been read in by <code><a href='read_tif.html'>read_tif()</a></code> as it would look in
 'ImageJ'. This function is really just <code><a href='https://rdrr.io/pkg/EBImage/man/display.html'>EBImage::display()</a></code> on the inside. If
 you do not have <code>EBImage</code> installed, a more basic display is offered.</p>
     </div>
@@ -152,7 +152,7 @@ you do not have <code>EBImage</code> installed, a more basic display is offered.
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>img</th>
-      <td><p>An ijtiff_img object.</p></td>
+      <td><p>An <a href='ijtiff_img.html'>ijtiff_img</a> object.</p></td>
     </tr>
     <tr>
       <th>method</th>
@@ -176,7 +176,7 @@ display always normalizes.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='kw'>img</span> <span class='op'>&lt;-</span> <span class='fu'>read_tif</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, package = <span class='st'>"ijtiff"</span>))
+<span class='kw'>img</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_tif.html'>read_tif</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, package = <span class='st'>"ijtiff"</span>))
 <span class='fu'>display</span>(<span class='kw'>img</span>)
 <span class='fu'>display</span>(<span class='kw'>img</span>[, , <span class='fl'>1</span>, <span class='fl'>1</span>]) <span class='co'># first (red) channel, first frame</span>
 <span class='fu'>display</span>(<span class='kw'>img</span>[, , <span class='fl'>2</span>, ]) <span class='co'># second (green) channel, first frame</span>

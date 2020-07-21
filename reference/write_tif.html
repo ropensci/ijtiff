@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.2</span>
       </span>
     </div>
 
@@ -168,7 +168,7 @@
 <li><p>For a
 multi-plane, grayscale image, use a 3-dimensional array <code>img[y, x, plane]</code>.</p></li>
 <li><p>For a multi-channel, single-plane image, use a 4-dimensional array
-with a redundant 4th slot <code>img[y, x, channel, ]</code> (see ijtiff_img
+with a redundant 4th slot <code>img[y, x, channel, ]</code> (see <a href='ijtiff_img.html'>ijtiff_img</a>
 'Examples' for an example).</p></li>
 <li><p>For a multi-channel, multi-plane image,
 use a 4-dimensional array <code>img[y, x, channel, plane]</code>.</p></li>
@@ -211,7 +211,7 @@ proceed?</p></td>
     <p>The input <code>img</code> (invisibly).</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code>read_tif()</code></p></div>
+    <div class='dont-index'><p><code><a href='read_tif.html'>read_tif()</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Simon Urbanek wrote most of this code for the 'tiff' package. Rory
@@ -220,7 +220,7 @@ package. Credit should be directed towards Lord Urbanek.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='kw'>img</span> <span class='op'>&lt;-</span> <span class='fu'>read_tif</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, package = <span class='st'>"ijtiff"</span>))
+<span class='kw'>img</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_tif.html'>read_tif</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, package = <span class='st'>"ijtiff"</span>))
 <span class='kw'>temp_dir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>()
 <span class='fu'>write_tif</span>(<span class='kw'>img</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='kw'>temp_dir</span>, <span class='st'>"/"</span>, <span class='st'>"Rlogo"</span>))
 <span class='kw'>img</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span>, nrow = <span class='fl'>2</span>)

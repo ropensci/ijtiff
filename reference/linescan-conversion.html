@@ -85,7 +85,7 @@ and to convert back." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.2</span>
       </span>
     </div>
 
@@ -143,11 +143,11 @@ and to convert back." />
     </div>
 
     <div class="ref-description">
-    <p><code>ijtiff</code> has the fourth dimension of an ijtiff_img as its time dimension.
+    <p><code>ijtiff</code> has the fourth dimension of an <a href='ijtiff_img.html'>ijtiff_img</a> as its time dimension.
 However, some linescan images (images where a single line of pixels is
 acquired over and over) have the time dimension as the y dimension, (to avoid
 the need for an image stack). These functions allow one to convert this type
-of image into a conventional ijtiff_img (with time in the fourth dimension)
+of image into a conventional <a href='ijtiff_img.html'>ijtiff_img</a> (with time in the fourth dimension)
 and to convert back.</p>
     </div>
 
@@ -165,17 +165,17 @@ axis. Dimension 4 must be 1 i.e. <code>dim(linescan_img)[4] == 1</code>.</p></td
     </tr>
     <tr>
       <th>img</th>
-      <td><p>A conventional ijtiff_img, to be turned into a linescan image.
+      <td><p>A conventional <a href='ijtiff_img.html'>ijtiff_img</a>, to be turned into a linescan image.
 Dimension 1 must be 1 i.e. <code>dim(img)[1] == 1</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The converted image, an object of class ijtiff_img.</p>
+    <p>The converted image, an object of class <a href='ijtiff_img.html'>ijtiff_img</a>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>linescan</span> <span class='op'>&lt;-</span> <span class='fu'>ijtiff_img</span>(<span class='fu'><a href='https://rdrr.io/r/base/array.html'>array</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span>, each = <span class='fl'>4</span>), dim = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>1</span>, <span class='fl'>1</span>)))
+    <pre class="examples"><div class='input'><span class='kw'>linescan</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ijtiff_img.html'>ijtiff_img</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/array.html'>array</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span>, each = <span class='fl'>4</span>), dim = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>1</span>, <span class='fl'>1</span>)))
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>linescan</span>)</div><div class='output co'>#&gt; <span class='message'>4x4 pixel ijtiff_img with 1 channel and 1 frame.</span></div><div class='output co'>#&gt; <span class='message'>Preview (top left of first channel of first frame):</span></div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4]
 #&gt; [1,]    1    2    3    4
 #&gt; [2,]    1    2    3    4
