@@ -406,6 +406,7 @@ test_that("reading certain frames works", {
 })
 
 test_that("Reading Mathieu's files works", {
+  skip_if(win32bit())
   hs <- read_tif(test_path("testthat-figs", "HyperStack.tif"))
   expect_equal(dim(hs), c(300, 400, 6, 12))
   expect_equal(dim(attr(hs, "color_map")), c(256, 3))

@@ -1,3 +1,9 @@
+# `ijtiff` 2.1.3
+
+## BUG FIXES
+* Fix tests by making use of `testthat::test_path()`.
+
+
 # `ijtiff` 2.1.2
 
 ## BUG FIXES
