@@ -1,3 +1,0 @@
-> print(read_tif(system.file("img", "Rlogo-banana-red.tif", package = "ijtiff")))
-Error in prep_path(.): Assertion on 'path' failed: File does not exist: ''.
-

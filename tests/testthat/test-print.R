@@ -1,9 +1,8 @@
 test_that("print method works", {
   verify_output(
-    test_path("printing_of_Rlogo-banana-red.txt"),
+    test_path("testthat-files", "printing_of_Rlogo-banana.txt"),
     print(
-      read_tif(system.file("img", "Rlogo-banana-red.tif",
-                           package = "ijtiff"))
+      read_tif(test_path("testthat-figs", "Rlogo-banana-red.tif"))
     )
   )
 })

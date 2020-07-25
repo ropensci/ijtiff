@@ -39,102 +39,48 @@
 write_tif <- function(img, path, bits_per_sample = "auto",
                       compression = "none", overwrite = FALSE, msg = TRUE) {
   err_on_win32bit("write_tif")
-  checkmate::assert_string(path)
-  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/") # windows safe
+  to_invisibly_return <- img
+  c(img, path, bits_per_sample, compression, overwrite, msg) %<-%
+    argchk_write_tif(
+      img = img, path = path, bits_per_sample = bits_per_sample,
+      compression = compression, overwrite = overwrite, msg = msg
+    )[c("img", "path", "bits_per_sample", "compression", "overwrite", "msg")]
   if (stringr::str_detect(path, "/")) {
     # write_tif() sometimes fails when writing to far away directories
-    if (endsWith(path, "/")) custom_stop("`path` cannot end with '/'.")
     tiff_dir <- filesstrings::str_before_last(path, "/")
     checkmate::assert_directory_exists(tiff_dir)
     path %<>% filesstrings::str_after_last("/")
     withr::local_dir(tiff_dir)
   }
-  to_invisibly_return <- img
-  checkmate::assert_scalar(bits_per_sample)
-  checkmate::assert(
-    checkmate::check_string(bits_per_sample),
-    checkmate::check_int(bits_per_sample)
-  )
-  if (isTRUE(checkmate::check_string(bits_per_sample))) {
-    if (startsWith("auto", tolower(bits_per_sample))) {
-      bits_per_sample <- "auto"
-    } else {
+  d <- dim(img)
+  floats <- anyNA(img) || (!filesstrings::all_equal(img, floor(img)))
+  if ((!floats) && any(img < 0)) {
+    if (min(img) < -float_max()) {
+      custom_stop(
+        "The lowest allowable negative value in `img` is {-float_max()}.",
+        "The lowest value in your `img` is {min(img)}.",
+        "
+         The `write_txt_img()` function allows you to write images without
+         restriction on the values therein. Maybe you should try that?
+        "
+      )
+    } else if (max(img) > float_max()) {
       custom_stop(
         "
-         If `bits_per_sample` is a string, then 'auto' is the only
-         allowable value.
+         If `img` has negative values (which the input `img` does),
+         then the maximum allowed positive value is {float_max()}.
         ",
-        "You have used '{bits_per_sample}'."
+        "The largest value in your `img` is {max(img)}.",
+        "
+         The `write_txt_img()` function allows you to write images without
+         restriction on the values therein. Maybe you should try that?
+        "
       )
     }
-  } else {
-    if (!bits_per_sample %in% c(8, 16, 32)) {
-      custom_stop(
-        "If specifying `bits_per_sample`, it must be one of 8, 16 or 32.",
-        "You have used `bits_per_sample = {bits_per_sample}`."
-      )
-    }
+    floats <- TRUE
   }
-  checkmate::assert_string(compression)
-  if (endsWith(tolower(path), ".tiff") || endsWith(tolower(path), ".tif")) {
-    path <- paste0(filesstrings::before_last_dot(path), ".tif")
-  }
-  path %<>% filesstrings::give_ext("tif")
-  if (file.exists(path) && overwrite == FALSE) {
-    custom_stop(
-      "The file {path}, already exists and `overwrite` is set to `FALSE`.",
-      "To enable overwriting, use `overwrite = TRUE`."
-    )
-  }
-  checkmate::assert_array(img)
-  checkmate::assert_array(img, min.d = 2, max.d = 4)
-  checkmate::assert_numeric(img)
-  img %<>% ijtiff_img()
-  d <- dim(img)
-  compressions <- c(
-    none = 1L, RLE = 2L, LZW = 5L, PackBits = 32773L, JPEG = 7L,
-    deflate = 8L, Zip = 8L
-  )
-  compression %<>% filesstrings::match_arg(names(compressions),
-    ignore_case = TRUE
-  ) %>% {
-    compressions[match(., names(compressions))]
-  }
-  floats <- FALSE
-  if (anyNA(img)) floats <- TRUE
-  if (!floats) if (!filesstrings::all_equal(img, floor(img))) floats <- TRUE
-  if (!floats) {
-    if (any(img < 0)) {
-      if (min(img) < -float_max()) {
-        custom_stop(
-          "The lowest allowable negative value in `img` is {-float_max()}.",
-          "The lowest value in your `img` is {min(img)}.",
-          "
-           The `write_txt_img()` function allows you to write images without
-           restriction on the values therein. Maybe you should try that?
-          "
-        )
-      }
-      if (max(img) > float_max()) {
-        custom_stop(
-          "
-           If `img` has negative values (which the input `img` does),
-           then the maximum allowed positive value is {float_max()}.
-          ",
-          "The largest value in your `img` is {max(img)}.",
-          "
-           The `write_txt_img()` function allows you to write images without
-           restriction on the values therein. Maybe you should try that?
-          "
-        )
-      }
-      floats <- TRUE
-    }
-  }
-  if (is.integer(img)) {
-    img %<>% as.numeric() # The C function needs img to be numeric
-    dim(img) <- d
-  }
+  img %<>% as.numeric() # The C function needs img to be numeric
+  dim(img) <- d
   if (floats) {
     checkmate::assert_numeric(img,
       lower = -float_max(),
@@ -164,12 +110,16 @@ write_tif <- function(img, path, bits_per_sample = "auto",
          restriction on the values therein. Maybe you should try that?
         "
       )
-    } else if (mx > 2^16 - 1) {
-      ideal_bps <- 32
-    } else if (mx > 2^8 - 1) {
-      ideal_bps <- 16
+    } else {
+      ideal_bps <- dplyr::case_when(
+        mx > 2^16 - 1 ~ 32,
+        mx > 2^8 - 1 ~ 16,
+        TRUE ~ ideal_bps
+      )
     }
-    if (bits_per_sample == "auto") bits_per_sample <- ideal_bps
+    bits_per_sample <- ifelse(bits_per_sample == "auto",
+      ideal_bps, bits_per_sample
+    )
     if (bits_per_sample < ideal_bps) {
       custom_stop("
          You are trying to write a {bits_per_sample}-bit image,

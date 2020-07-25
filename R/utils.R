@@ -1,19 +1,58 @@
+#' Prep an [ijtiff_img]-style array for `write_tif_C()`.
+#'
+#' It has to be a list of 3-dimensional arrays. Heavy lifting done in C++ by
+#' `enlist_img_cpp()`.
+#'
+#' @param img An [ijtiff_img]-style array.
+#'
+#' @return A list.
+#'
+#' @noRd
 enlist_img <- function(img) {
   checkmate::assert_numeric(img)
   checkmate::assert_array(img, d = 4)
   enlist_img_cpp(img)
 }
 
+#' Calculate [dim()] on every element in a list.
+#'
+#' @param lst A list.
+#'
+#' @return A list.
+#'
+#' @noRd
 dims <- function(lst) {
   checkmate::assert_list(lst)
   dims_cpp(lst)
 }
 
-enlist_planes <- function(arr) {
-  checkmate::assert_array(arr, d = 3)
-  purrr::map(seq_len(dim(arr)[3]), ~ arr[, , .])
+#' Split the planes of a 3D array into a list.
+#'
+#' Planes are along the 3rd dimension.
+#'
+#' @param arr3d A 3D array.
+#'
+#' @return A list of 2D arrays.
+#'
+#' @noRd
+enlist_planes <- function(arr3d) {
+  checkmate::assert_array(arr3d, d = 3)
+  out <- purrr::map(seq_len(dim(arr3d)[3]), ~ arr3d[, , ., drop = FALSE])
+  for (i in seq_along(out)) dim(out) <- dim(out)[1:2]
+  out
 }
 
+#' Extract the appropriate plane.
+#'
+#' Sometimes the TIFF reading is weird and you get more planes than you wanted,
+#' but one of them is clearly the right one. This function will pluck that out
+#' for you.
+#'
+#' @param arr An array. Mostly 3D. If 2D, input is returned.
+#'
+#' @return A 2D array.
+#'
+#' @noRd
 extract_desired_plane <- function(arr) {
   checkmate::assert_array(arr, min.d = 2, max.d = 3)
   d <- dim(arr)
@@ -44,6 +83,18 @@ extract_desired_plane <- function(arr) {
   arr
 }
 
+#' Compute the desired plane.
+#'
+#' This function wraps [extract_desired_plane()]. Sometimes the TIFF reading is
+#' weird and you get more planes than you wanted, but one of them is clearly the
+#' right one. This function will pluck that out for you. If the images have a
+#' color palette, that conversion takes place here too.
+#'
+#' @inheritParams extract_desired_plane
+#'
+#' @return A 2D array.
+#'
+#' @noRd
 compute_desired_plane <- function(arr) {
   atts <- attributes(arr)
   att_names <- names(atts)
@@ -54,26 +105,52 @@ compute_desired_plane <- function(arr) {
   extract_desired_plane(arr)
 }
 
+#' Find the lowest number that is bigger than all the elements in `x`.
+#'
+#' @param x A numeric vector.
+#' @param possible_upper_bounds A numeric vector.
+#' @param na_rm Ignore `NA`s?
+#'
+#' @return A number.
+#'
+#' @noRd
 lowest_upper_bound <- function(x, possible_upper_bounds, na_rm = TRUE) {
   checkmate::assert_numeric(x, min.len = 1)
   checkmate::assert_numeric(possible_upper_bounds, min.len = 1)
   checkmate::assert_flag(na_rm)
-  if (anyNA(x) && rlang::is_false(na_rm)) return(NA_real_)
+  if (anyNA(x) && rlang::is_false(na_rm)) {
+    return(NA_real_)
+  }
   mx <- suppressWarnings(max(as.vector(x), na.rm = na_rm))
-  if (is.na(mx) || is.infinite(mx)) return(NA_real_)
+  if (is.na(mx) || is.infinite(mx)) {
+    return(NA_real_)
+  }
   possible_upper_bounds <- sort(possible_upper_bounds)
   for (pub in possible_upper_bounds) {
-    if (pub >= mx) return(pub)
+    if (pub >= mx) {
+      return(pub)
+    }
   }
   return(NA_real_)
 }
 
+#' Fix the resolution unit if necessary.
+#'
+#' The resolution unit is another thing that ImageJ sometimes decides to record
+#' in `TIFFTAG_DESCRIPTION` so needs to be allowed for.
+#'
+#' @param x An [ijtiff_img] which optionally has a `description` attribute with
+#'   the contents of `TIFFTAG_DESCRIPTION`.
+#'
+#' @return An [ijtiff_img].
+#'
+#' @noRd
 fix_res_unit <- function(x) {
   if ("description" %in% names(attributes(x)) &&
-      startsWith(attr(x, "description"), "ImageJ") &&
-      (is.null(attr(x, "resolution_unit")) ||
-       attr(x, "resolution_unit") == "none") &&
-      stringr::str_detect(attr(x, "description"), "\\sunit=.+\\s")) {
+    startsWith(attr(x, "description"), "ImageJ") &&
+    (is.null(attr(x, "resolution_unit")) ||
+      attr(x, "resolution_unit") == "none") &&
+    stringr::str_detect(attr(x, "description"), "\\sunit=.+\\s")) {
     attr(x, "resolution_unit") <- stringr::str_match(
       attr(x, "description"), "\\sunit=([^\\s]+)"
     )[1, 2]
@@ -81,6 +158,16 @@ fix_res_unit <- function(x) {
   x
 }
 
+#' Does the object read by `read_tif_C()` have a colormap or channels specified
+#' in the weird ImageJ way?
+#'
+#' @param img_lst A list. The output of `read_tif_C()`.
+#' @param prep The output of a call to `prep_read()`.
+#' @param d The dimension of the images in `img_lst`.
+#'
+#' @return A flag.
+#'
+#' @noRd
 colormap_or_ij_channels <- function(img_lst, prep, d) {
   weird_ij_channels <- (isTRUE(length(img_lst) == prep$n_imgs) && prep$ij_n_ch)
   colormap <- (!prep$ij_n_ch && prep$n_ch == 1) && (length(d) > 2)
@@ -128,14 +215,33 @@ frames_count <- function(path) {
   count_frames(path = path)
 }
 
+#' Check if a package is installed.
+#'
+#' @param package A string. The name of a package.
+#'
+#' @return A flag.
+#'
+#' @noRd
 is_installed <- function(package) {
   checkmate::assert_string(package)
   installed_packages <- rownames(utils::installed.packages())
   package %in% installed_packages
 }
 
+#' Is a numeric vector equal to its floor.
+#'
+#' @param x A numeric vector.
+#'
+#' @return A flag.
+#'
+#' @noRd
 can_be_intish <- function(x) filesstrings::all_equal(x, floor(x))
 
+#' A message to tell the user to install EBImage.
+#'
+#' @return A string.
+#'
+#' @noRd
 ebimg_install_msg <- function() {
   paste0(
     "  * To install `EBImage`:", "\n",
@@ -246,9 +352,7 @@ pretty_msg <- function(...) {
 tif_tags_reference <- function() {
   "TIFF_tags.csv" %>%
     system.file("extdata", ., package = "ijtiff") %>%
-    {
-      suppressMessages(readr::read_csv(.))
-    }
+    readr::read_csv(., col_types = readr::cols())
 }
 
 #' Check that the `frames` argument has been passed correctly.
@@ -276,6 +380,89 @@ prep_frames <- function(frames) {
   frames
 }
 
+#' Calculate the number of slices from an ImageJ `TIFFTAG_DESCRIPTION`.
+#'
+#' @param ij_description A string.
+#'
+#' @return A number.
+#'
+#' @noRd
+calculate_n_slices <- function(ij_description) {
+  n_slices <- filesstrings::first_number_after_first(ij_description, "slices=")
+  if (stringr::str_detect(ij_description, "frames=")) {
+    n_frames <- filesstrings::first_number_after_first(
+      ij_description,
+      "frames="
+    )
+    if (!is.na(n_slices) && rlang::is_false(n_frames == n_slices)) {
+      if (isTRUE(n_slices == 1) || isTRUE(n_frames == 1)) {
+        n_slices <- n_frames <- max(n_slices, n_frames)
+      } else {
+        custom_stop(
+          "
+            The ImageJ-written image you're trying to read says it has
+            {n_frames} frames AND {n_slices} slices.
+            ", "
+            To be read by the `ijtiff` package, the number of slices OR the
+            number of frames should be specified in the TIFFTAG_DESCRIPTION
+            and they're interpreted as the same thing. It does not make sense
+            for them to be different numbers.
+            "
+        )
+      }
+    }
+    n_slices <- n_frames
+  }
+  n_slices
+}
+
+#' Extract info from an ImageJ-style `TIFFTAG_DESCRIPTION`.
+#'
+#' @inheritParams prep_read
+#'
+#' @return A named list with elements `n_imgs`, `n_slices`, `ij_n_ch`, `n_ch`.
+#'
+#' @noRd
+translate_ij_description <- function(tags1) {
+  n_imgs <- NA_integer_
+  n_slices <- NA_integer_
+  ij_n_ch <- FALSE
+  n_ch <- tags1$samples_per_pixel %||% 1
+  if ("description" %in% names(tags1) &&
+    startsWith(tags1$description, "ImageJ")) {
+    ij_description <- tags1$description
+    if (stringr::str_detect(ij_description, "channels=")) {
+      n_ch <- filesstrings::first_number_after_first(
+        ij_description,
+        "channels="
+      )
+      ij_n_ch <- TRUE
+    }
+    n_imgs <- filesstrings::first_number_after_first(ij_description, "images=")
+    n_slices <- calculate_n_slices(ij_description)
+    if ((!is.na(n_slices) && !is.na(n_imgs)) &&
+      ij_n_ch &&
+      n_imgs != n_ch * n_slices) {
+      custom_stop(
+        "
+        The ImageJ-written image you're trying to read says in its
+        TIFFTAG_DESCRIPTION that it has {n_imgs} images of
+        {n_slices} slices of {n_ch} channels. However, with {n_slices}
+        slices of {n_ch} channels, one would expect there to be
+        {n_slices} x {n_ch} = {n_ch * n_slices} images.
+        ", "
+        This discrepancy means that the `ijtiff` package can't read your
+        image correctly.
+        ", "
+        One possible source of this kind of error is that your image
+        is temporal and volumetric. `ijtiff` can handle either
+        time-based or volumetric stacks, but not both."
+      )
+    }
+  }
+  list(n_imgs = n_imgs, n_slices = n_slices, ij_n_ch = ij_n_ch, n_ch = n_ch)
+}
+
 #' Get information necessary for reading the image.
 #'
 #' While doing so, perform a check to see if the requested frames exist.
@@ -287,80 +474,27 @@ prep_frames <- function(frames) {
 #' @param tags Are we prepping the read of just tags (`TRUE`) or an image
 #'   (`FALSE`).
 #'
-#' @return A list with seven elements. \itemize{\item{`frames` is the adjusted
-#'   frame numbers (allowing for _ImageJ_  stuff), unique and sorted.}
-#'   \item{`back_map` is a mapping from `frames` back to its non-unique,
-#'   unsorted original; that would be `frames[back_map]`.} \item{`n_ch` is the
-#'   number of channels} \item{`n_dirs` is the number of directories in the TIFF
-#'   image.} \item{`n_slices` is the number of slices in the TIFF file. For
-#'   most, this is the same as `n_dirs` but for ImageJ-written images it can be
-#'   different.} \item{`n_imgs` is the number of images according to the ImageJ
-#'   `TIFFTAG_DESCRIPTION`. If not specified, it's `NA`.} \item{`ij_n_ch` is
-#'   `TRUE` if the number of channels was specified in the ImageJ
-#'   `TIFFTAG_DESCRIPTION`, otherwise `FALSE`.}}
+#' @return A list with seven elements.
+#' * `frames` is the adjusted frame numbers (allowing for _ImageJ_  stuff),
+#'  unique and sorted.
+#' * `back_map` is a mapping from `frames` back to its non-unique, unsorted
+#'  original; that would be `frames[back_map]`.
+#'  * `n_ch` is the number of channels.
+#'  * `n_dirs` is the number of directories in the TIFF image.
+#'  * `n_slices` is the number of slices in the TIFF file. For most, this is the
+#'   same as `n_dirs` but for ImageJ-written images it can be different.
+#'  * `n_imgs` is the number of images according to the ImageJ
+#'   `TIFFTAG_DESCRIPTION`. If not specified, it's `NA`.
+#'  * `ij_n_ch` is `TRUE` if the number of channels was specified in the ImageJ
+#'   `TIFFTAG_DESCRIPTION`, otherwise `FALSE`.
 #'
 #' @noRd
 prep_read <- function(path, frames, tags1, tags = FALSE) {
   frames %<>% prep_frames()
   frames_max <- max(frames)
-  n_imgs <- NA_integer_
-  n_slices <- NA_integer_
-  ij_n_ch <- FALSE
-  n_ch <- tags1$samples_per_pixel %||% 1
-  if ("description" %in% names(tags1)) {
-    description <- tags1$description
-    if (startsWith(description, "ImageJ")) {
-      if (stringr::str_detect(description, "channels=")) {
-        n_ch <- filesstrings::first_number_after_first(description, "channels=")
-        ij_n_ch <- TRUE
-      }
-      n_imgs <- filesstrings::first_number_after_first(description, "images=")
-      n_slices <- filesstrings::first_number_after_first(description, "slices=")
-      if (stringr::str_detect(description, "frames=")) {
-        n_frames <- filesstrings::first_number_after_first(description,
-                                                           "frames=")
-        if (!is.na(n_slices) && rlang::is_false(n_frames == n_slices)) {
-          if (isTRUE(n_slices == 1) || isTRUE(n_frames == 1)) {
-            n_slices <- n_frames <- max(n_slices, n_frames)
-          } else {
-            custom_stop(
-              "
-              The ImageJ-written image you're trying to read says it has
-              {n_frames} frames AND {n_slices} slices.
-              ", "
-              To be read by the `ijtiff` package, the number of slices OR the
-              number of frames should be specified in the TIFFTAG_DESCRIPTION
-              and they're interpreted as the same thing. It does not make sense
-              for them to be different numbers.
-              "
-            )
-          }
-        }
-        n_slices <- n_frames
-      }
-      if (!is.na(n_slices) && !is.na(n_imgs)) {
-        if (ij_n_ch) {
-          if (n_imgs != n_ch * n_slices) {
-            custom_stop(
-              "
-              The ImageJ-written image you're trying to read says in its
-              TIFFTAG_DESCRIPTION that it has {n_imgs} images of
-              {n_slices} slices of {n_ch} channels. However, with {n_slices}
-              slices of {n_ch} channels, one would expect there to be
-              {n_slices} x {n_ch} = {n_ch * n_slices} images.
-              ", "
-              This discrepancy means that the `ijtiff` package can't read your
-              image correctly.
-              ", "
-              One possible source of this kind of error is that your image
-              is temporal and volumetric. `ijtiff` can handle either
-              time-based or volumetric stacks, but not both."
-            )
-          }
-        }
-      }
-    }
-  }
+  c(n_imgs, n_slices, ij_n_ch, n_ch) %<-% translate_ij_description(
+    tags1
+  )[c("n_imgs", "n_slices", "ij_n_ch", "n_ch")]
   path %<>% prep_path()
   withr::local_dir(attr(path, "path_dir"))
   n_dirs <- .Call("count_directories_C", path, PACKAGE = "ijtiff")
@@ -387,11 +521,13 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
             "Its TIFFTAG_DESCRIPTION indicates that it holds {n_imgs} images."
           )
         }
-        framesxnch <- frames * n_ch
         if (tags) {
           frames <- frames * n_ch - (n_ch - 1)
         } else {
-          frames <- purrr::map(framesxnch, ~ .x - rev((seq_len(n_ch) - 1))) %>%
+          frames <- purrr::map(
+            frames * n_ch,
+            ~ .x - rev((seq_len(n_ch) - 1))
+          ) %>%
             unlist()
         }
       }
@@ -452,9 +588,7 @@ custom_stop_bullet <- function(string) {
   checkmate::assert_string(string)
   string %>%
     stringr::str_replace_all("\\s+", " ") %>%
-    {
-      stringr::str_glue("    * {.}")
-    }
+    paste("    *", .)
 }
 
 #' Nicely formatted error message.
@@ -489,6 +623,13 @@ custom_stop <- function(main_message, ..., .envir = parent.frame()) {
   rlang::abort(stringr::str_c(out, collapse = "\n"))
 }
 
+#' Check if EBImage is installed.
+#'
+#' Error if not.
+#'
+#' @return `TRUE` (invisibly) if installed.
+#'
+#' @noRd
 ebimg_check <- function() {
   if (!is_installed("EBImage")) {
     stop(paste0(
@@ -499,6 +640,11 @@ ebimg_check <- function() {
   invisible(TRUE)
 }
 
+#' Is this a 32-bit Windows machine?
+#'
+#' @return A flag.
+#'
+#' @noRd
 win32bit <- function() {
   sys_info <- tolower(Sys.info())
   windows <- stringr::str_detect(
@@ -509,6 +655,11 @@ win32bit <- function() {
   windows && (!bit64)
 }
 
+#' Error with a good error message on 32-bit Windows.
+#'
+#' This package does not work on 32-bit windows.
+#'
+#' @noRd
 err_on_win32bit <- function(fun_name) {
   checkmate::assert_string(fun_name)
   if (win32bit()) {

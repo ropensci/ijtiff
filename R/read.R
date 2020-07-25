@@ -93,7 +93,7 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
       stop("`read_tif()` tried to return a list.")
     } else if (list_safety == "warning") {
       warning("`read_tif()` is returning a list.")
-    } else {  # list_safety = "none"
+    } else {
       if (msg) {
         message("Reading a list of images with differing dimensions . . .")
       }

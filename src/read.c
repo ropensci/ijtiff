@@ -15,7 +15,7 @@ static void setAttr(SEXP x, const char *name, SEXP val) {
   UNPROTECT(1);  // UNPROTECT val
 }
 
-// avoid protection issues with setAttrib
+// avoid protection issues with getAttrib
 static SEXP getAttr(SEXP x, const char *name) {
   SEXP attr_name = PROTECT(mkString(name));
   SEXP out = PROTECT(getAttrib(x, attr_name));

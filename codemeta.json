@@ -382,6 +382,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "zeallot",
+      "name": "zeallot",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=zeallot"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "https://sysreqs.r-hub.io/get/zlib"
     },
     {
@@ -391,7 +403,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/ijtiff/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/ijtiff/blob/master/README.md",
-  "fileSize": "1143.65KB",
+  "fileSize": "4482.42KB",
   "contIntegration": [
     "https://travis-ci.org/ropensci/ijtiff",
     "https://ci.appveyor.com/project/ropensci/ijtiff",

@@ -136,8 +136,9 @@ as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
   colormode <- dplyr::if_else(colormode == "Colour", "Color", colormode)
   colormode <- dplyr::if_else(colormode == "Greyscale", "Grayscale", colormode)
   if (scale && can_be_intish(img)) {
-    lub <- max(lowest_upper_bound(img, c(2 ^ c(8, 16, 32) - 1)), max(img),
-               na.rm = TRUE)
+    lub <- max(lowest_upper_bound(img, c(2^c(8, 16, 32) - 1)), max(img),
+      na.rm = TRUE
+    )
     if (!is.na(lub)) img <- img / lub
   }
   img %<>% aperm(c(2, 1, 3, 4))

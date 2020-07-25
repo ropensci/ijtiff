@@ -18,20 +18,24 @@ print.ijtiff_img <- function(x, ...) {
   atts <- attributes(x)
   att_names <- names(attributes(x))
   cli::cat_line(cli::rule("TIFF tags"))
-  possible_tags <- c("bits_per_sample", "samples_per_pixel", "sample_format",
-                     "planar_config", "rows_per_strip", "tile_width",
-                     "tile_length", "compression", "threshholding",
-                     "software", "x_resolution", "y_resolution",
-                     "resolution_unit", "x_position", "y_position", "indexed",
-                     "orientation", "copyright", "artist",
-                     "document_name", "date_time",
-                     "description", "color_space", "color_map")
+  possible_tags <- c(
+    "bits_per_sample", "samples_per_pixel", "sample_format",
+    "planar_config", "rows_per_strip", "tile_width",
+    "tile_length", "compression", "threshholding",
+    "software", "x_resolution", "y_resolution",
+    "resolution_unit", "x_position", "y_position", "indexed",
+    "orientation", "copyright", "artist",
+    "document_name", "date_time",
+    "description", "color_space", "color_map"
+  )
   for (pt in possible_tags) {
     if (pt %in% att_names) {
       if (pt == "color_map") {
-        cli::cli_text(cli::symbol$bullet, " color map: ",
-                      "matrix with {nrow(atts$color_map)} row{?s} ",
-                      "and 3 columns (red, green, blue)")
+        cli::cli_text(
+          cli::symbol$bullet, " color map: ",
+          "matrix with {nrow(atts$color_map)} row{?s} ",
+          "and 3 columns (red, green, blue)"
+        )
       } else {
         cli::cli_text(cli::symbol$bullet, " {pt}: {atts[[pt]]}")
       }

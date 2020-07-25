@@ -1,23 +1,6 @@
 test_that("display works", {
   skip_if(win32bit())
-  skip_if_not_installed("EBImage")
   skip_if_not_installed("vdiffr")
-  skip_if_not_installed("rprojroot")
-  skip_if_not(
-    isTRUE(
-      tryCatch(fs::dir_exists(rprojroot::find_package_root_file("tests/figs")),
-        error = function(cnd) FALSE
-      )
-    )
-  )
-  skip_if_not(
-    isTRUE(
-      tryCatch(
-        fs::dir_exists(rprojroot::find_package_root_file("inst/local-only")),
-        error = function(cnd) FALSE
-      )
-    )
-  )
   img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
   vdiffr::expect_doppelganger("raster R logo", display(img, method = "r"))
   vdiffr::expect_doppelganger("basic R logo", display(img, basic = TRUE))
@@ -35,10 +18,8 @@ test_that("display works", {
   )
   vdiffr::expect_doppelganger(
     "raster R logo (green channel)",
-    display(img[, , 3, 1], method = "r")
+    display(img[, , 3, 1])
   )
-  img <- read_tif(
-    rprojroot::find_package_root_file("inst/local-only/Rlogo-banana-red.tif")
-  )
+  img <- read_tif(test_path("testthat-figs", "Rlogo-banana-red.tif"))
   vdiffr::expect_doppelganger("R logo banana red", display(img, method = "r"))
 })

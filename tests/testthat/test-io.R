@@ -1,14 +1,5 @@
 test_that("Package 2-channel example I/O works", {
   skip_if(win32bit())
-  skip_if_not_installed("rprojroot")
-  skip_if_not(
-    isTRUE(
-      tryCatch(
-        fs::dir_exists(rprojroot::find_package_root_file("inst/local-only")),
-        error = function(cnd) FALSE
-      )
-    )
-  )
   set.seed(1)
   img0 <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
   expect_equal(dim(img0), c(15, 6, 2, 5))
@@ -16,17 +7,13 @@ test_that("Package 2-channel example I/O works", {
     package = "ijtiff"
   ))
   expect_equal(dim(img1), c(155, 200, 2, 3))
-  img2 <- read_tif(
-    rprojroot::find_package_root_file("inst/local-only/Rlogo-banana-1-2.tif")
-  )
+  img2 <- read_tif(test_path("testthat-figs", "Rlogo-banana-1-2.tif"))
   expect_equal(dim(img2), c(155, 200, 3, 2))
   img3 <- read_tif(system.file("img", "Rlogo-banana-red_green_blue.tif",
     package = "ijtiff"
   ))
   expect_equal(dim(img3), c(155, 200, 3, 2))
-  img4 <- read_tif(
-    rprojroot::find_package_root_file("inst/local-only/Rlogo-banana-red.tif")
-  )
+  img4 <- read_tif(test_path("testthat-figs", "Rlogo-banana-red.tif"))
   expect_equal(dim(img4), c(155, 200, 1, 2))
   expect_equal(img3[, , 1, 1], img4[, , 1, 1])
   v22 <- c(2, 2, 1, 1)
@@ -419,24 +406,11 @@ test_that("reading certain frames works", {
 })
 
 test_that("Reading Mathieu's files works", {
-  skip_if_not_installed("rprojroot")
-  skip_if_not(
-    isTRUE(
-      tryCatch(
-        fs::dir_exists(rprojroot::find_package_root_file("inst/local-only")),
-        error = function(cnd) FALSE
-      )
-    )
-  )
-  hs <- read_tif(
-    rprojroot::find_package_root_file("inst/local-only/HyperStack.tif")
-  )
+  hs <- read_tif(test_path("testthat-figs", "HyperStack.tif"))
   expect_equal(dim(hs), c(300, 400, 6, 12))
   expect_equal(dim(attr(hs, "color_map")), c(256, 3))
   expect_equal(colnames(attr(hs, "color_map")), c("red", "green", "blue"))
-  i2 <- read_tif(
-    rprojroot::find_package_root_file("inst/local-only/image2.tif")
-  )
+  i2 <- read_tif(test_path("testthat-figs", "image2.tif"))
   expect_equal(dim(i2), c(1024, 1024, 6, 1))
   expect_equal(dim(attr(i2, "color_map")), c(256, 3))
   expect_equal(colnames(attr(i2, "color_map")), c("red", "green", "blue"))
