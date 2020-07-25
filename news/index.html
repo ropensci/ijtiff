@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.3</span>
       </span>
     </div>
 
@@ -135,12 +135,23 @@
       
     </div>
 
-    <div id="ijtiff-2-1-2" class="section level1">
-<h1 class="page-header" data-toc-text="2.1.2">
-<a href="#ijtiff-2-1-2" class="anchor"></a><small> 2020-07-24 </small><code>ijtiff</code> 2.1.2</h1>
+    <div id="ijtiff-2-1-3" class="section level1">
+<h1 class="page-header" data-toc-text="2.1.3">
+<a href="#ijtiff-2-1-3" class="anchor"></a><small> Unreleased </small><code>ijtiff</code> 2.1.3</h1>
 <div id="bug-fixes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>BUG FIXES</h2>
+<ul>
+<li>Fix tests by making use of <code><a href="https://testthat.r-lib.org/reference/test_path.html">testthat::test_path()</a></code>.</li>
+</ul>
+</div>
+</div>
+    <div id="ijtiff-2-1-2" class="section level1">
+<h1 class="page-header" data-toc-text="2.1.2">
+<a href="#ijtiff-2-1-2" class="anchor"></a><small> 2020-07-24 </small><code>ijtiff</code> 2.1.2</h1>
+<div id="bug-fixes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-1" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>Fix some typos in the vignettes.</li>
 </ul>
@@ -149,9 +160,9 @@
     <div id="ijtiff-2-1-1" class="section level1">
 <h1 class="page-header" data-toc-text="2.1.1">
 <a href="#ijtiff-2-1-1" class="anchor"></a><small> 2020-07-04 </small><code>ijtiff</code> 2.1.1</h1>
-<div id="bug-fixes-1" class="section level2">
+<div id="bug-fixes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-1" class="anchor"></a>BUG FIXES</h2>
+<a href="#bug-fixes-2" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>Fix a PROTECTion error.</li>
 </ul>
@@ -172,9 +183,9 @@
     <div id="ijtiff-2-0-5" class="section level1">
 <h1 class="page-header" data-toc-text="2.0.5">
 <a href="#ijtiff-2-0-5" class="anchor"></a><small> 2020-04-06 </small><code>ijtiff</code> 2.0.5</h1>
-<div id="bug-fixes-2" class="section level2">
+<div id="bug-fixes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-2" class="anchor"></a>BUG FIXES</h2>
+<a href="#bug-fixes-3" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>Fix a test that failed due to breaking changes in <code>tibble</code>.</li>
 </ul>
@@ -190,9 +201,9 @@
 <li>Include rOpenSci docs in <code>DESCRIPTION</code> as <code>URL</code>.</li>
 </ul>
 </div>
-<div id="bug-fixes-3" class="section level2">
+<div id="bug-fixes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-3" class="anchor"></a>BUG FIXES</h2>
+<a href="#bug-fixes-4" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>Sometimes <code>pkg-config</code> declares that <code>ijtiff</code> needs JBIG_KIT (compile flag <code>-ljbig</code>) at compile time. This is incorrect and it often causes users installation pain. This fix is a hack that removes this compile flag from the <code>pkg-config</code> output.</li>
 </ul>
@@ -201,9 +212,9 @@
     <div id="ijtiff-2-0-3" class="section level1">
 <h1 class="page-header" data-toc-text="2.0.3">
 <a href="#ijtiff-2-0-3" class="anchor"></a><small> 2019-08-24 </small><code>ijtiff</code> 2.0.3</h1>
-<div id="bug-fixes-4" class="section level2">
+<div id="bug-fixes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-4" class="anchor"></a>BUG FIXES</h2>
+<a href="#bug-fixes-5" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>
 <code>libjpeg</code> needs to be in <code>SystemRequirements</code>.</li>
@@ -213,9 +224,9 @@
     <div id="ijtiff-2-0-2" class="section level1">
 <h1 class="page-header" data-toc-text="2.0.2">
 <a href="#ijtiff-2-0-2" class="anchor"></a><small> 2019-07-06 </small><code>ijtiff</code> 2.0.2</h1>
-<div id="bug-fixes-5" class="section level2">
+<div id="bug-fixes-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-5" class="anchor"></a>BUG FIXES</h2>
+<a href="#bug-fixes-6" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>For <em>ImageJ</em>-written images, if <code>n_slices</code> and <code>n_frames</code> are both specified, that should be OK if they’re equal.</li>
 </ul>
@@ -224,9 +235,9 @@
     <div id="ijtiff-2-0-1" class="section level1">
 <h1 class="page-header" data-toc-text="2.0.1">
 <a href="#ijtiff-2-0-1" class="anchor"></a><small> 2019-06-28 </small><code>ijtiff</code> 2.0.1</h1>
-<div id="bug-fixes-6" class="section level2">
+<div id="bug-fixes-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-6" class="anchor"></a>BUG FIXES</h2>
+<a href="#bug-fixes-7" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>Insist on latest, bug-fixed <code>filesstrings</code> 3.1.5.</li>
 </ul>
@@ -254,9 +265,9 @@
 <code><a href="../reference/read_tif.html">read_tif()</a></code> and <code><a href="../reference/read_tags.html">read_tags()</a></code> now have the aliases <code><a href="../reference/read_tif.html">tif_read()</a></code> and <code><a href="../reference/read_tags.html">tags_read()</a></code> to comply with the rOpenSci <code>object_verb()</code> style.</li>
 </ul>
 </div>
-<div id="bug-fixes-7" class="section level2">
+<div id="bug-fixes-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-7" class="anchor"></a>BUG FIXES</h2>
+<a href="#bug-fixes-8" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>Include <code>sys/types.h</code> for greater type compatibility.</li>
 </ul>
@@ -265,9 +276,9 @@
     <div id="ijtiff-1-5-1" class="section level1">
 <h1 class="page-header" data-toc-text="1.5.1">
 <a href="#ijtiff-1-5-1" class="anchor"></a><small> 2019-05-16 </small><code>ijtiff</code> 1.5.1</h1>
-<div id="bug-fixes-8" class="section level2">
+<div id="bug-fixes-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-8" class="anchor"></a>BUG FIXES</h2>
+<a href="#bug-fixes-9" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>Require necessary version of <code>glue</code>.</li>
 <li>Fix dimension-related bug in <code><a href="../reference/as_EBImage.html">as_EBImage()</a></code>.</li>
@@ -285,9 +296,9 @@
 <li>Allow ZIP compression (which seems to be the best).</li>
 </ul>
 </div>
-<div id="bug-fixes-9" class="section level2">
+<div id="bug-fixes-10" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-9" class="anchor"></a>BUG FIXES</h2>
+<a href="#bug-fixes-10" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>
 <code><a href="../reference/text-image-io.html">write_txt_img()</a></code> was using decimal points for integers (e.g. 3.000 instead of just 3).</li>
@@ -297,9 +308,9 @@
     <div id="ijtiff-1-4-2" class="section level1">
 <h1 class="page-header" data-toc-text="1.4.2">
 <a href="#ijtiff-1-4-2" class="anchor"></a><small> 2018-10-07 </small><code>ijtiff</code> 1.4.2</h1>
-<div id="bug-fixes-10" class="section level2">
+<div id="bug-fixes-11" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-10" class="anchor"></a>BUG FIXES</h2>
+<a href="#bug-fixes-11" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>Hacky fix for <code>configure</code> script to deal with lack of <code>-ljbig</code> on Solaris.</li>
 <li>Trim the package to below 5MB by compressing a few TIFF files.</li>
@@ -316,9 +327,9 @@
 <li>The package is now lighter in appearance because it doesn’t explicitly depend on <code>tibble</code>.</li>
 </ul>
 </div>
-<div id="bug-fixes-11" class="section level2">
+<div id="bug-fixes-12" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-11" class="anchor"></a>BUG FIXES</h2>
+<a href="#bug-fixes-12" class="anchor"></a>BUG FIXES</h2>
 <ul>
 <li>The configure script now allows for needing <code>--static</code> with <code>pkg-config</code>.</li>
 </ul>
@@ -415,9 +426,9 @@
 <li>Improve README and vignette with more tangible and fun example.</li>
 </ul>
 </div>
-<div id="bug-fixes-12" class="section level4">
+<div id="bug-fixes-13" class="section level4">
 <h4 class="hasAnchor">
-<a href="#bug-fixes-12" class="anchor"></a>BUG FIXES</h4>
+<a href="#bug-fixes-13" class="anchor"></a>BUG FIXES</h4>
 <ul>
 <li>Fix windows <code>libtiff</code> issues (thanks to Jeroen Ooms).</li>
 <li>Found some ImageJ-written TIFFs that weren’t being read correctly and fixed that.</li>
