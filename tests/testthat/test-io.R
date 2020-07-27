@@ -1,17 +1,17 @@
 test_that("Package 2-channel example I/O works", {
   skip_if(win32bit())
   set.seed(1)
-  img0 <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
+  img0 <- read_tif(test_path("testthat-figs", "2ch_ij.tif"))
   expect_equal(dim(img0), c(15, 6, 2, 5))
   img1 <- read_tif(system.file("img", "Rlogo-banana-red_green.tif",
     package = "ijtiff"
   ))
-  expect_equal(dim(img1), c(155, 200, 2, 3))
+  expect_equal(dim(img1), c(155, 200, 2, 2))
   img2 <- read_tif(test_path("testthat-figs", "Rlogo-banana-1-2.tif"))
   expect_equal(dim(img2), c(155, 200, 3, 2))
-  img3 <- read_tif(system.file("img", "Rlogo-banana-red_green_blue.tif",
-    package = "ijtiff"
-  ))
+  img3 <- read_tif(
+    test_path("testthat-figs", "Rlogo-banana-red_green_blue.tif")
+  )
   expect_equal(dim(img3), c(155, 200, 3, 2))
   img4 <- read_tif(test_path("testthat-figs", "Rlogo-banana-red.tif"))
   expect_equal(dim(img4), c(155, 200, 1, 2))
@@ -248,7 +248,7 @@ test_that("write_tif() errors correctly", {
     fixed = TRUE
   )
   expect_error(
-    read_tif(system.file("img", "bad_ij1.tif", package = "ijtiff")),
+    read_tif(test_path("testthat-figs", "bad_ij1.tif")),
     paste(
       " The ImageJ-written image you're trying to read",
       "says in its TIFFTAG_DESCRIPTION that it has 13",
@@ -264,7 +264,7 @@ test_that("write_tif() errors correctly", {
     fixed = TRUE
   )
   expect_error(
-    read_tif(system.file("img", "bad_ij2.tif", package = "ijtiff")),
+    read_tif(test_path("testthat-figs", "bad_ij2.tif")),
     paste(
       " The ImageJ-written image you're trying to read",
       "says it has 8 frames AND 5 slices. \n    * To be",
@@ -352,7 +352,7 @@ test_that("text-image-io works", {
 
 test_that("reading certain frames works", {
   skip_if(win32bit())
-  path <- system.file("img", "2ch_ij.tif", package = "ijtiff")
+  path <- test_path("testthat-figs", "2ch_ij.tif")
   img <- read_tif(path, "A")
   img12 <- read_tif(path, frames = 1:2)
   img34 <- read_tif(path, frames = 3:4)

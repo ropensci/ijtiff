@@ -14,7 +14,6 @@
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
-    "version": "4.0.0",
     "url": "https://r-project.org"
   },
   "runtimePlatform": "R version 4.0.0 (2020-04-24)",
@@ -403,20 +402,13 @@
   ],
   "releaseNotes": "https://github.com/ropensci/ijtiff/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/ijtiff/blob/master/README.md",
-  "fileSize": "4482.442KB",
-  "contIntegration": [
-    "https://travis-ci.org/ropensci/ijtiff",
-    "https://ci.appveyor.com/project/ropensci/ijtiff",
-    "https://codecov.io/gh/ropensci/ijtiff"
-  ],
-  "developmentStatus": [
-    "http://www.repostatus.org/#active",
-    "https://www.tidyverse.org/lifecycle/#maturing"
-  ],
+  "fileSize": "34958.237KB",
+  "contIntegration": ["https://travis-ci.org/ropensci/ijtiff", "https://ci.appveyor.com/project/ropensci/ijtiff", "https://codecov.io/gh/ropensci/ijtiff"],
+  "developmentStatus": ["http://www.repostatus.org/#active", "https://www.tidyverse.org/lifecycle/#maturing"],
   "review": {
     "@type": "Review",
-    "url": "https://github.com/ropensci/onboarding/issues/164",
-    "provider": "http://ropensci.org"
+    "url": "https://github.com/ropensci/software-review/issues/164",
+    "provider": "https://ropensci.org"
   },
   "citation": [
     {
@@ -437,7 +429,7 @@
       "name": "ijtiff: An R package providing {TIFF} I/O for {ImageJ} users",
       "identifier": "10.21105/joss.00633",
       "url": "https://doi.org/10.21105/joss.00633",
-      "paginiation": "633",
+      "pagination": "633",
       "@id": "https://doi.org/10.21105/joss.00633",
       "sameAs": "https://doi.org/10.21105/joss.00633",
       "isPartOf": {

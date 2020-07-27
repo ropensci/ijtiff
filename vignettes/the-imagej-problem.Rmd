@@ -43,11 +43,11 @@ path_2ch_ij <- system.file("img", "Rlogo-banana-red_green.tif",
   package = "ijtiff"
 )
 ```
-`path_2ch_ij` is the path to a TIFF file which was made in _ImageJ_ from the R logo dancing banana GIF used in the README of Jeroen Ooms' `magick` package. The TIFF is a time-stack containing only the red and green channels of the first, third and fifth frames of the original GIF. Here's the full gif:
+`path_2ch_ij` is the path to a TIFF file which was made in _ImageJ_ from the R logo dancing banana GIF used in the README of Jeroen Ooms' `magick` package. The TIFF is a time-stack containing only the red and green channels of the first and third frames of the original GIF. Here's the full gif:
 
 ![](`r system.file("img", "Rlogo-banana.gif", package = "ijtiff")`)
 
-Here are the red and green channels of the first, third and fifth frames of the TIFF:
+Here are the red and green channels of the first and third frames of the TIFF:
 
 ```{r red and green banana, echo=FALSE, message=FALSE, dpi=300, fig.height=1, warning=FALSE, fig.width=2}
 rgbanana_tif <- system.file("img", "Rlogo-banana-red_green.tif",
@@ -71,11 +71,10 @@ When we import it with the original `tiff` package:
 ```{r original tiff import}
 img <- tiff::readTIFF(path_2ch_ij, all = TRUE)
 str(img) # 10 images
-img[[1]][100:105, 50:55] # print a section of the first image in the series
+img[[1]][100:105, 50:55, 1] # print a section of the first image in the series
 ```
 
-* We just get a list of `r length(img)` frames, with no information about the `r dim(img[[1]][3])` channels.
-* We get annoying warnings about ImageJ's private TIFF tags 50838 and 50839, which are of no interest to the `R` user. 
+* We just get a list of `r length(img)` frames, with wrong information about the `r dim(img[[1]][3])` channels (it looks like there are 3 channels per frame).
 * The numbers in the image array(s) are (by default) normalized to the range [0, 1].
 
 ### The `ijtiff` package
@@ -83,12 +82,11 @@ img[[1]][100:105, 50:55] # print a section of the first image in the series
 When we import the same image with the `ijtiff` package:
 ```{r ijtiff import}
 img <- ijtiff::read_tif(path_2ch_ij)
-dim(img) # 2 channels, 3 frames
+dim(img) # 2 channels, 2 frames
 img[100:105, 50:55, 1, 1] # print a section of the first channel, first frame
 ```
 
 * We see the image nicely represented as an array of `r dim(img[[1]][3])` channels of `r dim(img[[1]][4])` frames.
-* We get no needless warnings.
 * The numbers in the image are integers, the same as would be seen if one opened the image with ImageJ.
 
 

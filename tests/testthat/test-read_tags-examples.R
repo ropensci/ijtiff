@@ -18,7 +18,7 @@ test_that("`read_tags()` works", {
     color_space = "RGB"
   ))
   expect_equal(tags, ans, tolerance = 0.001)
-  path <- system.file("img", "2ch_ij.tif", package = "ijtiff")
+  path <- test_path("testthat-figs", "2ch_ij.tif")
   expect_equal(
     read_tags(path, "all")[c(2, 4)],
     tags_read(path, frames = c(2, 4))
