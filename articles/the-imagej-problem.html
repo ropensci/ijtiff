@@ -90,7 +90,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>The <em>ImageJ</em> Problem</h1>
             
-            <h4 class="date">2020-07-25</h4>
+            <h4 class="date">2020-07-27</h4>
       
       
       <div class="hidden name"><code>the-imagej-problem.Rmd</code></div>
@@ -128,9 +128,9 @@
   package = <span class="st">"ijtiff"</span>
 )
 </pre></div>
-<p><code>path_2ch_ij</code> is the path to a TIFF file which was made in <em>ImageJ</em> from the R logo dancing banana GIF used in the README of Jeroen Ooms’ <code>magick</code> package. The TIFF is a time-stack containing only the red and green channels of the first, third and fifth frames of the original GIF. Here’s the full gif:</p>
+<p><code>path_2ch_ij</code> is the path to a TIFF file which was made in <em>ImageJ</em> from the R logo dancing banana GIF used in the README of Jeroen Ooms’ <code>magick</code> package. The TIFF is a time-stack containing only the red and green channels of the first and third frames of the original GIF. Here’s the full gif:</p>
 <p><img src="../../../../R/Library/ijtiff/img/Rlogo-banana.gif"></p>
-<p>Here are the red and green channels of the first, third and fifth frames of the TIFF:</p>
+<p>Here are the red and green channels of the first and third frames of the TIFF:</p>
 <p><img src="the-imagej-problem_files/figure-html/red%20and%20green%20banana-1.png" width="600"></p>
 <div id="the-original-tiff-package" class="section level3">
 <h3 class="hasAnchor">
@@ -139,25 +139,22 @@
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="kw">img</span> <span class="op">&lt;-</span> <span class="kw">tiff</span>::<span class="fu"><a href="https://rdrr.io/pkg/tiff/man/readTIFF.html">readTIFF</a></span>(<span class="kw">path_2ch_ij</span>, all = <span class="fl">TRUE</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="kw">img</span>) <span class="co"># 10 images</span>
-<span class="co">#&gt; List of 6</span>
-<span class="co">#&gt;  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="co">#&gt;  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="co">#&gt;  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="co">#&gt;  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="co">#&gt;  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="co">#&gt;  $ : num [1:155, 1:200] 1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="kw">img</span>[[<span class="fl">1</span>]][<span class="fl">100</span><span class="op">:</span><span class="fl">105</span>, <span class="fl">50</span><span class="op">:</span><span class="fl">55</span>] <span class="co"># print a section of the first image in the series</span>
+<span class="co">#&gt; List of 4</span>
+<span class="co">#&gt;  $ : num [1:155, 1:200, 1:3] 0.996 0.996 0.996 0.996 0.996 ...</span>
+<span class="co">#&gt;  $ : num [1:155, 1:200, 1:3] 0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="co">#&gt;  $ : num [1:155, 1:200, 1:3] 0.996 0.996 0.996 0.996 0.996 ...</span>
+<span class="co">#&gt;  $ : num [1:155, 1:200, 1:3] 0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="kw">img</span>[[<span class="fl">1</span>]][<span class="fl">100</span><span class="op">:</span><span class="fl">105</span>, <span class="fl">50</span><span class="op">:</span><span class="fl">55</span>, <span class="fl">1</span>] <span class="co"># print a section of the first image in the series</span>
 <span class="co">#&gt;           [,1]      [,2]      [,3]      [,4]      [,5]      [,6]</span>
-<span class="co">#&gt; [1,] 0.6627451 0.6627451 0.6549020 0.6627451 0.7058824 0.9215686</span>
-<span class="co">#&gt; [2,] 0.6745098 0.6431373 0.6745098 0.6431373 0.6431373 0.6745098</span>
-<span class="co">#&gt; [3,] 0.6549020 0.6627451 0.6431373 0.6627451 0.6627451 0.6431373</span>
-<span class="co">#&gt; [4,] 0.6431373 0.6431373 0.6627451 0.6431373 0.6627451 0.6431373</span>
-<span class="co">#&gt; [5,] 0.6745098 0.6745098 0.6431373 0.6627451 0.6431373 0.6627451</span>
-<span class="co">#&gt; [6,] 0.6745098 0.6431373 0.6431373 0.6431373 0.6549020 0.6549020</span>
+<span class="co">#&gt; [1,] 0.6601663 0.6601663 0.6523537 0.6601663 0.7031357 0.9179828</span>
+<span class="co">#&gt; [2,] 0.6718853 0.6406348 0.6718853 0.6406348 0.6406348 0.6718853</span>
+<span class="co">#&gt; [3,] 0.6523537 0.6601663 0.6406348 0.6601663 0.6601663 0.6406348</span>
+<span class="co">#&gt; [4,] 0.6406348 0.6406348 0.6601663 0.6406348 0.6601663 0.6406348</span>
+<span class="co">#&gt; [5,] 0.6718853 0.6718853 0.6406348 0.6601663 0.6406348 0.6601663</span>
+<span class="co">#&gt; [6,] 0.6718853 0.6406348 0.6406348 0.6406348 0.6523537 0.6523537</span>
 </pre></div>
 <ul>
-<li>We just get a list of 6 frames, with no information about the channels.</li>
-<li>We get annoying warnings about ImageJ’s private TIFF tags 50838 and 50839, which are of no interest to the <code>R</code> user.</li>
+<li>We just get a list of 4 frames, with wrong information about the channels (it looks like there are 3 channels per frame).</li>
 <li>The numbers in the image array(s) are (by default) normalized to the range [0, 1].</li>
 </ul>
 </div>
@@ -168,11 +165,11 @@
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="kw">img</span> <span class="op">&lt;-</span> <span class="kw">ijtiff</span>::<span class="fu"><a href="../reference/read_tif.html">read_tif</a></span>(<span class="kw">path_2ch_ij</span>)
 <span class="co">#&gt; Reading Rlogo-banana-red_green.tif: an 8-bit, 155x200 pixel</span>
-<span class="co">#&gt; image of unsigned integer type. Reading 2 channels and 3</span>
+<span class="co">#&gt; image of unsigned integer type. Reading 2 channels and 2</span>
 <span class="co">#&gt; frames . . .</span>
 <span class="co">#&gt;  Done.</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="kw">img</span>) <span class="co"># 2 channels, 3 frames</span>
-<span class="co">#&gt; [1] 155 200   2   3</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="kw">img</span>) <span class="co"># 2 channels, 2 frames</span>
+<span class="co">#&gt; [1] 155 200   2   2</span>
 <span class="kw">img</span>[<span class="fl">100</span><span class="op">:</span><span class="fl">105</span>, <span class="fl">50</span><span class="op">:</span><span class="fl">55</span>, <span class="fl">1</span>, <span class="fl">1</span>] <span class="co"># print a section of the first channel, first frame</span>
 <span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6]</span>
 <span class="co">#&gt; [1,]  169  169  167  169  180  235</span>
@@ -184,7 +181,6 @@
 </pre></div>
 <ul>
 <li>We see the image nicely represented as an array of channels of frames.</li>
-<li>We get no needless warnings.</li>
 <li>The numbers in the image are integers, the same as would be seen if one opened the image with ImageJ.</li>
 </ul>
 </div>
