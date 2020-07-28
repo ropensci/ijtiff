@@ -1,5 +1,4 @@
 test_that("`count_frames()` works", {
-  skip_if(win32bit())
   expect_equal(
     count_frames(system.file("img", "Rlogo.tif", package = "ijtiff")),
     structure(1, n_dirs = 1)
