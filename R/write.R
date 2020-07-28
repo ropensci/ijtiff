@@ -38,7 +38,7 @@
 #' @export
 write_tif <- function(img, path, bits_per_sample = "auto",
                       compression = "none", overwrite = FALSE, msg = TRUE) {
-  err_on_win32bit("write_tif")
+  #err_on_win32bit("write_tif")
   to_invisibly_return <- img
   c(img, path, bits_per_sample, compression, overwrite, msg) %<-%
     argchk_write_tif(
@@ -163,7 +163,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
 #' @export
 tif_write <- function(img, path, bits_per_sample = "auto",
                       compression = "none", overwrite = FALSE, msg = TRUE) {
-  err_on_win32bit("tif_write")
+  #err_on_win32bit("tif_write")
   write_tif(
     img = img,
     path = path,

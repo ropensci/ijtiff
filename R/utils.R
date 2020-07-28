@@ -196,7 +196,7 @@ colormap_or_ij_channels <- function(img_lst, prep, d) {
 #' }
 #' @export
 count_frames <- function(path) {
-  err_on_win32bit("count_frames")
+  #err_on_win32bit("count_frames")
   path %<>% prep_path()
   withr::local_dir(attr(path, "path_dir"))
   prep <- prep_read(path,
@@ -211,7 +211,7 @@ count_frames <- function(path) {
 #' @rdname count_frames
 #' @export
 frames_count <- function(path) {
-  err_on_win32bit("frames_count")
+  #err_on_win32bit("frames_count")
   count_frames(path = path)
 }
 
