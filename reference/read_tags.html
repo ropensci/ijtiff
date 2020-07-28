@@ -81,7 +81,7 @@ is for reading this information without reading the actual image." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0</span>
       </span>
     </div>
 
@@ -173,13 +173,112 @@ from all frames, use <code>frames = "all"</code>.</p></td>
     <p>Simon Urbanek, Kent Johnson, Rory Nolan.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'>read_tags</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, package = <span class='st'>"ijtiff"</span>))
-<span class='fu'>read_tags</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"2ch_ij.tif"</span>, package = <span class='st'>"ijtiff"</span>))
-<span class='fu'>read_tags</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"2ch_ij.tif"</span>, package = <span class='st'>"ijtiff"</span>),
+    <pre class="examples"><div class='input'><span class='fu'>read_tags</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, package = <span class='st'>"ijtiff"</span>))</div><div class='output co'>#&gt; $frame1
+#&gt; $frame1$width
+#&gt; [1] 100
+#&gt; 
+#&gt; $frame1$length
+#&gt; [1] 76
+#&gt; 
+#&gt; $frame1$bits_per_sample
+#&gt; [1] 8
+#&gt; 
+#&gt; $frame1$samples_per_pixel
+#&gt; [1] 4
+#&gt; 
+#&gt; $frame1$sample_format
+#&gt; [1] "uint"
+#&gt; 
+#&gt; $frame1$planar_config
+#&gt; [1] "contiguous"
+#&gt; 
+#&gt; $frame1$rows_per_strip
+#&gt; [1] 76
+#&gt; 
+#&gt; $frame1$compression
+#&gt; [1] "LZW"
+#&gt; 
+#&gt; $frame1$x_resolution
+#&gt; [1] 299.99
+#&gt; 
+#&gt; $frame1$y_resolution
+#&gt; [1] 299.99
+#&gt; 
+#&gt; $frame1$resolution_unit
+#&gt; [1] "inch"
+#&gt; 
+#&gt; $frame1$orientation
+#&gt; [1] "top_left"
+#&gt; 
+#&gt; $frame1$color_space
+#&gt; [1] "RGB"
+#&gt; 
+#&gt; </div><div class='input'><span class='fu'>read_tags</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo-banana.tif"</span>, package = <span class='st'>"ijtiff"</span>),
   frames = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>4</span>)
-)
-}</div></pre>
+)</div><div class='output co'>#&gt; $frame2
+#&gt; $frame2$width
+#&gt; [1] 100
+#&gt; 
+#&gt; $frame2$length
+#&gt; [1] 78
+#&gt; 
+#&gt; $frame2$bits_per_sample
+#&gt; [1] 8
+#&gt; 
+#&gt; $frame2$samples_per_pixel
+#&gt; [1] 3
+#&gt; 
+#&gt; $frame2$sample_format
+#&gt; [1] "uint"
+#&gt; 
+#&gt; $frame2$planar_config
+#&gt; [1] "contiguous"
+#&gt; 
+#&gt; $frame2$rows_per_strip
+#&gt; [1] 78
+#&gt; 
+#&gt; $frame2$compression
+#&gt; [1] "deflate"
+#&gt; 
+#&gt; $frame2$software
+#&gt; [1] "ijtiff package, R 4.0.0"
+#&gt; 
+#&gt; $frame2$color_space
+#&gt; [1] "black is zero"
+#&gt; 
+#&gt; 
+#&gt; $frame4
+#&gt; $frame4$width
+#&gt; [1] 100
+#&gt; 
+#&gt; $frame4$length
+#&gt; [1] 78
+#&gt; 
+#&gt; $frame4$bits_per_sample
+#&gt; [1] 8
+#&gt; 
+#&gt; $frame4$samples_per_pixel
+#&gt; [1] 3
+#&gt; 
+#&gt; $frame4$sample_format
+#&gt; [1] "uint"
+#&gt; 
+#&gt; $frame4$planar_config
+#&gt; [1] "contiguous"
+#&gt; 
+#&gt; $frame4$rows_per_strip
+#&gt; [1] 78
+#&gt; 
+#&gt; $frame4$compression
+#&gt; [1] "deflate"
+#&gt; 
+#&gt; $frame4$software
+#&gt; [1] "ijtiff package, R 4.0.0"
+#&gt; 
+#&gt; $frame4$color_space
+#&gt; [1] "black is zero"
+#&gt; 
+#&gt; </div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
