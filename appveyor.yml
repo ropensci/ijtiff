@@ -19,9 +19,6 @@ platform: x64
 
 environment:
   R_VERSION: release
-  R_ARCH: x64
-  R_BUILD_ARGS: --no-manual --no-multiarch
-  R_CHECK_ARGS: --no-manual --as-cran --no-multiarch
   BIOC_USE_DEVEL: FALSE
   R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
 

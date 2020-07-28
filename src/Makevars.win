@@ -1,9 +1,6 @@
-ifeq "$(WIN)" "64"
-PKG_CPPFLAGS= -I../windows/libtiff-4.0.9/include
-PKG_LIBS= -L../windows/libtiff-4.0.9/lib${R_ARCH} -ltiff -ljpeg -llzma -lz
-else
-PKG_LIBS= -ltiff -ljpeg -llzma -lz
-endif
+LIB_TIFF ?= ../windows/libtiff-4.0.9
+PKG_CPPFLAGS = -I$(LIB_TIFF)/include
+PKG_LIBS = -L$(LIB_TIFF)/lib${R_ARCH} -ltiff -ljpeg -llzma -lz
 
 
 all: clean winlibs
