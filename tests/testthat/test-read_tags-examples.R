@@ -1,5 +1,4 @@
 test_that("`read_tags()` works", {
-  skip_if(win32bit())
   path <- system.file("img", "Rlogo.tif", package = "ijtiff")
   tags <- read_tags(path)
   ans <- list(frame1 = list(

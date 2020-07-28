@@ -1,5 +1,4 @@
 test_that("display works", {
-  skip_if(win32bit())
   skip_if_not_installed("vdiffr")
   img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
   vdiffr::expect_doppelganger("raster R logo", display(img, method = "r"))
