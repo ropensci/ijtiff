@@ -190,13 +190,10 @@ colormap_or_ij_channels <- function(img_lst, prep, d) {
 #'   file, making no allowance for the way ImageJ may write TIFF files.
 #'
 #' @examples
-#' \dontrun{
 #' count_frames(system.file("img", "Rlogo.tif", package = "ijtiff"))
-#' count_frames(system.file("img", "2ch_ij.tif", package = "ijtiff"))
-#' }
+#'
 #' @export
 count_frames <- function(path) {
-  #err_on_win32bit("count_frames")
   path %<>% prep_path()
   withr::local_dir(attr(path, "path_dir"))
   prep <- prep_read(path,
@@ -211,7 +208,6 @@ count_frames <- function(path) {
 #' @rdname count_frames
 #' @export
 frames_count <- function(path) {
-  #err_on_win32bit("frames_count")
   count_frames(path = path)
 }
 
@@ -273,6 +269,7 @@ ebimg_install_msg <- function() {
 #' print(stack)
 #' linescan <- stack_to_linescan(stack)
 #' print(linescan)
+#'
 #' @name linescan-conversion
 NULL
 
@@ -348,6 +345,7 @@ pretty_msg <- function(...) {
 #'
 #' @examples
 #' tif_tags_reference()
+#'
 #' @export
 tif_tags_reference <- function() {
   "TIFF_tags.csv" %>%
@@ -640,40 +638,3 @@ ebimg_check <- function() {
   invisible(TRUE)
 }
 
-#' Is this a 32-bit Windows machine?
-#'
-#' @return A flag.
-#'
-#' @noRd
-win32bit <- function() {
-  sys_info <- tolower(Sys.info())
-  windows <- stringr::str_detect(
-    sys_info[["sysname"]],
-    stringr::coll("windows")
-  )
-  bit64 <- stringr::str_detect(sys_info[["machine"]], stringr::coll("64"))
-  windows && (!bit64)
-}
-
-#' Error with a good error message on 32-bit Windows.
-#'
-#' This package does not work on 32-bit windows.
-#'
-#' @noRd
-err_on_win32bit <- function(fun_name) {
-  checkmate::assert_string(fun_name)
-  if (win32bit()) {
-    custom_stop(
-      "
-      The function `ijtiff::{fun_name}()` is not available on 32-bit windows
-      machines.
-      ",
-      "64-bit windows and any Linux or Mac will work.",
-      "
-      I am sorry about this, I spent many hours trying to get it to work
-      on 32-bit Windows machines but I failed.
-      "
-    )
-  }
-  invisible(NULL)
-}

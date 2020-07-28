@@ -27,18 +27,16 @@
 #' @seealso [read_tif()]
 #'
 #' @examples
-#' \dontrun{
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' temp_dir <- tempdir()
 #' write_tif(img, paste0(temp_dir, "/", "Rlogo"))
 #' img <- matrix(1:4, nrow = 2)
 #' write_tif(img, paste0(temp_dir, "/", "tiny2x2"))
 #' list.files(temp_dir, pattern = "tif$")
-#' }
+#'
 #' @export
 write_tif <- function(img, path, bits_per_sample = "auto",
                       compression = "none", overwrite = FALSE, msg = TRUE) {
-  #err_on_win32bit("write_tif")
   to_invisibly_return <- img
   c(img, path, bits_per_sample, compression, overwrite, msg) %<-%
     argchk_write_tif(
@@ -163,7 +161,6 @@ write_tif <- function(img, path, bits_per_sample = "auto",
 #' @export
 tif_write <- function(img, path, bits_per_sample = "auto",
                       compression = "none", overwrite = FALSE, msg = TRUE) {
-  #err_on_win32bit("tif_write")
   write_tif(
     img = img,
     path = path,

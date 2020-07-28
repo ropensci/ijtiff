@@ -56,9 +56,7 @@ install `libtiff`:
     `sudo yum install libtiff4-dev`.
   - On **Mac**, you need [Homebrew](https://brew.sh/). Then in the
     terminal, run `brew install libtiff`.
-  - On 64-bit **Windows**, no setup is required 😄. **If you have 32-bit
-    windows, the `ijtiff` package doesn’t work.** I worked really hard
-    to figure out why this is, but I couldn’t 😦.
+  - On **Windows**, no setup is required 😄.
 
 ### Installing the release version of the `ijtiff` R package
 

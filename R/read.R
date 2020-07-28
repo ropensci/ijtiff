@@ -52,7 +52,6 @@
 #'
 #' @export
 read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
-  #err_on_win32bit("read_tif")
   path %<>% prep_path()
   frames %<>% prep_frames()
   withr::local_dir(attr(path, "path_dir"))
@@ -119,7 +118,6 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
 #' @rdname read_tif
 #' @export
 tif_read <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
-  #err_on_win32bit("tif_read")
   read_tif(path = path, frames = frames, list_safety = list_safety, msg = msg)
 }
 
@@ -141,16 +139,13 @@ tif_read <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
 #' @seealso [read_tif()]
 #'
 #' @examples
-#' \dontrun{
 #' read_tags(system.file("img", "Rlogo.tif", package = "ijtiff"))
-#' read_tags(system.file("img", "2ch_ij.tif", package = "ijtiff"))
-#' read_tags(system.file("img", "2ch_ij.tif", package = "ijtiff"),
+#' read_tags(system.file("img", "Rlogo-banana.tif", package = "ijtiff"),
 #'   frames = c(2, 4)
 #' )
-#' }
+#'
 #' @export
 read_tags <- function(path, frames = 1) {
-  #err_on_win32bit("read_tags")
   frames %<>% prep_frames()
   path %<>% prep_path()
   withr::local_dir(attr(path, "path_dir"))
@@ -176,6 +171,5 @@ read_tags <- function(path, frames = 1) {
 #' @rdname read_tags
 #' @export
 tags_read <- function(path, frames = 1) {
- #err_on_win32bit("tags_read")
   read_tags(path = path, frames = frames)
 }

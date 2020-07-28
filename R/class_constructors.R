@@ -81,14 +81,10 @@ as_ijtiff_img <- ijtiff_img
 #' @return An [EBImage::Image].
 #'
 #' @examples
-#' \dontrun{
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' str(img)
 #' str(as_EBImage(img))
-#' img <- read_tif(system.file("img", "2ch_ij.tif", package = "ijtiff"))
-#' str(img)
-#' str(as_EBImage(img))
-#' }
+#'
 #' @export
 as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
   ebimg_check()

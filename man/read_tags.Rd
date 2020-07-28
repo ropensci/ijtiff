@@ -24,13 +24,11 @@ TIFF files contain metadata about images in their \emph{TIFF tags}. This functio
 is for reading this information without reading the actual image.
 }
 \examples{
-\dontrun{
 read_tags(system.file("img", "Rlogo.tif", package = "ijtiff"))
-read_tags(system.file("img", "2ch_ij.tif", package = "ijtiff"))
-read_tags(system.file("img", "2ch_ij.tif", package = "ijtiff"),
+read_tags(system.file("img", "Rlogo-banana.tif", package = "ijtiff"),
   frames = c(2, 4)
 )
-}
+
 }
 \seealso{
 \code{\link[=read_tif]{read_tif()}}

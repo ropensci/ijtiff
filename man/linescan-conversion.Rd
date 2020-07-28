@@ -35,4 +35,5 @@ stack <- linescan_to_stack(linescan)
 print(stack)
 linescan <- stack_to_linescan(stack)
 print(linescan)
+
 }

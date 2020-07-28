@@ -27,4 +27,5 @@ libtiff} \item{count}{the number of elements in the TIFF tag data}
 }
 \examples{
 tif_tags_reference()
+
 }

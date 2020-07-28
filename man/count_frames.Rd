@@ -27,8 +27,6 @@ directories in a TIFF file. There is an adjustment made for some
 ImageJ-written TIFF files.
 }
 \examples{
-\dontrun{
 count_frames(system.file("img", "Rlogo.tif", package = "ijtiff"))
-count_frames(system.file("img", "2ch_ij.tif", package = "ijtiff"))
-}
+
 }
