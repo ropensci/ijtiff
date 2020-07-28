@@ -1,7 +1,6 @@
-LIB_TIFF ?= ../windows/libtiff-4.0.9
-PKG_CPPFLAGS = -I$(LIB_TIFF)/include
-PKG_LIBS = -L$(LIB_TIFF)/lib${R_ARCH} -ltiff -ljpeg -llzma -lz
-
+RWINLIB = ../windows/libtiff-4.1.0/mingw$(WIN)
+PKG_CPPFLAGS = -I$(RWINLIB)/include
+PKG_LIBS = -L$(RWINLIB)/lib -ltiff -ljpeg -lz
 
 all: clean winlibs
 
