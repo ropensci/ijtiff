@@ -23,7 +23,6 @@ NULL
 #' tmptxt_ch1_path <- paste0(filesstrings::before_last_dot(tmptxt), "_ch1.txt")
 #' print(tmptxt_ch1_path)
 #' txt_img <- read_txt_img(tmptxt_ch1_path)
-#'
 #' @export
 write_txt_img <- function(img, path, rds = FALSE, msg = TRUE) {
   checkmate::assert_array(img, min.d = 2, max.d = 4)

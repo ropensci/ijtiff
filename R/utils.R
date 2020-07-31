@@ -191,7 +191,6 @@ colormap_or_ij_channels <- function(img_lst, prep, d) {
 #'
 #' @examples
 #' count_frames(system.file("img", "Rlogo.tif", package = "ijtiff"))
-#'
 #' @export
 count_frames <- function(path) {
   path %<>% prep_path()
@@ -269,7 +268,6 @@ ebimg_install_msg <- function() {
 #' print(stack)
 #' linescan <- stack_to_linescan(stack)
 #' print(linescan)
-#'
 #' @name linescan-conversion
 NULL
 
@@ -345,7 +343,6 @@ pretty_msg <- function(...) {
 #'
 #' @examples
 #' tif_tags_reference()
-#'
 #' @export
 tif_tags_reference <- function() {
   "TIFF_tags.csv" %>%
@@ -637,4 +634,3 @@ ebimg_check <- function() {
   }
   invisible(TRUE)
 }
-

@@ -33,7 +33,6 @@
 #' img <- matrix(1:4, nrow = 2)
 #' write_tif(img, paste0(temp_dir, "/", "tiny2x2"))
 #' list.files(temp_dir, pattern = "tif$")
-#'
 #' @export
 write_tif <- function(img, path, bits_per_sample = "auto",
                       compression = "none", overwrite = FALSE, msg = TRUE) {

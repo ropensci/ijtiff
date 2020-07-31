@@ -49,7 +49,6 @@
 #'
 #' @examples
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
-#'
 #' @export
 read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
   path %<>% prep_path()
@@ -143,7 +142,6 @@ tif_read <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
 #' read_tags(system.file("img", "Rlogo-banana.tif", package = "ijtiff"),
 #'   frames = c(2, 4)
 #' )
-#'
 #' @export
 read_tags <- function(path, frames = 1) {
   frames %<>% prep_frames()
