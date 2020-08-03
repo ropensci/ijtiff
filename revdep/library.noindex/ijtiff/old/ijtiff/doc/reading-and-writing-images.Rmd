@@ -39,7 +39,7 @@ img_dancing_banana <- read_tif(path_dancing_banana)
 Let's take a peek inside of `img_dancing_banana`.
 
 ```{r peek}
-str(img_dancing_banana)
+print(img_dancing_banana)
 ```
 
 You can see it's a `r length(dim(img_dancing_banana))`-dimensional array. The last two dimensions are `r dplyr::nth(dim(img_dancing_banana), -2)` and `r dplyr::nth(dim(img_dancing_banana), -1)`; this is because these are the channel and frame slots respectively: the image has `r dplyr::nth(dim(img_dancing_banana), -2)` channels (red, green and blue) and `r dplyr::nth(dim(img_dancing_banana), -1)` frames. The first two dimensions tell us that the images in the video are `r dim(img_dancing_banana)[1]` pixels tall and `r dim(img_dancing_banana)[2]` pixels wide. The image object is of class `ijtiff_img`. This guarantees that it is a 4-dimensional array with this structure. The attributes of the `ijtiff_img` give information on the various TIFF tags that were part of the TIFF image. You can read more about various TIFF tags at https://www.awaresystems.be/imaging/tiff/tifftags.html. To read just the tags and not the image, use the `read_tags()` function.
@@ -118,7 +118,7 @@ display(img_rlogo_grey)
 
 ## Writing TIFF files
 
-To write an image, you need an object in the style of an `ijtiff_img` object. You can read about those [here](https://ropensci.github.io/ijtiff/reference/ijtiff_img.html). The basic idea is to have your image in a 4-dimensional array with the structure `img[y, x, channel, frame]`. Then, to write this image to the location `path`, you just type `write_tif(img, path)`. 
+To write an image, you need an object in the style of an `ijtiff_img` object (see `help("ijtiff_img", package = "ijtiff")`). The basic idea is to have your image in a 4-dimensional array with the structure `img[y, x, channel, frame]`. Then, to write this image to the location `path`, you just type `write_tif(img, path)`. 
 
 ```{r write-tif}
 path <- tempfile(pattern = "dancing-banana", fileext = ".tif")
@@ -130,7 +130,9 @@ write_tif(img_dancing_banana, path)
 
 ## Reading text images
 
-You may have a text image that you want to read (but realistically, you might never).^[If you don't know what text images are, see https://ropensci.github.io/ijtiff/articles/text-images.html.]
+Note: if you don't know what text images are, see `vignette("text-images", package = "ijtiff")`.
+
+You may have a text image that you want to read (but realistically, you might never).
 
 ```{r read-txt-img}
 path_txt_img <- system.file("img", "Rlogo-grey.txt", package = "ijtiff")

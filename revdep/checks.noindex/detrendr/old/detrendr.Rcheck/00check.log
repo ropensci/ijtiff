@@ -1,11 +1,11 @@
 * using log directory ‘/Users/rnolan/Dropbox/DPhil/Misc/RStuff/ijtiff/revdep/checks.noindex/detrendr/old/detrendr.Rcheck’
-* using R version 4.0.0 (2020-04-24)
+* using R version 4.0.2 (2020-06-22)
 * using platform: x86_64-apple-darwin17.0 (64-bit)
 * using session charset: UTF-8
 * using options ‘--no-manual --no-build-vignettes’
 * checking for file ‘detrendr/DESCRIPTION’ ... OK
 * checking extension type ... Package
-* this is package ‘detrendr’ version ‘0.6.7’
+* this is package ‘detrendr’ version ‘0.6.8’
 * package encoding: UTF-8
 * checking package namespace information ... OK
 * checking package dependencies ... OK
@@ -62,18 +62,18 @@ GNU make is a SystemRequirements.
   Running ‘testthat.R’
 Running the tests in ‘tests/testthat.R’ failed.
 Last 13 lines of output:
-  [371529]  44 -  43 ==  1
-  ...
+  > library(testthat)
+  > library(detrendr)
+  > 
+  > if (!detrendr:::win32bit()) test_check("detrendr")
+  [31m──[39m [31m1. Failure: best_tau works (@test-best_params.R#25) [39m [31m────────────────────────[39m
+  `t1` not equal to `t2`.
+  1/2 mismatches
+  [1] 20.7 - 20 == 0.684
   
   ══ testthat results  ═══════════════════════════════════════════════════════════
-  [ OK: 208 | SKIPPED: 8 | WARNINGS: 0 | FAILED: 7 ]
+  [ OK: 214 | SKIPPED: 8 | WARNINGS: 0 | FAILED: 1 ]
   1. Failure: best_tau works (@test-best_params.R#25) 
-  2. Failure: best_l works (@test-best_params.R#61) 
-  3. Failure: detrending entire derectories works (@test-dir-detrend.R#61) 
-  4. Failure: detrending entire derectories works (@test-dir-detrend.R#63) 
-  5. Failure: detrending entire derectories works (@test-dir-detrend.R#116) 
-  6. Failure: detrending entire derectories works (@test-dir-detrend.R#118) 
-  7. Failure: detrending entire derectories works (@test-dir-detrend.R#166) 
   
   Error: testthat unit tests failed
   Execution halted

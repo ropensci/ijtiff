@@ -1,7 +1,7 @@
 Type: Package
 Package: ijtiff
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files
-Version: 2.1.0
+Version: 2.1.2
 Authors@R: 
     c(person(given = "Rory",
              family = "Nolan",
@@ -55,7 +55,7 @@ LazyData: true
 RoxygenNote: 7.1.0
 SystemRequirements: libtiff, libjpeg, zlib
 NeedsCompilation: yes
-Packaged: 2020-07-02 04:26:40 UTC; rnolan
+Packaged: 2020-07-24 03:46:54 UTC; rnolan
 Author: Rory Nolan [aut, cre] (<https://orcid.org/0000-0002-5239-4043>),
   Kent Johnson [aut],
   Simon Urbanek [ctb],
@@ -63,5 +63,6 @@ Author: Rory Nolan [aut, cre] (<https://orcid.org/0000-0002-5239-4043>),
   Jeroen Ooms [rev, ctb] (<https://orcid.org/0000-0002-4035-0289>),
   Jon Clayden [rev] (<https://orcid.org/0000-0002-6608-0619>)
 Repository: CRAN
-Date/Publication: 2020-07-02 05:30:02 UTC
-Built: R 4.0.0; x86_64-apple-darwin17.0; 2020-07-03 21:02:51 UTC; unix
+Date/Publication: 2020-07-24 13:20:02 UTC
+Built: R 4.0.2; x86_64-apple-darwin17.0; 2020-07-25 10:44:30 UTC; unix
+Archs: ijtiff.so.dSYM

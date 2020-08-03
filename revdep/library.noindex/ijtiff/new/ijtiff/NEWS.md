@@ -1,7 +1,22 @@
+# `ijtiff` 2.2.0
+
+# NEW FEATURES 
+* The package now works on 32-bit Windows (thanks to PR #12 from Jeroen Ooms).
+
+## BUG FIXES
+* Fix tests by making use of `testthat::test_path()`.
+
+
+# `ijtiff` 2.1.2
+
+## BUG FIXES
+* Fix some typos in the vignettes.
+
+
 # `ijtiff` 2.1.1
 
 ## BUG FIXES
-* Fix a protection error.
+* Fix a PROTECTion error.
 
 
 # `ijtiff` 2.1.0

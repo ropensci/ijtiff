@@ -33,5 +33,5 @@ img[[1]][100:105, 50:55] # print a section of the first image in the series
 ## ----ijtiff import------------------------------------------------------------
 img <- ijtiff::read_tif(path_2ch_ij)
 dim(img) # 2 channels, 3 frames
-img[100:105, 50:65, 1, 1] # print a section of the first channel, first frame
+img[100:105, 50:55, 1, 1] # print a section of the first channel, first frame
 

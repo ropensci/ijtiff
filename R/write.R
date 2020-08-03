@@ -51,21 +51,22 @@ write_tif <- function(img, path, bits_per_sample = "auto",
   }
   d <- dim(img)
   floats <- anyNA(img) || (!filesstrings::all_equal(img, floor(img)))
+  float_max <- .Call("float_max_C", PACKAGE = "ijtiff")
   if ((!floats) && any(img < 0)) {
-    if (min(img) < -float_max()) {
+    if (min(img) < -float_max) {
       custom_stop(
-        "The lowest allowable negative value in `img` is {-float_max()}.",
+        "The lowest allowable negative value in `img` is {-float_max}.",
         "The lowest value in your `img` is {min(img)}.",
         "
          The `write_txt_img()` function allows you to write images without
          restriction on the values therein. Maybe you should try that?
         "
       )
-    } else if (max(img) > float_max()) {
+    } else if (max(img) > float_max) {
       custom_stop(
         "
          If `img` has negative values (which the input `img` does),
-         then the maximum allowed positive value is {float_max()}.
+         then the maximum allowed positive value is {float_max}.
         ",
         "The largest value in your `img` is {max(img)}.",
         "
@@ -80,8 +81,8 @@ write_tif <- function(img, path, bits_per_sample = "auto",
   dim(img) <- d
   if (floats) {
     checkmate::assert_numeric(img,
-      lower = -float_max(),
-      upper = float_max()
+      lower = -float_max,
+      upper = float_max
     )
     if (bits_per_sample == "auto") bits_per_sample <- 32
     if (bits_per_sample != 32) {

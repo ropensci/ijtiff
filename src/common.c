@@ -12,6 +12,21 @@ static char txtbuf[2048];  // text buffer
 
 static TIFF *last_tiff; /* this to avoid leaks */
 
+// avoid protection issues with setAttrib
+void setAttr(SEXP x, const char *name, SEXP val) {
+  PROTECT(val);
+  setAttrib(x, Rf_install(name), val);
+  UNPROTECT(1);  // UNPROTECT val
+}
+
+// avoid protection issues with getAttrib
+SEXP getAttr(SEXP x, const char *name) {
+  SEXP attr_name = PROTECT(mkString(name));
+  SEXP out = PROTECT(getAttrib(x, attr_name));
+  UNPROTECT(2);  // UNPROTECT attr_name and out
+  return out;
+}
+
 static void TIFFWarningHandler_(const char* module, const char* fmt,
                                 va_list ap) {
   /* we can't pass it directly since R has no vprintf entry point */

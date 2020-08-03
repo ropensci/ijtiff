@@ -7,8 +7,8 @@
   "identifier": "ijtiff",
   "description": "General purpose TIFF file I/O for R users.\n    Currently the only such package with read and write support for TIFF\n    files with floating point (real-numbered) pixels, and the only package\n    that can correctly import TIFF files that were saved from 'ImageJ' and\n    write TIFF files than can be correctly read by 'ImageJ'\n    <https://imagej.nih.gov/ij/>.  Also supports text image I/O.",
   "name": "ijtiff: Comprehensive TIFF I/O with Full Support for 'ImageJ'\n    TIFF Files",
-  "codeRepository": "https://www.github.com/ropensci/ijtiff",
-  "issueTracker": "https://www.github.com/ropensci/ijtiff/issues",
+  "codeRepository": "https://github.com/ropensci/ijtiff",
+  "issueTracker": "https://github.com/ropensci/ijtiff/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
   "version": "2.2.0",
   "programmingLanguage": {
@@ -317,19 +317,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "Rcpp",
-      "name": "Rcpp",
-      "version": ">= 1.0.1",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=Rcpp"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "readr",
       "name": "readr",
       "provider": {
@@ -402,7 +389,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/ijtiff/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/ijtiff/blob/master/README.md",
-  "fileSize": "34955.292KB",
+  "fileSize": "61029.246KB",
   "contIntegration": ["https://travis-ci.org/ropensci/ijtiff", "https://ci.appveyor.com/project/ropensci/ijtiff", "https://codecov.io/gh/ropensci/ijtiff"],
   "developmentStatus": ["http://www.repostatus.org/#active", "https://www.tidyverse.org/lifecycle/#maturing"],
   "review": {
@@ -448,7 +435,8 @@
     "https://CRAN.R-project.org/package=ijtiff",
     "https://ropensci.github.io/ijtiff",
     "https://docs.ropensci.org/ijtiff",
-    "https://www.github.com/ropensci/ijtiff#readme"
+    "https://www.github.com/ropensci/ijtiff#readme",
+    "https://docs.ropensci.org/ijtiff/"
   ],
   "keywords": [
     "r",

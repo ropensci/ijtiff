@@ -18,10 +18,10 @@ downloads](http://cranlogs.r-pkg.org/badges/ijtiff)
 
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
-developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 
-[![](https://badges.ropensci.org/164_status.svg)](https://github.com/ropensci/onboarding/issues/164)
+[![](https://badges.ropensci.org/164_status.svg)](https://github.com/ropensci/software-review/issues/164)
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00633/status.svg)](https://doi.org/10.21105/joss.00633)
 
 ## Introduction
@@ -39,7 +39,7 @@ bugs therein.
     `ijtiff` works smoothly with these images.
 
 To learn about `ijtiff` and how to use it, visit the package website at
-<https://docs.ropensci.org/ijtiff>.
+<https://docs.ropensci.org/ijtiff/>.
 
 ## Installation
 

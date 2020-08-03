@@ -8,21 +8,6 @@
 
 #include <Rinternals.h>
 
-// avoid protection issues with setAttrib
-static void setAttr(SEXP x, const char *name, SEXP val) {
-  PROTECT(val);
-  setAttrib(x, Rf_install(name), val);
-  UNPROTECT(1);  // UNPROTECT val
-}
-
-// avoid protection issues with getAttrib
-static SEXP getAttr(SEXP x, const char *name) {
-  SEXP attr_name = PROTECT(mkString(name));
-  SEXP out = PROTECT(getAttrib(x, attr_name));
-  UNPROTECT(2);  // UNPROTECT attr_name and out
-  return out;
-}
-
 
 // Add information attributes according to the TIFF tags.
 // Only a somewhat random set (albeit mostly baseline) is supported

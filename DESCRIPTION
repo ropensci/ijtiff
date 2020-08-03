@@ -38,9 +38,9 @@ Description: General purpose TIFF file I/O for R users.
     write TIFF files than can be correctly read by 'ImageJ'
     <https://imagej.nih.gov/ij/>.  Also supports text image I/O.
 License: GPL-3
-URL: https://docs.ropensci.org/ijtiff,
-    https://www.github.com/ropensci/ijtiff#readme
-BugReports: https://www.github.com/ropensci/ijtiff/issues
+URL: https://docs.ropensci.org/ijtiff/,
+    https://github.com/ropensci/ijtiff
+BugReports: https://github.com/ropensci/ijtiff/issues
 Depends: 
     R (>= 3.1)
 Imports: 
@@ -54,7 +54,6 @@ Imports:
     magrittr (>= 1.5),
     methods,
     purrr,
-    Rcpp (>= 1.0.1),
     readr,
     rlang (>= 0.3.3),
     stringr (>= 1.2.0),
@@ -72,8 +71,6 @@ Suggests:
     testthat (>= 2.1.0),
     tiff,
     vdiffr
-LinkingTo: 
-    Rcpp (>= 1.0.1)
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

@@ -28,7 +28,6 @@ read_tags(system.file("img", "Rlogo.tif", package = "ijtiff"))
 read_tags(system.file("img", "Rlogo-banana.tif", package = "ijtiff"),
   frames = c(2, 4)
 )
-
 }
 \seealso{
 \code{\link[=read_tif]{read_tif()}}

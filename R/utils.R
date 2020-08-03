@@ -9,21 +9,8 @@
 #'
 #' @noRd
 enlist_img <- function(img) {
-  checkmate::assert_numeric(img)
-  checkmate::assert_array(img, d = 4)
-  enlist_img_cpp(img)
-}
-
-#' Calculate [dim()] on every element in a list.
-#'
-#' @param lst A list.
-#'
-#' @return A list.
-#'
-#' @noRd
-dims <- function(lst) {
-  checkmate::assert_list(lst)
-  dims_cpp(lst)
+  checkmate::assert_array(img, d = 4, mode = "double")
+  .Call("enlist_img_C", img, PACKAGE = "ijtiff")
 }
 
 #' Split the planes of a 3D array into a list.
@@ -36,10 +23,20 @@ dims <- function(lst) {
 #'
 #' @noRd
 enlist_planes <- function(arr3d) {
-  checkmate::assert_array(arr3d, d = 3)
-  out <- purrr::map(seq_len(dim(arr3d)[3]), ~ arr3d[, , ., drop = FALSE])
-  for (i in seq_along(out)) dim(out) <- dim(out)[1:2]
-  out
+  checkmate::assert_array(arr3d, d = 3, mode = "double")
+  .Call("enlist_planes_C", arr3d, PACKAGE = "ijtiff")
+}
+
+#' Calculate [dim()] on every element in a list.
+#'
+#' @param lst A list.
+#'
+#' @return A list.
+#'
+#' @noRd
+dims <- function(lst) {
+  checkmate::assert_list(lst)
+  .Call("dims_C", lst, PACKAGE = "ijtiff")
 }
 
 #' Extract the appropriate plane.
@@ -633,4 +630,10 @@ ebimg_check <- function() {
     ))
   }
   invisible(TRUE)
+}
+
+match_pillar_to_row_3 <- function(arr3d, mat) {
+  checkmate::assert_array(arr3d, d = 3, mode = "double")
+  checkmate::assert_matrix(mat, mode = "integer")
+  .Call("match_pillar_to_row_3_C", arr3d, mat, PACKAGE = "ijtiff")
 }

@@ -14,7 +14,7 @@ pacman::p_load(ijtiff, magrittr)
 img_dancing_banana <- read_tif(path_dancing_banana)
 
 ## ----peek---------------------------------------------------------------------
-str(img_dancing_banana)
+print(img_dancing_banana)
 
 ## ----red-blue-green-banana, echo=FALSE, message=FALSE, out.width='100%', dpi=300, fig.height=0.9----
 d <- dim(img_dancing_banana)

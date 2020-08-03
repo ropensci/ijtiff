@@ -36,5 +36,4 @@ Else \code{colormode} is set to "Grayscale".
 img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 str(img)
 str(as_EBImage(img))
-
 }

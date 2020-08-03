@@ -28,5 +28,4 @@ ImageJ-written TIFF files.
 }
 \examples{
 count_frames(system.file("img", "Rlogo.tif", package = "ijtiff"))
-
 }

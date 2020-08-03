@@ -59,7 +59,6 @@ packing}.
 }
 \examples{
 img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
-
 }
 \seealso{
 \code{\link[=write_tif]{write_tif()}}

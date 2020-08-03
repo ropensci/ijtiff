@@ -171,7 +171,7 @@ test_that("write_tif() errors correctly", {
       "    \\* You have used `bits_per_sample = 12`\\..?"
     )
   )
-  aaaa[1] <- -2 * float_max()
+  aaaa[1] <- -2 * .Call("float_max_C", PACKAGE = "ijtiff")
   expect_error(
     write_tif(aaaa, "a"),
     paste(
@@ -185,7 +185,7 @@ test_that("write_tif() errors correctly", {
     fixed = TRUE
   )
   aaaa[1] <- -1
-  aaaa[2] <- 2 * float_max()
+  aaaa[2] <- 2 * .Call("float_max_C", PACKAGE = "ijtiff")
   expect_error(
     write_tif(aaaa, "a"),
     paste(

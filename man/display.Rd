@@ -34,5 +34,4 @@ if (requireNamespace("EBImage")) {
   display(img[, , 3, ]) # third (blue) channel, first frame
   display(img, basic = TRUE) # displays first (red) channel, first frame
 }
-
 }

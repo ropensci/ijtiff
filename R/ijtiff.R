@@ -1,5 +1,4 @@
 #' @useDynLib ijtiff
-#' @importFrom Rcpp sourceCpp
 #' @importFrom magrittr '%>%' '%<>%' '%T>%'
 #' @importFrom rlang '%||%'
 #' @importFrom zeallot '%<-%'
