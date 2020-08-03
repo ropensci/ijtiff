@@ -1,5 +1,6 @@
 test_that("display works", {
   skip_if_not_installed("vdiffr")
+  skip_if(getRversion() < "4.0")
   img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
   vdiffr::expect_doppelganger("raster R logo", display(img, method = "r"))
   vdiffr::expect_doppelganger("basic R logo", display(img, basic = TRUE))
