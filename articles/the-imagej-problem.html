@@ -75,7 +75,14 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/ropensci/ijtiff/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -90,9 +97,9 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>The <em>ImageJ</em> Problem</h1>
             
-            <h4 class="date">2020-07-31</h4>
+            <h4 class="date">2020-08-03</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/ijtiff/blob/master/vignettes/the-imagej-problem.Rmd"><code>vignettes/the-imagej-problem.Rmd</code></a></small>
       <div class="hidden name"><code>the-imagej-problem.Rmd</code></div>
 
     </div>
@@ -102,7 +109,7 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>The <em>ImageJ</em> software (<a href="https://imagej.nih.gov/ij" class="uri">https://imagej.nih.gov/ij</a>) is a widely-used image viewing and processing software, particularly popular in microscopy and life sciences. It supports the TIFF image format (and many others). It reads TIFF files perfectly, however it can sometimes write them in a peculiar way, meaning that when other softwares try to read TIFF files written by <em>ImageJ</em>, mistakes can be made.</p>
+<p>The <em>ImageJ</em> software (<a href="https://imagej.nih.gov/ij/" class="uri">https://imagej.nih.gov/ij/</a>) is a widely-used image viewing and processing software, particularly popular in microscopy and life sciences. It supports the TIFF image format (and many others). It reads TIFF files perfectly, however it can sometimes write them in a peculiar way, meaning that when other softwares try to read TIFF files written by <em>ImageJ</em>, mistakes can be made.</p>
 <p>One goal of the <code>ijtiff</code> R package is to correctly import TIFF files that were saved from <em>ImageJ</em>.</p>
 <div id="frames-and-channels-in-tiff-files" class="section level3">
 <h3 class="hasAnchor">

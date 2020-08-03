@@ -118,7 +118,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/ropensci/ijtiff/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -133,7 +138,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Write images in TIFF format</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/ijtiff/blob/master/R/write.R'><code>R/write.R</code></a></small>
     <div class="hidden name"><code>write_tif.Rd</code></div>
     </div>
 
@@ -224,7 +229,7 @@ package. Credit should be directed towards Lord Urbanek.</p>
 <span class='fu'>write_tif</span>(<span class='kw'>img</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='kw'>temp_dir</span>, <span class='st'>"/"</span>, <span class='st'>"Rlogo"</span>))</div><div class='output co'>#&gt; <span class='message'>Writing Rlogo.tif: an 8-bit, 76x100 pixel image of unsigned</span>
 #&gt; <span class='message'>integer type with 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='kw'>img</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span>, nrow = <span class='fl'>2</span>)
 <span class='fu'>write_tif</span>(<span class='kw'>img</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='kw'>temp_dir</span>, <span class='st'>"/"</span>, <span class='st'>"tiny2x2"</span>))</div><div class='output co'>#&gt; <span class='message'>Writing tiny2x2.tif: an 8-bit, 2x2 pixel image of unsigned</span>
-#&gt; <span class='message'>integer type with 1 channel and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='kw'>temp_dir</span>, pattern = <span class='st'>"tif$"</span>)</div><div class='output co'>#&gt; [1] "Rlogo.tif"   "tiny2x2.tif"</div><div class='input'></div></pre>
+#&gt; <span class='message'>integer type with 1 channel and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='kw'>temp_dir</span>, pattern = <span class='st'>"tif$"</span>)</div><div class='output co'>#&gt; [1] "Rlogo.tif"   "tiny2x2.tif"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
