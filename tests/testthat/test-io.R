@@ -393,13 +393,9 @@ test_that("reading certain frames works", {
   )
 })
 
-test_that("Reading Mathieu's files works", {
-  hs <- read_tif(test_path("testthat-figs", "HyperStack.tif"))
-  expect_equal(dim(hs), c(300, 400, 6, 12))
-  expect_equal(dim(attr(hs, "color_map")), c(256, 3))
-  expect_equal(colnames(attr(hs, "color_map")), c("red", "green", "blue"))
+test_that("Reading Mathieu's file works", {
   i2 <- read_tif(test_path("testthat-figs", "image2.tif"))
-  expect_equal(dim(i2), c(1024, 1024, 6, 1))
+  expect_equal(dim(i2), c(200, 200, 6, 1))
   expect_equal(dim(attr(i2, "color_map")), c(256, 3))
   expect_equal(colnames(attr(i2, "color_map")), c("red", "green", "blue"))
 })

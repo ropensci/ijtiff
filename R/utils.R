@@ -227,7 +227,21 @@ is_installed <- function(package) {
 #' @return A flag.
 #'
 #' @noRd
-can_be_intish <- function(x) filesstrings::all_equal(x, floor(x))
+can_be_intish <- function(x) filesstrings::all_equal(x, floor(x))[]
+
+#' Check if an object is an [EBImage::Image].
+#'
+#' @param x An object.
+#'
+#' @return A flag.
+#'
+#' @noRd
+is_EBImage <- function(x) {
+  suppressWarnings(
+    isTRUE("Image" %in% class(x)) &&
+      isTRUE(attr(class(x), "package") == "EBImage")
+  )
+}
 
 #' A message to tell the user to install EBImage.
 #'

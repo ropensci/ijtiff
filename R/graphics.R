@@ -50,7 +50,7 @@ display <- function(img, method = NULL, basic = FALSE, normalize = TRUE) {
       if (!methods::is(img, "Image")) img %<>% as_EBImage()
       if (normalize) img %<>% EBImage::normalize()
       if (is.null(method)) {
-        EBImage::display(img)
+        EBImage::display(img, method = "raster")
       } else {
         checkmate::check_string(method)
         method %<>% filesstrings::match_arg(c("browser", "raster"),

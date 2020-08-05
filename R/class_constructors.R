@@ -51,7 +51,11 @@ ijtiff_img <- function(img, ...) {
     do_call_args <- c(list(img), dots)
     img <- do.call(structure, do_call_args)
   }
-  class(img) %<>% c("ijtiff_img", .)
+  cls <- class(img)
+  if (is_EBImage(img)) img <- aperm(img, c(2, 1, 3, 4))
+  suppressWarnings(
+    class(img) <- unique(c("ijtiff_img", dplyr::setdiff(cls, "Image")))
+  )
   img
 }
 
