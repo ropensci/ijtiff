@@ -565,8 +565,7 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
     } else {
       SEXP q = PROTECT(Rf_list1(pre_res));
       to_unprotect++;
-      SETCDR(multi_tail, q);  // `q` is now PROTECTed as part of `multi_tail`
-      multi_tail = q;
+      multi_tail = SETCDR(multi_tail, q);  // `q` is now PROTECTed as part of `multi_tail`
       UNPROTECT(2);  // removing explit PROTECTion of `q` UNPROTECTing `pre_res`
       to_unprotect -= 2;
     }
@@ -582,7 +581,7 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
     to_unprotect++;
     SET_VECTOR_ELT(res, i, Rf_PairToVectorList(current_atts));
     UNPROTECT(1);  // UNPROTECT `current_atts`
-    to_unprotect--;
+    --to_unprotect;
     multi_next = CDR(multi_next);
   }
   UNPROTECT(to_unprotect);
