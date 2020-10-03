@@ -52,8 +52,8 @@ display <- function(img, method = NULL, basic = FALSE, normalize = TRUE) {
       if (is.null(method)) {
         EBImage::display(img, method = "raster")
       } else {
-        checkmate::check_string(method)
-        method %<>% filesstrings::match_arg(c("browser", "raster"),
+        checkmate::assert_string(method)
+        method %<>% strex::match_arg(c("browser", "raster"),
           ignore_case = TRUE
         )
         EBImage::display(img, method = method)

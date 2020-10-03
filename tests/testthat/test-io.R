@@ -274,7 +274,7 @@ test_that("text-image-io works", {
   tmpfl <- tempfile() %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
   txt_img_write(mm, tmpfl)
-  tmpfl_txt <- filesstrings::give_ext(tmpfl, "txt")
+  tmpfl_txt <- strex::str_give_ext(tmpfl, "txt")
   expect_true(file.exists(tmpfl_txt))
   expect_equal(as.vector(mm), unlist(txt_img_read(tmpfl_txt)),
     check.attributes = FALSE
@@ -286,15 +286,15 @@ test_that("text-image-io works", {
     write_txt_img(mmm, tmpfl, rds = TRUE),
     "_ch1.txt and .+_ch2.txt"
   )
-  expect_equal(readRDS(filesstrings::give_ext(tmpfl, "rds")), ijtiff_img(mmm))
+  expect_equal(readRDS(strex::str_give_ext(tmpfl, "rds")), ijtiff_img(mmm))
   tmpfl_txts <- paste0(tmpfl, "_ch", 1:2, ".txt")
-  expect_equal(dir(filesstrings::str_before_last(tmpfl, "/"),
+  expect_equal(dir(strex::str_before_last(tmpfl, "/"),
     pattern = paste0(
-      filesstrings::str_after_last(tmpfl, "/"),
+      strex::str_after_last(tmpfl, "/"),
       ".+txt$"
     )
   ),
-  filesstrings::str_after_last(tmpfl_txts, "/"),
+  strex::str_after_last(tmpfl_txts, "/"),
   check.names = FALSE, check.attributes = FALSE
   )
   expect_equal(unlist(lapply(tmpfl_txts, read_txt_img)), as.vector(mmm),
@@ -309,13 +309,13 @@ test_that("text-image-io works", {
     "_ch2_frame1",
     "_ch2_frame2"
   ), ".txt")
-  expect_equal(dir(filesstrings::str_before_last(tmpfl, "/"),
+  expect_equal(dir(strex::str_before_last(tmpfl, "/"),
     pattern = paste0(
-      filesstrings::str_after_last(tmpfl, "/"),
+      strex::str_after_last(tmpfl, "/"),
       ".+txt$"
     )
   ),
-  filesstrings::str_after_last(tmpfl_txts, "/"),
+  strex::str_after_last(tmpfl_txts, "/"),
   check.names = FALSE, check.attributes = FALSE
   )
   expect_equal(unlist(lapply(tmpfl_txts, read_txt_img)), as.vector(mmmm),

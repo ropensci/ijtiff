@@ -20,7 +20,7 @@ NULL
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' tmptxt <- tempfile(pattern = "img", fileext = ".txt")
 #' write_txt_img(img, tmptxt)
-#' tmptxt_ch1_path <- paste0(filesstrings::before_last_dot(tmptxt), "_ch1.txt")
+#' tmptxt_ch1_path <- paste0(strex::str_before_last_dot(tmptxt), "_ch1.txt")
 #' print(tmptxt_ch1_path)
 #' txt_img <- read_txt_img(tmptxt_ch1_path)
 #' @export
@@ -31,20 +31,20 @@ write_txt_img <- function(img, path, rds = FALSE, msg = TRUE) {
   d <- dim(img)
   chs <- as.logical(d[3] - 1)
   frames <- as.logical(d[4] - 1)
-  if (rds) saveRDS(img, file = filesstrings::give_ext(path, "rds"))
+  if (rds) saveRDS(img, file = strex::str_give_ext(path, "rds"))
   grid <- expand.grid(seq_len(d[3]), seq_len(d[4])) %>% as.matrix()
   ch_part <- ""
   if (chs) ch_part <- paste0("_ch", grid[, 1])
   frame_part <- ""
   if (frames) frame_part <- paste0("_frame", grid[, 2])
-  paths <- paste0(filesstrings::before_last_dot(path), ch_part, frame_part) %>%
-    purrr::map_chr(filesstrings::give_ext, "txt") %T>% {
-      if (length(.) > 1) . <- filesstrings::nice_nums(.)
+  paths <- paste0(strex::str_before_last_dot(path), ch_part, frame_part) %>%
+    purrr::map_chr(strex::str_give_ext, "txt") %T>% {
+      if (length(.) > 1) . <- strex::str_alphord_nums(.)
     }
   msg_paths <- paths
   for (i in seq_along(msg_paths)) {
     if (stringr::str_detect(msg_paths[i], "/")) {
-      msg_paths[i] %<>% filesstrings::str_after_last("/")
+      msg_paths[i] %<>% strex::str_after_last("/")
     }
   }
   if (length(msg_paths) > 1) {
@@ -84,7 +84,7 @@ read_txt_img <- function(path, msg = TRUE) {
     progress = FALSE
   ))
   for (i in seq_len(ncol(out))) {
-    if (all(filesstrings::can_be_numeric(out[[i]]))) {
+    if (all(strex::str_can_be_numeric(out[[i]]))) {
       out[[i]] %<>% as.numeric()
     } else {
       custom_stop(
@@ -95,7 +95,7 @@ read_txt_img <- function(path, msg = TRUE) {
   }
   if (msg) {
     if (stringr::str_detect(path, "/")) {
-      path %<>% filesstrings::str_after_last("/")
+      path %<>% strex::str_after_last("/")
     }
     d <- dim(out)
     message("Reading ", d[1], "x", d[2], " pixel text image '", path, "' . . .")

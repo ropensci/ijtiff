@@ -56,11 +56,11 @@ extract_desired_plane <- function(arr) {
   if (length(d) == 3) {
     nonzero_planes <- !purrr::map_lgl(
       seq_len(d[3]),
-      ~ filesstrings::all_equal(arr[, , .], 0)
+      ~ isTRUE(unique(as.vector(arr[, , .])) == 0)
     )
     if (sum(nonzero_planes) == 1) {
       arr <- arr[, , nonzero_planes]
-    } else if (filesstrings::all_equal(enlist_planes(arr))) {
+    } else if (dplyr::n_distinct(enlist_planes(arr)) == 1) {
       arr <- arr[, , 1]
     } else {
       n_nonzero_unique_planes <- arr %>%
@@ -222,12 +222,15 @@ is_installed <- function(package) {
 
 #' Is a numeric vector equal to its floor.
 #'
+#' This is different to [checkmate::check_integerish()] as it permits things
+#' outside the 32-bit integer range.
+#'
 #' @param x A numeric vector.
 #'
 #' @return A flag.
 #'
 #' @noRd
-can_be_intish <- function(x) filesstrings::all_equal(x, floor(x))[]
+can_be_intish <- function(x) isTRUE(all(x == floor(x)))
 
 #' Check if an object is an [EBImage::Image].
 #'
@@ -394,9 +397,9 @@ prep_frames <- function(frames) {
 #'
 #' @noRd
 calculate_n_slices <- function(ij_description) {
-  n_slices <- filesstrings::first_number_after_first(ij_description, "slices=")
+  n_slices <- strex::str_first_number_after_first(ij_description, "slices=")
   if (stringr::str_detect(ij_description, "frames=")) {
-    n_frames <- filesstrings::first_number_after_first(
+    n_frames <- strex::str_first_number_after_first(
       ij_description,
       "frames="
     )
@@ -438,13 +441,13 @@ translate_ij_description <- function(tags1) {
     startsWith(tags1$description, "ImageJ")) {
     ij_description <- tags1$description
     if (stringr::str_detect(ij_description, "channels=")) {
-      n_ch <- filesstrings::first_number_after_first(
+      n_ch <- strex::str_first_number_after_first(
         ij_description,
         "channels="
       )
       ij_n_ch <- TRUE
     }
-    n_imgs <- filesstrings::first_number_after_first(ij_description, "images=")
+    n_imgs <- strex::str_first_number_after_first(ij_description, "images=")
     n_slices <- calculate_n_slices(ij_description)
     if ((!is.na(n_slices) && !is.na(n_imgs)) &&
       ij_n_ch &&

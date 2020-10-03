@@ -1,3 +1,9 @@
+# `ijtiff` 2.2.1
+
+## BUG FIXES
+* Insist on `strex` >= 1.3.1 to avoid a garbage collection issue.
+
+
 # `ijtiff` 2.2.0
 
 # NEW FEATURES 

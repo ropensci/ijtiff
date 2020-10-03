@@ -44,13 +44,13 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     )[c("img", "path", "bits_per_sample", "compression", "overwrite", "msg")]
   if (stringr::str_detect(path, "/")) {
     # write_tif() sometimes fails when writing to far away directories
-    tiff_dir <- filesstrings::str_before_last(path, "/")
+    tiff_dir <- strex::str_before_last(path, "/")
     checkmate::assert_directory_exists(tiff_dir)
-    path %<>% filesstrings::str_after_last("/")
+    path %<>% strex::str_after_last("/")
     withr::local_dir(tiff_dir)
   }
   d <- dim(img)
-  floats <- anyNA(img) || (!filesstrings::all_equal(img, floor(img)))
+  floats <- anyNA(img) || (!can_be_intish(img))
   float_max <- .Call("float_max_C", PACKAGE = "ijtiff")
   if ((!floats) && any(img < 0)) {
     if (min(img) < -float_max) {

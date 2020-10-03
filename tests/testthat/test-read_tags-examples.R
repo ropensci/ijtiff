@@ -29,7 +29,7 @@ test_that("`read_tags()` works", {
       "only 5 frames in total. "
     )
   )
-  expect_true(filesstrings::all_equal(read_tags(path, "all")))
+  expect_equal(dplyr::n_distinct(read_tags(path, "all")), 1)
   expect_equal(
     read_tags(path),
     list(

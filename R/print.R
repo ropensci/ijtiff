@@ -15,7 +15,6 @@ print.ijtiff_img <- function(x, ...) {
   )
   cli::cli_text("Preview (top left of first channel of first frame):")
   print(x[seq_len(min(6, d[1])), seq_len(min(6, d[2])), 1, 1])
-  atts <- attributes(x)
   att_names <- names(attributes(x))
   cli::cat_line(cli::rule("TIFF tags"))
   possible_tags <- c(
@@ -33,11 +32,11 @@ print.ijtiff_img <- function(x, ...) {
       if (pt == "color_map") {
         cli::cli_text(
           cli::symbol$bullet, " color map: ",
-          "matrix with {nrow(atts$color_map)} row{?s} ",
+          "matrix with {nrow(attr(x, 'color_map'))} row{?s} ",
           "and 3 columns (red, green, blue)"
         )
       } else {
-        cli::cli_text(cli::symbol$bullet, " {pt}: {atts[[pt]]}")
+        cli::cli_text(cli::symbol$bullet, " {pt}: {attr(x, pt)}")
       }
     }
   }

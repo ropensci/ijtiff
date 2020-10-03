@@ -41,9 +41,9 @@ argchk_write_tif <- function(img, path, bits_per_sample, compression,
   }
   checkmate::assert_string(compression)
   if (endsWith(tolower(path), ".tiff") || endsWith(tolower(path), ".tif")) {
-    path <- paste0(filesstrings::before_last_dot(path), ".tif")
+    path <- paste0(strex::str_before_last_dot(path), ".tif")
   }
-  path %<>% filesstrings::give_ext("tif")
+  path %<>% strex::str_give_ext("tif")
   checkmate::assert_flag(overwrite)
   if (file.exists(path) && (!overwrite)) {
     custom_stop(
@@ -59,7 +59,7 @@ argchk_write_tif <- function(img, path, bits_per_sample, compression,
     none = 1L, RLE = 2L, LZW = 5L, PackBits = 32773L, JPEG = 7L,
     deflate = 8L, Zip = 8L
   )
-  compression %<>% filesstrings::match_arg(names(compressions),
+  compression %<>% strex::match_arg(names(compressions),
     ignore_case = TRUE
   ) %>% {
     compressions[match(., names(compressions))]

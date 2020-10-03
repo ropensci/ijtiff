@@ -126,7 +126,7 @@ as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
     startsWith("gr", tolower(colormode)),
     "Gray", colormode
   )
-  colormode %<>% filesstrings::match_arg(c(
+  colormode %<>% strex::match_arg(c(
     "Color", "Colour",
     "Grayscale", "Greyscale"
   ),

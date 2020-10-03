@@ -56,7 +56,7 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
   withr::local_dir(attr(path, "path_dir"))
   checkmate::assert_logical(msg, max.len = 1)
   checkmate::assert_string(list_safety)
-  list_safety %<>% filesstrings::match_arg(c("error", "warning", "none"),
+  list_safety %<>% strex::match_arg(c("error", "warning", "none"),
     ignore_case = TRUE
   )
   tags1 <- read_tags(path, frames = 1)[[1]]
@@ -68,7 +68,7 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
   }
   checkmate::assert_list(out)
   ds <- dims(out)
-  if (filesstrings::all_equal(ds)) {
+  if (dplyr::n_distinct(ds) == 1) {
     d <- ds[[1]]
     attrs1 <- attributes(out[[1]])
     if (colormap_or_ij_channels(out, prep, d)) {
@@ -162,7 +162,7 @@ read_tags <- function(path, frames = 1) {
   if (!is.na(prep$n_slices) && prep$n_dirs != prep$n_slices) {
     frame_nums <- ceiling(frame_nums / prep$n_ch)
   }
-  names(out) <- paste0("frame", filesstrings::nice_nums(frame_nums))
+  names(out) <- paste0("frame", strex::str_alphord_nums(frame_nums))
   out
 }
 
