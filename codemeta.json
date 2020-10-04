@@ -389,7 +389,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/ijtiff/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/ijtiff/blob/master/README.md",
-  "fileSize": "24403.15KB",
+  "fileSize": "27563.572KB",
   "contIntegration": ["https://travis-ci.org/ropensci/ijtiff", "https://ci.appveyor.com/project/ropensci/ijtiff", "https://codecov.io/gh/ropensci/ijtiff"],
   "developmentStatus": ["https://www.repostatus.org/", "https://www.tidyverse.org/lifecycle/#maturing"],
   "review": {
