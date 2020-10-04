@@ -80,19 +80,13 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -146,7 +140,7 @@
     <p>This is for interoperability with the the <code>EBImage</code> package.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as_EBImage</span>(<span class='kw'>img</span>, colormode = <span class='kw'>NULL</span>, scale = <span class='fl'>TRUE</span>, force = <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>as_EBImage</span><span class='op'>(</span><span class='va'>img</span>, colormode <span class='op'>=</span> <span class='cn'>NULL</span>, scale <span class='op'>=</span> <span class='cn'>TRUE</span>, force <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -185,8 +179,10 @@ Else if <code>img</code> has 3 or 4 channels, then <code>colormode</code> is set
 Else <code>colormode</code> is set to "Grayscale".</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>img</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_tif.html'>read_tif</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, package = <span class='st'>"ijtiff"</span>))</div><div class='output co'>#&gt; <span class='message'>Reading Rlogo.tif: an 8-bit, 76x100 pixel image of unsigned</span>
-#&gt; <span class='message'>integer type. Reading 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='kw'>img</span>)</div><div class='output co'>#&gt;  'ijtiff_img' num [1:76, 1:100, 1:4, 1] 0 0 0 0 0 0 0 0 0 0 ...
+    <pre class="examples"><div class='input'><span class='va'>img</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_tif.html'>read_tif</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, package <span class='op'>=</span> <span class='st'>"ijtiff"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Reading Rlogo.tif: an 8-bit, 76x100 pixel image of unsigned</span>
+#&gt; <span class='message'>integer type. Reading 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>img</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  'ijtiff_img' num [1:76, 1:100, 1:4, 1] 0 0 0 0 0 0 0 0 0 0 ...
 #&gt;  - attr(*, "width")= int 100
 #&gt;  - attr(*, "length")= int 76
 #&gt;  - attr(*, "bits_per_sample")= int 8
@@ -199,7 +195,8 @@ Else <code>colormode</code> is set to "Grayscale".</p>
 #&gt;  - attr(*, "y_resolution")= num 300
 #&gt;  - attr(*, "resolution_unit")= chr "inch"
 #&gt;  - attr(*, "orientation")= chr "top_left"
-#&gt;  - attr(*, "color_space")= chr "RGB"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'>as_EBImage</span>(<span class='kw'>img</span>))</div><div class='output co'>#&gt; Formal class 'Image' [package "EBImage"] with 2 slots
+#&gt;  - attr(*, "color_space")= chr "RGB"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'>as_EBImage</span><span class='op'>(</span><span class='va'>img</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Formal class 'Image' [package "EBImage"] with 2 slots
 #&gt;   ..@ .Data    : num [1:100, 1:76, 1:4, 1] 0 0 0 0 0 0 0 0 0 0 ...
 #&gt;   ..@ colormode: int 2</div></pre>
   </div>
@@ -217,7 +214,7 @@ Else <code>colormode</code> is set to "Grayscale".</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

@@ -38,18 +38,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -97,7 +91,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Reading and Writing Images</h1>
             
-            <h4 class="date">2020-08-05</h4>
+            <h4 class="date">2020-10-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/ijtiff/blob/master/vignettes/reading-and-writing-images.Rmd"><code>vignettes/reading-and-writing-images.Rmd</code></a></small>
       <div class="hidden name"><code>reading-and-writing-images.Rmd</code></div>
@@ -113,22 +107,20 @@
 <p><img src="../../../../R/Library/ijtiff/img/Rlogo-banana.gif"></p>
 <p>As you can see, it’s a colour video of a banana dancing in front of the R logo. Hence, it has colour channel (red, green and blue) and frame (a video is comprised of several <em>frames</em>) information inside. I have this video saved in a TIFF file.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw">path_dancing_banana</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"img"</span>, <span class="st">"Rlogo-banana.tif"</span>,
-                                   package = <span class="st">"ijtiff"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">path_dancing_banana</span>)
-<span class="co">#&gt; [1] "/home/travis/R/Library/ijtiff/img/Rlogo-banana.tif"</span>
-</pre></div>
+<span class="va">path_dancing_banana</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"img"</span>, <span class="st">"Rlogo-banana.tif"</span>,
+                                   package <span class="op">=</span> <span class="st">"ijtiff"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">path_dancing_banana</span><span class="op">)</span>
+<span class="co">#&gt; [1] "/home/travis/R/Library/ijtiff/img/Rlogo-banana.tif"</span></pre></div>
 <p>To read it in, you just need <code><a href="../reference/read_tif.html">read_tif()</a></code> and the path to the image.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw">pacman</span>::<span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span>(<span class="kw">ijtiff</span>, <span class="kw">magrittr</span>)
-<span class="kw">img_dancing_banana</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_tif.html">read_tif</a></span>(<span class="kw">path_dancing_banana</span>)
+<span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">ijtiff</span>, <span class="va">magrittr</span><span class="op">)</span>
+<span class="va">img_dancing_banana</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_tif.html">read_tif</a></span><span class="op">(</span><span class="va">path_dancing_banana</span><span class="op">)</span>
 <span class="co">#&gt; Reading Rlogo-banana.tif: an 8-bit, 78x100 pixel image of</span>
 <span class="co">#&gt; unsigned integer type. Reading 3 channels and 8 frames . . .</span>
-<span class="co">#&gt;  Done.</span>
-</pre></div>
+<span class="co">#&gt;  Done.</span></pre></div>
 <p>Let’s take a peek inside of <code>img_dancing_banana</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">img_dancing_banana</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">img_dancing_banana</span><span class="op">)</span>
 <span class="co">#&gt; 78x100 pixel ijtiff_img with 3 channels and 8 frames.</span>
 <span class="co">#&gt; Preview (top left of first channel of first frame):</span>
 <span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6]</span>
@@ -146,8 +138,7 @@
 <span class="co">#&gt; ● rows_per_strip: 78</span>
 <span class="co">#&gt; ● compression: deflate</span>
 <span class="co">#&gt; ● software: ijtiff package, R 4.0.0</span>
-<span class="co">#&gt; ● color_space: black is zero</span>
-</pre></div>
+<span class="co">#&gt; ● color_space: black is zero</span></pre></div>
 <p>You can see it’s a 4-dimensional array. The last two dimensions are 3 and 8; this is because these are the channel and frame slots respectively: the image has 3 channels (red, green and blue) and 8 frames. The first two dimensions tell us that the images in the video are 78 pixels tall and 100 pixels wide. The image object is of class <code>ijtiff_img</code>. This guarantees that it is a 4-dimensional array with this structure. The attributes of the <code>ijtiff_img</code> give information on the various TIFF tags that were part of the TIFF image. You can read more about various TIFF tags at <a href="https://www.awaresystems.be/imaging/tiff/tifftags.html" class="uri">https://www.awaresystems.be/imaging/tiff/tifftags.html</a>. To read just the tags and not the image, use the <code><a href="../reference/read_tags.html">read_tags()</a></code> function.</p>
 <p>Let’s visualize the constituent parts of that 8-frame, colour TIFF.</p>
 <p><img src="reading-and-writing-images_files/figure-html/red-blue-green-banana-1.png" width="100%"></p>
@@ -158,11 +149,10 @@
 <p>It’s possible to read only certain frames. This can be a massive time and memory saver when working with large images.</p>
 <p>Suppose we only want frames 3, 5 and 7 from the image above.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="kw">img_dancing_banana357</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_tif.html">read_tif</a></span>(<span class="kw">path_dancing_banana</span>, frames = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">3</span>, <span class="fl">5</span>, <span class="fl">7</span>))
+<span class="va">img_dancing_banana357</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_tif.html">read_tif</a></span><span class="op">(</span><span class="va">path_dancing_banana</span>, frames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">5</span>, <span class="fl">7</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; Reading Rlogo-banana.tif: an 8-bit, 78x100 pixel image of</span>
 <span class="co">#&gt; unsigned integer type. Reading 3 channels and 3 frames . . .</span>
-<span class="co">#&gt;  Done.</span>
-</pre></div>
+<span class="co">#&gt;  Done.</span></pre></div>
 <p>Let’s visualize again.</p>
 <p><img src="reading-and-writing-images_files/figure-html/red-bblue-green-banana357-1.png" width="100%"></p>
 <p>Just in case you’re wondering, it’s not currently possible to read only certain channels.</p>
@@ -172,29 +162,27 @@
 <a href="#more-examples" class="anchor"></a>More examples</h3>
 <p>If you read an image with only one frame, the frame slot (4) will still be there:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="kw">path_rlogo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"img"</span>, <span class="st">"Rlogo.tif"</span>, package = <span class="st">"ijtiff"</span>)
-<span class="kw">img_rlogo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_tif.html">read_tif</a></span>(<span class="kw">path_rlogo</span>) 
+<span class="va">path_rlogo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"img"</span>, <span class="st">"Rlogo.tif"</span>, package <span class="op">=</span> <span class="st">"ijtiff"</span><span class="op">)</span>
+<span class="va">img_rlogo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_tif.html">read_tif</a></span><span class="op">(</span><span class="va">path_rlogo</span><span class="op">)</span> 
 <span class="co">#&gt; Reading Rlogo.tif: an 8-bit, 76x100 pixel image of unsigned</span>
 <span class="co">#&gt; integer type. Reading 4 channels and 1 frame . . .</span>
 <span class="co">#&gt;  Done.</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="kw">img_rlogo</span>)  <span class="co"># 4 channels, 1 frame</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">img_rlogo</span><span class="op">)</span>  <span class="co"># 4 channels, 1 frame</span>
 <span class="co">#&gt; [1]  76 100   4   1</span>
-<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="kw">img_rlogo</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">img_rlogo</span><span class="op">)</span>
 <span class="co">#&gt; [1] "ijtiff_img" "array"</span>
-<span class="fu"><a href="../reference/display.html">display</a></span>(<span class="kw">img_rlogo</span>)
-</pre></div>
+<span class="fu"><a href="../reference/display.html">display</a></span><span class="op">(</span><span class="va">img_rlogo</span><span class="op">)</span></pre></div>
 <p><img src="reading-and-writing-images_files/figure-html/one-frame-1.png" width="150"></p>
 <p>You can also have an image with only 1 channel:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="kw">path_rlogo_grey</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"img"</span>, <span class="st">"Rlogo-grey.tif"</span>, package = <span class="st">"ijtiff"</span>)
-<span class="kw">img_rlogo_grey</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_tif.html">read_tif</a></span>(<span class="kw">path_rlogo_grey</span>)
+<span class="va">path_rlogo_grey</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"img"</span>, <span class="st">"Rlogo-grey.tif"</span>, package <span class="op">=</span> <span class="st">"ijtiff"</span><span class="op">)</span>
+<span class="va">img_rlogo_grey</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_tif.html">read_tif</a></span><span class="op">(</span><span class="va">path_rlogo_grey</span><span class="op">)</span>
 <span class="co">#&gt; Reading Rlogo-grey.tif: a 32-bit, 76x100 pixel image of</span>
 <span class="co">#&gt; floating point type. Reading 1 channel and 1 frame . . .</span>
 <span class="co">#&gt;  Done.</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="kw">img_rlogo_grey</span>)  <span class="co"># 1 channel, 1 frame</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">img_rlogo_grey</span><span class="op">)</span>  <span class="co"># 1 channel, 1 frame</span>
 <span class="co">#&gt; [1]  76 100   1   1</span>
-<span class="fu"><a href="../reference/display.html">display</a></span>(<span class="kw">img_rlogo_grey</span>)
-</pre></div>
+<span class="fu"><a href="../reference/display.html">display</a></span><span class="op">(</span><span class="va">img_rlogo_grey</span><span class="op">)</span></pre></div>
 <p><img src="reading-and-writing-images_files/figure-html/one-channel-1.png" width="150"></p>
 </div>
 </div>
@@ -203,15 +191,14 @@
 <a href="#writing-tiff-files" class="anchor"></a>Writing TIFF files</h2>
 <p>To write an image, you need an object in the style of an <code>ijtiff_img</code> object (see <code><a href="../reference/ijtiff_img.html">help("ijtiff_img", package = "ijtiff")</a></code>). The basic idea is to have your image in a 4-dimensional array with the structure <code>img[y, x, channel, frame]</code>. Then, to write this image to the location <code>path</code>, you just type <code><a href="../reference/write_tif.html">write_tif(img, path)</a></code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="kw">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(pattern = <span class="st">"dancing-banana"</span>, fileext = <span class="st">".tif"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">path</span>)
-<span class="co">#&gt; [1] "/tmp/RtmpLPcwz9/dancing-banana44be1b95bb5.tif"</span>
-<span class="fu"><a href="../reference/write_tif.html">write_tif</a></span>(<span class="kw">img_dancing_banana</span>, <span class="kw">path</span>)
-<span class="co">#&gt; Writing dancing-banana44be1b95bb5.tif: an 8-bit, 78x100 pixel</span>
+<span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"dancing-banana"</span>, fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span>
+<span class="co">#&gt; [1] "/tmp/RtmpPnYy6I/dancing-banana29aa28a2c929.tif"</span>
+<span class="fu"><a href="../reference/write_tif.html">write_tif</a></span><span class="op">(</span><span class="va">img_dancing_banana</span>, <span class="va">path</span><span class="op">)</span>
+<span class="co">#&gt; Writing dancing-banana29aa28a2c929.tif: an 8-bit, 78x100 pixel</span>
 <span class="co">#&gt; image of unsigned integer type with 3 channels and 8 frames .</span>
 <span class="co">#&gt; . .</span>
-<span class="co">#&gt;  Done.</span>
-</pre></div>
+<span class="co">#&gt;  Done.</span></pre></div>
 </div>
 <div id="reading-text-images" class="section level2">
 <h2 class="hasAnchor">
@@ -219,21 +206,19 @@
 <p>Note: if you don’t know what text images are, see <code><a href="../articles/text-images.html">vignette("text-images", package = "ijtiff")</a></code>.</p>
 <p>You may have a text image that you want to read (but realistically, you might never).</p>
 <div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="kw">path_txt_img</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"img"</span>, <span class="st">"Rlogo-grey.txt"</span>, package = <span class="st">"ijtiff"</span>)
-<span class="kw">txt_img</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/text-image-io.html">read_txt_img</a></span>(<span class="kw">path_txt_img</span>)
+<span class="va">path_txt_img</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"img"</span>, <span class="st">"Rlogo-grey.txt"</span>, package <span class="op">=</span> <span class="st">"ijtiff"</span><span class="op">)</span>
+<span class="va">txt_img</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/text-image-io.html">read_txt_img</a></span><span class="op">(</span><span class="va">path_txt_img</span><span class="op">)</span>
 <span class="co">#&gt; Reading 76x100 pixel text image 'Rlogo-grey.txt' . . .</span>
-<span class="co">#&gt;  Done.</span>
-</pre></div>
+<span class="co">#&gt;  Done.</span></pre></div>
 </div>
 <div id="writing-text-images" class="section level2">
 <h2 class="hasAnchor">
 <a href="#writing-text-images" class="anchor"></a>Writing text images</h2>
 <p>Writing a text image works as you’d expect.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="fu"><a href="../reference/text-image-io.html">write_txt_img</a></span>(<span class="kw">txt_img</span>, path = <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(pattern = <span class="st">"txtimg"</span>, fileext = <span class="st">".txt"</span>))
-<span class="co">#&gt; Writing txtimg44be711f7ed4.txt: a 76x100 pixel text image with 1 channel and 1 frame . . .</span>
-<span class="co">#&gt;  Done.</span>
-</pre></div>
+<span class="fu"><a href="../reference/text-image-io.html">write_txt_img</a></span><span class="op">(</span><span class="va">txt_img</span>, path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"txtimg"</span>, fileext <span class="op">=</span> <span class="st">".txt"</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; Writing txtimg29aa1fd2d48c.txt: a 76x100 pixel text image with 1 channel and 1 frame . . .</span>
+<span class="co">#&gt;  Done.</span></pre></div>
 </div>
   </div>
 
@@ -252,7 +237,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

@@ -85,19 +85,13 @@ and to convert back." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -156,9 +150,9 @@ of image into a conventional <a href='ijtiff_img.html'>ijtiff_img</a> (with time
 and to convert back.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>linescan_to_stack</span>(<span class='kw'>linescan_img</span>)
+    <pre class="usage"><span class='fu'>linescan_to_stack</span><span class='op'>(</span><span class='va'>linescan_img</span><span class='op'>)</span>
 
-<span class='fu'>stack_to_linescan</span>(<span class='kw'>img</span>)</pre>
+<span class='fu'>stack_to_linescan</span><span class='op'>(</span><span class='va'>img</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,16 +174,19 @@ Dimension 1 must be 1 i.e. <code>dim(img)[1] == 1</code>.</p></td>
     <p>The converted image, an object of class <a href='ijtiff_img.html'>ijtiff_img</a>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>linescan</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ijtiff_img.html'>ijtiff_img</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/array.html'>array</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span>, each = <span class='fl'>4</span>), dim = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>1</span>, <span class='fl'>1</span>)))
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>linescan</span>)</div><div class='output co'>#&gt; <span class='message'>4x4 pixel ijtiff_img with 1 channel and 1 frame.</span></div><div class='output co'>#&gt; <span class='message'>Preview (top left of first channel of first frame):</span></div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4]
+    <pre class="examples"><div class='input'><span class='va'>linescan</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ijtiff_img.html'>ijtiff_img</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/array.html'>array</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span>, each <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span>, dim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>linescan</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>4x4 pixel ijtiff_img with 1 channel and 1 frame.</span></div><div class='output co'>#&gt; <span class='message'>Preview (top left of first channel of first frame):</span></div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4]
 #&gt; [1,]    1    2    3    4
 #&gt; [2,]    1    2    3    4
 #&gt; [3,]    1    2    3    4
 #&gt; [4,]    1    2    3    4
-#&gt; ── TIFF tags ───────────────────────────────────────────────────────────────────</div><div class='input'><span class='kw'>stack</span> <span class='op'>&lt;-</span> <span class='fu'>linescan_to_stack</span>(<span class='kw'>linescan</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>stack</span>)</div><div class='output co'>#&gt; <span class='message'>1x4 pixel ijtiff_img with 1 channel and 4 frames.</span></div><div class='output co'>#&gt; <span class='message'>Preview (top left of first channel of first frame):</span></div><div class='output co'>#&gt; [1] 1 2 3 4
-#&gt; ── TIFF tags ───────────────────────────────────────────────────────────────────</div><div class='input'><span class='kw'>linescan</span> <span class='op'>&lt;-</span> <span class='fu'>stack_to_linescan</span>(<span class='kw'>stack</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>linescan</span>)</div><div class='output co'>#&gt; <span class='message'>4x4 pixel ijtiff_img with 1 channel and 1 frame.</span></div><div class='output co'>#&gt; <span class='message'>Preview (top left of first channel of first frame):</span></div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4]
+#&gt; ── TIFF tags ───────────────────────────────────────────────────────────────────</div><div class='input'><span class='va'>stack</span> <span class='op'>&lt;-</span> <span class='fu'>linescan_to_stack</span><span class='op'>(</span><span class='va'>linescan</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>stack</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>1x4 pixel ijtiff_img with 1 channel and 4 frames.</span></div><div class='output co'>#&gt; <span class='message'>Preview (top left of first channel of first frame):</span></div><div class='output co'>#&gt; [1] 1 2 3 4
+#&gt; ── TIFF tags ───────────────────────────────────────────────────────────────────</div><div class='input'><span class='va'>linescan</span> <span class='op'>&lt;-</span> <span class='fu'>stack_to_linescan</span><span class='op'>(</span><span class='va'>stack</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>linescan</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>4x4 pixel ijtiff_img with 1 channel and 1 frame.</span></div><div class='output co'>#&gt; <span class='message'>Preview (top left of first channel of first frame):</span></div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4]
 #&gt; [1,]    1    2    3    4
 #&gt; [2,]    1    2    3    4
 #&gt; [3,]    1    2    3    4
@@ -210,7 +207,7 @@ Dimension 1 must be 1 i.e. <code>dim(img)[1] == 1</code>.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
