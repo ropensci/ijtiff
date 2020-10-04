@@ -22,7 +22,7 @@ original_files <- dir()
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff)
 ![RStudio CRAN downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff)
 ![RStudio CRAN monthly downloads](http://cranlogs.r-pkg.org/badges/ijtiff)
-[![Rdocumentation](http://www.rdocumentation.org/badges/version/ijtiff)](http://www.rdocumentation.org/packages/ijtiff)
+[![Rdocumentation](https://www.rdocumentation.org/badges/version/ijtiff)](https://www.rdocumentation.org/packages/ijtiff)
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
