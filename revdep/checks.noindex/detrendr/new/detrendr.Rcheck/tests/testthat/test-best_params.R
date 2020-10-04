@@ -22,7 +22,7 @@ test_that("best_tau works", {
   expect_equal(length(t1), 2)
   set.seed(1)
   t2 <- best_tau(img_2ch, purpose = "fcs")
-  expect_equal(t1, t2)
+  expect_equal(t1, t2, tolerance = 1)
   img <- array(rpois(99^3, 99), dim = rep(99, 3))
   bt <- best_tau(img, purpose = "ffs")
   if (!is.na(bt)) {

@@ -5,7 +5,7 @@
 * using options ‘--no-manual --no-build-vignettes’
 * checking for file ‘detrendr/DESCRIPTION’ ... OK
 * checking extension type ... Package
-* this is package ‘detrendr’ version ‘0.6.8’
+* this is package ‘detrendr’ version ‘0.6.9’
 * package encoding: UTF-8
 * checking package namespace information ... OK
 * checking package dependencies ... OK
@@ -56,27 +56,13 @@ GNU make is a SystemRequirements.
 * checking files in ‘vignettes’ ... OK
 * checking examples ... OK
 * checking for unstated dependencies in ‘tests’ ... OK
-* checking tests ... ERROR
+* checking tests ... OK
   Running ‘spelling.R’
-  Comparing ‘spelling.Rout’ to ‘spelling.Rout.save’ ... OK
+  Comparing ‘spelling.Rout’ to ‘spelling.Rout.save’ ...9,11d8
+< Potential spelling errors:
+<   WORD       FOUND IN
+< magrittr   NEWS.md:4
   Running ‘testthat.R’
-Running the tests in ‘tests/testthat.R’ failed.
-Last 13 lines of output:
-  > library(testthat)
-  > library(detrendr)
-  > 
-  > if (!detrendr:::win32bit()) test_check("detrendr")
-  [31m──[39m [31m1. Failure: best_tau works (@test-best_params.R#25) [39m [31m────────────────────────[39m
-  `t1` not equal to `t2`.
-  1/2 mismatches
-  [1] 20 - 20.7 == -0.684
-  
-  ══ testthat results  ═══════════════════════════════════════════════════════════
-  [ OK: 214 | SKIPPED: 8 | WARNINGS: 0 | FAILED: 1 ]
-  1. Failure: best_tau works (@test-best_params.R#25) 
-  
-  Error: testthat unit tests failed
-  Execution halted
 * checking for unstated dependencies in vignettes ... OK
 * checking package vignettes in ‘inst/doc’ ... OK
 * checking running R code from vignettes ... NONE
@@ -85,4 +71,4 @@ Last 13 lines of output:
   ‘single-images.Rmd’ using ‘UTF-8’... OK
 * checking re-building of vignette outputs ... SKIPPED
 * DONE
-Status: 1 ERROR, 1 NOTE
+Status: 1 NOTE

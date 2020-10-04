@@ -21,8 +21,11 @@ Type 'q()' to quit R.
 +     skip_on_cran = TRUE
 +   )
 + }
+Potential spelling errors:
+  WORD       FOUND IN
+magrittr   NEWS.md:4
 All Done!
 > 
 > proc.time()
    user  system elapsed 
-  0.818   0.197   1.016 
+  1.772   0.431   2.399 

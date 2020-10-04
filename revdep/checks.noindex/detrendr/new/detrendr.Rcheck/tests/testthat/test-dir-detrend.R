@@ -1,5 +1,5 @@
 test_that("detrending entire derectories works", {
-  skip_if(getRversion() < "3.6.0")
+  skip_if(getRversion() < "3.6")
   skip_on_cran()
   cwd <- setwd(tempdir(check = TRUE))
   on.exit(setwd(cwd))
@@ -124,17 +124,35 @@ test_that("detrending entire derectories works", {
   )
   expect_equivalent(unlist(detrendeds), unlist(detrendeds_dir), tolerance = 1)
   if (get_os() == "mac") {
-    expect_equal(
-      dir("detrended"),
-      paste0(
-        c(
-          "2ch_ij_detrended_thresh=Triangle=0.6,Triangle=0.6_",
-          "bleached_detrended_thresh=Triangle=41.622_"
+    expect_true(
+      any(
+        filesstrings::all_equal(
+          dir("detrended"),
+          paste0(
+            c(
+              "2ch_ij_detrended_thresh=Triangle=0.6,Triangle=0.6_",
+              "bleached_detrended_thresh=Triangle=41.622_"
+            ),
+            "exponential_",
+            c(
+              "for_FFS_tau=auto=NA,auto=NA.tif",
+              "for_FFS_tau=auto=22.0703125.tif"
+            )
+          )
         ),
-        "exponential_",
-        c(
-          "for_FFS_tau=auto=NA,auto=NA.tif",
-          "for_FFS_tau=auto=22.0703125.tif"
+        filesstrings::all_equal(
+          dir("detrended"),
+          paste0(
+            c(
+              "2ch_ij_detrended_thresh=Triangle=0.6,Triangle=0.6_",
+              "bleached_detrended_thresh=Triangle=41.622_"
+            ),
+            "exponential_",
+            c(
+              "for_FFS_tau=auto=NA,auto=NA.tif",
+              "for_FFS_tau=auto=21.38671875.tif"
+            )
+          )
         )
       )
     )

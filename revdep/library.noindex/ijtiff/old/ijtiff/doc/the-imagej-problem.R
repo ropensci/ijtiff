@@ -28,10 +28,10 @@ ijtiff::display(to_display)
 ## ----original tiff import-----------------------------------------------------
 img <- tiff::readTIFF(path_2ch_ij, all = TRUE)
 str(img) # 10 images
-img[[1]][100:105, 50:55] # print a section of the first image in the series
+img[[1]][100:105, 50:55, 1] # print a section of the first image in the series
 
 ## ----ijtiff import------------------------------------------------------------
 img <- ijtiff::read_tif(path_2ch_ij)
-dim(img) # 2 channels, 3 frames
+dim(img) # 2 channels, 2 frames
 img[100:105, 50:55, 1, 1] # print a section of the first channel, first frame
 

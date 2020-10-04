@@ -1,7 +1,7 @@
 Type: Package
 Package: ijtiff
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files
-Version: 2.1.2
+Version: 2.2.0
 Authors@R: 
     c(person(given = "Rory",
              family = "Nolan",
@@ -37,25 +37,24 @@ Description: General purpose TIFF file I/O for R users.
     write TIFF files than can be correctly read by 'ImageJ'
     <https://imagej.nih.gov/ij/>.  Also supports text image I/O.
 License: GPL-3
-URL: https://docs.ropensci.org/ijtiff,
-        https://www.github.com/ropensci/ijtiff#readme
-BugReports: https://www.github.com/ropensci/ijtiff/issues
+URL: https://docs.ropensci.org/ijtiff/,
+        https://github.com/ropensci/ijtiff
+BugReports: https://github.com/ropensci/ijtiff/issues
 Depends: R (>= 3.1)
 Imports: checkmate (>= 1.9.3), cli, dplyr, filesstrings (>= 3.1.5), fs
         (>= 1.3.1), graphics, grDevices, magrittr (>= 1.5), methods,
-        purrr, Rcpp (>= 1.0.1), readr, rlang (>= 0.3.3), stringr (>=
-        1.2.0), withr (>= 2.1.0)
+        purrr, readr, rlang (>= 0.3.3), stringr (>= 1.2.0), withr (>=
+        2.1.0), zeallot
 Suggests: abind, covr, EBImage, knitr, pacman, rmarkdown, rprojroot,
         spelling, testthat (>= 2.1.0), tiff, vdiffr
-LinkingTo: Rcpp (>= 1.0.1)
 VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 SystemRequirements: libtiff, libjpeg, zlib
 NeedsCompilation: yes
-Packaged: 2020-07-24 03:46:54 UTC; rnolan
+Packaged: 2020-08-05 05:48:53 UTC; rnolan
 Author: Rory Nolan [aut, cre] (<https://orcid.org/0000-0002-5239-4043>),
   Kent Johnson [aut],
   Simon Urbanek [ctb],
@@ -63,6 +62,6 @@ Author: Rory Nolan [aut, cre] (<https://orcid.org/0000-0002-5239-4043>),
   Jeroen Ooms [rev, ctb] (<https://orcid.org/0000-0002-4035-0289>),
   Jon Clayden [rev] (<https://orcid.org/0000-0002-6608-0619>)
 Repository: CRAN
-Date/Publication: 2020-07-24 13:20:02 UTC
-Built: R 4.0.2; x86_64-apple-darwin17.0; 2020-07-25 10:44:30 UTC; unix
+Date/Publication: 2020-08-05 16:50:11 UTC
+Built: R 4.0.2; x86_64-apple-darwin17.0; 2020-08-06 10:41:32 UTC; unix
 Archs: ijtiff.so.dSYM

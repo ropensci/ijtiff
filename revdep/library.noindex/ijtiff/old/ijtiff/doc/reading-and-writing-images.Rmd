@@ -91,7 +91,7 @@ to_display[seq_len(nrow(reds)) + 2 * nrow(reds), , 3, ] <- blues
 display(to_display)
 ```
 
-Just in case you're wondering, it's not currently possible to read only certain channels. This would be more difficult to implement, but if you need this, ask me and I'll see what I can do.
+Just in case you're wondering, it's not currently possible to read only certain channels. 
 
 ### More examples
 
