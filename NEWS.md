@@ -1,3 +1,9 @@
+# `ijtiff` 2.2.3
+
+## BUG FIXES
+* Make `configure` more portable by using `sh` instead of `bash`.
+
+
 # `ijtiff` 2.2.2
 
 ## BUG FIXES
