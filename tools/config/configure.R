@@ -15,14 +15,17 @@ PKG_LIBS <- "-ltiff -ljpeg -lz"
 PKG_CFLAGS <- PKGCONFIG_CFLAGS <- PKGCONFIG_LIBS <- ""
 
 # Use pkg-config if available
-pkg_config_available <- suppressWarnings(
-  isTRUE(
-    as.logical(
-      nchar(
-        system2("pkg-config", "--version", stdout = TRUE)
+pkg_config_available <- tryCatch(
+  suppressWarnings(
+    isTRUE(
+      as.logical(
+        nchar(
+          system2("pkg-configs", "--version", stderr = TRUE)
+        )
       )
     )
-  )
+  ),
+  error = function(cnd) FALSE
 )
 if (pkg_config_available) {
   PKGCONFIG_CFLAGS <- system2(
