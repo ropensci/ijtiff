@@ -79,15 +79,6 @@ devtools::install_github("ropensci/ijtiff")
 This package uses a lot of code from the original `tiff` package by
 Simon Urbanek.
 
-## Advice for Package Authors
-
-If you’re authoring a package which is to depend on `ijtiff` and you’re
-using AppVeyor, be sure to force AppVeyor to use 64-bit architecture.
-This avoids some peculiarities of 32-bit AppVeyor which cause `ijtiff`
-installations to fail. You can see how to do this in the
-[`appveyor.yml`](https://github.com/ropensci/ijtiff/blob/master/appveyor.yml)
-file in this repository.
-
 ## Contribution
 
 Contributions to this package are welcome. The preferred method of

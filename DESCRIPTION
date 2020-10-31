@@ -73,6 +73,7 @@ Suggests:
     vdiffr
 VignetteBuilder: 
     knitr
+Biarch: TRUE
 Encoding: UTF-8
 Language: en-US
 LazyData: true
