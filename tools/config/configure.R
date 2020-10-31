@@ -76,13 +76,13 @@ cat(stringr::str_glue("Using PKG_LIBS={PKG_LIBS}"), "\n")
 
 # Find compiler
 CC <- system2(paste0(R.home(), "/bin/R"),
-              c("CMD", "CONFIG", "CC"),
+              c("CMD", "config", "CC"),
               stdout = TRUE)
 CFLAGS <- system2(paste0(R.home(), "/bin/R"),
-                  c("CMD", "CONFIG", "CFLAGS"),
+                  c("CMD", "config", "CFLAGS"),
                   stdout = TRUE)
 CPPFLAGS <- system2(paste0(R.home(), "/bin/R"),
-                    c("CMD", "CONFIG", "CPPFLAGS"),
+                    c("CMD", "config", "CPPFLAGS"),
                     stdout = TRUE)
 
 # Test configuration
@@ -95,13 +95,14 @@ test_failed <- as.logical(
 
 if (test_failed) {
   cat("------------------------- ANTICONF ERROR ---------------------------",
-      "\n", "Configuration failed because $PKG_CONFIG_NAME was not found.",
+      "\n", "Configuration failed because" , PKG_CONFIG_NAME, "was not found.",
       "Try installing:", "\n",
       " * deb: $PKG_DEB_NAME (Debian, Ubuntu, etc)", "\n",
       " * rpm: $PKG_RPM_NAME (Fedora, EPEL)", "\n",
       " * brew: $PKG_BREW_NAME (OSX)", "\n",
-      "If $PKG_CONFIG_NAME is already installed, check that 'pkg-config' is",
-      "in your PATH and PKG_CONFIG_PATH contains a $PKG_CONFIG_NAME.pc file.",
+      "If", PKG_CONFIG_NAME, "is already installed, check that 'pkg-config' is",
+      "in your PATH and PKG_CONFIG_PATH contains a,",
+      stringr::str_glue("{PKG_CONFIG_NAME}.pc"), "file.",
       "If pkg-config is unavailable,",
       "you can set INCLUDE_DIR and LIB_DIR manually via:", "\n",
       "R CMD INSTALL --configure-vars='INCLUDE_DIR=... LIB_DIR=...'", "\n",
