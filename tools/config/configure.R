@@ -12,7 +12,9 @@ PKG_BREW_NAME <- "libtiff"
 PKG_TEST_HEADER <- "<tiff.h>"
 PKG_LIBS <- "-ltiff -ljpeg -lz"
 
-PKG_CFLAGS <- PKGCONFIG_CFLAGS <- PKGCONFIG_LIBS <- ""
+PKGCONFIG_CFLAGS <- PKGCONFIG_LIBS <- ""
+
+PKG_CFLAGS <- system2("echo", "$PKG_CFLAGS", stdout = TRUE)
 
 # Use pkg-config if available
 pkg_config_available <- tryCatch(
