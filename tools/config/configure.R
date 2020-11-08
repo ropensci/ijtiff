@@ -96,23 +96,27 @@ test_failed <- as.logical(
 )
 
 if (test_failed) {
-  cat("------------------------- ANTICONF ERROR ---------------------------",
-      "\n", "Configuration failed because" , PKG_CONFIG_NAME, "was not found.",
-      "Try installing:", "\n",
-      " * deb: $PKG_DEB_NAME (Debian, Ubuntu, etc)", "\n",
-      " * rpm: $PKG_RPM_NAME (Fedora, EPEL)", "\n",
-      " * brew: $PKG_BREW_NAME (OSX)", "\n",
-      "If", PKG_CONFIG_NAME, "is already installed, check that 'pkg-config' is",
-      "in your PATH and PKG_CONFIG_PATH contains a,",
-      stringr::str_glue("{PKG_CONFIG_NAME}.pc"), "file.",
-      "If pkg-config is unavailable,",
-      "you can set INCLUDE_DIR and LIB_DIR manually via:", "\n",
-      "R CMD INSTALL --configure-vars='INCLUDE_DIR=... LIB_DIR=...'", "\n",
-      "--------------------------------------------------------------------")
+  cat(
+    "------------------------- ANTICONF ERROR ---------------------------\n",
+    stringr::str_glue(
+      "Configuration failed because {PKG_CONFIG_NAME} was not found. \n",
+      " Try installing:", "\n",
+      "  * deb: {PKG_DEB_NAME} (Debian, Ubuntu, etc)", "\n",
+      "  * rpm: {PKG_RPM_NAME} (Fedora, EPEL)", "\n",
+      "  * brew: {PKG_BREW_NAME} (OSX)", "\n",
+      " If {PKG_CONFIG_NAME} is already installed, check that 'pkg-config'",
+      "\n", " is in your PATH and PKG_CONFIG_PATH contains a ",
+      " {PKG_CONFIG_NAME}.pc file.", "\n",
+      " If pkg-config is unavailable,",
+      " you can set INCLUDE_DIR and LIB_DIR", "\n", " manually via:", "\n",
+      " `R CMD INSTALL --configure-vars='INCLUDE_DIR=... LIB_DIR=...'`", "\n",
+      "--------------------------------------------------------------------"
+    )
+  )
 } else {  # Write to Makevars
   readr::write_lines(
-    paste0(c("PKG_CPPFLAGS=", "PKG_LIBS="),
-           c(PKG_CFLAGS, PKG_LIBS)),
+    stringr::str_glue("PKG_CPPFLAGS={PKG_CFLAGS}", "\n",
+                      "PKG_LIBS={PKG_LIBS}"),
     "src/Makevars"
   )
 }
