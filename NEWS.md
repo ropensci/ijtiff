@@ -1,4 +1,11 @@
-# `ijtiff` 2.2.3
+# `ijtiff` 2.2.5
+
+## BUG FIXES
+* Typo fix for `configure`. At one point there was a call of `pkg-configs` instead of `pkg-config`.
+* Also now all compile flags from `pkg-config --libs` _and_ `pkg-config --libs --static` are used every time.
+
+
+# `ijtiff` 2.2.4
 
 ## BUG FIXES
 * Fix for `configure` error messages.

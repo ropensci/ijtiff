@@ -154,12 +154,12 @@ static void TIFF_add_tags(TIFF *tiff, SEXP res) {
     uint16_t *colormap[3] = {0, 0, 0};
     TIFFGetField(tiff, TIFFTAG_COLORMAP, colormap, colormap + 1, colormap + 2);
     if (colormap[0] && colormap[1] && colormap[2]) {
-      SEXP bps_sxp = PROTECT(getAttr(res, "bits_per_sample"));
+      SEXP bps_sxp = Rf_protect(getAttr(res, "bits_per_sample"));
       if (Rf_xlength(bps_sxp)) {
-        uint8_t bps = INTEGER(bps_sxp)[0];
-        uint32_t nvals = pow(2, bps) + 0.5;  // careful to avoid rounding error
+        int bps = INTEGER(bps_sxp)[0];
+        uint32_t nvals = (uint32_t) (pow(2, bps) + 0.5);  // avoid rounding err
         if (bps < 32) {  // ImageJ only supports LUTS for 16-bit TIFFs
-          SEXP colormap_mat = PROTECT(allocMatrix(INTSXP, nvals, 3));
+          SEXP colormap_mat = Rf_protect(allocMatrix(INTSXP, nvals, 3));
           int *colormap_mat_intptr = INTEGER(colormap_mat);
           for (int i = 0; i != 3; ++i) {
             int jstart = i * nvals;
@@ -167,25 +167,25 @@ static void TIFF_add_tags(TIFF *tiff, SEXP res) {
               colormap_mat_intptr[jstart + j] = colormap[i][j];
             }
           }
-          SEXP colnames = PROTECT(allocVector(STRSXP, 3));
+          SEXP colnames = Rf_protect(allocVector(STRSXP, 3));
           SET_STRING_ELT(colnames, 0, mkChar("red"));
           SET_STRING_ELT(colnames, 1, mkChar("green"));
           SET_STRING_ELT(colnames, 2, mkChar("blue"));
           setAttrib(colormap_mat, R_DimNamesSymbol,
                     Rf_list2(R_NilValue, colnames));
           setAttr(res, "color_map", colormap_mat);
-          UNPROTECT(2);
+          Rf_unprotect(2);
         }
       }
-      UNPROTECT(1);
+      Rf_unprotect(1);
     }
   }
 }
 
 SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
   check_type_sizes();
-  uint64_t to_unprotect = 0;
-  SEXP res = PROTECT(R_NilValue), multi_res = PROTECT(R_NilValue);
+  int to_unprotect = 0;
+  SEXP res = Rf_protect(R_NilValue), multi_res = Rf_protect(R_NilValue);
   to_unprotect += 2;  // res and multi_res
   SEXP multi_tail = multi_res, dim;
   const char *fn;  // file name
@@ -268,7 +268,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
   	    Rf_warning("The \'ijtiff\' package only supports unsigned "
                    "integer or float sample formats, but your image contains "
                    "the signed integer format.");
-  	res = PROTECT(allocVector(REALSXP, imageWidth * imageLength * out_spp));
+  	res = Rf_protect(allocVector(REALSXP, imageWidth * imageLength * out_spp));
   	to_unprotect++;  // res needs to be UNPROTECTed later
   	real_arr = REAL(res);
   	if (tileWidth == 0) {
@@ -330,8 +330,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
       			for (i = 0; i < n; i += step) {
       			  const uint8_t *v = (const uint8_t*) buf + i;
       			  if (is_float) {
-      			    float float_val = NA_REAL;
-      			    float_val = ((const float*) v)[0];
+      			    float float_val = ((const float*) v)[0];
       			    real_arr[imageLength * x + y] = float_val;
       			  } else {
       			    int int_val = NA_INTEGER;
@@ -490,40 +489,40 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
   	  }
   	}
   	_TIFFfree(buf);
-  	dim = PROTECT(allocVector(INTSXP, (out_spp > 1) ? 3 : 2));
+  	dim = Rf_protect(allocVector(INTSXP, (out_spp > 1) ? 3 : 2));
   	to_unprotect++;
   	INTEGER(dim)[0] = imageLength;
   	INTEGER(dim)[1] = imageWidth;
   	if (out_spp > 1) INTEGER(dim)[2] = out_spp;
   	setAttrib(res, R_DimSymbol, dim);
     TIFF_add_tags(tiff, res);
-  	UNPROTECT(1);  // UNPROTECT `dim`
+  	Rf_unprotect(1);  // UNPROTECT `dim`
   	to_unprotect--;
   	if (multi_res == R_NilValue) {  // first image in stack
-  	  multi_res = multi_tail = PROTECT(Rf_list1(res));
+  	  multi_res = multi_tail = Rf_protect(Rf_list1(res));
   	  to_unprotect++;  // `multi_res` needs to be UNPROTECTed later
   	} else {
-  	  SEXP q = PROTECT(Rf_list1(res));
+  	  SEXP q = Rf_protect(Rf_list1(res));
   	  to_unprotect++;
   	  SETCDR(multi_tail, q);  // `q` is now PROTECTed as part of `multi_tail`
   	  multi_tail = q;
-  	  UNPROTECT(2);  // removing explit PROTECTion of `q` UNPROTECTing `res`
+  	  Rf_unprotect(2);  // removing explit PROTECTion of `q` UNPROTECTing `res`
   	  to_unprotect -= 2;
   	}
   	if (!TIFFReadDirectory(tiff))
   	  break;
   }
   TIFFClose(tiff);
-  res = PROTECT(PairToVectorList(multi_res));  // convert LISTSXP into VECSXP
+  res = Rf_protect(PairToVectorList(multi_res));  // convert LISTSXP into VECSXP
   to_unprotect++;
-  UNPROTECT(to_unprotect);
+  Rf_unprotect(to_unprotect);
   return res;
 }
 
 SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
   check_type_sizes();
-  uint64_t to_unprotect = 0;
-  SEXP pre_res = PROTECT(R_NilValue), multi_res = PROTECT(R_NilValue);
+  int to_unprotect = 0;
+  SEXP pre_res = Rf_protect(R_NilValue), multi_res = Rf_protect(R_NilValue);
   to_unprotect += 2;
   SEXP multi_tail = multi_res;
   const char *fn;
@@ -554,44 +553,44 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
         break;  // safety net: I don't expect this line to ever be needed
       }
     }
-    PROTECT(pre_res = allocVector(VECSXP, 0));
+    Rf_protect(pre_res = allocVector(VECSXP, 0));
     to_unprotect++;
     TIFF_add_tags(tiff, pre_res);
     /* Build a linked list of results */
     n_img++;
     if (multi_res == R_NilValue) {  // first image in stack
-      multi_res = multi_tail = PROTECT(Rf_list1(pre_res));
+      multi_res = multi_tail = Rf_protect(Rf_list1(pre_res));
       to_unprotect++;  // `multi_res` needs to be UNPROTECTed later
     } else {
-      SEXP q = PROTECT(Rf_list1(pre_res));
+      SEXP q = Rf_protect(Rf_list1(pre_res));
       to_unprotect++;
       multi_tail = SETCDR(multi_tail, q);  // `q` is now PROTECTed as part of `multi_tail`
-      UNPROTECT(2);  // removing explit PROTECTion of `q` UNPROTECTing `pre_res`
+      Rf_unprotect(2);  // removing explit PROTECTion of `q` UNPROTECTing `pre_res`
       to_unprotect -= 2;
     }
     if (!TIFFReadDirectory(tiff))
       break;
   }
   TIFFClose(tiff);
-  SEXP res = PROTECT(allocVector(VECSXP, n_img));
+  SEXP res = Rf_protect(allocVector(VECSXP, n_img));
   to_unprotect++;  // PROTECT `res`
   SEXP multi_next = multi_res;
   for (R_len_t i = 0; i != n_img; ++i) {
-    SEXP current_atts = PROTECT(ATTRIB(CAR(multi_next)));
+    SEXP current_atts = Rf_protect(ATTRIB(CAR(multi_next)));
     to_unprotect++;
     SET_VECTOR_ELT(res, i, Rf_PairToVectorList(current_atts));
-    UNPROTECT(1);  // UNPROTECT `current_atts`
+    Rf_unprotect(1);  // UNPROTECT `current_atts`
     --to_unprotect;
     multi_next = CDR(multi_next);
   }
-  UNPROTECT(to_unprotect);
+  Rf_unprotect(to_unprotect);
   return res;
 }
 
 SEXP count_directories_C(SEXP sFn /*FileName*/) {
   check_type_sizes();
-  uint64_t to_unprotect = 0;
-  SEXP res = PROTECT(allocVector(REALSXP, 1));
+  int to_unprotect = 0;
+  SEXP res = Rf_protect(allocVector(REALSXP, 1));
   to_unprotect++;
   const char *fn;
   tiff_job_t rj;
@@ -612,6 +611,6 @@ SEXP count_directories_C(SEXP sFn /*FileName*/) {
   }
   TIFFClose(tiff);
   REAL(res)[0] = cur_dir;
-  UNPROTECT(to_unprotect);
+  Rf_unprotect(to_unprotect);
   return res;
 }

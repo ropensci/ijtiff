@@ -76,7 +76,7 @@ SEXP match_pillar_to_row_3_C(SEXP arr3d, SEXP mat) {
   for (R_xlen_t i = 0; i != out_len; ++i) {
     bool found = false;
     R_xlen_t mat_nrow = nrows(mat);
-    for (R_xlen_t j = 0; j != mat_nrow; ++j) {
+    for (int j = 0; j != mat_nrow; ++j) {
       if (arr3d_dbl[i] == mat_int[j] &&
           arr3d_dbl[i + out_len] == mat_int[j + mat_nrow] &&
           arr3d_dbl[i + 2 * out_len] == mat_int[j + 2 * mat_nrow]) {

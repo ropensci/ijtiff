@@ -22,7 +22,7 @@ pkg_config_available <- tryCatch(
     isTRUE(
       as.logical(
         nchar(
-          system2("pkg-configs", "--version", stderr = TRUE)
+          system2("pkg-config", "--version", stdout = TRUE)
         )
       )
     )
@@ -38,6 +38,12 @@ if (pkg_config_available) {
   PKGCONFIG_LIBS <- system2("pkg-config",
                             c("--libs", PKG_CONFIG_NAME),
                             stdout = TRUE)
+  PKGCONFIG_STATIC_LIBS <- system2("pkg-config",
+                                   c("--libs", "--static", PKG_CONFIG_NAME),
+                                   stdout = TRUE)
+  PKGCONFIG_LIBS <- paste(PKGCONFIG_LIBS, PKGCONFIG_STATIC_LIBS)
+  PKGCONFIG_LIBS <- unique(stringr::str_split(PKGCONFIG_LIBS, "\\s+")[[1]])
+  PKGCONFIG_LIBS <- paste(PKGCONFIG_LIBS, collapse = " ")
 }
 
 # Note that cflags may be empty in case of success
@@ -50,18 +56,7 @@ if (nchar(INCLUDE_DIR) || nchar(LIB_DIR)) {
 } else if (nchar(PKGCONFIG_CFLAGS) || nchar(PKGCONFIG_LIBS)) {
   cat("Found pkg-config cflags and libs!", "\n")
   PKG_CFLAGS <- PKGCONFIG_CFLAGS
-  # pkg-config may miss -ljpeg and -lz, in which case it needs static libs
-  static_needed <- !all(
-    stringr::str_detect(PKGCONFIG_LIBS, c("-ltiff", "-ljpeg", "-lz"))
-  )
-  if (static_needed) {
-    PKGCONFIG_LIBS <- system2("pkg-config",
-                              c("--libs", "--static", PKG_CONFIG_NAME),
-                              stdout = TRUE)
-  }
-  if (all(stringr::str_detect(PKGCONFIG_LIBS, c("-ltiff", "-ljpeg", "-lz")))) {
-    PKG_LIBS <- PKGCONFIG_LIBS
-  }
+  PKG_LIBS <- PKGCONFIG_LIBS
 }
 
 # pkg-config often says -ljbig is necessary but it seems not to be

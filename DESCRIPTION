@@ -2,7 +2,7 @@ Type: Package
 Package: ijtiff
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ'
     TIFF Files
-Version: 2.2.4
+Version: 2.2.5
 Authors@R: 
     c(person(given = "Rory",
              family = "Nolan",
