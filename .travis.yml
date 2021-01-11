@@ -15,6 +15,7 @@ matrix:
             - libtiff5-dev
             - libfftw3-dev
             - libgit2-dev
+            - libharfbuzz-dev
       after_success: Rscript -e 'covr::codecov()'
       before_cache: Rscript -e 'remotes::install_github("r-lib/pkgdown")'
       deploy:
