@@ -30,20 +30,37 @@ pkg_config_available <- tryCatch(
   error = function(cnd) FALSE
 )
 if (pkg_config_available) {
-  PKGCONFIG_CFLAGS <- system2(
-    "pkg-config",
-    c("--cflags", "--silence-errors", PKG_CONFIG_NAME),
-    stdout = TRUE
+  cat("Found pkg-config!", "\n")
+  PKGCONFIG_CFLAGS <- tryCatch(
+    system2("pkg-config",
+            c("--cflags", "--silence-errors", PKG_CONFIG_NAME),
+            stdout = TRUE),
+    error = function(cnd) ""
   )
-  PKGCONFIG_LIBS <- system2("pkg-config",
-                            c("--libs", PKG_CONFIG_NAME),
-                            stdout = TRUE)
-  PKGCONFIG_STATIC_LIBS <- system2("pkg-config",
-                                   c("--libs", "--static", PKG_CONFIG_NAME),
-                                   stdout = TRUE)
-  PKGCONFIG_LIBS <- paste(PKGCONFIG_LIBS, PKGCONFIG_STATIC_LIBS)
-  PKGCONFIG_LIBS <- unique(stringr::str_split(PKGCONFIG_LIBS, "\\s+")[[1]])
-  PKGCONFIG_LIBS <- paste(PKGCONFIG_LIBS, collapse = " ")
+  PKGCONFIG_LIBS <- tryCatch(
+    system2("pkg-config",
+            c("--libs", PKG_CONFIG_NAME),
+            stdout = TRUE),
+    error = function(cnd) ""
+  )
+  PKGCONFIG_STATIC_LIBS <- tryCatch(
+    system2("pkg-config",
+            c("--libs", "--static", PKG_CONFIG_NAME),
+            stdout = TRUE),
+    error = function(cnd) ""
+  )
+  pkgconfig_success <- any(
+    purrr::map_lgl(
+      list(PKGCONFIG_CFLAGS, PKGCONFIG_LIBS, PKGCONFIG_STATIC_LIBS),
+      ~isTRUE(nchar(.) > 0)
+    )
+  )
+  if (pkgconfig_success) {
+    if (length(PKGCONFIG_CFLAGS) == 0) PKGCONFIG_CFLAGS <- ""
+    PKGCONFIG_LIBS <- paste(PKGCONFIG_LIBS, PKGCONFIG_STATIC_LIBS)
+    PKGCONFIG_LIBS <- unique(stringr::str_split(PKGCONFIG_LIBS, "\\s+")[[1]])
+    PKGCONFIG_LIBS <- stringr::str_trim(paste(PKGCONFIG_LIBS, collapse = " "))
+  }
 }
 
 # Note that cflags may be empty in case of success
@@ -54,7 +71,7 @@ if (nchar(INCLUDE_DIR) || nchar(LIB_DIR)) {
   PKG_CFLAGS <- stringr::str_glue("-I{INCLUDE_DIR} {PKG_CFLAGS}")
   PKG_LIBS <- stringr::str_glue("-L{LIB_DIR} {PKG_LIBS}")
 } else if (nchar(PKGCONFIG_CFLAGS) || nchar(PKGCONFIG_LIBS)) {
-  cat("Found pkg-config cflags and libs!", "\n")
+  cat("Found pkg-config cflags and/or libs for libtiff!", "\n")
   PKG_CFLAGS <- PKGCONFIG_CFLAGS
   PKG_LIBS <- PKGCONFIG_LIBS
 }
