@@ -46,7 +46,7 @@ display <- function(img, method = NULL, basic = FALSE, normalize = TRUE) {
       xaxt = "n", yaxt = "n"
     )
   } else {
-    if (is_installed("EBImage")) {
+    if (rlang::is_installed("EBImage")) {
       if (!methods::is(img, "Image")) img %<>% as_EBImage()
       if (normalize) img %<>% EBImage::normalize()
       if (is.null(method)) {

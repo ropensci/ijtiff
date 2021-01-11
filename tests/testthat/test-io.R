@@ -1,56 +1,69 @@
 test_that("Package 2-channel example I/O works", {
   set.seed(1)
-  img0 <- read_tif(test_path("testthat-figs", "2ch_ij.tif"))
+  img0 <- read_tif(test_path("testthat-figs", "2ch_ij.tif"), msg = FALSE)
   expect_equal(dim(img0), c(15, 6, 2, 5))
   img1 <- read_tif(system.file("img", "Rlogo-banana-red_green.tif",
     package = "ijtiff"
-  ))
+  ), msg = FALSE)
   expect_equal(dim(img1), c(155, 200, 2, 2))
-  img2 <- read_tif(test_path("testthat-figs", "Rlogo-banana-1-2.tif"))
+  img2 <- read_tif(test_path("testthat-figs", "Rlogo-banana-1-2.tif"),
+    msg = FALSE
+  )
   expect_equal(dim(img2), c(155, 200, 3, 2))
   img3 <- read_tif(
-    test_path("testthat-figs", "Rlogo-banana-red_green_blue.tif")
+    test_path("testthat-figs", "Rlogo-banana-red_green_blue.tif"),
+    msg = FALSE
   )
   expect_equal(dim(img3), c(155, 200, 3, 2))
-  img4 <- read_tif(test_path("testthat-figs", "Rlogo-banana-red.tif"))
+  img4 <- read_tif(test_path("testthat-figs", "Rlogo-banana-red.tif"),
+    msg = FALSE
+  )
   expect_equal(dim(img4), c(155, 200, 1, 2))
   expect_equal(img3[, , 1, 1], img4[, , 1, 1])
   v22 <- c(2, 2, 1, 1)
   a22 <- array(seq_len(prod(v22)), dim = v22)
   tmptif <- tempfile(fileext = ".tif") %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
-  write_tif(a22, tmptif)
-  in_tif <- read_tif(tmptif)
+  write_tif(a22, tmptif, msg = FALSE)
+  in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v22)
-  expect_equal(as.vector(in_tif), as.vector(a22), check.attributes = FALSE)
+  expect_equal(as.vector(in_tif), as.vector(a22), ignore_attr = FALSE)
   v2345 <- 2:5
   a2345 <- array(seq_len(prod(v2345)), dim = v2345)
-  write_tif(a2345, tmptif, overwrite = TRUE)
-  in_tif <- read_tif(tmptif)
+  suppressMessages(
+    expect_message(
+      write_tif(a2345, tmptif, overwrite = TRUE),
+      "Writing.+.tif.+8-bit.+2x3 pixel image.+unsigned integer.+4 ch.+5 frames"
+    )
+  )
+
+  in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v2345)
-  expect_equal(as.vector(in_tif), as.vector(a2345), check.attributes = FALSE)
+  expect_equal(as.vector(in_tif), as.vector(a2345), ignore_attr = FALSE)
   expect_equal(
-    as.vector(read_tif(tmptif, frames = c(3, 5))),
+    as.vector(read_tif(tmptif, frames = c(3, 5), msg = FALSE)),
     as.vector(a2345[, , , c(3, 5)])
   )
   v22 <- c(2, 2, 1, 1)
   a22 <- array(sample.int(prod(v22)), dim = v22)
   tmptif <- tempfile(fileext = ".tif") %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
-  write_tif(a22, tmptif)
-  in_tif <- read_tif(tmptif)
+  write_tif(a22, tmptif, msg = FALSE)
+  in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v22)
-  expect_equal(as.vector(in_tif), as.vector(a22), check.attributes = FALSE)
+  expect_equal(as.vector(in_tif), as.vector(a22), ignore_attr = FALSE)
   v2345 <- 2:5
   a2345 <- array(sample.int(prod(v2345)), dim = v2345)
-  write_tif(a2345, tmptif, overwrite = TRUE)
-  in_tif <- read_tif(tmptif)
+  write_tif(a2345, tmptif, overwrite = TRUE, msg = FALSE)
+  in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v2345)
-  expect_equal(as.vector(in_tif), as.vector(a2345), check.attributes = FALSE)
+  expect_equal(as.vector(in_tif), as.vector(a2345), ignore_attr = FALSE)
 })
 
 test_that("Package RGB I/O works", {
-  img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
+  img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"),
+    msg = FALSE
+  )
   expect_equal(dim(img), c(76, 100, 4, 1))
 })
 
@@ -60,10 +73,10 @@ test_that("8-bit unsigned integer TIFF I/O works", {
   a2345 <- array(sample.int(prod(v2345)), dim = v2345)
   tmptif <- tempfile(fileext = ".tif") %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
-  write_tif(a2345, tmptif)
-  in_tif <- read_tif(tmptif)
+  write_tif(a2345, tmptif, msg = FALSE)
+  in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v2345)
-  expect_equal(as.vector(in_tif), as.vector(a2345), check.attributes = FALSE)
+  expect_equal(as.vector(in_tif), as.vector(a2345), ignore_attr = FALSE)
 })
 
 test_that("16-bit unsigned integer TIFF I/O works", {
@@ -72,10 +85,10 @@ test_that("16-bit unsigned integer TIFF I/O works", {
   a6789 <- array(sample.int(prod(v6789)), dim = v6789)
   tmptif <- tempfile(fileext = ".tif") %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
-  tif_write(a6789, tmptif)
-  in_tif <- read_tif(tmptif)
+  tif_write(a6789, tmptif, msg = FALSE)
+  in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v6789)
-  expect_equal(as.vector(in_tif), as.vector(a6789), check.attributes = FALSE)
+  expect_equal(as.vector(in_tif), as.vector(a6789), ignore_attr = FALSE)
 })
 
 test_that("32-bit unsigned integer TIFF I/O works", {
@@ -84,10 +97,10 @@ test_that("32-bit unsigned integer TIFF I/O works", {
   a1m <- array(sample.int(2^32 - 1, prod(v1m)), dim = v1m)
   tmptif <- tempfile(fileext = ".tif") %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
-  write_tif(a1m, tmptif)
-  in_tif <- read_tif(tmptif)
+  write_tif(a1m, tmptif, msg = FALSE)
+  in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v1m)
-  expect_equal(as.vector(in_tif), as.vector(a1m), check.attributes = FALSE)
+  expect_equal(as.vector(in_tif), as.vector(a1m), ignore_attr = FALSE)
 })
 
 test_that("Float (real-numbered) TIFF I/O works", {
@@ -96,19 +109,19 @@ test_that("Float (real-numbered) TIFF I/O works", {
   a2345 <- array(sample.int(prod(v2345)), dim = v2345) + 0.5
   tmptif <- tempfile(fileext = ".tif") %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
-  write_tif(a2345, paste0(tmptif, "f"))
-  in_tif <- read_tif(tmptif)
+  write_tif(a2345, paste0(tmptif, "f"), msg = FALSE)
+  in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v2345)
-  expect_equal(as.vector(in_tif), as.vector(a2345), check.attributes = FALSE)
+  expect_equal(as.vector(in_tif), as.vector(a2345), ignore_attr = FALSE)
   a2345[9] <- NA
   expect_error(
-    write_tif(a2345, tmptif),
+    write_tif(a2345, tmptif, msg = FALSE),
     "To enable overwriting, use `overwrite = TRUE`"
   )
-  write_tif(a2345, tmptif, overwrite = TRUE)
-  in_tif <- read_tif(tmptif)
+  write_tif(a2345, tmptif, overwrite = TRUE, msg = FALSE)
+  in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v2345)
-  expect_equal(as.vector(in_tif), as.vector(a2345), check.attributes = FALSE)
+  expect_equal(as.vector(in_tif), as.vector(a2345), ignore_attr = FALSE)
 })
 
 test_that("Negative-numbered TIFF I/O works", {
@@ -117,10 +130,10 @@ test_that("Negative-numbered TIFF I/O works", {
   a2345[1] <- -1
   tmptif <- tempfile(fileext = ".tif") %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
-  write_tif(a2345, tmptif)
-  in_tif <- read_tif(tmptif)
+  write_tif(a2345, tmptif, msg = FALSE)
+  in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v2345)
-  expect_equal(as.vector(in_tif), as.vector(a2345), check.attributes = FALSE)
+  expect_equal(as.vector(in_tif), as.vector(a2345), ignore_attr = FALSE)
   expect_equal(attr(in_tif, "sample_format"), "float")
 })
 
@@ -132,16 +145,23 @@ test_that("List returning works", {
   tmptif <- tempfile(fileext = ".tif") %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
   expect_equal(tiff::writeTIFF(weird_list_img, tmptif), 2)
-  expect_error(read_tif(tmptif), "tried to return a list")
+  expect_error(read_tif(tmptif, msg = FALSE), "tried to return a list")
   expect_warning(
-    read_tif(tmptif, list_safety = "warn"),
+    read_tif(tmptif, list_safety = "warn", msg = FALSE),
     "returning a list"
   )
-  in_weird <- read_tif(tmptif, list_safety = "n")
-  expect_equal(in_weird,
+  suppressMessages(
+    expect_message(
+      in_weird <- read_tif(tmptif, list_safety = "n"),
+      "Reading a list of images with differing dimensions"
+    )
+  )
+  purrr::map2(
+    in_weird,
     purrr::map(weird_list_img, ~ floor(. * (2^8 - 1))),
-    check.attributes = FALSE
-  ) # writing causes truncation
+    expect_equal,
+    ignore_attr = TRUE
+  )
 })
 
 test_that("TIFFErrorHandler_ works", {
@@ -153,9 +173,12 @@ test_that("TIFFErrorHandler_ works", {
 
 test_that("write_tif() errors correctly", {
   aaaa <- array(0, dim = rep(4, 4))
-  expect_error(tif_write(aaaa, "path/"), "path.+cannot end with.+/")
   expect_error(
-    write_tif(aaaa, "a", bits_per_sample = "abc"),
+    tif_write(aaaa, "path/", msg = FALSE),
+    "path.+cannot end with.+/"
+  )
+  expect_error(
+    write_tif(aaaa, "a", bits_per_sample = "abc", msg = FALSE),
     paste0(
       " If `bits_per_sample` is a string, then 'auto' is ",
       "the only allowable value. \n    * You have used 'ab",
@@ -273,18 +296,27 @@ test_that("text-image-io works", {
   dim(mm) %<>% c(1, 1)
   tmpfl <- tempfile() %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
-  txt_img_write(mm, tmpfl)
+  txt_img_write(mm, tmpfl, msg = FALSE)
   tmpfl_txt <- strex::str_give_ext(tmpfl, "txt")
   expect_true(file.exists(tmpfl_txt))
-  expect_equal(as.vector(mm), unlist(txt_img_read(tmpfl_txt)),
-    check.attributes = FALSE
+  expect_equal(as.vector(mm),
+    as.vector(txt_img_read(tmpfl_txt, msg = FALSE)),
+    ignore_attr = FALSE
+  )
+  suppressMessages(
+    expect_message(
+      txt_img_read(tmpfl_txt, msg = TRUE),
+      "Reading 4x15 pixel text image"
+    )
   )
   file.remove(tmpfl_txt)
   skip_if_not_installed("abind")
   mmm <- abind::abind(mm, mm, along = 3)
-  expect_message(
-    write_txt_img(mmm, tmpfl, rds = TRUE),
-    "_ch1.txt and .+_ch2.txt"
+  suppressMessages(
+    expect_message(
+      write_txt_img(mmm, tmpfl, rds = TRUE),
+      "_ch1.txt and .+_ch2.txt"
+    )
   )
   expect_equal(readRDS(strex::str_give_ext(tmpfl, "rds")), ijtiff_img(mmm))
   tmpfl_txts <- paste0(tmpfl, "_ch", 1:2, ".txt")
@@ -295,14 +327,15 @@ test_that("text-image-io works", {
     )
   ),
   strex::str_after_last(tmpfl_txts, "/"),
-  check.names = FALSE, check.attributes = FALSE
+  ignore_attr = FALSE
   )
-  expect_equal(unlist(lapply(tmpfl_txts, read_txt_img)), as.vector(mmm),
-    check.attributes = FALSE
+  expect_equal(unlist(lapply(tmpfl_txts, read_txt_img, msg = FALSE)),
+    as.vector(mmm),
+    ignore_attr = FALSE
   )
   file.remove(tmpfl_txts)
   mmmm <- abind::abind(mmm, mmm, along = 4)
-  write_txt_img(mmmm, tmpfl)
+  write_txt_img(mmmm, tmpfl, msg = FALSE)
   tmpfl_txts <- paste0(tmpfl, c(
     "_ch1_frame1",
     "_ch1_frame2",
@@ -316,10 +349,11 @@ test_that("text-image-io works", {
     )
   ),
   strex::str_after_last(tmpfl_txts, "/"),
-  check.names = FALSE, check.attributes = FALSE
+  ignore_attr = FALSE
   )
-  expect_equal(unlist(lapply(tmpfl_txts, read_txt_img)), as.vector(mmmm),
-    check.attributes = FALSE
+  expect_equal(unlist(lapply(tmpfl_txts, read_txt_img, msg = FALSE)),
+    as.vector(mmmm),
+    ignore_attr = FALSE
   )
   bad_txt_img <- dplyr::tribble(
     ~col1, ~col2,
@@ -341,10 +375,10 @@ test_that("text-image-io works", {
 
 test_that("reading certain frames works", {
   path <- test_path("testthat-figs", "2ch_ij.tif")
-  img <- read_tif(path, "A")
-  img12 <- read_tif(path, frames = 1:2)
-  img34 <- read_tif(path, frames = 3:4)
-  img25 <- read_tif(path, frames = c(2, 5))
+  img <- read_tif(path, "A", msg = FALSE)
+  img12 <- read_tif(path, frames = 1:2, msg = FALSE)
+  img34 <- read_tif(path, frames = 3:4, msg = FALSE)
+  img25 <- read_tif(path, frames = c(2, 5), msg = FALSE)
   expect_equal(
     img[, , , c(1, 2)] %>% {
       list(
@@ -394,7 +428,7 @@ test_that("reading certain frames works", {
 })
 
 test_that("Reading Mathieu's file works", {
-  i2 <- read_tif(test_path("testthat-figs", "image2.tif"))
+  i2 <- read_tif(test_path("testthat-figs", "image2.tif"), msg = FALSE)
   expect_equal(dim(i2), c(200, 200, 6, 1))
   expect_equal(dim(attr(i2, "color_map")), c(256, 3))
   expect_equal(colnames(attr(i2, "color_map")), c("red", "green", "blue"))

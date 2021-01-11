@@ -1,11 +1,13 @@
 test_that("`as_EBImage()` works", {
   skip_if_not_installed("EBImage")
-  img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
+  img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"),
+    msg = FALSE
+  )
   expect_equal(dim(img), c(76, 100, 4, 1))
   ebimg <- as_EBImage(img)
   expect_equal(dim(ebimg), c(100, 76, 4, 1))
-  expect_is(ebimg, "Image")
-  img <- read_tif(test_path("testthat-figs", "2ch_ij.tif"))
+  expect_s4_class(ebimg, "Image")
+  img <- read_tif(test_path("testthat-figs", "2ch_ij.tif"), msg = FALSE)
   expect_equal(dim(img), c(15, 6, 2, 5))
   ebimg <- as_EBImage(img)
   expect_equal(dim(ebimg), c(6, 15, 2, 5))

@@ -207,19 +207,6 @@ frames_count <- function(path) {
   count_frames(path = path)
 }
 
-#' Check if a package is installed.
-#'
-#' @param package A string. The name of a package.
-#'
-#' @return A flag.
-#'
-#' @noRd
-is_installed <- function(package) {
-  checkmate::assert_string(package)
-  installed_packages <- rownames(utils::installed.packages())
-  package %in% installed_packages
-}
-
 #' Is a numeric vector equal to its floor.
 #'
 #' This is different to [checkmate::check_integerish()] as it permits things
@@ -640,7 +627,7 @@ custom_stop <- function(main_message, ..., .envir = parent.frame()) {
 #'
 #' @noRd
 ebimg_check <- function() {
-  if (!is_installed("EBImage")) {
+  if (!rlang::is_installed("EBImage")) {
     stop(paste0(
       "To use this function, you need to have the `EBImage` package ",
       "installed.", "\n", ebimg_install_msg()

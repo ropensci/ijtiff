@@ -64,6 +64,7 @@ Suggests:
     covr,
     EBImage,
     knitr,
+    mockery,
     pacman,
     rmarkdown,
     rprojroot,
@@ -74,6 +75,7 @@ Suggests:
 VignetteBuilder: 
     knitr
 Biarch: TRUE
+Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
 LazyData: true
