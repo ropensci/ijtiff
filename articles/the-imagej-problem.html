@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.5</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/ropensci/ijtiff/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -86,13 +86,12 @@
 
       
 
-      </header><link href="the-imagej-problem_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="the-imagej-problem_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>The <em>ImageJ</em> Problem</h1>
             
-            <h4 class="date">2020-11-11</h4>
+            <h4 class="date">2021-01-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/ijtiff/blob/master/vignettes/the-imagej-problem.Rmd"><code>vignettes/the-imagej-problem.Rmd</code></a></small>
       <div class="hidden name"><code>the-imagej-problem.Rmd</code></div>
@@ -125,10 +124,10 @@
 <div id="reading-imagej-tiff-files" class="section level2">
 <h2 class="hasAnchor">
 <a href="#reading-imagej-tiff-files" class="anchor"></a>Reading <em>ImageJ</em> TIFF files</h2>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="va">path_2ch_ij</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"img"</span>, <span class="st">"Rlogo-banana-red_green.tif"</span>,
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">path_2ch_ij</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"img"</span>, <span class="st">"Rlogo-banana-red_green.tif"</span>,
   package <span class="op">=</span> <span class="st">"ijtiff"</span>
-<span class="op">)</span></pre></div>
+<span class="op">)</span></code></pre></div>
 <p><code>path_2ch_ij</code> is the path to a TIFF file which was made in <em>ImageJ</em> from the R logo dancing banana GIF used in the README of Jeroen Ooms’ <code>magick</code> package. The TIFF is a time-stack containing only the red and green channels of the first and third frames of the original GIF. Here’s the full gif:</p>
 <p><img src="../../../../R/Library/ijtiff/img/Rlogo-banana.gif"></p>
 <p>Here are the red and green channels of the first and third frames of the TIFF:</p>
@@ -137,8 +136,8 @@
 <h3 class="hasAnchor">
 <a href="#the-original-tiff-package" class="anchor"></a>The original <code>tiff</code> package</h3>
 <p>When we import it with the original <code>tiff</code> package:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">img</span> <span class="op">&lt;-</span> <span class="fu">tiff</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tiff/man/readTIFF.html">readTIFF</a></span><span class="op">(</span><span class="va">path_2ch_ij</span>, all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">img</span> <span class="op">&lt;-</span> <span class="fu">tiff</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tiff/man/readTIFF.html">readTIFF</a></span><span class="op">(</span><span class="va">path_2ch_ij</span>, all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="co"># 10 images</span>
 <span class="co">#&gt; List of 4</span>
 <span class="co">#&gt;  $ : num [1:155, 1:200, 1:3] 0.996 0.996 0.996 0.996 0.996 ...</span>
@@ -152,7 +151,7 @@
 <span class="co">#&gt; [3,] 0.6523537 0.6601663 0.6406348 0.6601663 0.6601663 0.6406348</span>
 <span class="co">#&gt; [4,] 0.6406348 0.6406348 0.6601663 0.6406348 0.6601663 0.6406348</span>
 <span class="co">#&gt; [5,] 0.6718853 0.6718853 0.6406348 0.6601663 0.6406348 0.6601663</span>
-<span class="co">#&gt; [6,] 0.6718853 0.6406348 0.6406348 0.6406348 0.6523537 0.6523537</span></pre></div>
+<span class="co">#&gt; [6,] 0.6718853 0.6406348 0.6406348 0.6406348 0.6523537 0.6523537</span></code></pre></div>
 <ul>
 <li>We just get a list of 4 frames, with wrong information about the channels (it looks like there are 3 channels per frame).</li>
 <li>The numbers in the image array(s) are (by default) normalized to the range [0, 1].</li>
@@ -162,8 +161,8 @@
 <h3 class="hasAnchor">
 <a href="#the-ijtiff-package" class="anchor"></a>The <code>ijtiff</code> package</h3>
 <p>When we import the same image with the <code>ijtiff</code> package:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">img</span> <span class="op">&lt;-</span> <span class="fu">ijtiff</span><span class="fu">::</span><span class="fu"><a href="../reference/read_tif.html">read_tif</a></span><span class="op">(</span><span class="va">path_2ch_ij</span><span class="op">)</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">img</span> <span class="op">&lt;-</span> <span class="fu">ijtiff</span><span class="fu">::</span><span class="fu"><a href="../reference/read_tif.html">read_tif</a></span><span class="op">(</span><span class="va">path_2ch_ij</span><span class="op">)</span>
 <span class="co">#&gt; Reading Rlogo-banana-red_green.tif: an 8-bit, 155x200 pixel</span>
 <span class="co">#&gt; image of unsigned integer type. Reading 2 channels and 2</span>
 <span class="co">#&gt; frames . . .</span>
@@ -177,7 +176,7 @@
 <span class="co">#&gt; [3,]  167  169  164  169  169  164</span>
 <span class="co">#&gt; [4,]  164  164  169  164  169  164</span>
 <span class="co">#&gt; [5,]  172  172  164  169  164  169</span>
-<span class="co">#&gt; [6,]  172  164  164  164  167  167</span></pre></div>
+<span class="co">#&gt; [6,]  172  164  164  164  167  167</span></code></pre></div>
 <ul>
 <li>We see the image nicely represented as an array of channels of frames.</li>
 <li>The numbers in the image are integers, the same as would be seen if one opened the image with ImageJ.</li>

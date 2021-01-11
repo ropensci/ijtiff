@@ -54,6 +54,8 @@ channel-frame pair gets its own file." />
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -81,7 +83,7 @@ channel-frame pair gets its own file." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ijtiff</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.5</span>
       </span>
     </div>
 
@@ -115,7 +117,7 @@ channel-frame pair gets its own file." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/ropensci/ijtiff/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -180,10 +182,10 @@ single R object) file?</p></td>
 </div><div class='output co'>#&gt; <span class='message'>Reading Rlogo.tif: an 8-bit, 76x100 pixel image of unsigned</span>
 #&gt; <span class='message'>integer type. Reading 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='va'>tmptxt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span>pattern <span class='op'>=</span> <span class='st'>"img"</span>, fileext <span class='op'>=</span> <span class='st'>".txt"</span><span class='op'>)</span>
 <span class='fu'>write_txt_img</span><span class='op'>(</span><span class='va'>img</span>, <span class='va'>tmptxt</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Writing img4cda4965f34d_ch1.txt, img4cda4965f34d_ch2.txt, img4cda4965f34d_ch3.txt and img4cda4965f34d_ch4.txt: a 76x100 pixel text image with 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='va'>tmptxt_ch1_path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'>strex</span><span class='fu'>::</span><span class='fu'><a href='https://rorynolan.github.io/strex/reference/str_before_last_dot.html'>str_before_last_dot</a></span><span class='op'>(</span><span class='va'>tmptxt</span><span class='op'>)</span>, <span class='st'>"_ch1.txt"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Writing img4ec32d0f5985_ch1.txt, img4ec32d0f5985_ch2.txt, img4ec32d0f5985_ch3.txt and img4ec32d0f5985_ch4.txt: a 76x100 pixel text image with 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='va'>tmptxt_ch1_path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'>strex</span><span class='fu'>::</span><span class='fu'><a href='https://rorynolan.github.io/strex/reference/str_before_last_dot.html'>str_before_last_dot</a></span><span class='op'>(</span><span class='va'>tmptxt</span><span class='op'>)</span>, <span class='st'>"_ch1.txt"</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>tmptxt_ch1_path</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "/tmp/RtmpnmTi7v/img4cda4965f34d_ch1.txt"</div><div class='input'><span class='va'>txt_img</span> <span class='op'>&lt;-</span> <span class='fu'>read_txt_img</span><span class='op'>(</span><span class='va'>tmptxt_ch1_path</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Reading 76x100 pixel text image 'img4cda4965f34d_ch1.txt' . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div></pre>
+</div><div class='output co'>#&gt; [1] "/tmp/Rtmpw04VhZ/img4ec32d0f5985_ch1.txt"</div><div class='input'><span class='va'>txt_img</span> <span class='op'>&lt;-</span> <span class='fu'>read_txt_img</span><span class='op'>(</span><span class='va'>tmptxt_ch1_path</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Reading 76x100 pixel text image 'img4ec32d0f5985_ch1.txt' . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
