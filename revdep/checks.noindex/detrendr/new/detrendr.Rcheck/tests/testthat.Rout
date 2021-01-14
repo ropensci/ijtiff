@@ -19,9 +19,12 @@ Type 'q()' to quit R.
 > library(detrendr)
 > 
 > test_check("detrendr")
-══ testthat results  ═══════════════════════════════════════════════════════════
-[ OK: 215 | SKIPPED: 8 | WARNINGS: 0 | FAILED: 0 ]
+══ Skipped tests ═══════════════════════════════════════════════════════════════
+● get_os() == "linux" is not TRUE (4)
+● get_os() == "windows" is not TRUE (4)
+
+[ FAIL 0 | WARN 0 | SKIP 8 | PASS 215 ]
 > 
 > proc.time()
    user  system elapsed 
-257.987  25.935 298.657 
+141.859  14.416 141.182 

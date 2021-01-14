@@ -66,19 +66,29 @@ test_that("detrending entire derectories works", {
     tolerance = 1
   )
   if (get_os() == "mac") {
-    expect_equal(
-      dir("detrended"),
-      paste0(
+    dir_detrended <- paste0(
+      c(
+        "2ch_ij_detrended_thresh=Triangle=0.6,Triangle=0.6_",
+        "bleached_detrended_thresh=Triangle=41.622_"
+      ),
+      c(
+        "boxcar_for_FFS_l=auto=NA,auto=3.tif",
+        "boxcar_for_FFS_l=auto=17.tif"
+      )
+    )
+    if (!isTRUE(all.equal(dir_detrended, dir("detrended")))) {
+      dir_detrended <- paste0(
         c(
           "2ch_ij_detrended_thresh=Triangle=0.6,Triangle=0.6_",
           "bleached_detrended_thresh=Triangle=41.622_"
         ),
         c(
           "boxcar_for_FFS_l=auto=NA,auto=3.tif",
-          "boxcar_for_FFS_l=auto=17.tif"
+          "boxcar_for_FFS_l=auto=18.tif"
         )
       )
-    )
+    }
+    expect_equal(dir("detrended"), dir_detrended)
   }
   if (get_os() == "linux") {
     dd <- dir("detrended")

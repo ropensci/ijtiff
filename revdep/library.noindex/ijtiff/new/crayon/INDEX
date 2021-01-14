@@ -13,6 +13,7 @@ has_color               Does the current R session support ANSI colors?
 has_style               Check if a string has some ANSI styling
 hyperlink               Terminal Hyperlinks
 make_style              Create an ANSI color style
+num_ansi_colors         Detect the number of ANSI colors to use
 num_colors              Number of colors the terminal supports
 show_ansi_colors        Show the ANSI color table on the screen
 start.crayon            Switch on or off a style

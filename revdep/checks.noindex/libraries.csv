@@ -1,6 +1,6 @@
 package,old,new,delta
-ijtiff,2.2.0,2.2.1,*
+ijtiff,2.2.4,2.2.5,*
+cpp11,NA,0.2.5,*
 crayon,NA,1.3.4.9000,*
-dplyr,NA,1.0.2,*
-strex,NA,1.3.1,*
-withr,NA,2.3.0,*
+rlang,NA,0.4.10,*
+strex,NA,1.4.1,*

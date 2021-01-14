@@ -11,10 +11,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2020-08-05" />
+<meta name="date" content="2020-11-08" />
 
 <title>Reading and Writing Images</title>
 
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      a.sourceLine { display: inline-block; line-height: 1.25; }
+  a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+  a.sourceLine:empty { height: 1.2em; }
+  .sourceCode { overflow: visible; }
+  code.sourceCode { white-space: pre; position: relative; }
+  div.sourceCode { margin: 1em 0; }
+  pre.sourceCode { margin: 0; }
+  @media screen {
+  div.sourceCode { overflow: auto; }
+  }
+  @media print {
+  code.sourceCode { white-space: pre-wrap; }
+  a.sourceLine { text-indent: -1em; padding-left: 1em; }
+  }
+  pre.numberSource a.sourceLine
+    { position: relative; left: -4em; }
+  pre.numberSource a.sourceLine::before
+    { content: attr(data-line-number);
+      position: relative; left: -1em; text-align: right; vertical-align: baseline;
+      border: none; pointer-events: all; display: inline-block;
+      -webkit-touch-callout: none; -webkit-user-select: none;
+      -khtml-user-select: none; -moz-user-select: none;
+      -ms-user-select: none; user-select: none;
+      padding: 0 4px; width: 4em;
+      color: #aaaaaa;
+    }
+  pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+  div.sourceCode
+    {  }
+  @media screen {
+  a.sourceLine::before { text-decoration: underline; }
+  }
+  code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+  code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+  code span.at { color: #7d9029; } /* Attribute */
+  code span.bn { color: #40a070; } /* BaseN */
+  code span.bu { } /* BuiltIn */
+  code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+  code span.ch { color: #4070a0; } /* Char */
+  code span.cn { color: #880000; } /* Constant */
+  code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+  code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+  code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+  code span.dt { color: #902000; } /* DataType */
+  code span.dv { color: #40a070; } /* DecVal */
+  code span.er { color: #ff0000; font-weight: bold; } /* Error */
+  code span.ex { } /* Extension */
+  code span.fl { color: #40a070; } /* Float */
+  code span.fu { color: #06287e; } /* Function */
+  code span.im { } /* Import */
+  code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+  code span.op { color: #666666; } /* Operator */
+  code span.ot { color: #007020; } /* Other */
+  code span.pp { color: #bc7a00; } /* Preprocessor */
+  code span.sc { color: #4070a0; } /* SpecialChar */
+  code span.ss { color: #bb6688; } /* SpecialString */
+  code span.st { color: #4070a0; } /* String */
+  code span.va { color: #19177c; } /* Variable */
+  code span.vs { color: #4070a0; } /* VerbatimString */
+  code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    </style>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -299,7 +369,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">Reading and Writing Images</h1>
-<h4 class="date">2020-08-05</h4>
+<h4 class="date">2020-11-08</h4>
 
 
 
@@ -311,7 +381,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">path_dancing_banana &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;img&quot;</span>, <span class="st">&quot;Rlogo-banana.tif&quot;</span>,</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">                                   <span class="dt">package =</span> <span class="st">&quot;ijtiff&quot;</span>)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">print</span>(path_dancing_banana)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#&gt; [1] &quot;/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/RtmpZ0XsBN/Rinst169c126999bb5/ijtiff/img/Rlogo-banana.tif&quot;</span></a></code></pre></div>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#&gt; [1] &quot;/private/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T/RtmpilNI9e/Rinsta5f25b0e0971/ijtiff/img/Rlogo-banana.tif&quot;</span></a></code></pre></div>
 <p>To read it in, you just need <code>read_tif()</code> and the path to the image.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">pacman<span class="op">::</span><span class="kw">p_load</span>(ijtiff, magrittr)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">img_dancing_banana &lt;-<span class="st"> </span><span class="kw">read_tif</span>(path_dancing_banana)</a>
@@ -329,7 +399,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt; [4,]  255  255  255  255  255  255</span></a>
 <a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt; [5,]  255  255  255  255  255  255</span></a>
 <a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; [6,]  255  255  255  255  255  255</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt; ── TIFF tags ─────────────────────────────────────────────────────────────────────────────────────────────────────────</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt; ── TIFF tags ───────────────────────────────────────────────────────────────────</span></a>
 <a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt; ● bits_per_sample: 8</span></a>
 <a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt; ● samples_per_pixel: 3</span></a>
 <a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt; ● sample_format: uint</span></a>
@@ -385,11 +455,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>To write an image, you need an object in the style of an <code>ijtiff_img</code> object (see <code>help(&quot;ijtiff_img&quot;, package = &quot;ijtiff&quot;)</code>). The basic idea is to have your image in a 4-dimensional array with the structure <code>img[y, x, channel, frame]</code>. Then, to write this image to the location <code>path</code>, you just type <code>write_tif(img, path)</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">path &lt;-<span class="st"> </span><span class="kw">tempfile</span>(<span class="dt">pattern =</span> <span class="st">&quot;dancing-banana&quot;</span>, <span class="dt">fileext =</span> <span class="st">&quot;.tif&quot;</span>)</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">print</span>(path)</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt; [1] &quot;/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T//RtmpOy1mx9/dancing-banana16a703bd6b029.tif&quot;</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt; [1] &quot;/var/folders/l_/2mwm03p55zg7zjykv084hhvr0000gn/T//RtmpUUv6lf/dancing-bananaa6b272248e7c.tif&quot;</span></a>
 <a class="sourceLine" id="cb7-4" data-line-number="4"><span class="kw">write_tif</span>(img_dancing_banana, path)</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">#&gt; Writing dancing-banana16a703bd6b029.tif: an 8-bit, 78x100</span></a>
-<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">#&gt; pixel image of unsigned integer type with 3 channels and 8</span></a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co">#&gt; frames . . .</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">#&gt; Writing dancing-bananaa6b272248e7c.tif: an 8-bit, 78x100 pixel</span></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">#&gt; image of unsigned integer type with 3 channels and 8 frames .</span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co">#&gt; . .</span></a>
 <a class="sourceLine" id="cb7-8" data-line-number="8"><span class="co">#&gt;  Done.</span></a></code></pre></div>
 </div>
 <div id="reading-text-images" class="section level2">
@@ -405,7 +475,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Writing text images</h2>
 <p>Writing a text image works as you’d expect.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">write_txt_img</span>(txt_img, <span class="dt">path =</span> <span class="kw">tempfile</span>(<span class="dt">pattern =</span> <span class="st">&quot;txtimg&quot;</span>, <span class="dt">fileext =</span> <span class="st">&quot;.txt&quot;</span>))</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">#&gt; Writing txtimg16a7071dcc09d.txt: a 76x100 pixel text image with 1 channel and 1 frame . . .</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">#&gt; Writing txtimga6b219b4c60.txt: a 76x100 pixel text image with 1 channel and 1 frame . . .</span></a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">#&gt;  Done.</span></a></code></pre></div>
 </div>
 

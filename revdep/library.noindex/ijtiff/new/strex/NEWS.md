@@ -1,3 +1,19 @@
+# `strex` 1.4.1
+
+## BUG FIXES
+* R version 3.5 or greater is needed because `INTEGER_GET_REGION` is used, which was introduced with R's `ALTREP` stuff.
+
+
+# `strex` 1.4.0
+
+## MINOR IMPROVEMENTS
+* `str_trim_anything()` got a speedup.
+* `str_match_arg()` now has better error messaging.
+
+## BUG FIXES
+* `utils` was wrongly imported.
+
+
 # `strex` 1.3.1
 
 ## BUG FIXES

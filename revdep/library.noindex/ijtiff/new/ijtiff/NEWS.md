@@ -1,3 +1,28 @@
+# `ijtiff` 2.2.5
+
+## BUG FIXES
+* Typo fix for `configure`. At one point there was a call of `pkg-configs` instead of `pkg-config`.
+* Also now all compile flags from `pkg-config --libs` _and_ `pkg-config --libs --static` are used every time.
+
+
+# `ijtiff` 2.2.4
+
+## BUG FIXES
+* Fix for `configure` error messages.
+
+
+# `ijtiff` 2.2.3
+
+## BUG FIXES
+* Make `configure` more portable by using `sh` instead of `bash`.
+
+
+# `ijtiff` 2.2.2
+
+## BUG FIXES
+* Insist on bug-fixed `strex` >= 1.4.
+
+
 # `ijtiff` 2.2.1
 
 ## BUG FIXES
@@ -6,7 +31,7 @@
 
 # `ijtiff` 2.2.0
 
-# NEW FEATURES 
+## NEW FEATURES 
 * The package now works on 32-bit Windows (thanks to PR #12 from Jeroen Ooms).
 
 ## BUG FIXES

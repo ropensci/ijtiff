@@ -19,9 +19,8 @@ Type 'q()' to quit R.
 > library(nandb)
 > 
 > if (!nandb:::win32bit()) test_check("nandb")
-══ testthat results  ═══════════════════════════════════════════════════════════
-[ OK: 155 | SKIPPED: 0 | WARNINGS: 0 | FAILED: 0 ]
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 155 ]
 > 
 > proc.time()
    user  system elapsed 
- 61.999   5.367  68.210 
+ 47.213   4.827  52.981 

@@ -18,10 +18,9 @@ Type 'q()' to quit R.
 > library(testthat)
 > library(autothresholdr)
 > 
-> if (!autothresholdr:::win32bit()) test_check("autothresholdr")
-══ testthat results  ═══════════════════════════════════════════════════════════
-[ OK: 69 | SKIPPED: 0 | WARNINGS: 0 | FAILED: 0 ]
+> test_check("autothresholdr")
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 69 ]
 > 
 > proc.time()
    user  system elapsed 
-  4.770   0.417   6.155 
+  2.323   0.243   2.589 
