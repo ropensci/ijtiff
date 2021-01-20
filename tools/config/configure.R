@@ -32,21 +32,27 @@ pkg_config_available <- tryCatch(
 if (pkg_config_available) {
   cat("Found pkg-config!", "\n")
   PKGCONFIG_CFLAGS <- tryCatch(
-    system2("pkg-config",
-            c("--cflags", "--silence-errors", PKG_CONFIG_NAME),
-            stdout = TRUE),
+    suppressWarnings(
+      system2("pkg-config",
+              c("--cflags", "--silence-errors", PKG_CONFIG_NAME),
+              stdout = TRUE)
+    ),
     error = function(cnd) ""
   )
   PKGCONFIG_LIBS <- tryCatch(
-    system2("pkg-config",
-            c("--libs", PKG_CONFIG_NAME),
-            stdout = TRUE),
+    suppressWarnings(
+      system2("pkg-config",
+              c("--libs", PKG_CONFIG_NAME),
+              stdout = TRUE)
+    ),
     error = function(cnd) ""
   )
   PKGCONFIG_STATIC_LIBS <- tryCatch(
-    system2("pkg-config",
-            c("--libs", "--static", PKG_CONFIG_NAME),
-            stdout = TRUE),
+    suppressWarnings(
+      system2("pkg-config",
+              c("--libs", "--static", PKG_CONFIG_NAME),
+              stdout = TRUE)
+    ),
     error = function(cnd) ""
   )
   pkgconfig_success <- any(
@@ -70,10 +76,14 @@ if (nchar(INCLUDE_DIR) || nchar(LIB_DIR)) {
   cat("Found INCLUDE_DIR and/or LIB_DIR!", "\n")
   PKG_CFLAGS <- stringr::str_glue("-I{INCLUDE_DIR} {PKG_CFLAGS}")
   PKG_LIBS <- stringr::str_glue("-L{LIB_DIR} {PKG_LIBS}")
-} else if (nchar(PKGCONFIG_CFLAGS) || nchar(PKGCONFIG_LIBS)) {
-  cat("Found pkg-config cflags and/or libs for libtiff!", "\n")
-  PKG_CFLAGS <- PKGCONFIG_CFLAGS
-  PKG_LIBS <- PKGCONFIG_LIBS
+} else {
+  if (nchar(PKGCONFIG_CFLAGS) || nchar(PKGCONFIG_LIBS)) {
+    cat("Found pkg-config cflags and/or libs for libtiff!", "\n")
+    PKG_CFLAGS <- PKGCONFIG_CFLAGS
+    PKG_LIBS <- PKGCONFIG_LIBS
+  } else {
+    cat("Did not find pkg-config cflags or libs for libtiff.", "\n")
+  }
 }
 
 # pkg-config often says -ljbig is necessary but it seems not to be
