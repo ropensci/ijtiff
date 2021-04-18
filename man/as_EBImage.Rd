@@ -33,7 +33,9 @@ Else if \code{img} has 3 or 4 channels, then \code{colormode} is set to \code{"C
 Else \code{colormode} is set to "Grayscale".
 }
 \examples{
-img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
-str(img)
-str(as_EBImage(img))
+if (rlang::is_installed("EBImage")) {
+  img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
+  str(img)
+  str(as_EBImage(img))
+}
 }

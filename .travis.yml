@@ -24,6 +24,7 @@ matrix:
         script: Rscript -e 'pkgdown::deploy_site_github()'
         skip_cleanup: true
     - os: osx
+      osx_image: xcode12.2
       env: _R_CHECK_LENGTH_1_CONDITION_=true
 
 bioc_packages: EBImage
