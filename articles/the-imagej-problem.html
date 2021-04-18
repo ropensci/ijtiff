@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -71,7 +73,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/ropensci/ijtiff/">
+  <a href="https://github.com/ropensci/ijtiff/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -91,9 +93,9 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>The <em>ImageJ</em> Problem</h1>
             
-            <h4 class="date">2021-01-20</h4>
+            <h4 data-toc-skip class="date">2021-04-18</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ropensci/ijtiff/blob/master/vignettes/the-imagej-problem.Rmd"><code>vignettes/the-imagej-problem.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/ijtiff/blob/master/vignettes/the-imagej-problem.Rmd" class="external-link"><code>vignettes/the-imagej-problem.Rmd</code></a></small>
       <div class="hidden name"><code>the-imagej-problem.Rmd</code></div>
 
     </div>
@@ -103,7 +105,7 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>The <em>ImageJ</em> software (<a href="https://imagej.nih.gov/ij/" class="uri">https://imagej.nih.gov/ij/</a>) is a widely-used image viewing and processing software, particularly popular in microscopy and life sciences. It supports the TIFF image format (and many others). It reads TIFF files perfectly, however it can sometimes write them in a peculiar way, meaning that when other softwares try to read TIFF files written by <em>ImageJ</em>, mistakes can be made.</p>
+<p>The <em>ImageJ</em> software (<a href="https://imagej.nih.gov/ij/" class="external-link uri">https://imagej.nih.gov/ij/</a>) is a widely-used image viewing and processing software, particularly popular in microscopy and life sciences. It supports the TIFF image format (and many others). It reads TIFF files perfectly, however it can sometimes write them in a peculiar way, meaning that when other softwares try to read TIFF files written by <em>ImageJ</em>, mistakes can be made.</p>
 <p>One goal of the <code>ijtiff</code> R package is to correctly import TIFF files that were saved from <em>ImageJ</em>.</p>
 <div id="frames-and-channels-in-tiff-files" class="section level3">
 <h3 class="hasAnchor">
@@ -125,7 +127,7 @@
 <h2 class="hasAnchor">
 <a href="#reading-imagej-tiff-files" class="anchor"></a>Reading <em>ImageJ</em> TIFF files</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">path_2ch_ij</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"img"</span>, <span class="st">"Rlogo-banana-red_green.tif"</span>,
+<code class="sourceCode R"><span class="va">path_2ch_ij</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"img"</span>, <span class="st">"Rlogo-banana-red_green.tif"</span>,
   package <span class="op">=</span> <span class="st">"ijtiff"</span>
 <span class="op">)</span></code></pre></div>
 <p><code>path_2ch_ij</code> is the path to a TIFF file which was made in <em>ImageJ</em> from the R logo dancing banana GIF used in the README of Jeroen Ooms’ <code>magick</code> package. The TIFF is a time-stack containing only the red and green channels of the first and third frames of the original GIF. Here’s the full gif:</p>
@@ -137,8 +139,8 @@
 <a href="#the-original-tiff-package" class="anchor"></a>The original <code>tiff</code> package</h3>
 <p>When we import it with the original <code>tiff</code> package:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">img</span> <span class="op">&lt;-</span> <span class="fu">tiff</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tiff/man/readTIFF.html">readTIFF</a></span><span class="op">(</span><span class="va">path_2ch_ij</span>, all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="co"># 10 images</span>
+<code class="sourceCode R"><span class="va">img</span> <span class="op">&lt;-</span> <span class="fu">tiff</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tiff/man/readTIFF.html" class="external-link">readTIFF</a></span><span class="op">(</span><span class="va">path_2ch_ij</span>, all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="co"># 10 images</span>
 <span class="co">#&gt; List of 4</span>
 <span class="co">#&gt;  $ : num [1:155, 1:200, 1:3] 0.996 0.996 0.996 0.996 0.996 ...</span>
 <span class="co">#&gt;  $ : num [1:155, 1:200, 1:3] 0 0 0 0 0 0 0 0 0 0 ...</span>
@@ -167,7 +169,7 @@
 <span class="co">#&gt; image of unsigned integer type. Reading 2 channels and 2</span>
 <span class="co">#&gt; frames . . .</span>
 <span class="co">#&gt;  Done.</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="co"># 2 channels, 2 frames</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">img</span><span class="op">)</span> <span class="co"># 2 channels, 2 frames</span>
 <span class="co">#&gt; [1] 155 200   2   2</span>
 <span class="va">img</span><span class="op">[</span><span class="fl">100</span><span class="op">:</span><span class="fl">105</span>, <span class="fl">50</span><span class="op">:</span><span class="fl">55</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">]</span> <span class="co"># print a section of the first channel, first frame</span>
 <span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6]</span>
@@ -212,11 +214,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Rory Nolan, Kent Johnson.</p>
+  <p></p>
+<p>Developed by Rory Nolan, Kent Johnson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.6.1.9001.</p>
 </div>
 
       </footer>
@@ -224,6 +228,8 @@
 
   
 
+
+  
 
   </body>
 </html>

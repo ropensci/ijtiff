@@ -66,9 +66,18 @@
 
 
 
+<!-- dependencies from examples -->
+
+
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -181,10 +190,13 @@ Else if <code>img</code> has 3 or 4 channels, then <code>colormode</code> is set
 Else <code>colormode</code> is set to "Grayscale".</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>img</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_tif.html'>read_tif</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, package <span class='op'>=</span> <span class='st'>"ijtiff"</span><span class='op'>)</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/is_installed.html'>is_installed</a></span><span class='op'>(</span><span class='st'>"EBImage"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='va'>img</span> <span class='op'>&lt;-</span> <span class='fu'><a href='read_tif.html'>read_tif</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"img"</span>, <span class='st'>"Rlogo.tif"</span>, package <span class='op'>=</span> <span class='st'>"ijtiff"</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>img</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'>as_EBImage</span><span class='op'>(</span><span class='va'>img</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
 </div><div class='output co'>#&gt; <span class='message'>Reading Rlogo.tif: an 8-bit, 76x100 pixel image of unsigned</span>
-#&gt; <span class='message'>integer type. Reading 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>img</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  'ijtiff_img' num [1:76, 1:100, 1:4, 1] 0 0 0 0 0 0 0 0 0 0 ...
+#&gt; <span class='message'>integer type. Reading 4 channels and 1 frame . . .</span></div><div class='output co'>#&gt; <span class='message'> Done.</span></div><div class='output co'>#&gt;  'ijtiff_img' num [1:76, 1:100, 1:4, 1] 0 0 0 0 0 0 0 0 0 0 ...
 #&gt;  - attr(*, "width")= int 100
 #&gt;  - attr(*, "length")= int 76
 #&gt;  - attr(*, "bits_per_sample")= int 8
@@ -197,8 +209,8 @@ Else <code>colormode</code> is set to "Grayscale".</p>
 #&gt;  - attr(*, "y_resolution")= num 300
 #&gt;  - attr(*, "resolution_unit")= chr "inch"
 #&gt;  - attr(*, "orientation")= chr "top_left"
-#&gt;  - attr(*, "color_space")= chr "RGB"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'>as_EBImage</span><span class='op'>(</span><span class='va'>img</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Formal class 'Image' [package "EBImage"] with 2 slots
+#&gt;  - attr(*, "color_space")= chr "RGB"
+#&gt; Formal class 'Image' [package "EBImage"] with 2 slots
 #&gt;   ..@ .Data    : num [1:100, 1:76, 1:4, 1] 0 0 0 0 0 0 0 0 0 0 ...
 #&gt;   ..@ colormode: int 2</div></pre>
   </div>
@@ -212,11 +224,11 @@ Else <code>colormode</code> is set to "Grayscale".</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Rory Nolan, Kent Johnson.</p>
+  <p><p>Developed by Rory Nolan, Kent Johnson.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -224,6 +236,8 @@ Else <code>colormode</code> is set to "Grayscale".</p>
 
   
 
+
+  
 
   </body>
 </html>
