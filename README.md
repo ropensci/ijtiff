@@ -14,7 +14,6 @@ Status](https://ci.appveyor.com/api/projects/status/github/ropensci/ijtiff?branc
 downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff)
 ![RStudio CRAN monthly
 downloads](http://cranlogs.r-pkg.org/badges/ijtiff)
-[![Rdocumentation](https://www.rdocumentation.org/badges/version/ijtiff)](https://www.rdocumentation.org/packages/ijtiff)
 
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
