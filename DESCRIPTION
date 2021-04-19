@@ -55,7 +55,7 @@ Imports:
     purrr,
     readr,
     rlang (>= 0.3.3),
-    strex (>= 1.4),
+    strex (>= 1.4.1),
     stringr (>= 1.4),
     withr (>= 2.1),
     zeallot

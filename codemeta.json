@@ -343,7 +343,7 @@
       "@type": "SoftwareApplication",
       "identifier": "strex",
       "name": "strex",
-      "version": ">= 1.4",
+      "version": ">= 1.4.1",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -401,9 +401,9 @@
   ],
   "releaseNotes": "https://github.com/ropensci/ijtiff/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/ijtiff/blob/master/README.md",
-  "fileSize": "15151.508KB",
+  "fileSize": "15151.272KB",
   "contIntegration": ["https://travis-ci.org/ropensci/ijtiff", "https://ci.appveyor.com/project/ropensci/ijtiff", "https://codecov.io/gh/ropensci/ijtiff"],
-  "developmentStatus": ["https://www.repostatus.org/", "https://www.tidyverse.org/lifecycle/#maturing"],
+  "developmentStatus": ["https://www.repostatus.org/", "https://lifecycle.r-lib.org/articles/stages.html"],
   "citation": [
     {
       "@type": "ScholarlyArticle",
