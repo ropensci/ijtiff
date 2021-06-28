@@ -1,4 +1,5 @@
-RWINLIB = ../windows/libtiff-4.1.0/mingw$(WIN)
+MSYSTEM ?= mingw$(WIN)
+RWINLIB = ../windows/libtiff-4.2.0/$(MSYSTEM)
 PKG_CPPFLAGS = -I$(RWINLIB)/include
 PKG_LIBS = -L$(RWINLIB)/lib -ltiff -ljpeg -lz
 
