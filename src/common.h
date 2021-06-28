@@ -2,6 +2,7 @@
 #define PKG_TIFF_COMMON_H__
 
 #include <stdio.h>
+#include <stdint.h>
 #include <tiff.h>
 #include <tiffio.h>
 
@@ -20,9 +21,5 @@ void check_type_sizes(void);
 void setAttr(SEXP x, const char *name, SEXP val);
 SEXP getAttr(SEXP x, const char *name);
 
-typedef unsigned char uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned int uint32_t;
-typedef unsigned long long int uint64_t;
 
 #endif  // PKG_TIFF_COMMON_H__

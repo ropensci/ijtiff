@@ -1,3 +1,9 @@
+# `ijtiff` 2.2.7
+
+# BUG FIXES
+* Fix for new libtiff using C99's `<stdint.h>`.
+
+
 # `ijtiff` 2.2.6
 
 # BUG FIXES

@@ -18,7 +18,7 @@ SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats) {
   FILE *f;
   int bps = asInteger(sBPS), compression = asInteger(sCompr),	img_index = 0;
   int n_img = 1;
-  uint32 width, height, planes = 1;
+  uint32_t width, height, planes = 1;
   bool floats = asLogical(sFloats);
   if (TYPEOF(image) == VECSXP) {  // if the image was specified as a list
 	  if ((n_img = LENGTH(image)) == 0) {
@@ -65,7 +65,7 @@ SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats) {
 	  TIFFSetField(tiff, TIFFTAG_ROWSPERSTRIP, height);
 	  TIFFSetField(tiff, TIFFTAG_COMPRESSION, compression);
 	  TIFFSetField(tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK);
-	  uint32 x, y, pl;
+	  uint32_t x, y, pl;
 	  tdata_t buf = _TIFFmalloc(width * height * planes * (bps / 8));
 	  float *data_float;
 	  uint8_t *data8;

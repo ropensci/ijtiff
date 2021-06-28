@@ -5,12 +5,12 @@
   ],
   "@type": "SoftwareSourceCode",
   "identifier": "ijtiff",
-  "description": "General purpose TIFF file I/O for R users.\n    Currently the only such package with read and write support for TIFF\n    files with floating point (real-numbered) pixels, and the only package\n    that can correctly import TIFF files that were saved from 'ImageJ' and\n    write TIFF files than can be correctly read by 'ImageJ'\n    <https://imagej.nih.gov/ij/>.  Also supports text image I/O.",
-  "name": "ijtiff: Comprehensive TIFF I/O with Full Support for 'ImageJ'\n    TIFF Files",
+  "description": "General purpose TIFF file I/O for R users.  Currently the\n    only such package with read and write support for TIFF files with\n    floating point (real-numbered) pixels, and the only package that can\n    correctly import TIFF files that were saved from 'ImageJ' and write\n    TIFF files than can be correctly read by 'ImageJ'\n    <https://imagej.nih.gov/ij/>.  Also supports text image I/O.",
+  "name": "ijtiff: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files",
   "codeRepository": "https://github.com/ropensci/ijtiff",
   "issueTracker": "https://github.com/ropensci/ijtiff/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -400,8 +400,7 @@
     }
   ],
   "releaseNotes": "https://github.com/ropensci/ijtiff/blob/master/NEWS.md",
-  "readme": "https://github.com/ropensci/ijtiff/blob/master/README.md",
-  "fileSize": "15151.272KB",
+  "fileSize": "2808.697KB",
   "contIntegration": ["https://travis-ci.org/ropensci/ijtiff", "https://ci.appveyor.com/project/ropensci/ijtiff", "https://codecov.io/gh/ropensci/ijtiff"],
   "developmentStatus": ["https://www.repostatus.org/", "https://lifecycle.r-lib.org/articles/stages.html"],
   "citation": [

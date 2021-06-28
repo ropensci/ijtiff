@@ -196,32 +196,32 @@ TIFF *TIFF_Open(const char *mode, tiff_job_t *rj) {
 }
 
 void check_type_sizes(void) {
-  unsigned int sz = sizeof(unsigned char) * CHAR_BIT;
+  unsigned int sz = sizeof(uint8_t) * CHAR_BIT;
   if (sz != 8) {
-    Rf_error("Usually, the size of the \'unsigned char\' type is 8 bits, "
+    Rf_error("Usually, the size of the \'uint8_t\' type is 8 bits, "
                "however on your system it is %i. The \'ijtiff\' library relies "
-               "on \'unsigned char\' being 8-bit, so it will not work "
+               "on \'uint8_t\' being 8-bit, so it will not work "
                "on your system.", sz);
   }
-  sz = sizeof(unsigned short) * CHAR_BIT;
+  sz = sizeof(uint16_t) * CHAR_BIT;
   if (sz != 16) {
-    Rf_error("Usually, the size of the \'unsigned short\' type is 16 bits, "
+    Rf_error("Usually, the size of the \'uint16_t\' type is 16 bits, "
                "however on your system it is %i. The \'ijtiff\' library relies "
-               "on \'unsigned short\' being 16-bit, so it will not "
+               "on \'uint16_t\' being 16-bit, so it will not "
                "work on your system.", sz);
   }
-  sz = sizeof(unsigned int) * CHAR_BIT;
+  sz = sizeof(uint32_t) * CHAR_BIT;
   if (sz != 32) {
-    Rf_error("Usually, the size of the \'unsigned int\' type is 32 bits, "
+    Rf_error("Usually, the size of the \'uint32_t\' type is 32 bits, "
                "however on your system it is %i. The \'ijtiff\' library relies "
-               "on \'unsigned int\' being 32-bit, so it will not work "
+               "on \'uint32_t\' being 32-bit, so it will not work "
                "on your system.", sz);
   }
-  sz = sizeof(unsigned long long int) * CHAR_BIT;
+  sz = sizeof(uint64_t) * CHAR_BIT;
   if (sz != 64) {
-    Rf_error("Usually, the size of the \'unsigned long long int\' type is "
+    Rf_error("Usually, the size of the \'uint64_t\' type is "
                "64 bits, however on your system it is %i. The \'ijtiff\' "
-               "library relies on \'unsigned int\' being 32-bit, so it will not"
+               "library relies on \'uint64_t\' being 32-bit, so it will not"
                " work on your system.", sz);
   }
   sz = sizeof(float) * CHAR_BIT;

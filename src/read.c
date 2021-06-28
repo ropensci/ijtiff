@@ -427,7 +427,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
   	      if (spp == 1) { // config doesn't matter for spp == 1
   	        // direct gray */
   	        tsize_t i, step = bps / 8;
-  	        uint32 xoff = 0, yoff = 0;
+  	        uint32_t xoff = 0, yoff = 0;
   	        for (i = 0; i < n; i += step) {
   	          double val = NA_REAL;
   	          const unsigned char *v = (const unsigned char*) buf + i;
@@ -452,7 +452,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
   	        }
   	      } else if (config == PLANARCONFIG_CONTIG) {  // spp > 1, interlaced
   	        tsize_t i, j, step = spp * bps / 8;
-  	        uint32 xoff = 0, yoff = 0;
+  	        uint32_t xoff = 0, yoff = 0;
   	        for (i = 0; i < n; i += step) {
   	          const unsigned char *v = (const uint8_t*) buf + i;
   	          if (x + xoff < imageWidth && y + yoff < imageLength) {
