@@ -43,7 +43,7 @@ jobs:
 
       - name: Query dependencies
         run: |
-          install.packages('remotes')
+          install.packages('remotes', 'BiocManager')
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
@@ -62,10 +62,12 @@ jobs:
           do
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
+          sudo apt-get install -y libwebp-dev
+          sudo apt-get install -y libzstd-dev
 
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE, repos = c(BioCsoft = "https://bioconductor.org/packages/3.11/bioc", BioCann = "https://bioconductor.org/packages/3.11/data/annotation", BioCexp = "https://bioconductor.org/packages/3.11/data/experiment", BioCworkflows = "https://bioconductor.org/packages/3.11/workflows", CRAN = "https://cran.rstudio.com/"))
+          remotes::install_deps(dependencies = TRUE, repos = BiocManager::repositories())
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
