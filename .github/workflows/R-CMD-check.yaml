@@ -65,7 +65,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE)
+          remotes::install_deps(dependencies = TRUE, repos = c(BioCsoft = "https://bioconductor.org/packages/3.11/bioc", BioCann = "https://bioconductor.org/packages/3.11/data/annotation", BioCexp = "https://bioconductor.org/packages/3.11/data/experiment", BioCworkflows = "https://bioconductor.org/packages/3.11/workflows", CRAN = "https://cran.rstudio.com/"))
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
