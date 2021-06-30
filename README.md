@@ -3,8 +3,7 @@
 
 # ijtiff <img src="man/figures/logo.png" height="140" align="right">
 
-[![Travis-CI Build
-Status](https://travis-ci.org/ropensci/ijtiff.svg?branch=master)](https://travis-ci.org/ropensci/ijtiff)
+[![R-CMD-check](https://github.com/ropensci/ijtiff/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/ijtiff/actions)
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/ropensci/ijtiff?branch=master&svg=true)](https://ci.appveyor.com/project/ropensci/ijtiff)
 [![codecov](https://codecov.io/gh/ropensci/ijtiff/branch/master/graph/badge.svg)](https://codecov.io/gh/ropensci/ijtiff)
@@ -29,10 +28,10 @@ package](https://cran.r-project.org/package=tiff) already exists for
 this purpose but `ijtiff` adds some functionality and overcomes some
 bugs therein.
 
-  - `ijtiff` can write TIFF files whose pixel values are real
+-   `ijtiff` can write TIFF files whose pixel values are real
     (floating-point) numbers; `tiff` cannot.
-  - `ijtiff` can read and write *text images*; `tiff` cannot.
-  - `tiff` struggles to interpret channel information and gives cryptic
+-   `ijtiff` can read and write *text images*; `tiff` cannot.
+-   `tiff` struggles to interpret channel information and gives cryptic
     errors when reading TIFF files written by the *ImageJ* software;
     `ijtiff` works smoothly with these images.
 
@@ -46,15 +45,15 @@ To learn about `ijtiff` and how to use it, visit the package website at
 `ijtiff` requires you to have the `libtiff` C library installed. To
 install `libtiff`:
 
-  - On **Debian Linux**, try `sudo apt-get install libtiff5-dev`, or if
+-   On **Debian Linux**, try `sudo apt-get install libtiff5-dev`, or if
     that fails, try  
     `sudo apt-get install libtiff4-dev`.
-  - On **Fedora Linux**, try `sudo yum install libtiff5-dev`, or if that
+-   On **Fedora Linux**, try `sudo yum install libtiff5-dev`, or if that
     doesn’t work, try  
     `sudo yum install libtiff4-dev`.
-  - On **Mac**, you need [Homebrew](https://brew.sh/). Then in the
+-   On **Mac**, you need [Homebrew](https://brew.sh/). Then in the
     terminal, run `brew install libtiff`.
-  - On **Windows**, no setup is required 😄.
+-   On **Windows**, no setup is required 😄.
 
 ### Installing the release version of the `ijtiff` R package
 
@@ -84,7 +83,6 @@ contribution is through a github pull request. Feel free to contact me
 by creating an issue. Please note that this project is released with a
 [Contributor Code of
 Conduct](https://github.com/ropensci/ijtiff/blob/master/CONDUCT.md). By
-participating in this project you agree to abide by its
-terms.
+participating in this project you agree to abide by its terms.
 
 [![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
