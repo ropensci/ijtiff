@@ -1,12 +1,12 @@
 # `ijtiff` 2.2.7
 
-# BUG FIXES
+## BUG FIXES
 * Fix for new libtiff using C99's `<stdint.h>`.
 
 
 # `ijtiff` 2.2.6
 
-# BUG FIXES
+## BUG FIXES
 * Suppress unhelpful warnings during configure when `pkg-config` doesn't find info for libtiff.
 * Remove `LazyData` from `DESCRIPTION` (was causing CRAN note).
 
