@@ -2,11 +2,10 @@
 
     Code
       read_tif(test_path("testthat-figs", "Rlogo-banana-red.tif"))
-    Message <simpleMessage>
+    Message
       Reading Rlogo-banana-red.tif: an 8-bit, 155x200 pixel image of
       unsigned integer type. Reading 1 channel and 2 frames . . .
-       Done.
-    Message <cliMessage>
+      Done.
       155x200 pixel ijtiff_img with 1 channel and 2 frames.
       Preview (top left of first channel of first frame):
     Output
@@ -18,7 +17,7 @@
       [5,]  255  255  255  255  255  255
       [6,]  255  255  255  255  255  255
       -- TIFF tags -------------------------------------------------------------------
-    Message <cliMessage>
+    Message
       * bits_per_sample: 8
       * samples_per_pixel: 1
       * sample_format: uint
