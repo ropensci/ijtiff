@@ -6,7 +6,7 @@
 [![R-CMD-check](https://github.com/ropensci/ijtiff/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/ijtiff/actions)
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/ropensci/ijtiff?branch=master&svg=true)](https://ci.appveyor.com/project/ropensci/ijtiff)
-[![codecov](https://codecov.io/gh/ropensci/ijtiff/branch/master/graph/badge.svg)](https://codecov.io/gh/ropensci/ijtiff)
+[![codecov](https://app.codecov.io/gh/ropensci/ijtiff/branch/master/graph/badge.svg)](https://app.codecov.io/gh/ropensci/ijtiff)
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff)
 ![RStudio CRAN

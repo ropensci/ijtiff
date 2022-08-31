@@ -1,3 +1,9 @@
+# `ijtiff` 2.2.8
+
+## BUG FIXES
+* Fix headings in NEWS.md..
+
+
 # `ijtiff` 2.2.7
 
 ## BUG FIXES

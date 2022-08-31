@@ -1,22 +1,20 @@
 {
-  "@context": [
-    "https://doi.org/10.5063/schema/codemeta-2.0",
-    "http://schema.org"
-  ],
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "ijtiff",
-  "description": "General purpose TIFF file I/O for R users.  Currently the\n    only such package with read and write support for TIFF files with\n    floating point (real-numbered) pixels, and the only package that can\n    correctly import TIFF files that were saved from 'ImageJ' and write\n    TIFF files than can be correctly read by 'ImageJ'\n    <https://imagej.nih.gov/ij/>.  Also supports text image I/O.",
+  "description": "General purpose TIFF file I/O for R users. Currently the only such package with read and write support for TIFF files with floating point (real-numbered) pixels, and the only package that can correctly import TIFF files that were saved from 'ImageJ' and write TIFF files than can be correctly read by 'ImageJ' <https://imagej.nih.gov/ij/>. Also supports text image I/O.",
   "name": "ijtiff: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files",
+  "relatedLink": "https://docs.ropensci.org/ijtiff/",
   "codeRepository": "https://github.com/ropensci/ijtiff",
   "issueTracker": "https://github.com/ropensci/ijtiff/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "2.2.7",
+  "version": "2.2.8",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.0.2 (2020-06-22)",
+  "runtimePlatform": "R version 4.2.1 (2022-06-23)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -59,8 +57,6 @@
       "@id": "https://orcid.org/0000-0002-8010-9481"
     }
   ],
-  "copyrightHolder": {},
-  "funder": {},
   "maintainer": [
     {
       "@type": "Person",
@@ -102,7 +98,7 @@
       "provider": {
         "@id": "https://www.bioconductor.org",
         "@type": "Organization",
-        "name": "BioConductor",
+        "name": "Bioconductor",
         "url": "https://www.bioconductor.org"
       },
       "sameAs": "https://bioconductor.org/packages/release/bioc/html/EBImage.html"
@@ -217,14 +213,14 @@
       "sameAs": "https://CRAN.R-project.org/package=vdiffr"
     }
   ],
-  "softwareRequirements": [
-    {
+  "softwareRequirements": {
+    "1": {
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
       "version": ">= 3.5"
     },
-    {
+    "2": {
       "@type": "SoftwareApplication",
       "identifier": "checkmate",
       "name": "checkmate",
@@ -237,7 +233,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=checkmate"
     },
-    {
+    "3": {
       "@type": "SoftwareApplication",
       "identifier": "cli",
       "name": "cli",
@@ -249,7 +245,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=cli"
     },
-    {
+    "4": {
       "@type": "SoftwareApplication",
       "identifier": "dplyr",
       "name": "dplyr",
@@ -261,7 +257,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dplyr"
     },
-    {
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "fs",
       "name": "fs",
@@ -274,17 +270,17 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=fs"
     },
-    {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "graphics",
       "name": "graphics"
     },
-    {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "grDevices",
       "name": "grDevices"
     },
-    {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "magrittr",
       "name": "magrittr",
@@ -297,12 +293,12 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=magrittr"
     },
-    {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "methods",
       "name": "methods"
     },
-    {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "purrr",
       "name": "purrr",
@@ -314,7 +310,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=purrr"
     },
-    {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "readr",
       "name": "readr",
@@ -326,7 +322,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=readr"
     },
-    {
+    "12": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -339,7 +335,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    {
+    "13": {
       "@type": "SoftwareApplication",
       "identifier": "strex",
       "name": "strex",
@@ -352,7 +348,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=strex"
     },
-    {
+    "14": {
       "@type": "SoftwareApplication",
       "identifier": "stringr",
       "name": "stringr",
@@ -365,7 +361,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=stringr"
     },
-    {
+    "15": {
       "@type": "SoftwareApplication",
       "identifier": "withr",
       "name": "withr",
@@ -378,7 +374,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=withr"
     },
-    {
+    "16": {
       "@type": "SoftwareApplication",
       "identifier": "zeallot",
       "name": "zeallot",
@@ -390,19 +386,9 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=zeallot"
     },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "https://sysreqs.r-hub.io/get/zlib"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "https://sysreqs.r-hub.io/get/libtiff"
-    }
-  ],
-  "releaseNotes": "https://github.com/ropensci/ijtiff/blob/master/NEWS.md",
-  "fileSize": "2808.735KB",
-  "contIntegration": ["https://travis-ci.org/ropensci/ijtiff", "https://ci.appveyor.com/project/ropensci/ijtiff", "https://codecov.io/gh/ropensci/ijtiff"],
-  "developmentStatus": ["https://www.repostatus.org/", "https://lifecycle.r-lib.org/articles/stages.html"],
+    "SystemRequirements": "libtiff, libjpeg, zlib"
+  },
+  "fileSize": "2952.257KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -436,22 +422,5 @@
         }
       }
     }
-  ],
-  "relatedLink": [
-    "https://CRAN.R-project.org/package=ijtiff",
-    "https://ropensci.github.io/ijtiff",
-    "https://docs.ropensci.org/ijtiff",
-    "https://www.github.com/ropensci/ijtiff#readme",
-    "https://docs.ropensci.org/ijtiff/"
-  ],
-  "keywords": [
-    "r",
-    "rstats",
-    "tiff-files",
-    "imagej",
-    "tiff-images",
-    "image-manipulation",
-    "r-package",
-    "peer-reviewed"
   ]
 }

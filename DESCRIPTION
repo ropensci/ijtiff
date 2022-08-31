@@ -1,34 +1,19 @@
 Type: Package
 Package: ijtiff
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files
-Version: 2.2.7
-Authors@R: 
-    c(person(given = "Rory",
-             family = "Nolan",
-             role = c("aut", "cre"),
-             email = "rorynoolan@gmail.com",
-             comment = c(ORCID = "0000-0002-5239-4043")),
-      person(given = "Kent",
-             family = "Johnson",
-             role = "aut",
-             email = "kjohnson@akoyabio.com"),
-      person(given = "Simon",
-             family = "Urbanek",
-             role = "ctb",
-             email = "Simon.Urbanek@r-project.org"),
-      person(given = "Sergi",
-             family = "Padilla-Parra",
-             role = "ths",
-             email = "spadilla@well.ox.ac.uk",
-             comment = c(ORCID = "0000-0002-8010-9481")),
-      person(given = "Jeroen",
-             family = "Ooms",
-             role = c("rev", "ctb"),
-             comment = c(ORCID = "0000-0002-4035-0289")),
-      person(given = "Jon",
-             family = "Clayden",
-             role = "rev",
-             comment = c(ORCID = "0000-0002-6608-0619")))
+Version: 2.2.8
+Authors@R: c(
+    person("Rory", "Nolan", , "rorynoolan@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-5239-4043")),
+    person("Kent", "Johnson", , "kjohnson@akoyabio.com", role = "aut"),
+    person("Simon", "Urbanek", , "Simon.Urbanek@r-project.org", role = "ctb"),
+    person("Sergi", "Padilla-Parra", , "spadilla@well.ox.ac.uk", role = "ths",
+           comment = c(ORCID = "0000-0002-8010-9481")),
+    person("Jeroen", "Ooms", role = c("rev", "ctb"),
+           comment = c(ORCID = "0000-0002-4035-0289")),
+    person("Jon", "Clayden", role = "rev",
+           comment = c(ORCID = "0000-0002-6608-0619"))
+  )
 Maintainer: Rory Nolan <rorynoolan@gmail.com>
 Description: General purpose TIFF file I/O for R users.  Currently the
     only such package with read and write support for TIFF files with
