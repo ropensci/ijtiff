@@ -27,3 +27,4 @@
 ^README\.knit\.md$
 ^README\.utf8\.md$
 ^README\.Rmd$
+^CRAN-SUBMISSION$

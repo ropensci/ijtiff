@@ -4,11 +4,9 @@
 # ijtiff <img src="man/figures/logo.png" height="140" align="right">
 
 [![R-CMD-check](https://github.com/ropensci/ijtiff/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/ijtiff/actions)
-[![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/ropensci/ijtiff?branch=master&svg=true)](https://ci.appveyor.com/project/ropensci/ijtiff)
-[![codecov](https://app.codecov.io/gh/ropensci/ijtiff/branch/master/graph/badge.svg)](https://app.codecov.io/gh/ropensci/ijtiff)
+[![codecov](https://codecov.io/gh/ropensci/ijtiff/branch/master/graph/badge.svg?token=rNNRw2FU0F)](https://codecov.io/gh/ropensci/ijtiff)
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff)
 ![RStudio CRAN
 downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff)
 ![RStudio CRAN monthly
@@ -53,7 +51,7 @@ install `libtiff`:
     `sudo yum install libtiff4-dev`.
 -   On **Mac**, you need [Homebrew](https://brew.sh/). Then in the
     terminal, run `brew install libtiff`.
--   On **Windows**, no setup is required 😄.
+-   On **Windows**, no setup is required.
 
 ### Installing the release version of the `ijtiff` R package
 
@@ -85,4 +83,4 @@ by creating an issue. Please note that this project is released with a
 Conduct](https://github.com/ropensci/ijtiff/blob/master/CONDUCT.md). By
 participating in this project you agree to abide by its terms.
 
-[![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
+[![ropensci_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
