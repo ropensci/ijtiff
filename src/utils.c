@@ -6,7 +6,7 @@
 
 #include "common.h"
 
-SEXP float_max_C() {
+SEXP float_max_C(void) {
   SEXP out = PROTECT(Rf_allocVector(REALSXP, 1));
   REAL(out)[0] = FLT_MAX;
   UNPROTECT(1);

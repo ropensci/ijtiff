@@ -2,6 +2,7 @@
 #' @importFrom magrittr '%>%' '%<>%' '%T>%'
 #' @importFrom rlang '%||%'
 #' @importFrom zeallot '%<-%'
+#' @useDynLib ijtiff, .registration = TRUE
 NULL
 
 ## quiets concerns of R CMD check re: the .'s that appear in pipelines

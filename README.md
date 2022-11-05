@@ -4,7 +4,7 @@
 # ijtiff <img src="man/figures/logo.png" height="140" align="right">
 
 [![R-CMD-check](https://github.com/ropensci/ijtiff/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/ijtiff/actions)
-[![codecov](https://codecov.io/gh/ropensci/ijtiff/branch/master/graph/badge.svg?token=rNNRw2FU0F)](https://codecov.io/gh/ropensci/ijtiff)
+[![codecov](https://app.codecov.io/gh/ropensci/ijtiff/branch/master/graph/badge.svg?token=rNNRw2FU0F)](https://app.codecov.io/gh/ropensci/ijtiff)
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff)
 ![RStudio CRAN

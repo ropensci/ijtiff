@@ -1,7 +1,7 @@
 Type: Package
 Package: ijtiff
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files
-Version: 2.2.8
+Version: 2.2.9
 Authors@R: c(
     person("Rory", "Nolan", , "rorynoolan@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5239-4043")),
@@ -20,7 +20,7 @@ Description: General purpose TIFF file I/O for R users.  Currently the
     floating point (real-numbered) pixels, and the only package that can
     correctly import TIFF files that were saved from 'ImageJ' and write
     TIFF files than can be correctly read by 'ImageJ'
-    <https://imagej.nih.gov/ij/>.  Also supports text image I/O.
+    <https://imagej.nih.gov/ij/>. Also supports text image I/O.
 License: GPL-3
 URL: https://docs.ropensci.org/ijtiff/, https://github.com/ropensci/ijtiff
 BugReports: https://github.com/ropensci/ijtiff/issues
@@ -62,5 +62,5 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 SystemRequirements: libtiff, libjpeg, zlib
