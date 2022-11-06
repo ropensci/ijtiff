@@ -8,3 +8,6 @@
 
 ### Reverse dependencies
 There are 3 reverse dependencies: `detrendr`, `nandb` and `autothresholdr`. This update does not break any of these. 
+
+### Current CRAN Issues
+* The `clang` warnings currently showing up on CRAN have been addressed.

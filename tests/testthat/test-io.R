@@ -261,7 +261,7 @@ test_that("write_tif() errors correctly", {
     fixed = TRUE
   )
   expect_error(
-    read_tif(test_path("testthat-figs", "bad_ij1.tif")),
+    suppressWarnings(read_tif(test_path("testthat-figs", "bad_ij1.tif"))),
     paste(
       " The ImageJ-written image you're trying to read",
       "says in its TIFFTAG_DESCRIPTION that it has 13",
@@ -277,7 +277,7 @@ test_that("write_tif() errors correctly", {
     fixed = TRUE
   )
   expect_error(
-    read_tif(test_path("testthat-figs", "bad_ij2.tif")),
+    suppressWarnings(read_tif(test_path("testthat-figs", "bad_ij2.tif"))),
     paste(
       " The ImageJ-written image you're trying to read",
       "says it has 8 frames AND 5 slices. \n    * To be",
@@ -380,43 +380,49 @@ test_that("reading certain frames works", {
   img34 <- read_tif(path, frames = 3:4, msg = FALSE)
   img25 <- read_tif(path, frames = c(2, 5), msg = FALSE)
   expect_equal(
-    img[, , , c(1, 2)] %>% {
-      list(
-        dim(.), as.vector(.),
-        attributes(img) %T>% {
-          .[["dim"]] <- c(dim(img)[1:3], 2)
-        }
-      )
-    },
-    img12 %>% {
-      list(dim(.), as.vector(.), attributes(.))
-    }
+    img[, , , c(1, 2)] %>%
+      {
+        list(
+          dim(.), as.vector(.),
+          attributes(img) %T>% {
+            .[["dim"]] <- c(dim(img)[1:3], 2)
+          }
+        )
+      },
+    img12 %>%
+      {
+        list(dim(.), as.vector(.), attributes(.))
+      }
   )
   expect_equal(
-    img[, , , c(3, 4)] %>% {
-      list(
-        dim(.), as.vector(.),
-        attributes(img) %T>% {
-          .[["dim"]] <- c(dim(img)[1:3], 2)
-        }
-      )
-    },
-    img34 %>% {
-      list(dim(.), as.vector(.), attributes(.))
-    }
+    img[, , , c(3, 4)] %>%
+      {
+        list(
+          dim(.), as.vector(.),
+          attributes(img) %T>% {
+            .[["dim"]] <- c(dim(img)[1:3], 2)
+          }
+        )
+      },
+    img34 %>%
+      {
+        list(dim(.), as.vector(.), attributes(.))
+      }
   )
   expect_equal(
-    img[, , , c(2, 5)] %>% {
-      list(
-        dim(.), as.vector(.),
-        attributes(img) %T>% {
-          .[["dim"]] <- c(dim(img)[1:3], 2)
-        }
-      )
-    },
-    img25 %>% {
-      list(dim(.), as.vector(.), attributes(.))
-    }
+    img[, , , c(2, 5)] %>%
+      {
+        list(
+          dim(.), as.vector(.),
+          attributes(img) %T>% {
+            .[["dim"]] <- c(dim(img)[1:3], 2)
+          }
+        )
+      },
+    img25 %>%
+      {
+        list(dim(.), as.vector(.), attributes(.))
+      }
   )
   expect_error(read_tif(path, frames = 7),
     paste(
