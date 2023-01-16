@@ -27,7 +27,7 @@ NULL
 write_txt_img <- function(img, path, rds = FALSE, msg = TRUE) {
   checkmate::assert_array(img, min.d = 2, max.d = 4)
   checkmate::assert_numeric(img)
-  img %<>% ijtiff_img()
+  img <- ijtiff_img(img)
   d <- dim(img)
   chs <- as.logical(d[3] - 1)
   frames <- as.logical(d[4] - 1)
@@ -38,13 +38,12 @@ write_txt_img <- function(img, path, rds = FALSE, msg = TRUE) {
   frame_part <- ""
   if (frames) frame_part <- paste0("_frame", grid[, 2])
   paths <- paste0(strex::str_before_last_dot(path), ch_part, frame_part) %>%
-    purrr::map_chr(strex::str_give_ext, "txt") %T>% {
-      if (length(.) > 1) . <- strex::str_alphord_nums(.)
-    }
+    purrr::map_chr(strex::str_give_ext, "txt")
+  if (length(paths) > 1) paths <- strex::str_alphord_nums(paths)
   msg_paths <- paths
   for (i in seq_along(msg_paths)) {
-    if (stringr::str_detect(msg_paths[i], "/")) {
-      msg_paths[i] %<>% strex::str_after_last("/")
+    if (stringr::str_detect(msg_paths[i], stringr::coll("/"))) {
+      msg_paths[i] <- strex::str_after_last(msg_paths[i], stringr::coll("/"))
     }
   }
   if (length(msg_paths) > 1) {
@@ -68,7 +67,7 @@ write_txt_img <- function(img, path, rds = FALSE, msg = TRUE) {
   ) %>%
     purrr::map(as.data.frame)
   for (i in seq_along(dfs)) {
-    dfs[[i]] %<>% dplyr::mutate_if(can_be_intish, as.integer)
+    dfs[[i]] <- dplyr::mutate_if(dfs[[i]], can_be_intish, as.integer)
   }
   purrr::map2(dfs, paths, ~ readr::write_tsv(.x, .y, col_names = FALSE))
   if (msg) message("\b Done.")
@@ -85,22 +84,30 @@ read_txt_img <- function(path, msg = TRUE) {
   ))
   for (i in seq_len(ncol(out))) {
     if (all(strex::str_can_be_numeric(out[[i]]))) {
-      out[[i]] %<>% as.numeric()
+      out[[i]] <- as.numeric(out[[i]])
     } else {
-      custom_stop(
-        "`path` must be the path to a text file which is an array of numbers.",
-        "Column {i} of the text file at your `path` {path} is not numeric."
+      rlang::abort(
+        c(
+          paste(
+            "`path` must be the path to a text file which is an array",
+            "of numbers."
+          ),
+          x = stringr::str_glue(
+            "Column {i} of the text file at your ",
+            "`path` {path} is not numeric."
+          )
+        )
       )
     }
   }
   if (msg) {
-    if (stringr::str_detect(path, "/")) {
-      path %<>% strex::str_after_last("/")
+    if (stringr::str_detect(path, stringr::coll("/"))) {
+      path <- strex::str_after_last(path, stringr::coll("/"))
     }
     d <- dim(out)
     message("Reading ", d[1], "x", d[2], " pixel text image '", path, "' . . .")
   }
-  out %<>%
+  out <- out %>%
     data.matrix() %>%
     magrittr::set_colnames(value = NULL)
   if (msg) message("\b Done.")

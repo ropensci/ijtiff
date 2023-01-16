@@ -177,123 +177,33 @@ test_that("write_tif() errors correctly", {
     tif_write(aaaa, "path/", msg = FALSE),
     "path.+cannot end with.+/"
   )
-  expect_error(
-    write_tif(aaaa, "a", bits_per_sample = "abc", msg = FALSE),
-    paste0(
-      " If `bits_per_sample` is a string, then 'auto' is ",
-      "the only allowable value. \n    * You have used 'ab",
-      "c'."
-    ),
-    fixed = TRUE
+  expect_snapshot_error(
+    write_tif(aaaa, "a", bits_per_sample = "abc", msg = FALSE)
   )
-  expect_error(
-    write_tif(aaaa, "a", bits_per_sample = 12),
-    paste0(
-      "If specifying `bits_per_sample`, it must be one of 8, 16 or.?",
-      "32\\..?",
-      "    \\* You have used `bits_per_sample = 12`\\..?"
-    )
-  )
+  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 12))
   aaaa[1] <- -2 * .Call("float_max_C", PACKAGE = "ijtiff")
-  expect_error(
-    write_tif(aaaa, "a"),
-    paste(
-      "The lowest allowable negative value in `img` is",
-      "-3.40282346638529e+38.\n    * The lowest value in",
-      "your `img` is -6.80564693277058e+38.\n    *  The",
-      "`write_txt_img()` function allows you to write",
-      "images without restriction on the values therein.",
-      "Maybe you should try that?"
-    ),
-    fixed = TRUE
-  )
+  expect_snapshot_error(write_tif(aaaa, "a"))
   aaaa[1] <- -1
   aaaa[2] <- 2 * .Call("float_max_C", PACKAGE = "ijtiff")
-  expect_error(
-    write_tif(aaaa, "a"),
-    paste(
-      " If `img` has negative values (which the input",
-      "`img` does), then the maximum allowed positive",
-      "value is 3.40282346638529e+38. \n    * The largest",
-      "value in your `img` is 6.80564693277058e+38.\n   ",
-      "*  The `write_txt_img()` function allows you to",
-      "write images without restriction on the values",
-      "therein. Maybe you should try that?"
-    ),
-    fixed = TRUE
-  )
+  expect_snapshot_error(write_tif(aaaa, "a"))
   aaaa[2] <- 1
   aaaa[1] <- 0.5
-  expect_error(
-    write_tif(aaaa, "a", bits_per_sample = 16),
-    paste(
-      " Your image needs to be written as floating point",
-      "numbers (not integers). For this, it is necessary",
-      "to have 32 bits per sample. \n    * You have",
-      "selected 16 bits per sample."
-    ),
-    fixed = TRUE
-  )
+  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 16))
   aaaa[1] <- 2^33
-  expect_error(
-    write_tif(aaaa, "a", bits_per_sample = 16),
-    paste(
-      " The maximum value in 'img' is 8589934592 which",
-      "is greater than 2 ^ 32 - 1 and therefore too high",
-      "to be written to a TIFF file. \n    * The",
-      "`write_txt_img()` function allows you to write",
-      "images without restriction on the values therein.",
-      "Maybe you should try that?"
-    ),
-    fixed = TRUE
-  )
+  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 16))
   aaaa[1] <- 2^20
-  expect_error(
-    write_tif(aaaa, "a", bits_per_sample = 16),
-    paste0(
-      " You are trying to write a 16-bit image, however t",
-      "he maximum element in `img` is 1048576, which is t",
-      "oo big. \n    *  The largest allowable value in a 1",
-      "6-bit image is 65535.\n    *  To write your `img` t",
-      "o a TIFF file, you need at least 32 bits per sampl",
-      "e."
-    ),
-    fixed = TRUE
+  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 16))
+  expect_snapshot_error(
+    suppressWarnings(read_tif(test_path("testthat-figs", "bad_ij1.tif")))
   )
-  expect_error(
-    suppressWarnings(read_tif(test_path("testthat-figs", "bad_ij1.tif"))),
-    paste(
-      " The ImageJ-written image you're trying to read",
-      "says in its TIFFTAG_DESCRIPTION that it has 13",
-      "images of 5 slices of 2 channels. However, with 5",
-      "slices of 2 channels, one would expect there to",
-      "be 5 x 2 = 10 images. \n    * This discrepancy",
-      "means that the `ijtiff` package can't read your",
-      "image correctly.\n    * One possible source of",
-      "this kind of error is that your image is temporal",
-      "and volumetric. `ijtiff` can handle either",
-      "time-based or volumetric stacks, but not both."
-    ),
-    fixed = TRUE
-  )
-  expect_error(
-    suppressWarnings(read_tif(test_path("testthat-figs", "bad_ij2.tif"))),
-    paste(
-      " The ImageJ-written image you're trying to read",
-      "says it has 8 frames AND 5 slices. \n    * To be",
-      "read by the `ijtiff` package, the number of",
-      "slices OR the number of frames should be",
-      "specified in the TIFFTAG_DESCRIPTION and they're",
-      "interpreted as the same thing. It does not make",
-      "sense for them to be different numbers."
-    ),
-    fixed = TRUE
+  expect_snapshot_error(
+    suppressWarnings(read_tif(test_path("testthat-figs", "bad_ij2.tif")))
   )
 })
 
 test_that("text-image-io works", {
   mm <- matrix(1:60, nrow = 4)
-  dim(mm) %<>% c(1, 1)
+  dim(mm) <- c(dim(mm), 1, 1)
   tmpfl <- tempfile() %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
   txt_img_write(mm, tmpfl, msg = FALSE)
@@ -320,14 +230,15 @@ test_that("text-image-io works", {
   )
   expect_equal(readRDS(strex::str_give_ext(tmpfl, "rds")), ijtiff_img(mmm))
   tmpfl_txts <- paste0(tmpfl, "_ch", 1:2, ".txt")
-  expect_equal(dir(strex::str_before_last(tmpfl, "/"),
-    pattern = paste0(
-      strex::str_after_last(tmpfl, "/"),
-      ".+txt$"
-    )
-  ),
-  strex::str_after_last(tmpfl_txts, "/"),
-  ignore_attr = FALSE
+  expect_equal(
+    dir(strex::str_before_last(tmpfl, "/"),
+      pattern = paste0(
+        strex::str_after_last(tmpfl, "/"),
+        ".+txt$"
+      )
+    ),
+    strex::str_after_last(tmpfl_txts, "/"),
+    ignore_attr = FALSE
   )
   expect_equal(unlist(lapply(tmpfl_txts, read_txt_img, msg = FALSE)),
     as.vector(mmm),
@@ -342,14 +253,15 @@ test_that("text-image-io works", {
     "_ch2_frame1",
     "_ch2_frame2"
   ), ".txt")
-  expect_equal(dir(strex::str_before_last(tmpfl, "/"),
-    pattern = paste0(
-      strex::str_after_last(tmpfl, "/"),
-      ".+txt$"
-    )
-  ),
-  strex::str_after_last(tmpfl_txts, "/"),
-  ignore_attr = FALSE
+  expect_equal(
+    dir(strex::str_before_last(tmpfl, "/"),
+      pattern = paste0(
+        strex::str_after_last(tmpfl, "/"),
+        ".+txt$"
+      )
+    ),
+    strex::str_after_last(tmpfl_txts, "/"),
+    ignore_attr = FALSE
   )
   expect_equal(unlist(lapply(tmpfl_txts, read_txt_img, msg = FALSE)),
     as.vector(mmmm),
@@ -374,6 +286,7 @@ test_that("text-image-io works", {
 })
 
 test_that("reading certain frames works", {
+  `%T>%` <- magrittr::`%T>%`
   path <- test_path("testthat-figs", "2ch_ij.tif")
   img <- read_tif(path, "A", msg = FALSE)
   img12 <- read_tif(path, frames = 1:2, msg = FALSE)
@@ -424,13 +337,7 @@ test_that("reading certain frames works", {
         list(dim(.), as.vector(.), attributes(.))
       }
   )
-  expect_error(read_tif(path, frames = 7),
-    paste(
-      " You have requested frame number 7 but there are",
-      "only 5 frames in total. "
-    ),
-    fixed = TRUE
-  )
+  expect_snapshot_error(read_tif(path, frames = 7))
 })
 
 test_that("Reading Mathieu's file works", {

@@ -22,13 +22,7 @@ test_that("`read_tags()` works", {
     read_tags(path, "all")[c(2, 4)],
     tags_read(path, frames = c(2, 4))
   )
-  expect_error(
-    read_tags(path, frames = c(11, 12)),
-    paste(
-      " You have requested frame number 12 but there are",
-      "only 5 frames in total. "
-    )
-  )
+  expect_snapshot_error(read_tags(path, frames = c(11, 12)))
   expect_equal(dplyr::n_distinct(read_tags(path, "all")), 1)
   expect_equal(
     read_tags(path),

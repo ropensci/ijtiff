@@ -46,7 +46,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     # write_tif() sometimes fails when writing to far away directories
     tiff_dir <- strex::str_before_last(path, "/")
     checkmate::assert_directory_exists(tiff_dir)
-    path %<>% strex::str_after_last("/")
+    path <- strex::str_after_last(path, stringr::coll("/"))
     withr::local_dir(tiff_dir)
   }
   d <- dim(img)
@@ -54,30 +54,41 @@ write_tif <- function(img, path, bits_per_sample = "auto",
   float_max <- .Call("float_max_C", PACKAGE = "ijtiff")
   if ((!floats) && any(img < 0)) {
     if (min(img) < -float_max) {
-      custom_stop(
-        "The lowest allowable negative value in `img` is {-float_max}.",
-        "The lowest value in your `img` is {min(img)}.",
-        "
-         The `write_txt_img()` function allows you to write images without
-         restriction on the values therein. Maybe you should try that?
-        "
+      rlang::abort(
+        c(
+          stringr::str_glue(
+            "The lowest allowable negative value in `img` is ",
+            "{-float_max}."
+          ),
+          x = stringr::str_glue(
+            "The lowest value in your `img` is {min(img)}."
+          ),
+          i = paste(
+            "The `write_txt_img()` function allows you to write images without",
+            " restriction on the values therein. Maybe you should try that?"
+          )
+        )
       )
     } else if (max(img) > float_max) {
-      custom_stop(
-        "
-         If `img` has negative values (which the input `img` does),
-         then the maximum allowed positive value is {float_max}.
-        ",
-        "The largest value in your `img` is {max(img)}.",
-        "
-         The `write_txt_img()` function allows you to write images without
-         restriction on the values therein. Maybe you should try that?
-        "
+      rlang::abort(
+        c(
+          stringr::str_glue(
+            "If `img` has negative values (which the input `img` does),",
+            " then the maximum allowed positive value is {float_max}."
+          ),
+          x = stringr::str_glue(
+            "The largest value in your `img` is {max(img)}."
+          ),
+          i = paste(
+            "The `write_txt_img()` function allows you to write images without",
+            " restriction on the values therein. Maybe you should try that?"
+          )
+        )
       )
     }
     floats <- TRUE
   }
-  img %<>% as.numeric() # The C function needs img to be numeric
+  img <- as.numeric(img) # The C function needs img to be numeric
   dim(img) <- d
   if (floats) {
     checkmate::assert_numeric(img,
@@ -86,27 +97,35 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     )
     if (bits_per_sample == "auto") bits_per_sample <- 32
     if (bits_per_sample != 32) {
-      custom_stop(
-        "
-         Your image needs to be written as floating point numbers
-         (not integers). For this, it is necessary to have 32 bits per
-         sample.
-        ",
-        "You have selected {bits_per_sample} bits per sample."
+      rlang::abort(
+        c(
+          paste(
+            "Your image needs to be written as floating point numbers",
+            "(not integers). For this, it is necessary to have 32 bits per",
+            "sample."
+          ),
+          x = stringr::str_glue(
+            "You have selected {bits_per_sample} bits per sample."
+          )
+        )
       )
     }
   } else {
     ideal_bps <- 8
     mx <- floor(max(img))
     if (mx > 2^32 - 1) {
-      custom_stop(
-        "
-         The maximum value in 'img' is {mx} which is greater than 2 ^ 32 - 1 and
-         therefore too high to be written to a TIFF file.
-        ",
-        "The `write_txt_img()` function allows you to write images without
-         restriction on the values therein. Maybe you should try that?
-        "
+      rlang::abort(
+        c(
+          stringr::str_glue(
+            "The maximum value in 'img' is {mx} which is ",
+            "greater than 2^32 - 1 ",
+            "and therefore too high to be written to a TIFF file."
+          ),
+          i = paste(
+            "The `write_txt_img()` function allows you to write images without",
+            " restriction on the values therein. Maybe you should try that?"
+          )
+        )
       )
     } else {
       ideal_bps <- dplyr::case_when(
@@ -119,27 +138,35 @@ write_tif <- function(img, path, bits_per_sample = "auto",
       ideal_bps, bits_per_sample
     )
     if (bits_per_sample < ideal_bps) {
-      custom_stop("
-         You are trying to write a {bits_per_sample}-bit image,
-         however the maximum element in `img` is {mx}, which is too big.
-        ", "
-         The largest allowable value in a {bits_per_sample}-bit image is
-         {2 ^ bits_per_sample -1}.
-        ", "
-         To write your `img` to a TIFF file, you need at least {ideal_bps}
-         bits per sample.
-        ")
+      rlang::abort(
+        c(
+          stringr::str_glue(
+            "You are trying to write a {bits_per_sample}-bit image, ",
+            "however the maximum element in `img` is {mx}, which is too big."
+          ),
+          x = stringr::str_glue(
+            "The largest allowable value in a ",
+            "{bits_per_sample}-bit image is ",
+            "{2 ^ bits_per_sample -1}."
+          ),
+          i = stringr::str_glue(
+            "To write your `img` to a TIFF file, you need ",
+            "at least {ideal_bps} bits per sample."
+          )
+        )
+      )
     }
   }
   if (msg) {
-    bps <- bits_per_sample %>% {
-      dplyr::case_when(
-        . == 8 ~ "an 8-bit, ",
-        . == 16 ~ "a 16-bit, ",
-        . == 32 ~ "a 32-bit, ",
-        TRUE ~ "a 0-bit, "
-      )
-    }
+    bps <- bits_per_sample %>%
+      {
+        dplyr::case_when(
+          . == 8 ~ "an 8-bit, ",
+          . == 16 ~ "a 16-bit, ",
+          . == 32 ~ "a 32-bit, ",
+          TRUE ~ "a 0-bit, "
+        )
+      }
     pretty_msg(
       "Writing ", path, ": ", bps, d[1], "x", d[2], " pixel image of ",
       ifelse(floats, "floating point", "unsigned integer"),

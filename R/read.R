@@ -51,30 +51,32 @@
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' @export
 read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
-  path %<>% prep_path()
-  frames %<>% prep_frames()
+  path <- prep_path(path)
+  frames <- prep_frames(frames)
   withr::local_dir(attr(path, "path_dir"))
   checkmate::assert_logical(msg, max.len = 1)
   checkmate::assert_string(list_safety)
-  list_safety %<>% strex::match_arg(c("error", "warning", "none"),
+  list_safety <- strex::match_arg(list_safety,
+    c("error", "warning", "none"),
     ignore_case = TRUE
   )
   tags1 <- read_tags(path, frames = 1)[[1]]
   prep <- prep_read(path, frames, tags1, tags = FALSE)
   out <- .Call("read_tif_C", path.expand(path), prep$frames,
     PACKAGE = "ijtiff"
-  ) %>% {
-    .[prep$back_map]
-  }
+  ) %>%
+    {
+      .[prep$back_map]
+    }
   checkmate::assert_list(out)
   ds <- dims(out)
   if (dplyr::n_distinct(ds) == 1) {
     d <- ds[[1]]
     attrs1 <- attributes(out[[1]])
     if (colormap_or_ij_channels(out, prep, d)) {
-      out %<>% purrr::map(compute_desired_plane)
+      out <- purrr::map(out, compute_desired_plane)
     }
-    out %<>% unlist()
+    out <- unlist(out)
     dim(out) <- c(d[1:2], prep$n_ch, length(out) / prod(c(d[1:2], prep$n_ch)))
     attrs1$dim <- NULL
     do_call_list <- c(list(img = out), attrs1)
@@ -92,22 +94,24 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
     }
   } else if (msg) {
     ints <- attr(out, "sample_format") == "uint"
-    bps <- attr(out, "bits_per_sample") %>% {
-      dplyr::case_when(
-        . == 8 ~ "an 8-bit, ",
-        . == 16 ~ "a 16-bit, ",
-        . == 32 ~ "a 32-bit, ",
-        TRUE ~ "a 0-bit, "
-      )
-    }
-    dim(out) %>% {
-      pretty_msg(
-        "Reading ", path, ": ", bps, .[1], "x", .[2], " pixel image of ",
-        ifelse(ints, "unsigned integer", "floating point"), " type. Reading ",
-        .[3], " channel", ifelse(.[3] > 1, "s", ""), " and ", .[4],
-        " frame", ifelse(.[4] > 1, "s", ""), " . . ."
-      )
-    }
+    bps <- attr(out, "bits_per_sample") %>%
+      {
+        dplyr::case_when(
+          . == 8 ~ "an 8-bit, ",
+          . == 16 ~ "a 16-bit, ",
+          . == 32 ~ "a 32-bit, ",
+          TRUE ~ "a 0-bit, "
+        )
+      }
+    dim(out) %>%
+      {
+        pretty_msg(
+          "Reading ", path, ": ", bps, .[1], "x", .[2], " pixel image of ",
+          ifelse(ints, "unsigned integer", "floating point"), " type. Reading ",
+          .[3], " channel", ifelse(.[3] > 1, "s", ""), " and ", .[4],
+          " frame", ifelse(.[4] > 1, "s", ""), " . . ."
+        )
+      }
   }
   out <- fix_res_unit(out)
   if (msg) pretty_msg("\b Done.")
@@ -144,8 +148,8 @@ tif_read <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
 #' )
 #' @export
 read_tags <- function(path, frames = 1) {
-  frames %<>% prep_frames()
-  path %<>% prep_path()
+  frames <- prep_frames(frames)
+  path <- prep_path(path)
   withr::local_dir(attr(path, "path_dir"))
   if (isTRUE(all.equal(frames, 1,
     check.attributes = FALSE, check.names = FALSE

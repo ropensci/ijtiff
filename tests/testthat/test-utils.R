@@ -46,10 +46,6 @@ test_that("lowest_upper_bound() edge cases work correctly", {
   expect_equal(lowest_upper_bound(NA_integer_, 1:5, na_rm = TRUE), NA_real_)
 })
 
-test_that("custom_stop() errors correctly", {
-  expect_error(custom_stop("a", 1), "must all be of character type")
-})
-
 test_that("prep_read() errors correctly in unusual circumstances", {
   expect_error(
     read_tif(test_path("testthat-figs", "image2.tif"), frames = 999),

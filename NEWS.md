@@ -1,7 +1,14 @@
+# `ijtiff` 2.3.0
+
+## MINOR IMPROVEMENTS
+* Use `rlang::abort()` and its error message formatting.
+* Move away from `magrittr`'s `%<>%`.
+
+
 # `ijtiff` 2.2.8
 
 ## BUG FIXES
-* Fix headings in NEWS.md..
+* Fix headings in NEWS.md.
 
 
 # `ijtiff` 2.2.7

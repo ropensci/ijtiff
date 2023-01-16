@@ -29,23 +29,23 @@ ijtiff_img <- function(img, ...) {
   checkmate::assert_array(img, min.d = 2, max.d = 4)
   if (is.logical(img)) {
     atts <- attributes(img)
-    img %<>% as.numeric()
+    img <- as.numeric(img)
     attributes(img) <- atts
   }
   checkmate::assert_numeric(img)
-  if (length(dim(img)) == 2) dim(img) %<>% c(1, 1)
+  if (length(dim(img)) == 2) dim(img) <- c(dim(img), 1, 1)
   if (length(dim(img)) == 3) {
-    dim(img) %<>% {
-      c(.[1:2], 1, .[3])
-    }
+    dim(img) <- c(dim(img)[1:2], 1, dim(img)[3])
   }
   dots <- list(...)
   if (length(dots)) {
     namez <- names(dots)
     if (is.null(namez) || any(namez == "")) {
-      custom_stop(
-        "All arguments in ... must be named.",
-        "Your argument {dots[[1]]} is not named."
+      rlang::abort(
+        c(
+          "All arguments in ... must be named.",
+          stringr::str_glue("Your argument {dots[[1]]} is not named.")
+        )
       )
     }
     do_call_args <- c(list(img), dots)
@@ -100,15 +100,21 @@ as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
       return(img)
     } else {
       if (force) {
-        img %<>% ijtiff_img()
+        img <- ijtiff_img(img)
       } else {
-        custom_stop("
-          This function expects the input `img` to be of class 'ijtiff_img',
-          however the `img` you have supplied is not.
-         ", "
-          To force your array through this function, use `force = TRUE`, but
-          take care to check that the result is what you'd like it to be.
-         ")
+        rlang::abort(
+          c(
+            paste(
+              " This function expects the input `img` to be of class",
+              "'ijtiff_img', however the `img` you have supplied is not."
+            ),
+            i = paste(
+              "To force your array through this function, use",
+              "`force = TRUE`, but take care to",
+              "check that the result is what you'd like it to be."
+            )
+          )
+        )
       }
     }
   }
@@ -128,11 +134,9 @@ as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
     startsWith("gr", tolower(colormode)),
     "Gray", colormode
   )
-  colormode %<>% strex::match_arg(c(
-    "Color", "Colour",
-    "Grayscale", "Greyscale"
-  ),
-  ignore_case = TRUE
+  colormode <- strex::match_arg(colormode,
+    c("Color", "Colour", "Grayscale", "Greyscale"),
+    ignore_case = TRUE
   )
   colormode <- dplyr::if_else(colormode == "Colour", "Color", colormode)
   colormode <- dplyr::if_else(colormode == "Greyscale", "Grayscale", colormode)
@@ -142,7 +146,7 @@ as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
     )
     if (!is.na(lub)) img <- img / lub
   }
-  img %<>% aperm(c(2, 1, 3, 4))
+  img <- aperm(img, c(2, 1, 3, 4))
   if (length(dim(img)) == 4 && dim(img)[3] == 1) dim(img) <- dim(img)[-3]
   EBImage::Image(img, colormode = colormode)
 }

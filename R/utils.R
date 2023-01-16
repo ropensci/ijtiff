@@ -67,13 +67,14 @@ extract_desired_plane <- function(arr) {
         enlist_planes() %>%
         unique() %>%
         length()
-      custom_stop(
-        "Cannot extract the desired plane.",
-        "
-                   There are {n_nonzero_unique_planes} unique nonzero planes,
-                   so it is impossible to decipher which is the correct one
-                   to extract.
-                  "
+      rlang::abort(
+        c("Cannot extract the desired plane.",
+          x = stringr::str_glue(
+            "There are {n_nonzero_unique_planes} unique nonzero ",
+            "planes, so it is impossible to decipher which is the ",
+            "correct one to extract."
+          )
+        )
       )
     }
   }
@@ -190,7 +191,7 @@ colormap_or_ij_channels <- function(img_lst, prep, d) {
 #' count_frames(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' @export
 count_frames <- function(path) {
-  path %<>% prep_path()
+  path <- prep_path(path)
   withr::local_dir(attr(path, "path_dir"))
   prep <- prep_read(path,
     frames = "all",
@@ -275,14 +276,19 @@ NULL
 #' @rdname linescan-conversion
 #' @export
 linescan_to_stack <- function(linescan_img) {
-  linescan_img %<>% ijtiff_img()
+  linescan_img <- ijtiff_img(linescan_img)
   if (dim(linescan_img)[4] != 1) {
-    custom_stop(
-      "
-       The fourth dimension of `linescan_img` should be equal to 1
-       (or else it's not a linescan image).
-      ",
-      "Yours has dim(linescan_img)[4] == {dim(linescan_img)[4]}."
+    rlang::abort(
+      c(
+        paste(
+          "The fourth dimension of `linescan_img` should be equal to 1",
+          "(or else it's not a linescan image)."
+        ),
+        stringr::str_glue(
+          "Yours has ",
+          "`dim(linescan_img)[4] == {dim(linescan_img)[4]}`."
+        )
+      )
     )
   }
   linescan_img %>%
@@ -293,14 +299,16 @@ linescan_to_stack <- function(linescan_img) {
 #' @rdname linescan-conversion
 #' @export
 stack_to_linescan <- function(img) {
-  img %<>% ijtiff_img()
+  img <- ijtiff_img(img)
   if (dim(img)[1] != 1) {
-    custom_stop(
-      "
-       The first dimension of `img` should be equal to 1
-       (or else it's not a stack that can be converted to a linescan).
-      ",
-      "Yours has dim(img)[1] == {dim(img)[1]}."
+    rlang::abort(
+      c(
+        paste(
+          "The first dimension of `img` should be equal to 1 (or",
+          "else it's not a stack that can be converted to a linescan)."
+        ),
+        x = stringr::str_glue("Yours has dim(img)[1] == {dim(img)[1]}.")
+      )
     )
   }
   img %>%
@@ -364,11 +372,12 @@ prep_frames <- function(frames) {
     checkmate::check_integerish(frames, lower = 1)
   )
   if (is.character(frames)) {
-    frames %<>% tolower()
+    frames <- tolower(frames)
     if (!startsWith("all", frames)) {
-      custom_stop(
-        "If `frames` is a string, it must be 'all'.",
-        "You have `frames = '{frames}'`."
+      rlang::abort(
+        c("If `frames` is a string, it must be 'all'.",
+          x = stringr::str_glue("You have `frames = '{frames}'`.")
+        )
       )
     }
     frames <- "all"
@@ -394,16 +403,19 @@ calculate_n_slices <- function(ij_description) {
       if (isTRUE(n_slices == 1) || isTRUE(n_frames == 1)) {
         n_slices <- n_frames <- max(n_slices, n_frames)
       } else {
-        custom_stop(
-          "
-            The ImageJ-written image you're trying to read says it has
-            {n_frames} frames AND {n_slices} slices.
-            ", "
-            To be read by the `ijtiff` package, the number of slices OR the
-            number of frames should be specified in the TIFFTAG_DESCRIPTION
-            and they're interpreted as the same thing. It does not make sense
-            for them to be different numbers.
-            "
+        rlang::abort(
+          c(
+            stringr::str_glue(
+              "The ImageJ-written image you're trying to read says it ",
+              "has {n_frames} frames AND {n_slices} slices."
+            ),
+            x = paste(
+              "To be read by the `ijtiff` package, the number of slices OR the",
+              "number of frames should be specified in the TIFFTAG_DESCRIPTION",
+              "and they're interpreted as the same thing. It does not make",
+              "sense for them to be different numbers."
+            )
+          )
         )
       }
     }
@@ -439,20 +451,25 @@ translate_ij_description <- function(tags1) {
     if ((!is.na(n_slices) && !is.na(n_imgs)) &&
       ij_n_ch &&
       n_imgs != n_ch * n_slices) {
-      custom_stop(
-        "
-        The ImageJ-written image you're trying to read says in its
-        TIFFTAG_DESCRIPTION that it has {n_imgs} images of
-        {n_slices} slices of {n_ch} channels. However, with {n_slices}
-        slices of {n_ch} channels, one would expect there to be
-        {n_slices} x {n_ch} = {n_ch * n_slices} images.
-        ", "
-        This discrepancy means that the `ijtiff` package can't read your
-        image correctly.
-        ", "
-        One possible source of this kind of error is that your image
-        is temporal and volumetric. `ijtiff` can handle either
-        time-based or volumetric stacks, but not both."
+      rlang::abort(
+        c(
+          stringr::str_glue(
+            "The ImageJ-written image you're trying to read says in its ",
+            "TIFFTAG_DESCRIPTION that it has {n_imgs} images of ",
+            "{n_slices} slices of {n_ch} channels. However, with {n_slices} ",
+            "slices of {n_ch} channels, one would expect there to be ",
+            "{n_slices} x {n_ch} = {n_ch * n_slices} images."
+          ),
+          x = paste(
+            "This discrepancy means that the `ijtiff` package",
+            "can't read your image correctly."
+          ),
+          i = paste(
+            "One possible source of this kind of error is that your",
+            "image may be temporal and volumetric. `ijtiff` can handle",
+            "either time-based or volumetric stacks, but not both."
+          )
+        )
       )
     }
   }
@@ -486,12 +503,12 @@ translate_ij_description <- function(tags1) {
 #'
 #' @noRd
 prep_read <- function(path, frames, tags1, tags = FALSE) {
-  frames %<>% prep_frames()
+  frames <- prep_frames(frames)
   frames_max <- max(frames)
   c(n_imgs, n_slices, ij_n_ch, n_ch) %<-% translate_ij_description(
     tags1
   )[c("n_imgs", "n_slices", "ij_n_ch", "n_ch")]
-  path %<>% prep_path()
+  path <- prep_path(path)
   withr::local_dir(attr(path, "path_dir"))
   n_dirs <- .Call("count_directories_C", path, PACKAGE = "ijtiff")
   if (!is.na(n_slices)) {
@@ -500,21 +517,28 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
       frames_max <- n_slices
     }
     if (frames_max > n_slices) {
-      custom_stop("
-      You have requested frame number {frames_max} but there
-      are only {n_slices} frames in total.
-                ")
+      rlang::abort(
+        stringr::str_glue(
+          "You have requested frame number {frames_max} but ",
+          "there are only {n_slices} frames in total."
+        )
+      )
     }
     if (ij_n_ch) {
       if (n_dirs != n_slices) {
         if (!is.na(n_imgs) && n_dirs != n_imgs) {
-          custom_stop(
-            "
-          If TIFFTAG_DESCRIPTION specifies the number of images, this must be
-          equal to the number of directories in the TIFF file.
-          ",
-            "Your TIFF file has {n_dirs} directories.",
-            "Its TIFFTAG_DESCRIPTION indicates that it holds {n_imgs} images."
+          rlang::abort(
+            c(
+              paste(
+                "If TIFFTAG_DESCRIPTION specifies the number of images, this",
+                "must be equal to the number of directories in the TIFF file."
+              ),
+              x = stringr::str_glue("Your TIFF file has {n_dirs} directories."),
+              x = stringr::str_glue(
+                "Its TIFFTAG_DESCRIPTION indicates that it",
+                " holds {n_imgs} images."
+              )
+            )
           )
         }
         if (tags) {
@@ -534,10 +558,12 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
       frames_max <- n_dirs
     }
     if (frames_max > n_dirs) {
-      custom_stop("
-      You have requested frame number {frames_max} but there
-      are only {n_dirs} frames in total.
-                ")
+      rlang::abort(
+        stringr::str_glue(
+          "You have requested frame number {frames_max} but",
+          " there are only {n_dirs} frames in total."
+        )
+      )
     }
   }
   good_frames <- sort(unique(frames))
@@ -566,58 +592,11 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
 #' @noRd
 prep_path <- function(path) {
   checkmate::assert_string(path)
-  path %<>% stringr::str_replace_all(stringr::coll("\\"), "/") # windows safe
+  path <- stringr::str_replace_all(path, stringr::coll("\\"), "/") # windows
   checkmate::assert_file_exists(path)
   structure(fs::path_file(path), path_dir = fs::path_dir(path))
 }
 
-
-#' Construct the bullet point bits for `custom_stop()`.
-#'
-#' @param string The message for the bullet point.
-#'
-#' @return A string with the bullet-pointed message nicely formatted for the
-#'   console.
-#'
-#' @noRd
-custom_stop_bullet <- function(string) {
-  checkmate::assert_string(string)
-  string %>%
-    stringr::str_replace_all("\\s+", " ") %>%
-    paste("    *", .)
-}
-
-#' Nicely formatted error message.
-#'
-#' Format an error message with bullet-pointed sub-messages with nice
-#' line-breaks.
-#'
-#' Arguments should be entered as `glue`-style strings.
-#'
-#' @param main_message The main error message.
-#' @param ... Bullet-pointed sub-messages.
-#'
-#' @noRd
-custom_stop <- function(main_message, ..., .envir = parent.frame()) {
-  checkmate::assert_string(main_message)
-  main_message %<>%
-    stringr::str_replace_all("\\s+", " ") %>%
-    stringr::str_glue(.envir = .envir)
-  out <- main_message
-  dots <- unlist(list(...))
-  if (length(dots)) {
-    if (!is.character(dots)) {
-      stop("\nThe arguments in ... must all be of character type.")
-    }
-    dots %<>%
-      purrr::map_chr(stringr::str_glue, .envir = .envir) %>%
-      purrr::map_chr(custom_stop_bullet)
-    out %<>% {
-      stringr::str_c(c(., dots), collapse = "\n")
-    }
-  }
-  rlang::abort(stringr::str_c(out, collapse = "\n"))
-}
 
 #' Check if EBImage is installed.
 #'

@@ -1,5 +1,5 @@
 #' @useDynLib ijtiff
-#' @importFrom magrittr '%>%' '%<>%' '%T>%'
+#' @importFrom magrittr '%>%'
 #' @importFrom rlang '%||%'
 #' @importFrom zeallot '%<-%'
 #' @useDynLib ijtiff, .registration = TRUE

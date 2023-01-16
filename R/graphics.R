@@ -27,33 +27,23 @@
 display <- function(img, method = NULL, basic = FALSE, normalize = TRUE) {
   if (basic) {
     ld <- length(dim(img))
-    if (ld == 4) {
-      img %<>% {
-        .[, , 1, 1]
-      }
-    }
-    if (ld == 3) {
-      img %<>% {
-        .[, , 1]
-      }
-    }
+    if (ld == 4) img <- img[, , 1, 1]
+    if (ld == 3) img <- img[, , 1]
     checkmate::assert_matrix(img)
-    img %<>% {
-      t(.[rev(seq_len(nrow(.))), ])
-    }
+    img <- t(img[rev(seq_len(nrow(img))), ])
     graphics::image(img,
       col = grDevices::grey.colors(999, 0, 1),
       xaxt = "n", yaxt = "n"
     )
   } else {
     if (rlang::is_installed("EBImage")) {
-      if (!methods::is(img, "Image")) img %<>% as_EBImage()
-      if (normalize) img %<>% EBImage::normalize()
+      if (!methods::is(img, "Image")) img <- as_EBImage(img)
+      if (normalize) img <- EBImage::normalize(img)
       if (is.null(method)) {
         EBImage::display(img, method = "raster")
       } else {
         checkmate::assert_string(method)
-        method %<>% strex::match_arg(c("browser", "raster"),
+        method <- strex::match_arg(method, c("browser", "raster"),
           ignore_case = TRUE
         )
         EBImage::display(img, method = method)
