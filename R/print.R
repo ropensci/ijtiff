@@ -8,6 +8,7 @@
 #' @export
 print.ijtiff_img <- function(x, ...) {
   checkmate::assert_class(x, "ijtiff_img")
+  checkmate::assert(length(dim(x)) == 4)
   d <- dim(x)
   cli::cli_text(
     "{d[1]}x{d[2]} pixel ijtiff_img ",

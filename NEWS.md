@@ -1,3 +1,9 @@
+# `ijtiff` 2.3.1
+
+## BUG FIXES
+* Fix test for new waldo.
+
+
 # `ijtiff` 2.3.0
 
 ## MINOR IMPROVEMENTS
