@@ -388,7 +388,7 @@
     },
     "SystemRequirements": "libtiff, libjpeg, zlib"
   },
-  "fileSize": "3092.772KB",
+  "fileSize": "3092.264KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -407,7 +407,6 @@
       ],
       "name": "ijtiff: An R package providing {TIFF} I/O for {ImageJ} users",
       "identifier": "10.21105/joss.00633",
-      "url": "https://doi.org/10.21105/joss.00633",
       "pagination": "633",
       "@id": "https://doi.org/10.21105/joss.00633",
       "sameAs": "https://doi.org/10.21105/joss.00633",
