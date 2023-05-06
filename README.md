@@ -4,18 +4,12 @@
 # ijtiff <img src="man/figures/logo.png" height="140" align="right">
 
 [![R-CMD-check](https://github.com/ropensci/ijtiff/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/ijtiff/actions)
-[![codecov](https://codecov.io/gh/ropensci/ijtiff/branch/master/graph/badge.svg?token=rNNRw2FU0F)](https://codecov.io/gh/ropensci/ijtiff)
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff)
 ![RStudio CRAN
 downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff)
 ![RStudio CRAN monthly
 downloads](http://cranlogs.r-pkg.org/badges/ijtiff)
-
-[![Project Status: Active – The project has reached a stable, usable
-state and is being actively
-developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
-[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00633/status.svg)](https://doi.org/10.21105/joss.00633)
 
