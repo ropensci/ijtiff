@@ -1,4 +1,4 @@
-# `ijtiff` 2.3.1
+# `ijtiff` 2.3.2
 
 ## MINOR IMPROVEMENTS
 * Add `libwebp` and `libzstd` to `README` installation instructions.

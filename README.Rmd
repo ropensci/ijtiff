@@ -17,6 +17,8 @@ original_files <- dir()
 
 [![R-CMD-check](https://github.com/ropensci/ijtiff/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/ijtiff/actions)
 
+[![Project Status: Inactive – The project has reached a stable, usable state but is no longer being actively developed; support/maintenance will be provided as time allows.](https://www.repostatus.org/badges/latest/inactive.svg)](https://www.repostatus.org/#inactive)
+
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff)
 ![RStudio CRAN downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff)
 ![RStudio CRAN monthly downloads](http://cranlogs.r-pkg.org/badges/ijtiff)
