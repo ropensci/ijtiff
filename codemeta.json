@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/ropensci/ijtiff",
   "issueTracker": "https://github.com/ropensci/ijtiff/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -388,7 +388,7 @@
     },
     "SystemRequirements": "libtiff, libjpeg, zlib"
   },
-  "fileSize": "3092.226KB",
+  "fileSize": "3091.802KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -424,7 +424,6 @@
   ],
   "releaseNotes": "https://github.com/ropensci/ijtiff/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/ijtiff/blob/master/README.md",
-  "contIntegration": ["https://github.com/ropensci/ijtiff/actions", "https://app.codecov.io/gh/ropensci/ijtiff"],
-  "developmentStatus": ["https://www.repostatus.org/", "https://lifecycle.r-lib.org/articles/stages.html"],
+  "contIntegration": "https://github.com/ropensci/ijtiff/actions",
   "keywords": ["r", "rstats", "tiff-files", "imagej", "tiff-images", "image-manipulation", "r-package", "peer-reviewed"]
 }

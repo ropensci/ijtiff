@@ -1,5 +1,11 @@
 # `ijtiff` 2.3.1
 
+## MINOR IMPROVEMENTS
+* Add `libwebp` and `libzstd` to `README` installation instructions.
+
+
+# `ijtiff` 2.3.1
+
 ## BUG FIXES
 * Fix test for new waldo.
 
