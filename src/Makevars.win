@@ -1,7 +1,7 @@
-MSYSTEM ?= mingw$(WIN)
-RWINLIB = ../windows/libtiff-4.2.0/$(MSYSTEM)
-PKG_CPPFLAGS = -I$(RWINLIB)/include
-PKG_LIBS = -L$(RWINLIB)/lib -ltiff -ljpeg -lz
+MSYSTEM = mingw$(WIN)
+RWINLIB = ../windows/libtiff
+PKG_CPPFLAGS = -I$(RWINLIB)/$(MSYSTEM)/include -I$(RWINLIB)/include
+PKG_LIBS = -L$(RWINLIB)/$(MSYSTEM)/lib -L$(RWINLIB)/lib -ltiff -ljpeg -lz
 
 all: clean winlibs
 
