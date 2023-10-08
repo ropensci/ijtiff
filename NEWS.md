@@ -1,3 +1,9 @@
+# `ijtiff` 2.3.3
+
+## BUG FIXES
+* Ignore `pkg-config` when it says to use `-ljbig` or `-lLerc`. 
+
+
 # `ijtiff` 2.3.2
 
 ## MINOR IMPROVEMENTS

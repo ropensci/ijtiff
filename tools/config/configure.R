@@ -34,31 +34,34 @@ if (pkg_config_available) {
   PKGCONFIG_CFLAGS <- tryCatch(
     suppressWarnings(
       system2("pkg-config",
-              c("--cflags", "--silence-errors", PKG_CONFIG_NAME),
-              stdout = TRUE)
+        c("--cflags", "--silence-errors", PKG_CONFIG_NAME),
+        stdout = TRUE
+      )
     ),
     error = function(cnd) ""
   )
   PKGCONFIG_LIBS <- tryCatch(
     suppressWarnings(
       system2("pkg-config",
-              c("--libs", PKG_CONFIG_NAME),
-              stdout = TRUE)
+        c("--libs", PKG_CONFIG_NAME),
+        stdout = TRUE
+      )
     ),
     error = function(cnd) ""
   )
   PKGCONFIG_STATIC_LIBS <- tryCatch(
     suppressWarnings(
       system2("pkg-config",
-              c("--libs", "--static", PKG_CONFIG_NAME),
-              stdout = TRUE)
+        c("--libs", "--static", PKG_CONFIG_NAME),
+        stdout = TRUE
+      )
     ),
     error = function(cnd) ""
   )
   pkgconfig_success <- any(
     purrr::map_lgl(
       list(PKGCONFIG_CFLAGS, PKGCONFIG_LIBS, PKGCONFIG_STATIC_LIBS),
-      ~isTRUE(nchar(.) > 0)
+      ~ isTRUE(nchar(.) > 0)
     )
   )
   if (pkgconfig_success) {
@@ -86,10 +89,15 @@ if (nchar(INCLUDE_DIR) || nchar(LIB_DIR)) {
   }
 }
 
-# pkg-config often says -ljbig is necessary but it seems not to be
-if (stringr::str_detect(PKG_LIBS, "\\s?-ljbig\\s?")) {
-  PKG_LIBS <- stringr::str_replace_all(PKG_LIBS, "\\s?-ljbig\\s?", " ")
+# pkg-config often says -ljbig and -lLerc are necessary but they seem not to be
+for (lib in c("jbig", "[Ll]erc")) {
+  PKG_LIBS <- stringr::str_replace_all(
+    PKG_LIBS,
+    stringr::str_glue("\\s?-l{lib}(\\s?)"),
+    "\\1"
+  )
 }
+
 
 PKG_LIBS <- stringr::str_trim(PKG_LIBS)
 PKG_CFLAGS <- stringr::str_trim(PKG_CFLAGS)
@@ -100,20 +108,25 @@ cat(stringr::str_glue("Using PKG_LIBS={PKG_LIBS}"), "\n")
 
 # Find compiler
 CC <- system2(paste0(R.home(), "/bin/R"),
-              c("CMD", "config", "CC"),
-              stdout = TRUE)
+  c("CMD", "config", "CC"),
+  stdout = TRUE
+)
 CFLAGS <- system2(paste0(R.home(), "/bin/R"),
-                  c("CMD", "config", "CFLAGS"),
-                  stdout = TRUE)
+  c("CMD", "config", "CFLAGS"),
+  stdout = TRUE
+)
 CPPFLAGS <- system2(paste0(R.home(), "/bin/R"),
-                    c("CMD", "config", "CPPFLAGS"),
-                    stdout = TRUE)
+  c("CMD", "config", "CPPFLAGS"),
+  stdout = TRUE
+)
 
 # Test configuration
 test_failed <- as.logical(
   system(
-    paste('echo "#include', PKG_TEST_HEADER, '" |',
-          CC, CPPFLAGS, PKG_CFLAGS, CFLAGS, "-E -xc - >/dev/null 2>&1")
+    paste(
+      'echo "#include', PKG_TEST_HEADER, '" |',
+      CC, CPPFLAGS, PKG_CFLAGS, CFLAGS, "-E -xc - >/dev/null 2>&1"
+    )
   )
 )
 
@@ -135,10 +148,12 @@ if (test_failed) {
       "--------------------------------------------------------------------"
     )
   )
-} else {  # Write to Makevars
+} else { # Write to Makevars
   readr::write_lines(
-    stringr::str_glue("PKG_CPPFLAGS={PKG_CFLAGS}", "\n",
-                      "PKG_LIBS={PKG_LIBS}"),
+    stringr::str_glue(
+      "PKG_CPPFLAGS={PKG_CFLAGS}", "\n",
+      "PKG_LIBS={PKG_LIBS}"
+    ),
     "src/Makevars"
   )
 }
