@@ -43,9 +43,9 @@ To learn about `ijtiff` and how to use it, visit the package website at
 install `libtiff`:
 
 - On **Debian Linux**, try
-  `sudo apt-get install libtiff-dev libwebp-dev libzstd-dev`.
+  `sudo apt-get install libtiff-dev libdeflate-dev libwebp-dev libzstd-dev zlib1g-dev`.
 - On **Fedora Linux**, try
-  `sudo yum install libtiff-devel libwebp-devel libzstd-devel`.
+  `sudo yum install libtiff-devel libdeflate-devel libwebp-devel libzstd-devel zlib-devel`.
 - On **Mac**, you need [Homebrew](https://brew.sh/). Then in the
   terminal, run `brew install libtiff`.
 - On **Windows**, no setup is required.

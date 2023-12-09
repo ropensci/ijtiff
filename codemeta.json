@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/ropensci/ijtiff",
   "issueTracker": "https://github.com/ropensci/ijtiff/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -386,9 +386,9 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=zeallot"
     },
-    "SystemRequirements": "libtiff, libjpeg, zlib"
+    "SystemRequirements": "libtiff, libdeflate, libjpeg, libwebp, libzstd, zlib"
   },
-  "fileSize": "3092.62KB",
+  "fileSize": "3092.765KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",

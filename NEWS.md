@@ -1,6 +1,12 @@
 # `ijtiff` 2.3.3
 
 ## BUG FIXES
+* Include more (necessary) stuff in `SystemRequirements`.
+
+
+# `ijtiff` 2.3.3
+
+## BUG FIXES
 * Ignore `pkg-config` when it says to use `-ljbig` or `-lLerc`. 
 
 
