@@ -386,9 +386,9 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=zeallot"
     },
-    "SystemRequirements": "libtiff, libdeflate, libjpeg, libwebp, libzstd, zlib"
+    "SystemRequirements": "libtiff, libbz2, libdeflate, libjpeg, liblzma,\n    libwebp, libzstd, zlib"
   },
-  "fileSize": "3092.765KB",
+  "fileSize": "3092.89KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
