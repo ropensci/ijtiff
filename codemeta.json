@@ -2,7 +2,7 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "ijtiff",
-  "description": "General purpose TIFF file I/O for R users. Currently the only such package with read and write support for TIFF files with floating point (real-numbered) pixels, and the only package that can correctly import TIFF files that were saved from 'ImageJ' and write TIFF files than can be correctly read by 'ImageJ' <https://imagej.nih.gov/ij/>. Also supports text image I/O.",
+  "description": "General purpose TIFF file I/O for R users. Currently the only such package with read and write support for TIFF files with floating point (real-numbered) pixels, and the only package that can correctly import TIFF files that were saved from 'ImageJ' and write TIFF files than can be correctly read by 'ImageJ' <https://imagej.net/ij/>. Also supports text image I/O.",
   "name": "ijtiff: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files",
   "relatedLink": ["https://docs.ropensci.org/ijtiff/", "https://CRAN.R-project.org/package=ijtiff"],
   "codeRepository": "https://github.com/ropensci/ijtiff",
@@ -14,7 +14,7 @@
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.2.1 (2022-06-23)",
+  "runtimePlatform": "R version 4.2.0 (2022-04-22)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -388,7 +388,7 @@
     },
     "SystemRequirements": "libtiff, libbz2, libdeflate, libjpeg, liblzma,\n    libwebp, libzstd, zlib"
   },
-  "fileSize": "3092.89KB",
+  "fileSize": "2949.213KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",

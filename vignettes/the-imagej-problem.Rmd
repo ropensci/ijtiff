@@ -18,7 +18,7 @@ library(magrittr)
 
 ## Introduction
 
-The _ImageJ_ software (https://imagej.nih.gov/ij/) is a widely-used image viewing and processing software, particularly popular in microscopy and life sciences. It supports the TIFF image format (and many others). It reads TIFF files perfectly, however it can sometimes write them in a peculiar way, meaning that when other softwares try to read TIFF files written by _ImageJ_, mistakes can be made. 
+The _ImageJ_ software (https://imagej.net/ij/) is a widely-used image viewing and processing software, particularly popular in microscopy and life sciences. It supports the TIFF image format (and many others). It reads TIFF files perfectly, however it can sometimes write them in a peculiar way, meaning that when other softwares try to read TIFF files written by _ImageJ_, mistakes can be made. 
 
 One goal of the `ijtiff` R package is to correctly import TIFF files that were saved from _ImageJ_.
  
