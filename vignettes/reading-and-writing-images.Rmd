@@ -58,7 +58,7 @@ to_display <- array(0, dim = c(3 * nrow(reds), ncol(reds), 3, 1))
 to_display[seq_len(nrow(reds)), , 1, ] <- reds
 to_display[seq_len(nrow(reds)) + nrow(reds), , 2, ] <- greens
 to_display[seq_len(nrow(reds)) + 2 * nrow(reds), , 3, ] <- blues
-display(to_display)
+display(to_display, basic = TRUE)
 ```
 
 There you go: 8 frames in 3 colours.
@@ -88,7 +88,7 @@ to_display <- array(0, dim = c(3 * nrow(reds), ncol(reds), 3, 1))
 to_display[seq_len(nrow(reds)), , 1, ] <- reds
 to_display[seq_len(nrow(reds)) + nrow(reds), , 2, ] <- greens
 to_display[seq_len(nrow(reds)) + 2 * nrow(reds), , 3, ] <- blues
-display(to_display)
+display(to_display, basic = TRUE)
 ```
 
 Just in case you're wondering, it's not currently possible to read only certain channels. 
@@ -102,7 +102,7 @@ path_rlogo <- system.file("img", "Rlogo.tif", package = "ijtiff")
 img_rlogo <- read_tif(path_rlogo) 
 dim(img_rlogo)  # 4 channels, 1 frame
 class(img_rlogo)
-display(img_rlogo)
+display(img_rlogo, basic = TRUE)
 ```
 
 You can also have an image with only 1 channel:
@@ -111,7 +111,7 @@ You can also have an image with only 1 channel:
 path_rlogo_grey <- system.file("img", "Rlogo-grey.tif", package = "ijtiff")
 img_rlogo_grey <- read_tif(path_rlogo_grey)
 dim(img_rlogo_grey)  # 1 channel, 1 frame
-display(img_rlogo_grey)
+display(img_rlogo_grey, basic = TRUE)
 ```
 
 

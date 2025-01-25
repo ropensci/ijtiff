@@ -1,4 +1,10 @@
-# `ijtiff` 2.3.3
+# `ijtiff` 2.3.5
+
+## BUG FIXES
+* Use basic image display in vignettes. `EBImage` was causing integer overflow.
+
+
+# `ijtiff` 2.3.4
 
 ## BUG FIXES
 * Include more (necessary) stuff in `SystemRequirements`.
