@@ -64,5 +64,5 @@ Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-SystemRequirements: libtiff, libbz2, libdeflate, libjpeg, liblzma,
-    libwebp, libzstd, zlib
+SystemRequirements: fftw3, libtiff, libbz2, libdeflate, libjpeg, liblzma,
+    libwebp, libzstd, X11, zlib

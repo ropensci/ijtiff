@@ -117,6 +117,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "magick",
+      "name": "magick",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=magick"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "mockery",
       "name": "mockery",
       "provider": {
@@ -277,8 +289,15 @@
     },
     "7": {
       "@type": "SoftwareApplication",
-      "identifier": "grDevices",
-      "name": "grDevices"
+      "identifier": "imager",
+      "name": "imager",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=imager"
     },
     "8": {
       "@type": "SoftwareApplication",
@@ -386,9 +405,9 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=zeallot"
     },
-    "SystemRequirements": "libtiff, libbz2, libdeflate, libjpeg, liblzma,\n    libwebp, libzstd, zlib"
+    "SystemRequirements": "fftw3, libtiff, libbz2, libdeflate, libjpeg, liblzma,\n    libwebp, libzstd, X11, zlib"
   },
-  "fileSize": "2949.382KB",
+  "fileSize": "3116.581KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
