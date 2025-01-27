@@ -11,9 +11,12 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  crop = TRUE
 )
+knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
 library(magrittr)
+par(mar=rep(0, 4))
 ```
 
 ## Introduction
@@ -49,7 +52,7 @@ path_2ch_ij <- system.file("img", "Rlogo-banana-red_green.tif",
 
 Here are the red and green channels of the first and third frames of the TIFF:
 
-```{r red and green banana, echo=FALSE, message=FALSE, dpi=300, fig.height=1, warning=FALSE, fig.width=2}
+```{r red and green banana, echo=FALSE, message=FALSE, dpi=300, warning=FALSE, out.width='100%'}
 rgbanana_tif <- system.file("img", "Rlogo-banana-red_green.tif",
   package = "ijtiff"
 ) %>%
@@ -62,7 +65,7 @@ greens <- purrr::map(seq_len(d[4]), ~ rgbanana_tif[, , 2, .]) %>%
 to_display <- array(0, dim = c(2 * nrow(reds), ncol(reds), 3, 1))
 to_display[seq_len(nrow(reds)), , 1, ] <- reds
 to_display[seq_len(nrow(reds)) + nrow(reds), , 2, ] <- greens
-ijtiff::display(to_display)
+ijtiff::display(to_display, axes = FALSE)
 ```
 
 ### The original `tiff` package

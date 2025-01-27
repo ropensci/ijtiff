@@ -20,3 +20,29 @@ errors when reading TIFF files written by the \emph{ImageJ} software; \code{ijti
 works smoothly with these images.
 }
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://docs.ropensci.org/ijtiff/}
+  \item \url{https://github.com/ropensci/ijtiff}
+  \item Report bugs at \url{https://github.com/ropensci/ijtiff/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Rory Nolan \email{rorynoolan@gmail.com} (\href{https://orcid.org/0000-0002-5239-4043}{ORCID})
+
+Authors:
+\itemize{
+  \item Kent Johnson \email{kjohnson@akoyabio.com}
+}
+
+Other contributors:
+\itemize{
+  \item Simon Urbanek \email{Simon.Urbanek@r-project.org} [contributor]
+  \item Sergi Padilla-Parra \email{spadilla@well.ox.ac.uk} (\href{https://orcid.org/0000-0002-8010-9481}{ORCID}) [thesis advisor]
+  \item Jeroen Ooms (\href{https://orcid.org/0000-0002-4035-0289}{ORCID}) [reviewer, contributor]
+  \item Jon Clayden (\href{https://orcid.org/0000-0002-6608-0619}{ORCID}) [reviewer]
+}
+
+}

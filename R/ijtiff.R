@@ -30,7 +30,6 @@ if (getRversion() >= "2.15.1") {
 #' errors when reading TIFF files written by the _ImageJ_ software; `ijtiff`
 #' works smoothly with these images.
 #'
-#' @docType package
 #' @name ijtiff
 #' @aliases ijtiff-package
-NULL
+"_PACKAGE"

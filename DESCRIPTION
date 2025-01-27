@@ -32,7 +32,7 @@ Imports:
     dplyr,
     fs (>= 1.5),
     graphics,
-    grDevices,
+    imager,
     magrittr (>= 1.5),
     methods,
     purrr,
@@ -47,6 +47,7 @@ Suggests:
     covr,
     EBImage,
     knitr,
+    magick,
     mockery,
     pacman,
     rmarkdown,
@@ -62,6 +63,6 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 SystemRequirements: libtiff, libbz2, libdeflate, libjpeg, liblzma,
     libwebp, libzstd, zlib

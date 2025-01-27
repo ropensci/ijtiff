@@ -1,9 +1,7 @@
 Acknowledgement
-AppVeyor
 BITSPERSAMPLE
 CMD
 DOI
-EBImage
 FCS
 Grayscale
 Hacky
@@ -13,8 +11,10 @@ ImageJ
 JBIG
 LUTs
 Messasges
+ORCID
 PLANARCONFIG
 PROTECTion
+Parra
 README
 RESOLUTIONUNIT
 ROpenSci
@@ -27,7 +27,7 @@ XRESOLUTION
 YRESOLUTION
 awaresystems
 bona
-codecov
+cimg
 coercible
 colormaps
 colour
@@ -37,10 +37,7 @@ github
 grayscale
 https
 imagej
-img
-imgs
 libtiff
-lifecycle
 linescan
 md
 nd
