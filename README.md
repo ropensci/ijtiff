@@ -10,11 +10,11 @@ state but is no longer being actively developed; support/maintenance
 will be provided as time
 allows.](https://www.repostatus.org/badges/latest/inactive.svg)](https://www.repostatus.org/#inactive)
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/ijtiff)](https://cran.r-project.org/package=ijtiff)
 ![RStudio CRAN
-downloads](http://cranlogs.r-pkg.org/badges/grand-total/ijtiff)
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/ijtiff)
 ![RStudio CRAN monthly
-downloads](http://cranlogs.r-pkg.org/badges/ijtiff)
+downloads](https://cranlogs.r-pkg.org/badges/ijtiff)
 
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00633/status.svg)](https://doi.org/10.21105/joss.00633)
 
