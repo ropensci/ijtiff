@@ -15,12 +15,21 @@
 #' the list is a 4-dimensional array `img`, indexed as `img[y, x, channel,
 #' frame]`.
 #'
-#' A (somewhat random) set of TIFF tags are attributed to the read image. These
-#' are IMAGEDEPTH, BITSPERSAMPLE, SAMPLESPERPIXEL, SAMPLEFORMAT, PLANARCONFIG,
-#' COMPRESSION, THRESHHOLDING, XRESOLUTION, YRESOLUTION, RESOLUTIONUNIT, INDEXED
-#' and ORIENTATION. More tags should be added in a subsequent version of this
-#' package. You can read about TIFF tags at
-#' https://www.awaresystems.be/imaging/tiff/tifftags.html.
+#' The following TIFF tags are read and attached as attributes to the returned image:
+#' * TIFFTAG_IMAGEDEPTH (tag 32): Image depth (for 3D images)
+#' * TIFFTAG_BITSPERSAMPLE (tag 258): Number of bits per component
+#' * TIFFTAG_SAMPLESPERPIXEL (tag 277): Number of components per pixel
+#' * TIFFTAG_SAMPLEFORMAT (tag 339): Data type (1=uint, 2=int, 3=float, etc.)
+#' * TIFFTAG_PLANARCONFIG (tag 284): How components are stored (1=contiguous, 2=separate)
+#' * TIFFTAG_COMPRESSION (tag 259): Compression method used
+#' * TIFFTAG_THRESHHOLDING (tag 263): Thresholding used on data
+#' * TIFFTAG_XRESOLUTION (tag 282): Pixels per ResolutionUnit in width
+#' * TIFFTAG_YRESOLUTION (tag 283): Pixels per ResolutionUnit in height
+#' * TIFFTAG_RESOLUTIONUNIT (tag 296): Unit of X/YResolution (1=none, 2=inch, 3=cm)
+#' * TIFFTAG_IMAGEDESCRIPTION (tag 270): Description of image contents
+#' * TIFFTAG_SOFTWARE (tag 305): Name/version of software used
+#'
+#' For more details on TIFF tags, see https://www.awaresystems.be/imaging/tiff/tifftags.html
 #'
 #' TIFF images can have a wide range of internal representations, but only the
 #' most common in image processing are supported (8-bit, 16-bit and 32-bit
@@ -36,6 +45,7 @@
 #' @param msg Print an informative message about the image being read?
 #'
 #' @return An object of class [ijtiff_img] or a list of [ijtiff_img]s.
+#'   The object will have attributes containing the TIFF tags listed above.
 #'
 #' @note \itemize{ \item 12-bit TIFFs are not supported. \item There is no
 #'   standard for packing order for TIFFs beyond 8-bit so we assume big-endian

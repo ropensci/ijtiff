@@ -1,7 +1,9 @@
 ---
 title: "Reading and Writing Images"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Reading and Writing Images}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,17 +19,51 @@ knitr::opts_chunk$set(
 knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
 ```
 
-## Reading TIFF files
+## Quick Start
+
+```{r quickstart}
+library(ijtiff)
+
+# Read a TIFF file
+img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
+
+# Write a TIFF file
+write_tif(img, tempfile(fileext = ".tif"))
+
+# Write a TIFF file with specific color space
+write_tif(array(1:4, dim = c(2, 2, 1, 1)), tempfile(fileext = ".tif"), color_space = "min-is-black")
+write_tif(array(1:24, dim = c(2, 2, 3, 2)), tempfile(fileext = ".tif"), color_space = "rgb")
+```
+
+## Understanding Image Structure
+
+### Frames and Channels
+
+Before diving into reading and writing images, it's important to understand how TIFF images are structured:
+
+* **Frames** represent different slices in a volumetric image or time points in a video
+* **Channels** represent different colors or data channels:
+  - Grayscale images have 1 channel
+  - RGB color images have 3 channels (red, green, blue)
+  - RGBA images have 4 channels (red, green, blue, alpha)
+  - Specialized imaging (e.g., microscopy) may use any number of channels
+
+All images in ijtiff are represented as 4-dimensional arrays with the structure `img[y, x, channel, frame]`.
+
+## Reading TIFF Files
+
+### Basic Reading
 
 Check out the following video:
 
 ![](`r system.file("img", "Rlogo-banana.gif", package = "ijtiff")`)
 
-As you can see, it's a colour video of a banana dancing in front of the R logo. Hence, it has colour channel (red, green and blue) and frame (a video is comprised of several _frames_) information inside. I have this video saved in a TIFF file.
+As you can see, it's a colour video of a banana dancing in front of the R logo. Hence, it has colour channels (red, green and blue) and multiple frames. I have this video saved in a TIFF file.
 
 ```{r dancing-banana-path}
 path_dancing_banana <- system.file("img", "Rlogo-banana.tif",
-                                   package = "ijtiff")
+  package = "ijtiff"
+)
 print(path_dancing_banana)
 ```
 
@@ -44,17 +80,17 @@ Let's take a peek inside of `img_dancing_banana`.
 print(img_dancing_banana)
 ```
 
-You can see it's a `r length(dim(img_dancing_banana))`-dimensional array. The last two dimensions are `r dplyr::nth(dim(img_dancing_banana), -2)` and `r dplyr::nth(dim(img_dancing_banana), -1)`; this is because these are the channel and frame slots respectively: the image has `r dplyr::nth(dim(img_dancing_banana), -2)` channels (red, green and blue) and `r dplyr::nth(dim(img_dancing_banana), -1)` frames. The first two dimensions tell us that the images in the video are `r dim(img_dancing_banana)[1]` pixels tall and `r dim(img_dancing_banana)[2]` pixels wide. The image object is of class `ijtiff_img`. This guarantees that it is a 4-dimensional array with this structure. The attributes of the `ijtiff_img` give information on the various TIFF tags that were part of the TIFF image. You can read more about various TIFF tags at https://www.loc.gov/preservation/digital/formats/content/tiff_tags.shtml. To read just the tags and not the image, use the `read_tags()` function.
+You can see it's a `r length(dim(img_dancing_banana))`-dimensional array. The last two dimensions are `r dplyr::nth(dim(img_dancing_banana), -2)` and `r dplyr::nth(dim(img_dancing_banana), -1)`; this is because these are the channel and frame slots respectively: the image has `r dplyr::nth(dim(img_dancing_banana), -2)` channels (red, green and blue) and `r dplyr::nth(dim(img_dancing_banana), -1)` frames. The first two dimensions tell us that the images in the video are `r dim(img_dancing_banana)[1]` pixels tall and `r dim(img_dancing_banana)[2]` pixels wide.
 
 Let's visualize the constituent parts of that 8-frame, colour TIFF.
 
 ```{r red-blue-green-banana, echo=FALSE, message=FALSE, out.width='100%', dpi=300}
 d <- dim(img_dancing_banana)
-reds <- purrr::map(seq_len(d[4]), ~ img_dancing_banana[, , 1, .]) %>% 
+reds <- purrr::map(seq_len(d[4]), ~ img_dancing_banana[, , 1, .]) %>%
   purrr::reduce(cbind)
-greens <- purrr::map(seq_len(d[4]), ~ img_dancing_banana[, , 2, .]) %>% 
+greens <- purrr::map(seq_len(d[4]), ~ img_dancing_banana[, , 2, .]) %>%
   purrr::reduce(cbind)
-blues <- purrr::map(seq_len(d[4]), ~ img_dancing_banana[, , 3, .]) %>% 
+blues <- purrr::map(seq_len(d[4]), ~ img_dancing_banana[, , 3, .]) %>%
   purrr::reduce(cbind)
 to_display <- array(0, dim = c(3 * nrow(reds), ncol(reds), 3, 1))
 to_display[seq_len(nrow(reds)), , 1, ] <- reds
@@ -65,8 +101,7 @@ display(to_display, axes = FALSE)
 
 There you go: 8 frames in 3 colours.
 
-
-### Reading only certain frames
+### Reading Specific Frames
 
 It's possible to read only certain frames. This can be a massive time and memory saver when working with large images.
 
@@ -80,11 +115,11 @@ Let's visualize again.
 
 ```{r red-bblue-green-banana357, echo=FALSE, message=FALSE, out.width='100%', dpi=300}
 d <- dim(img_dancing_banana357)
-reds <- purrr::map(seq_len(d[4]), ~ img_dancing_banana357[, , 1, .]) %>% 
+reds <- purrr::map(seq_len(d[4]), ~ img_dancing_banana357[, , 1, .]) %>%
   purrr::reduce(cbind)
-greens <- purrr::map(seq_len(d[4]), ~ img_dancing_banana357[, , 2, .]) %>% 
+greens <- purrr::map(seq_len(d[4]), ~ img_dancing_banana357[, , 2, .]) %>%
   purrr::reduce(cbind)
-blues <- purrr::map(seq_len(d[4]), ~ img_dancing_banana357[, , 3, .]) %>% 
+blues <- purrr::map(seq_len(d[4]), ~ img_dancing_banana357[, , 3, .]) %>%
   purrr::reduce(cbind)
 to_display <- array(0, dim = c(3 * nrow(reds), ncol(reds), 3, 1))
 to_display[seq_len(nrow(reds)), , 1, ] <- reds
@@ -93,16 +128,16 @@ to_display[seq_len(nrow(reds)) + 2 * nrow(reds), , 3, ] <- blues
 display(to_display, axes = FALSE)
 ```
 
-Just in case you're wondering, it's not currently possible to read only certain channels. 
+Note: It's not currently possible to read only certain channels.
 
-### More examples
+### More Examples
 
 If you read an image with only one frame, the frame slot (4) will still be there:
 
 ```{r one-frame, dpi=300, out.width='90%'}
 path_rlogo <- system.file("img", "Rlogo.tif", package = "ijtiff")
-img_rlogo <- read_tif(path_rlogo) 
-dim(img_rlogo)  # 4 channels, 1 frame
+img_rlogo <- read_tif(path_rlogo)
+dim(img_rlogo) # 4 channels, 1 frame
 class(img_rlogo)
 display(img_rlogo, axes = FALSE)
 ```
@@ -112,13 +147,11 @@ You can also have an image with only 1 channel:
 ```{r one-channel, dpi=300, out.width='90%'}
 path_rlogo_grey <- system.file("img", "Rlogo-grey.tif", package = "ijtiff")
 img_rlogo_grey <- read_tif(path_rlogo_grey)
-dim(img_rlogo_grey)  # 1 channel, 1 frame
+dim(img_rlogo_grey) # 1 channel, 1 frame
 display(img_rlogo_grey, axes = FALSE)
 ```
 
-
-
-## Writing TIFF files
+## Writing TIFF Files
 
 To write an image, you need an object in the style of an `ijtiff_img` object (see `help("ijtiff_img", package = "ijtiff")`). The basic idea is to have your image in a 4-dimensional array with the structure `img[y, x, channel, frame]`. Then, to write this image to the location `path`, you just type `write_tif(img, path)`. 
 
@@ -128,24 +161,8 @@ print(path)
 write_tif(img_dancing_banana, path)
 ```
 
+## See Also
 
-
-## Reading text images
-
-Note: if you don't know what text images are, see `vignette("text-images", package = "ijtiff")`.
-
-You may have a text image that you want to read (but realistically, you might never).
-
-```{r read-txt-img}
-path_txt_img <- system.file("img", "Rlogo-grey.txt", package = "ijtiff")
-txt_img <- read_txt_img(path_txt_img)
-```
-
-
-## Writing text images
-
-Writing a text image works as you'd expect.
-
-```{r, write-txt-img}
-write_txt_img(txt_img, path = tempfile(pattern = "txtimg", fileext = ".txt"))
-```
+* For working with TIFF tags and metadata, see `vignette("tiff-tags", package = "ijtiff")`
+* For handling text-based images, see `vignette("text-images", package = "ijtiff")`
+* For ImageJ compatibility information, see `vignette("the-imagej-problem", package = "ijtiff")`

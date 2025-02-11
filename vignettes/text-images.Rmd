@@ -1,7 +1,9 @@
 ---
 title: "Text Images"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Text Images}
   %\VignetteEngine{knitr::rmarkdown}
@@ -15,17 +17,77 @@ knitr::opts_chunk$set(
 )
 ```
 
-## What are text images
+## Understanding Text Images
 
-Text images are just arrays of numbers stored in a tab-delimited file (https://en.wikipedia.org/wiki/Tab-separated_values), where each location in the file is a pixel and the value stored there is the pixel intensity. 
+Text images are arrays of numbers stored in a tab-delimited file (https://en.wikipedia.org/wiki/Tab-separated_values), where each location in the file represents a pixel and the value stored there is the pixel intensity.
 
+### Why Use Text Images?
 
-## What are they good for?
+Text images serve two main purposes:
 
-### You might need to read them
+1. **Compatibility**: Many software packages (e.g., Microsoft Excel) don't support saving arrays as TIFF files but can save them as tab-separated text files.
 
-Many softwares (e.g. Microsoft excel) don't support the saving of arrays as TIFF files. Many of these such softwares do support the saving of arrays as (tab-separated) text files. So, whether you like it or not, you might come across an image that was saved as a text file. You might not (if you're lucky), but I have, so being able to read them is handy. Beware that `ijtiff::read_txt_img()` assumes a tab-separated file (so something else like a CSV file won't work). This is the type of text image that you can save from _ImageJ_.
+2. **Value Range**: A 32-bit TIFF file can only hold values up to $2^{32} - 1$ (approximately $4 \times 10^9$). Text images have no such limitation, making them useful for storing very large numerical values.
 
-### You might (once in a million years) want to write them
+### Limitations
 
-A 32-bit TIFF file can only hold values up to $2^{32} - 1$, that's approximately $4 \times 10^9$. For whatever reason, this might not be enough for you, what if you want to write a value of $10^{10}$ to an image? Then, you're out of luck with TIFF files (and most if not all other image formats), but a text image is your friend. Text images place no restriction on the values therein. They're awkward and inefficient, but they can get you out of a hole sometimes.
+While text images can be useful in specific situations, they have some drawbacks:
+* Larger file sizes compared to binary formats
+* Slower to read and write
+* Less standardized than TIFF format
+* Not supported by most image viewing software
+
+## Working with Text Images
+
+### Reading Text Images
+
+To read a text image, use the `read_txt_img()` function:
+
+```{r read-txt-img}
+library(ijtiff)
+path_txt_img <- system.file("img", "Rlogo-grey.txt", package = "ijtiff")
+txt_img <- read_txt_img(path_txt_img)
+print(dim(txt_img))  # Show image dimensions
+```
+
+Note that `read_txt_img()` expects a tab-separated file (TSV). This is the format that ImageJ uses when saving text images. Other formats like CSV are not supported.
+
+### Writing Text Images
+
+Writing a text image is straightforward using `write_txt_img()`:
+
+```{r write-txt-img}
+# Create a simple test image
+test_img <- array(1:16, dim = c(4, 4, 1, 1))
+
+# Write it as a text image
+out_path <- tempfile(pattern = "txtimg", fileext = ".txt")
+write_txt_img(test_img, path = out_path)
+
+# Read it back to verify
+read_back <- read_txt_img(out_path)
+all.equal(test_img, read_back)
+```
+
+### Converting Between TIFF and Text Images
+
+You can convert between TIFF and text image formats using a combination of `read_tif()`, `write_tif()`, `read_txt_img()`, and `write_txt_img()`:
+
+```{r convert}
+# TIFF to text
+tiff_path <- system.file("img", "Rlogo-grey.tif", package = "ijtiff")
+img <- read_tif(tiff_path)
+txt_path <- tempfile(fileext = ".txt")
+write_txt_img(img, txt_path)
+
+# Text to TIFF
+txt_img <- read_txt_img(txt_path)
+tiff_path2 <- tempfile(fileext = ".tif")
+write_tif(txt_img, tiff_path2)
+```
+
+## See Also
+
+* For general image reading and writing, see `vignette("reading-and-writing-images", package = "ijtiff")`
+* For working with TIFF tags, see `vignette("tiff-tags", package = "ijtiff")`
+* For ImageJ compatibility, see `vignette("the-imagej-problem", package = "ijtiff")`

@@ -9,7 +9,10 @@
 #'
 #' @noRd
 enlist_img <- function(img) {
-  checkmate::assert_array(img, d = 4, mode = "double")
+  checkmate::assert(
+    checkmate::check_array(img, mode = "double", d = 4),
+    checkmate::check_array(img, mode = "integer", d = 4)
+  )
   .Call("enlist_img_C", img, PACKAGE = "ijtiff")
 }
 
@@ -23,7 +26,10 @@ enlist_img <- function(img) {
 #'
 #' @noRd
 enlist_planes <- function(arr3d) {
-  checkmate::assert_array(arr3d, d = 3, mode = "double")
+  checkmate::assert(
+    checkmate::check_array(arr3d, mode = "double", d = 3),
+    checkmate::check_array(arr3d, mode = "integer", d = 3)
+  )
   .Call("enlist_planes_C", arr3d, PACKAGE = "ijtiff")
 }
 
@@ -113,8 +119,8 @@ compute_desired_plane <- function(arr) {
 #'
 #' @noRd
 lowest_upper_bound <- function(x, possible_upper_bounds, na_rm = TRUE) {
-  checkmate::assert_numeric(x, min.len = 1)
-  checkmate::assert_numeric(possible_upper_bounds, min.len = 1)
+  checkmate::assert_numeric(x)
+  checkmate::assert_numeric(possible_upper_bounds)
   checkmate::assert_flag(na_rm)
   if (anyNA(x) && rlang::is_false(na_rm)) {
     return(NA_real_)
@@ -615,8 +621,105 @@ ebimg_check <- function() {
   invisible(TRUE)
 }
 
-match_pillar_to_row_3 <- function(arr3d, mat) {
-  checkmate::assert_array(arr3d, d = 3, mode = "double")
-  checkmate::assert_matrix(mat, mode = "integer")
-  .Call("match_pillar_to_row_3_C", arr3d, mat, PACKAGE = "ijtiff")
+#' Map RGB triplets to color palette indices
+#'
+#' For TIFF images using indexed color (palette mode), this function maps RGB
+#' triplets back to their corresponding indices in the color palette. Each pixel
+#' in the input array is compared with each row in the color palette to find the
+#' matching RGB color.
+#'
+#' @param rgb_array A 3D array where each "pillar" (x,y position across the 3rd
+#'   dimension) represents an RGB triplet. The 3rd dimension must have size 3
+#'   for the RGB components.
+#' @param color_palette A matrix where each row represents an RGB color triplet.
+#'   The matrix must have 3 columns corresponding to R, G, and B values.
+#'
+#' @return An integer matrix where each value is the index (0-based) into the
+#'   color palette that matches the RGB triplet at that position in the input
+#'   array. If no match is found for a pixel (which shouldn't happen with valid
+#'   palette data), NA is returned for that position.
+#'
+#' @noRd
+match_pillar_to_row_3 <- function(rgb_array, color_palette) {
+  checkmate::assert_array(rgb_array, d = 3)
+  checkmate::assert_matrix(color_palette)
+  .Call("match_pillar_to_row_3_C", rgb_array, color_palette, PACKAGE = "ijtiff")
+}
+
+#' Write a TIFF file.
+#'
+#' @param path A string. The path to the TIFF file to be written.
+#' @param img An [ijtiff_img]-style array.
+#' @param resolution_unit A string. The resolution unit. One of "none", "inch",
+#'   "cm".
+#' @param x_resolution A number. The horizontal resolution.
+#' @param y_resolution A number. The vertical resolution.
+#' @param software A string. The software used to write the TIFF file.
+#' @param description A string. The TIFFTAG_DESCRIPTION.
+#' @param color_space A string. The color space. One of "min-is-black", "rgb".
+#' @param compression A string. The compression algorithm. One of "none",
+#'   "lzw", "jpeg", "deflate", "adobe_deflate", "ccittrle", "t85", "t43",
+#'   "it8ctpad", "it8lw", "it8mp", "it8bl", "pixarlog", "next", "ccittrlew",
+#'   "zip", "koas", "jpegxr", "webp".
+#'
+#' @return `TRUE` (invisibly) if everything is OK.
+#'
+#' @noRd
+write_tif <- function(path, img, resolution_unit, x_resolution, y_resolution,
+                      software, description, color_space, compression) {
+  checkmate::assert_string(path)
+  checkmate::assert_file_does_not_exist(path)
+  img <- enlist_img(img)
+  if (!is.null(resolution_unit)) {
+    if (!is.character(resolution_unit) || length(resolution_unit) != 1) {
+      rlang::abort("resolution_unit must be a character string")
+    }
+    resolution_unit <- tolower(resolution_unit)
+    if (!resolution_unit %in% c("none", "inch", "cm")) {
+      rlang::abort("resolution_unit must be one of 'none', 'inch', or 'cm'")
+    }
+    resolution_unit <- switch(resolution_unit,
+      none = 1L,
+      inch = 2L,
+      cm = 3L
+    )
+  } else {
+    resolution_unit <- 2L  # Default to inches
+  }
+
+  if (!is.null(color_space)) {
+    if (!is.character(color_space) || length(color_space) != 1) {
+      rlang::abort("color_space must be a character string")
+    }
+    color_space <- tolower(color_space)
+    if (!color_space %in% c("min-is-black", "rgb")) {
+      rlang::abort("color_space must be one of 'min-is-black' or 'rgb'")
+    }
+    color_space <- switch(color_space,
+      "min-is-black" = 1L,
+      rgb = 2L
+    )
+  } else {
+    color_space <- 1L  # Default to min-is-black
+  }
+
+  checkmate::assert_numeric(x_resolution)
+  checkmate::assert_numeric(y_resolution)
+  checkmate::assert_string(software)
+  checkmate::assert_string(description)
+  checkmate::assert_string(compression)
+  compression <- tolower(compression)
+  if (!compression %in% c(
+    "none", "lzw", "jpeg", "deflate", "adobe_deflate", "ccittrle", "t85",
+    "t43", "it8ctpad", "it8lw", "it8mp", "it8bl", "pixarlog", "next",
+    "ccittrlew", "zip", "koas", "jpegxr", "webp"
+  )) {
+    rlang::abort("compression must be one of 'none', 'lzw', 'jpeg', 'deflate',",
+      "'adobe_deflate', 'ccittrle', 't85', 't43', 'it8ctpad', 'it8lw',",
+      "'it8mp', 'it8bl', 'pixarlog', 'next', 'ccittrlew', 'zip', 'koas',",
+      "'jpegxr', 'webp'")
+  }
+  .Call("write_tif_C", path, img, resolution_unit, x_resolution, y_resolution,
+    software, description, color_space, compression, PACKAGE = "ijtiff")
+  invisible(TRUE)
 }

@@ -14,7 +14,8 @@ test_that("`read_tags()` works", {
     y_resolution = 299.99,
     resolution_unit = "inch",
     orientation = "top_left",
-    color_space = "RGB"
+    color_space = "RGB",
+    photometric = 2L
   ))
   expect_equal(tags, ans, tolerance = 0.001)
   path <- test_path("testthat-figs", "2ch_ij.tif")
@@ -38,7 +39,8 @@ test_that("`read_tags()` works", {
           "hyperstack=true\nmode=composite\n",
           "loop=false\n"
         ),
-        color_space = "black is zero"
+        color_space = "black is zero",
+        photometric = 1L
       )
     )
   )

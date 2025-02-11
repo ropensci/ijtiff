@@ -3,7 +3,7 @@
 
 # ijtiff <img src="man/figures/logo.png" height="140" align="right">
 
-[![R-CMD-check](https://github.com/ropensci/ijtiff/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/ijtiff/actions)
+[![R-CMD-check](https://github.com/ropensci/ijtiff/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/ijtiff/actions/workflows/R-CMD-check.yaml)
 
 [![Project Status: Inactive – The project has reached a stable, usable
 state but is no longer being actively developed; support/maintenance

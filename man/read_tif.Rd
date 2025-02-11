@@ -24,6 +24,7 @@ or to just return the list quietly (\code{list_safety = "none"}).}
 }
 \value{
 An object of class \link{ijtiff_img} or a list of \link{ijtiff_img}s.
+The object will have attributes containing the TIFF tags listed above.
 }
 \description{
 Reads an image from a TIFF file/content into a numeric array or list.
@@ -41,12 +42,23 @@ TIFF file have varying dimensions (most people have never seen this), in
 which case they are read in as a list of images, where again each element of
 the list is a 4-dimensional array \code{img}, indexed as \code{img[y, x, channel, frame]}.
 
-A (somewhat random) set of TIFF tags are attributed to the read image. These
-are IMAGEDEPTH, BITSPERSAMPLE, SAMPLESPERPIXEL, SAMPLEFORMAT, PLANARCONFIG,
-COMPRESSION, THRESHHOLDING, XRESOLUTION, YRESOLUTION, RESOLUTIONUNIT, INDEXED
-and ORIENTATION. More tags should be added in a subsequent version of this
-package. You can read about TIFF tags at
-https://www.awaresystems.be/imaging/tiff/tifftags.html.
+The following TIFF tags are read and attached as attributes to the returned image:
+\itemize{
+\item TIFFTAG_IMAGEDEPTH (tag 32): Image depth (for 3D images)
+\item TIFFTAG_BITSPERSAMPLE (tag 258): Number of bits per component
+\item TIFFTAG_SAMPLESPERPIXEL (tag 277): Number of components per pixel
+\item TIFFTAG_SAMPLEFORMAT (tag 339): Data type (1=uint, 2=int, 3=float, etc.)
+\item TIFFTAG_PLANARCONFIG (tag 284): How components are stored (1=contiguous, 2=separate)
+\item TIFFTAG_COMPRESSION (tag 259): Compression method used
+\item TIFFTAG_THRESHHOLDING (tag 263): Thresholding used on data
+\item TIFFTAG_XRESOLUTION (tag 282): Pixels per ResolutionUnit in width
+\item TIFFTAG_YRESOLUTION (tag 283): Pixels per ResolutionUnit in height
+\item TIFFTAG_RESOLUTIONUNIT (tag 296): Unit of X/YResolution (1=none, 2=inch, 3=cm)
+\item TIFFTAG_IMAGEDESCRIPTION (tag 270): Description of image contents
+\item TIFFTAG_SOFTWARE (tag 305): Name/version of software used
+}
+
+For more details on TIFF tags, see https://www.awaresystems.be/imaging/tiff/tifftags.html
 
 TIFF images can have a wide range of internal representations, but only the
 most common in image processing are supported (8-bit, 16-bit and 32-bit

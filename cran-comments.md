@@ -1,2 +1,2 @@
-The UBSAN issue is fixed now.
+Reverse dependency check done with no issues.
 

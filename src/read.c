@@ -149,6 +149,7 @@ static void TIFF_add_tags(TIFF *tiff, SEXP res) {
       name = uv;
     }
     setAttr(res, "color_space", mkString(name));
+    setAttr(res, "photometric", ScalarInteger(i16));
   }
   if (strcmp(name, "palette") == 0) {
     uint16_t *colormap[3] = {0, 0, 0};

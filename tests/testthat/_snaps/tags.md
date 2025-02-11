@@ -47,7 +47,3 @@
     The ImageJ-written image you're trying to read says it has 8 frames AND 5 slices.
     x To be read by the `ijtiff` package, the number of slices OR the number of frames should be specified in the TIFFTAG_DESCRIPTION and they're interpreted as the same thing. It does not make sense for them to be different numbers.
 
-# reading certain frames works
-
-    You have requested frame number 7 but there are only 5 frames in total.
-

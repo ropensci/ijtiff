@@ -26,41 +26,71 @@ SEXP dims_C(SEXP lst) {
   return dims;
 }
 
-SEXP enlist_img_C(SEXP arr4d) {  // arr4d must be a 4d array of doubles
+SEXP enlist_img_C(SEXP arr4d) {  // arr4d must be a 4d array of integers or doubles
   SEXP d4 = PROTECT(getAttr(arr4d, "dim"));
   int *d4_int = INTEGER(d4);
   SEXP out = PROTECT(Rf_allocVector(VECSXP, d4_int[3]));
   R_xlen_t sub_len = d4_int[0] * d4_int[1] * d4_int[2];
-  double *arr4d_dbl = REAL(arr4d);
-  for (R_xlen_t j = 0; j != d4_int[3]; ++j) {
-    double *start = arr4d_dbl + j * sub_len;
-    SEXP out_j = PROTECT(
-      Rf_alloc3DArray(REALSXP, d4_int[0], d4_int[1], d4_int[2])
-    );
-    double *out_j_dbl = REAL(out_j);
-    memcpy(out_j_dbl, start, sub_len * sizeof(double));
-    SET_VECTOR_ELT(out, j, out_j);
-    UNPROTECT(1);
+  switch(TYPEOF(arr4d)) {
+    case REALSXP: {
+      double *arr4d_dbl = REAL(arr4d);
+      for (R_xlen_t j = 0; j != d4_int[3]; ++j) {
+        SEXP out_j = PROTECT(Rf_alloc3DArray(REALSXP, d4_int[0], d4_int[1], d4_int[2]));
+        double *out_j_dbl = REAL(out_j);
+        memcpy(out_j_dbl, arr4d_dbl + j * sub_len, sub_len * sizeof(double));
+        SET_VECTOR_ELT(out, j, out_j);
+        UNPROTECT(1);
+      }
+      break;
+    }
+    case INTSXP: {
+      int *arr4d_int = INTEGER(arr4d);
+      for (R_xlen_t j = 0; j != d4_int[3]; ++j) {
+        SEXP out_j = PROTECT(Rf_alloc3DArray(INTSXP, d4_int[0], d4_int[1], d4_int[2]));
+        int *out_j_int = INTEGER(out_j);
+        memcpy(out_j_int, arr4d_int + j * sub_len, sub_len * sizeof(int));
+        SET_VECTOR_ELT(out, j, out_j);
+        UNPROTECT(1);
+      }
+      break;
+    }
+    default:
+      Rf_error("Input array must be numeric (integer or double)");
   }
   UNPROTECT(2);
   return out;
 }
 
-SEXP enlist_planes_C(SEXP arr3d) {  // arr3d must be a 3d array of doubles
+SEXP enlist_planes_C(SEXP arr3d) {  // arr3d must be a 3d array of integers or doubles
   SEXP d3 = PROTECT(getAttr(arr3d, "dim"));
   int *d3_int = INTEGER(d3);
   SEXP out = PROTECT(Rf_allocVector(VECSXP, d3_int[2]));
   R_xlen_t sub_len = d3_int[0] * d3_int[1];
-  double *arr4d_dbl = REAL(arr3d);
-  for (R_xlen_t j = 0; j != d3_int[2]; ++j) {
-    double *start = arr4d_dbl + j * sub_len;
-    SEXP out_j = PROTECT(
-      Rf_allocMatrix(REALSXP, d3_int[0], d3_int[1])
-    );
-    double *out_j_dbl = REAL(out_j);
-    memcpy(out_j_dbl, start, sub_len * sizeof(double));
-    SET_VECTOR_ELT(out, j, out_j);
-    UNPROTECT(1);
+  switch(TYPEOF(arr3d)) {
+    case REALSXP: {
+      double *arr3d_dbl = REAL(arr3d);
+      for (R_xlen_t j = 0; j != d3_int[2]; ++j) {
+        SEXP out_j = PROTECT(Rf_allocMatrix(REALSXP, d3_int[0], d3_int[1]));
+        double *out_j_dbl = REAL(out_j);
+        memcpy(out_j_dbl, arr3d_dbl + j * sub_len, sub_len * sizeof(double));
+        SET_VECTOR_ELT(out, j, out_j);
+        UNPROTECT(1);
+      }
+      break;
+    }
+    case INTSXP: {
+      int *arr3d_int = INTEGER(arr3d);
+      for (R_xlen_t j = 0; j != d3_int[2]; ++j) {
+        SEXP out_j = PROTECT(Rf_allocMatrix(INTSXP, d3_int[0], d3_int[1]));
+        int *out_j_int = INTEGER(out_j);
+        memcpy(out_j_int, arr3d_int + j * sub_len, sub_len * sizeof(int));
+        SET_VECTOR_ELT(out, j, out_j);
+        UNPROTECT(1);
+      }
+      break;
+    }
+    default:
+      Rf_error("Input array must be numeric (integer or double)");
   }
   UNPROTECT(2);
   return out;

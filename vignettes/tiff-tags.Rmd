@@ -1,0 +1,198 @@
+---
+title: "Working with TIFF Tags"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Working with TIFF Tags}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  crop = TRUE
+)
+knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
+```
+
+## Quick Start
+
+```{r quickstart}
+library(ijtiff)
+
+# Read tags from a TIFF file
+tags <- read_tags(system.file("img", "Rlogo.tif", package = "ijtiff"))
+
+# Write a TIFF with custom tags
+img <- array(1:4, dim = c(2, 2, 1, 1))
+write_tif(img, tempfile(fileext = ".tif"), 
+          description = "Test image",
+          resolution = c(300, 300))
+```
+
+## Understanding TIFF Tags
+
+TIFF (Tagged Image File Format) files contain not just image data, but also metadata in the form of tags. These tags provide important information about the image, such as:
+
+* Image dimensions (width, height)
+* Color space and channel information
+* Resolution and physical dimensions
+* Compression method
+* Custom metadata
+
+The `ijtiff` package provides robust support for reading and writing several important TIFF tags.
+
+## Reading TIFF Tags
+
+### Basic Tag Reading
+
+You can read tags from a TIFF file without loading the entire image using `read_tags()`:
+
+```{r read-tags}
+path_example <- system.file("img", "Rlogo-banana.tif", package = "ijtiff")
+tags <- read_tags(path_example)
+str(tags$frame1)  # Show just the first frame's tags
+```
+
+### Tag Structure
+
+The tags are returned as a list with one element per frame. Each frame's tags include:
+
+* Image dimensions (ImageLength, ImageWidth)
+* Bits per sample
+* Samples per pixel (channels)
+* Resolution information (XResolution, YResolution, ResolutionUnit)
+* Compression method
+* And more
+
+## Writing TIFF Tags
+
+### Image Description
+
+Add a description to your TIFF file using the `description` parameter:
+
+```{r write-description}
+# Create a simple test image
+img <- array(1:4, dim = c(2, 2, 1, 1))
+tmp_file <- tempfile(fileext = ".tif")
+
+# Write with description
+write_tif(img, tmp_file, description = "My test image", msg = FALSE)
+
+# Read back the description
+tags <- read_tags(tmp_file)
+cat("Image description:", tags$frame1$description, "\n")
+```
+
+### Color Space
+
+Control the photometric interpretation of the image:
+
+```{r write-color-space}
+# Write a grayscale image with min-is-black interpretation
+img_gray <- array(1:4, dim = c(2, 2, 1, 1))
+tmp_file <- tempfile(fileext = ".tif")
+write_tif(img_gray, tmp_file, 
+          color_space = "min-is-black",  # Default for grayscale
+          msg = FALSE)
+
+# Write an RGB image
+img_rgb <- array(1:24, dim = c(2, 2, 3, 1))
+tmp_file2 <- tempfile(fileext = ".tif")
+write_tif(img_rgb, tmp_file2, 
+          color_space = "rgb",  # Required for RGB images
+          msg = FALSE)
+
+# Read back the color space information
+tags_gray <- read_tags(tmp_file)
+tags_rgb <- read_tags(tmp_file2)
+cat("Grayscale color space:", tags_gray$frame1$color_space, "\n")
+cat("RGB color space:", tags_rgb$frame1$color_space, "\n")
+```
+
+### Resolution Information
+
+Set image resolution in different units:
+
+```{r write-resolution}
+# Write with resolution in inches (default)
+write_tif(img, tmp_file, 
+          resolution = c(300, 300),  # x and y resolution
+          resolution_unit = "inch",
+          overwrite = TRUE,
+          msg = FALSE)
+
+# Read back the resolution information
+tags <- read_tags(tmp_file)
+cat("Resolution:", tags$frame1$x_resolution, "x", tags$frame1$y_resolution, 
+    "pixels per", tags$frame1$resolution_unit, "\n")
+```
+
+### Supported Tags
+
+The `ijtiff` package supports reading and writing several TIFF tags:
+
+* **ImageWidth (256)**: Width of the image in pixels
+* **ImageLength (257)**: Height of the image in pixels
+* **BitsPerSample (258)**: Number of bits per component
+* **Compression (259)**: Compression scheme used
+* **PhotometricInterpretation (262)**: Color space of the image data
+* **ImageDescription (270)**: ASCII string describing the image
+* **SamplesPerPixel (277)**: Number of components per pixel
+* **XResolution (282)**: Pixels per ResolutionUnit in the ImageWidth direction
+* **YResolution (283)**: Pixels per ResolutionUnit in the ImageLength direction
+* **ResolutionUnit (296)**: Unit of measurement for XResolution and YResolution
+* **SampleFormat (339)**: Data sample format
+
+## Reading Images with Tags
+
+When you read an image using `read_tif()`, the tags are automatically attached as attributes:
+
+```{r read-with-tags}
+# Read an image
+img <- read_tif(path_example, msg = FALSE)
+
+# View key attributes (tags)
+str(attributes(img)[c("width", "length", "bits_per_sample", "samples_per_pixel")])
+```
+
+## TIFF Tags Reference
+
+For a complete reference of all supported TIFF tags and their properties, use `tif_tags_reference()`:
+
+```{r tags-reference}
+# View the complete TIFF tags reference
+ref <- tif_tags_reference()
+head(ref, 20)  # Show first few tags
+```
+
+This reference includes information about each tag's:
+
+* Decimal and hexadecimal codes
+* Name and short description
+* Tag type (baseline or extended)
+* C type in libtiff
+* Default value
+* And more
+
+## Tips for Working with Tags
+
+1. Always check the image description and resolution when working with scientific images
+2. When writing images for ImageJ use, set appropriate resolution units
+3. The `sample_format` tag is automatically set based on your data type
+4. Some tags are read-only and set automatically by the package
+
+## See Also
+
+* For general image reading and writing, see `vignette("reading-and-writing-images", package = "ijtiff")`
+* For ImageJ compatibility, see `vignette("the-imagej-problem", package = "ijtiff")`
+* For text image support, see `vignette("text-images", package = "ijtiff")`
+
+## Further Reading
+
+* [Library of Congress documentation on TIFF tags](https://www.loc.gov/preservation/digital/formats/content/tiff_tags.shtml)
+* [ImageJ TIFF format description](https://imagej.net/ij/docs/guide/146-7.html)

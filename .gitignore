@@ -11,3 +11,6 @@ Makevars
 docs/
 revdep/
 CRAN-SUBMISSION
+/doc/
+/Meta/
+.windsurfrules

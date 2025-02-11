@@ -1,3 +1,14 @@
+# `ijtiff` 2.4.0
+
+## NEW FEATURES
+* Ability to read/write several tiff tags:
+  - Photometric (color space) (262)
+  - ImageDescription (270)
+  - XResolution (282)
+  - YResolution (283)
+  - ResolutionUnit (296)
+
+
 # `ijtiff` 2.3.5
 
 ## BUG FIXES

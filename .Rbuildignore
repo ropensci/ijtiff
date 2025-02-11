@@ -28,3 +28,6 @@
 ^README\.utf8\.md$
 ^README\.Rmd$
 ^CRAN-SUBMISSION$
+^doc$
+^Meta$
+^\.windsurfrules$

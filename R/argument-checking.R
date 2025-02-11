@@ -9,12 +9,14 @@
 #' @return A named list.
 #'
 #' @noRd
-argchk_write_tif <- function(img, path, bits_per_sample, compression,
-                             overwrite, msg) {
+argchk_write_tif <- function(img, path, bits_per_sample, compression, overwrite, msg,
+                             description, resolution, resolution_unit, color_space) {
+  checkmate::assert_array(img, min.d = 2, max.d = 4)
   checkmate::assert_string(path)
   path <- stringr::str_replace_all(path, stringr::coll("\\"), "/") # windows
   if (endsWith(path, "/")) rlang::abort("`path` cannot end with '/'.")
-  checkmate::assert_scalar(bits_per_sample)
+
+  # Handle bits_per_sample
   checkmate::assert(
     checkmate::check_string(bits_per_sample),
     checkmate::check_int(bits_per_sample)
@@ -45,38 +47,67 @@ argchk_write_tif <- function(img, path, bits_per_sample, compression,
       )
     }
   }
+
+  # Handle compression
   checkmate::assert_string(compression)
   if (endsWith(tolower(path), ".tiff") || endsWith(tolower(path), ".tif")) {
     path <- paste0(strex::str_before_last_dot(path), ".tif")
   }
-  path <- strex::str_give_ext(path, "tif")
+  if (!endsWith(tolower(path), ".tif")) {
+    path <- paste0(path, ".tif")
+  }
+
+  # Handle description
+  checkmate::assert_string(description, null.ok = TRUE)
+
+  # Handle resolution
+  checkmate::assert_numeric(resolution, len = 2, null.ok = TRUE)
+  if (!is.null(resolution)) {
+    if (any(resolution <= 0)) {
+      rlang::abort("Resolution values must be positive.")
+    }
+    if (is.null(resolution_unit)) {
+      resolution_unit <- "inch"  # Default to inch if resolution is set but unit is not
+    }
+  }
+  checkmate::assert_choice(resolution_unit, choices = c("none", "inch", "cm"), null.ok = TRUE)
+
+  # Handle color_space
+  checkmate::assert_choice(color_space, choices = c("min-is-black", "rgb"), null.ok = TRUE)
+  if (is.null(color_space)) {
+    color_space <- "min-is-black"  # Default to min-is-black
+  }
+  color_space_codes <- c("min-is-black" = 1L, "rgb" = 2L)
+  color_space <- color_space_codes[color_space]
+
+  # Handle overwrite and msg
   checkmate::assert_flag(overwrite)
   if (file.exists(path) && (!overwrite)) {
     rlang::abort(
-      c(
-        stringr::str_glue(
-          "The file {path}, already exists and `overwrite` ",
-          "is set to `FALSE`."
-        ),
-        x = "To enable overwriting, use `overwrite = TRUE`."
+      stringr::str_glue(
+        "'{path}' already exists. Use `overwrite = TRUE` to overwrite it."
       )
     )
   }
-  checkmate::assert_array(img)
-  checkmate::assert_array(img, min.d = 2, max.d = 4)
-  checkmate::assert_numeric(img)
-  img <- ijtiff_img(img)
+  checkmate::assert_flag(msg)
+
+  # Convert compression string to integer code
   compressions <- c(
     none = 1L, RLE = 2L, LZW = 5L, PackBits = 32773L, JPEG = 7L,
     deflate = 8L, Zip = 8L
   )
-  compression <- strex::match_arg(compression, names(compressions),
-    ignore_case = TRUE
+  compression <- match.arg(
+    tolower(compression),
+    tolower(names(compressions))
   )
   compression <- compressions[compression]
-  checkmate::assert_flag(msg)
+
+  img <- ijtiff_img(img)
+
   list(
     img = img, path = path, bits_per_sample = bits_per_sample,
-    compression = compression, overwrite = overwrite, msg = msg
+    compression = compression, overwrite = overwrite, msg = msg,
+    description = description, resolution = resolution, resolution_unit = resolution_unit,
+    color_space = color_space
   )
 }

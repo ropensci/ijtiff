@@ -11,7 +11,11 @@ write_tif(
   bits_per_sample = "auto",
   compression = "none",
   overwrite = FALSE,
-  msg = TRUE
+  msg = TRUE,
+  description = NULL,
+  resolution = NULL,
+  resolution_unit = NULL,
+  color_space = "min-is-black"
 )
 
 tif_write(
@@ -20,7 +24,11 @@ tif_write(
   bits_per_sample = "auto",
   compression = "none",
   overwrite = FALSE,
-  msg = TRUE
+  msg = TRUE,
+  description = NULL,
+  resolution = NULL,
+  resolution_unit = "inch",
+  color_space = "min-is-black"
 )
 }
 \arguments{
@@ -38,19 +46,36 @@ use a 4-dimensional array \code{img[y, x, channel, plane]}.}}
 values are 8, 16, and 32. The default \code{"auto"} automatically picks the
 smallest workable value based on the maximum element in \code{img}. For example,
 if the maximum element in \code{img} is 789, then 16-bit will be chosen because
-789 is greater than 2 ^ 8 - 1 but less than or equal to 2 ^ 16 - 1.}
+789 is greater than 2 ^ 8 - 1 but less than or equal to 2 ^ 16 - 1.
+Uses TIFFTAG_BITSPERSAMPLE (tag 258).}
 
 \item{compression}{A string, the desired compression algorithm. Must be one
 of \code{"none"}, \code{"LZW"}, \code{"PackBits"}, \code{"RLE"}, \code{"JPEG"}, \code{"deflate"} or
 \code{"Zip"}. If you want compression but don't know which one to go for, I
 recommend \code{"Zip"}, it gives a large file size reduction and it's lossless.
 Note that \code{"deflate"} and \code{"Zip"} are the same thing. Avoid using \code{"JPEG"}
-compression in a TIFF file if you can; I've noticed it can be buggy.}
+compression in a TIFF file if you can; I've noticed it can be buggy. Uses
+TIFFTAG_COMPRESSION (tag 259).}
 
 \item{overwrite}{If writing the image would overwrite a file, do you want to
 proceed?}
 
 \item{msg}{Print an informative message about the image being written?}
+
+\item{description}{Optional string to set as the image description tag.
+Uses TIFFTAG_IMAGEDESCRIPTION (tag 270).}
+
+\item{resolution}{Numeric vector of length 2 specifying the x and y resolution in
+pixels per unit. Default is NULL (no resolution set).
+Uses TIFFTAG_XRESOLUTION (tag 282) and TIFFTAG_YRESOLUTION (tag 283).}
+
+\item{resolution_unit}{Character string specifying the resolution unit. Must be one
+of "none", "inch", or "cm". Default is "inch". Also accepts NULL, which has
+the same result as "inch". Uses TIFFTAG_RESOLUTIONUNIT (tag 296).}
+
+\item{color_space}{Character string specifying the photometric interpretation. Must be one
+of "min-is-black" (1) or "RGB" (2). Default is "min-is-black". Uses TIFFTAG_PHOTOMETRIC
+(tag 262).}
 }
 \value{
 The input \code{img} (invisibly).
