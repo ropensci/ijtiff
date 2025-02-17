@@ -48,7 +48,8 @@ test_that("lowest_upper_bound() edge cases work correctly", {
 
 test_that("prep_read() errors correctly in unusual circumstances", {
   expect_error(
-    read_tif(test_path("testthat-figs", "image2.tif"), frames = 999),
+    read_tif(test_path("testthat-figs", "image2.tif"),
+             frames = 999, msg = FALSE),
     "You.+requested.+frame.+999 but.+only 6 frames"
   )
   skip_if_not_installed("mockery")

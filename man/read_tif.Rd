@@ -42,9 +42,9 @@ which case they are read in as a list of images, where again each element of
 the list is a 4-dimensional array \code{img}, indexed as \code{img[y, x, channel, frame]}.
 
 A (somewhat random) set of TIFF tags are attributed to the read image. These
-are IMAGEDEPTH, BITSPERSAMPLE, SAMPLESPERPIXEL, SAMPLEFORMAT, PLANARCONFIG,
-COMPRESSION, THRESHHOLDING, XRESOLUTION, YRESOLUTION, RESOLUTIONUNIT, INDEXED
-and ORIENTATION. More tags should be added in a subsequent version of this
+are ImageDepth, BitsPerSample, SamplesPerPixel, SampleFormat, PlanarConfig,
+Compression, Threshholding, XResolution, YResolution, ResolutionUnit, Indexed
+and Orientation. More tags should be added in a subsequent version of this
 package. You can read about TIFF tags at
 https://www.awaresystems.be/imaging/tiff/tifftags.html.
 

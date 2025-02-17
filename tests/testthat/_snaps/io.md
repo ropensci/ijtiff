@@ -38,14 +38,14 @@
 
 ---
 
-    The ImageJ-written image you're trying to read says in its TIFFTAG_DESCRIPTION that it has 13 images of 5 slices of 2 channels. However, with 5 slices of 2 channels, one would expect there to be 5 x 2 = 10 images.
+    The ImageJ-written image you're trying to read says in its ImageDescription that it has 13 images of 5 slices of 2 channels. However, with 5 slices of 2 channels, one would expect there to be 5 x 2 = 10 images.
     x This discrepancy means that the `ijtiff` package can't read your image correctly.
     i One possible source of this kind of error is that your image may be temporal and volumetric. `ijtiff` can handle either time-based or volumetric stacks, but not both.
 
 ---
 
     The ImageJ-written image you're trying to read says it has 8 frames AND 5 slices.
-    x To be read by the `ijtiff` package, the number of slices OR the number of frames should be specified in the TIFFTAG_DESCRIPTION and they're interpreted as the same thing. It does not make sense for them to be different numbers.
+    x To be read by the `ijtiff` package, the number of slices OR the number of frames should be specified in the ImageDescription and they're interpreted as the same thing. It does not make sense for them to be different numbers.
 
 # reading certain frames works
 

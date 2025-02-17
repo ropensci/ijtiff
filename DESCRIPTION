@@ -33,6 +33,7 @@ Imports:
     fs (>= 1.5),
     graphics,
     imager,
+    jsonlite,
     magrittr (>= 1.5),
     methods,
     purrr,
@@ -40,7 +41,6 @@ Imports:
     rlang (>= 1.0),
     strex (>= 1.5),
     stringr (>= 1.4),
-    withr (>= 2.1),
     zeallot
 Suggests: 
     abind,

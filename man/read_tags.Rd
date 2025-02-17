@@ -5,16 +5,19 @@
 \alias{tags_read}
 \title{Read TIFF tag information without actually reading the image array.}
 \usage{
-read_tags(path, frames = 1)
+read_tags(path, frames = "all", translate_tags = TRUE)
 
 tags_read(path, frames = 1)
 }
 \arguments{
 \item{path}{A string. The path to the tiff file to read.}
 
-\item{frames}{Which frames do you want to read tags from. Default first frame
-only. To read from the 2nd and 7th frames, use \code{frames = c(2, 7)}, to read
-from all frames, use \code{frames = "all"}.}
+\item{frames}{Which frames do you want to read. Default all. To read the 2nd
+and 7th frames, use \code{frames = c(2, 7)}.}
+
+\item{translate_tags}{Logical. Should the TIFF tags be translated to
+human-readable strings? E.g. \code{Compression = 1} becomes
+\code{Compression = "none"}.}
 }
 \value{
 A list of lists.
@@ -25,9 +28,6 @@ is for reading this information without reading the actual image.
 }
 \examples{
 read_tags(system.file("img", "Rlogo.tif", package = "ijtiff"))
-read_tags(system.file("img", "Rlogo-banana.tif", package = "ijtiff"),
-  frames = c(2, 4)
-)
 }
 \seealso{
 \code{\link[=read_tif]{read_tif()}}

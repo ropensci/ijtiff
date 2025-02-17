@@ -30,13 +30,14 @@ test_that("Package 2-channel example I/O works", {
   expect_equal(as.vector(in_tif), as.vector(a22), ignore_attr = FALSE)
   v2345 <- 2:5
   a2345 <- array(seq_len(prod(v2345)), dim = v2345)
+  # Capture the actual message
   suppressMessages(
     expect_message(
       write_tif(a2345, tmptif, overwrite = TRUE),
-      "Writing.+.tif.+8-bit.+2x3 pixel image.+unsigned integer.+4 ch.+5 frames"
+      paste("Writing.+.tif: an 8-bit, 2x3 pixel image of.+unsigned integer",
+            "type with 4 channels and 5 frames")
     )
   )
-
   in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v2345)
   expect_equal(as.vector(in_tif), as.vector(a2345), ignore_attr = FALSE)
@@ -54,7 +55,16 @@ test_that("Package 2-channel example I/O works", {
   expect_equal(as.vector(in_tif), as.vector(a22), ignore_attr = FALSE)
   v2345 <- 2:5
   a2345 <- array(sample.int(prod(v2345)), dim = v2345)
-  write_tif(a2345, tmptif, overwrite = TRUE, msg = FALSE)
+  # Test writing with message
+  suppressMessages(
+    expect_message(
+      write_tif(a2345, tmptif, overwrite = TRUE),
+      paste(
+        "Writing.+.tif: an 8-bit, 2x3 pixel image of.+unsigned integer type",
+        "with 4 channels and 5 frames"
+      )
+    )
+  )
   in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v2345)
   expect_equal(as.vector(in_tif), as.vector(a2345), ignore_attr = FALSE)
@@ -65,6 +75,10 @@ test_that("Package RGB I/O works", {
     msg = FALSE
   )
   expect_equal(dim(img), c(76, 100, 4, 1))
+  # Test that photometric interpretation is correctly mapped from JSON
+  expect_equal(attr(img, "PhotometricInterpretation"), "RGB")
+  # Test that sample format is correctly mapped from JSON
+  expect_equal(attr(img, "SampleFormat"), "unsigned integer data")
 })
 
 test_that("8-bit unsigned integer TIFF I/O works", {
@@ -77,6 +91,7 @@ test_that("8-bit unsigned integer TIFF I/O works", {
   in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v2345)
   expect_equal(as.vector(in_tif), as.vector(a2345), ignore_attr = FALSE)
+  expect_equal(attr(in_tif, "SampleFormat"), "unsigned integer data")
 })
 
 test_that("16-bit unsigned integer TIFF I/O works", {
@@ -122,6 +137,8 @@ test_that("Float (real-numbered) TIFF I/O works", {
   in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v2345)
   expect_equal(as.vector(in_tif), as.vector(a2345), ignore_attr = FALSE)
+  # Test that sample format is correctly mapped from JSON
+  expect_equal(attr(in_tif, "SampleFormat"), "IEEE floating point data [IEEE]")
 })
 
 test_that("Negative-numbered TIFF I/O works", {
@@ -134,7 +151,7 @@ test_that("Negative-numbered TIFF I/O works", {
   in_tif <- read_tif(tmptif, msg = FALSE)
   expect_equal(dim(in_tif), v2345)
   expect_equal(as.vector(in_tif), as.vector(a2345), ignore_attr = FALSE)
-  expect_equal(attr(in_tif, "sample_format"), "float")
+  expect_equal(attr(in_tif, "SampleFormat"), "IEEE floating point data [IEEE]")
 })
 
 test_that("List returning works", {
@@ -168,7 +185,8 @@ test_that("TIFFErrorHandler_ works", {
   tmptxt <- tempfile(fileext = ".txt") %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
   writeLines(c("a", "b"), tmptxt)
-  expect_error(suppressWarnings(tif_read(tmptxt)), "Cannot read TIFF header")
+  expect_error(suppressWarnings(tif_read(tmptxt, msg = FALSE)),
+               "Cannot read TIFF header")
 })
 
 test_that("write_tif() errors correctly", {
@@ -180,24 +198,28 @@ test_that("write_tif() errors correctly", {
   expect_snapshot_error(
     write_tif(aaaa, "a", bits_per_sample = "abc", msg = FALSE)
   )
-  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 12))
+  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 12, msg = FALSE))
   aaaa[1] <- -2 * .Call("float_max_C", PACKAGE = "ijtiff")
-  expect_snapshot_error(write_tif(aaaa, "a"))
+  expect_snapshot_error(write_tif(aaaa, "a", msg = FALSE))
   aaaa[1] <- -1
   aaaa[2] <- 2 * .Call("float_max_C", PACKAGE = "ijtiff")
-  expect_snapshot_error(write_tif(aaaa, "a"))
+  expect_snapshot_error(write_tif(aaaa, "a", msg = FALSE))
   aaaa[2] <- 1
   aaaa[1] <- 0.5
-  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 16))
+  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 16, msg = FALSE))
   aaaa[1] <- 2^33
-  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 16))
+  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 16, msg = FALSE))
   aaaa[1] <- 2^20
-  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 16))
+  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 16, msg = FALSE))
   expect_snapshot_error(
-    suppressWarnings(read_tif(test_path("testthat-figs", "bad_ij1.tif")))
+    suppressWarnings(
+      read_tif(test_path("testthat-figs", "bad_ij1.tif"), msg = FALSE)
+    )
   )
   expect_snapshot_error(
-    suppressWarnings(read_tif(test_path("testthat-figs", "bad_ij2.tif")))
+    suppressWarnings(
+      read_tif(test_path("testthat-figs", "bad_ij2.tif"), msg = FALSE)
+    )
   )
 })
 
@@ -290,59 +312,30 @@ test_that("reading certain frames works", {
   path <- test_path("testthat-figs", "2ch_ij.tif")
   img <- read_tif(path, "A", msg = FALSE)
   img12 <- read_tif(path, frames = 1:2, msg = FALSE)
-  img34 <- read_tif(path, frames = 3:4, msg = FALSE)
   img25 <- read_tif(path, frames = c(2, 5), msg = FALSE)
-  expect_equal(
-    img[, , , c(1, 2)] %>%
-      {
-        list(
-          dim(.), as.vector(.),
-          attributes(img) %T>% {
-            .[["dim"]] <- c(dim(img)[1:3], 2)
-          }
-        )
-      },
-    img12 %>%
-      {
-        list(dim(.), as.vector(.), attributes(.))
-      }
+  img12_alt <- img[, , , c(1, 2)]
+  expect_equal(dim(img12), dim(img12_alt))
+  expect_equal(as.vector(img12), as.vector(img12_alt))
+  img12_attrs <- purrr::list_modify(
+    attributes(img12), tags_by_frame = purrr::zap(), dim = purrr::zap()
   )
-  expect_equal(
-    img[, , , c(3, 4)] %>%
-      {
-        list(
-          dim(.), as.vector(.),
-          attributes(img) %T>% {
-            .[["dim"]] <- c(dim(img)[1:3], 2)
-          }
-        )
-      },
-    img34 %>%
-      {
-        list(dim(.), as.vector(.), attributes(.))
-      }
+  img_attrs <- purrr::list_modify(
+    attributes(img), tags_by_frame = purrr::zap(), dim = purrr::zap()
   )
-  expect_equal(
-    img[, , , c(2, 5)] %>%
-      {
-        list(
-          dim(.), as.vector(.),
-          attributes(img) %T>% {
-            .[["dim"]] <- c(dim(img)[1:3], 2)
-          }
-        )
-      },
-    img25 %>%
-      {
-        list(dim(.), as.vector(.), attributes(.))
-      }
+  expect_equal(img12_attrs, img_attrs)
+  img25_alt <- img[, , , c(2, 5)]
+  expect_equal(dim(img25), dim(img25_alt))
+  expect_equal(as.vector(img25), as.vector(img25_alt))
+  img25_attrs <- purrr::list_modify(
+    attributes(img25), tags_by_frame = purrr::zap(), dim = purrr::zap()
   )
-  expect_snapshot_error(read_tif(path, frames = 7))
+  expect_equal(img25_attrs, img_attrs)
+  expect_snapshot_error(read_tif(path, frames = 7, msg = FALSE))
 })
 
 test_that("Reading Mathieu's file works", {
   i2 <- read_tif(test_path("testthat-figs", "image2.tif"), msg = FALSE)
   expect_equal(dim(i2), c(200, 200, 6, 1))
-  expect_equal(dim(attr(i2, "color_map")), c(256, 3))
-  expect_equal(colnames(attr(i2, "color_map")), c("red", "green", "blue"))
+  expect_equal(dim(attr(i2, "ColorMap")), c(256, 3))
+  expect_equal(colnames(attr(i2, "ColorMap")), c("red", "green", "blue"))
 })

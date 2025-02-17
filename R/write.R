@@ -37,18 +37,13 @@
 write_tif <- function(img, path, bits_per_sample = "auto",
                       compression = "none", overwrite = FALSE, msg = TRUE) {
   to_invisibly_return <- img
+  if (endsWith(path, "/")) rlang::abort("`path` cannot end with '/'.")
+  path <- fs::path_expand(path)
   c(img, path, bits_per_sample, compression, overwrite, msg) %<-%
     argchk_write_tif(
       img = img, path = path, bits_per_sample = bits_per_sample,
       compression = compression, overwrite = overwrite, msg = msg
     )[c("img", "path", "bits_per_sample", "compression", "overwrite", "msg")]
-  if (stringr::str_detect(path, "/")) {
-    # write_tif() sometimes fails when writing to far away directories
-    tiff_dir <- strex::str_before_last(path, "/")
-    checkmate::assert_directory_exists(tiff_dir)
-    path <- strex::str_after_last(path, stringr::coll("/"))
-    withr::local_dir(tiff_dir)
-  }
   d <- dim(img)
   floats <- anyNA(img) || (!can_be_intish(img))
   float_max <- .Call("float_max_C", PACKAGE = "ijtiff")
@@ -167,7 +162,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
           TRUE ~ "a 0-bit, "
         )
       }
-    pretty_msg(
+    message(
       "Writing ", path, ": ", bps, d[1], "x", d[2], " pixel image of ",
       ifelse(floats, "floating point", "unsigned integer"),
       " type with ", d[3],
@@ -180,7 +175,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     floats,
     PACKAGE = "ijtiff"
   )
-  if (msg) pretty_msg("\b Done.")
+  if (msg) message("\b Done.")
   invisible(to_invisibly_return)
 }
 

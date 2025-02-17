@@ -28,3 +28,4 @@
 ^README\.utf8\.md$
 ^README\.Rmd$
 ^CRAN-SUBMISSION$
+^scratch\..+$

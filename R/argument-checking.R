@@ -13,7 +13,6 @@ argchk_write_tif <- function(img, path, bits_per_sample, compression,
                              overwrite, msg) {
   checkmate::assert_string(path)
   path <- stringr::str_replace_all(path, stringr::coll("\\"), "/") # windows
-  if (endsWith(path, "/")) rlang::abort("`path` cannot end with '/'.")
   checkmate::assert_scalar(bits_per_sample)
   checkmate::assert(
     checkmate::check_string(bits_per_sample),

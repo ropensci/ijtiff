@@ -1,0 +1,48 @@
+{
+    "SampleFormat": {
+      "1": "unsigned integer data",
+      "2": "two's complement signed integer data",
+      "3": "IEEE floating point data [IEEE]",
+      "4": "undefined data format"
+    },
+    "PlanarConfiguration": {
+      "1": "contiguous",
+      "2": "separate"
+    },
+    "Compression": {
+      "1": "none",
+      "2": "CCITT1D",
+      "3": "Group3Fax",
+      "4": "Group4Fax",
+      "5": "LZW",
+      "6": "JPEG (obsolete)",
+      "7": "JPEG",
+      "8": "Deflate",
+      "32773": "PackBits"
+    },
+    "ResolutionUnit": {
+      "1": "none",
+      "2": "inch",
+      "3": "cm"
+    },
+    "Orientation": {
+      "1": "top_left",
+      "2": "top_right",
+      "3": "bottom_right",
+      "4": "bottom_left",
+      "5": "left_top",
+      "6": "right_top",
+      "7": "right_bottom",
+      "8": "left_bottom"
+    },
+    "PhotometricInterpretation": {
+      "0": "WhiteIsZero",
+      "1": "BlackIsZero",
+      "2": "RGB",
+      "3": "Palette",
+      "4": "TransparencyMask",
+      "5": "CMYK",
+      "6": "YCbCr",
+      "8": "CIELab"
+    }
+}

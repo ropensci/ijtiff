@@ -119,7 +119,7 @@ as_EBImage <- function(img, colormode = NULL, scale = TRUE, force = TRUE) {
     }
   }
   if (is.null(colormode)) {
-    if (isTRUE(attr(img, "color_space") == "RGB")) {
+    if (isTRUE(attr(img, "PhotometricInterpretation") == "RGB")) {
       colormode <- "color"
     } else {
       colormode <- dplyr::if_else(dim(img)[3] %in% 3:4, "color", "gray")

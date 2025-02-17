@@ -4,9 +4,10 @@ on:
   push:
     branches: [main, master]
   pull_request:
-    branches: [main, master]
 
-name: R-CMD-check
+name: R-CMD-check.yaml
+
+permissions: read-all
 
 jobs:
   R-CMD-check:
@@ -19,10 +20,7 @@ jobs:
       matrix:
         config:
           - {os: macos-latest,   r: 'release'}
-          - {os: windows-latest, r: 'devel'}
           - {os: windows-latest, r: 'release'}
-          - {os: windows-latest, r: '4.2'}
-          - {os: windows-latest, r: '4.1'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel-1'}
@@ -32,7 +30,7 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -42,19 +40,19 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: Install Linux system dependencies
-        if: runner.os == 'Linux'
-        run: sudo apt-get install -y libwebp-dev libzstd-dev
-
-      - name: Install MacOS system dependencies
-        if: runner.os == 'macOS'
-        run: brew install --cask xquartz
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
           needs: check
 
+      - name: Install libx11 on macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew install --cask xquartz
+          brew install libx11
+          brew link libx11 --force
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
+          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'

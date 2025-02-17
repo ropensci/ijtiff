@@ -94,11 +94,10 @@ extract_desired_plane <- function(arr) {
 #'
 #' @noRd
 compute_desired_plane <- function(arr) {
-  atts <- attributes(arr)
-  att_names <- names(atts)
-  if (all(c("color_space", "color_map") %in% att_names) &&
-    isTRUE(atts$color_space == "palette")) {
-    return(match_pillar_to_row_3(arr, attr(arr, "color_map", exact = TRUE)))
+  att_names <- names(attributes(arr))
+  if (all(c("PhotometricInterpretation", "ColorMap") %in% att_names) &&
+    isTRUE(attr(arr, "PhotometricInterpretation") == "Palette")) {
+    return(match_pillar_to_row_3(arr, attr(arr, "ColorMap", exact = TRUE)))
   }
   extract_desired_plane(arr)
 }
@@ -135,23 +134,27 @@ lowest_upper_bound <- function(x, possible_upper_bounds, na_rm = TRUE) {
 #' Fix the resolution unit if necessary.
 #'
 #' The resolution unit is another thing that ImageJ sometimes decides to record
-#' in `TIFFTAG_DESCRIPTION` so needs to be allowed for.
+#' in `ImageDescription` so needs to be allowed for.
 #'
 #' @param x An [ijtiff_img] which optionally has a `description` attribute with
-#'   the contents of `TIFFTAG_DESCRIPTION`.
+#'   the contents of `ImageDescription`.
 #'
 #' @return An [ijtiff_img].
 #'
 #' @noRd
 fix_res_unit <- function(x) {
-  if ("description" %in% names(attributes(x)) &&
-    startsWith(attr(x, "description"), "ImageJ") &&
-    (is.null(attr(x, "resolution_unit")) ||
-      attr(x, "resolution_unit") == "none") &&
-    stringr::str_detect(attr(x, "description"), "\\sunit=.+\\s")) {
-    attr(x, "resolution_unit") <- stringr::str_match(
-      attr(x, "description"), "\\sunit=([^\\s]+)"
-    )[1, 2]
+  desc <- attr(x, "ImageDescription")
+  curr_unit <- attr(x, "ResolutionUnit")
+  if (!is.null(desc) &&
+      startsWith(desc, "ImageJ") &&
+      stringr::str_detect(desc, "\\sunit=.+\\s") &&
+      (is.null(curr_unit) || curr_unit == "No absolute unit of measurement")) {
+    unit <- stringr::str_extract(desc, "(?<=unit=).+?(?=\\s)")
+    if (unit == "inch") {
+      attr(x, "ResolutionUnit") <- "Inch"
+    } else if (unit == "cm") {
+      attr(x, "ResolutionUnit") <- "Centimeter"
+    }
   }
   x
 }
@@ -191,8 +194,7 @@ colormap_or_ij_channels <- function(img_lst, prep, d) {
 #' count_frames(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' @export
 count_frames <- function(path) {
-  path <- prep_path(path)
-  withr::local_dir(attr(path, "path_dir"))
+  path <- fs::path_expand(path)
   prep <- prep_read(path,
     frames = "all",
     tags1 = read_tags(path, frames = 1)[[1]]
@@ -316,23 +318,6 @@ stack_to_linescan <- function(img) {
     ijtiff_img()
 }
 
-#' Wrap messages to make them prettier.
-#'
-#' Format messages with line breaks so that single words don't appear on
-#' multiple lines.
-#'
-#' @param ... Bits of the message to be pasted together.
-#'
-#' @noRd
-pretty_msg <- function(...) {
-  dots <- unlist(list(...))
-  checkmate::assert_character(dots)
-  stringr::str_c(dots, collapse = "") %>%
-    strwrap(width = 63) %>%
-    stringr::str_c(collapse = "\n") %>%
-    message()
-}
-
 #' TIFF tag reference.
 #'
 #' A dataset containing the information on all known baseline and extended TIFF
@@ -385,7 +370,7 @@ prep_frames <- function(frames) {
   frames
 }
 
-#' Calculate the number of slices from an ImageJ `TIFFTAG_DESCRIPTION`.
+#' Calculate the number of slices from an ImageJ `ImageDescription`.
 #'
 #' @param ij_description A string.
 #'
@@ -411,7 +396,7 @@ calculate_n_slices <- function(ij_description) {
             ),
             x = paste(
               "To be read by the `ijtiff` package, the number of slices OR the",
-              "number of frames should be specified in the TIFFTAG_DESCRIPTION",
+              "number of frames should be specified in the ImageDescription",
               "and they're interpreted as the same thing. It does not make",
               "sense for them to be different numbers."
             )
@@ -424,7 +409,7 @@ calculate_n_slices <- function(ij_description) {
   n_slices
 }
 
-#' Extract info from an ImageJ-style `TIFFTAG_DESCRIPTION`.
+#' Extract info from an ImageJ-style `ImageDescription`.
 #'
 #' @inheritParams prep_read
 #'
@@ -435,10 +420,11 @@ translate_ij_description <- function(tags1) {
   n_imgs <- NA_integer_
   n_slices <- NA_integer_
   ij_n_ch <- FALSE
-  n_ch <- tags1$samples_per_pixel %||% 1
-  if ("description" %in% names(tags1) &&
-    startsWith(tags1$description, "ImageJ")) {
-    ij_description <- tags1$description
+  n_ch <- tags1$SamplesPerPixel %||% 1
+  if ("ImageDescription" %in% names(tags1) &&
+    !is.null(tags1$ImageDescription) &&
+    startsWith(tags1$ImageDescription, "ImageJ")) {
+    ij_description <- tags1$ImageDescription
     if (stringr::str_detect(ij_description, "channels=")) {
       n_ch <- strex::str_first_number_after_first(
         ij_description,
@@ -455,7 +441,7 @@ translate_ij_description <- function(tags1) {
         c(
           stringr::str_glue(
             "The ImageJ-written image you're trying to read says in its ",
-            "TIFFTAG_DESCRIPTION that it has {n_imgs} images of ",
+            "ImageDescription that it has {n_imgs} images of ",
             "{n_slices} slices of {n_ch} channels. However, with {n_slices} ",
             "slices of {n_ch} channels, one would expect there to be ",
             "{n_slices} x {n_ch} = {n_ch * n_slices} images."
@@ -497,9 +483,9 @@ translate_ij_description <- function(tags1) {
 #'  * `n_slices` is the number of slices in the TIFF file. For most, this is the
 #'   same as `n_dirs` but for ImageJ-written images it can be different.
 #'  * `n_imgs` is the number of images according to the ImageJ
-#'   `TIFFTAG_DESCRIPTION`. If not specified, it's `NA`.
+#'   `ImageDescription`. If not specified, it's `NA`.
 #'  * `ij_n_ch` is `TRUE` if the number of channels was specified in the ImageJ
-#'   `TIFFTAG_DESCRIPTION`, otherwise `FALSE`.
+#'   `ImageDescription`, otherwise `FALSE`.
 #'
 #' @noRd
 prep_read <- function(path, frames, tags1, tags = FALSE) {
@@ -508,8 +494,7 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
   c(n_imgs, n_slices, ij_n_ch, n_ch) %<-% translate_ij_description(
     tags1
   )[c("n_imgs", "n_slices", "ij_n_ch", "n_ch")]
-  path <- prep_path(path)
-  withr::local_dir(attr(path, "path_dir"))
+  path <- fs::path_expand(path)
   n_dirs <- .Call("count_directories_C", path, PACKAGE = "ijtiff")
   if (!is.na(n_slices)) {
     if (frames[[1]] == "all") {
@@ -530,12 +515,12 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
           rlang::abort(
             c(
               paste(
-                "If TIFFTAG_DESCRIPTION specifies the number of images, this",
+                "If ImageDescription specifies the number of images, this",
                 "must be equal to the number of directories in the TIFF file."
               ),
               x = stringr::str_glue("Your TIFF file has {n_dirs} directories."),
               x = stringr::str_glue(
-                "Its TIFFTAG_DESCRIPTION indicates that it",
+                "Its ImageDescription indicates that it",
                 " holds {n_imgs} images."
               )
             )
@@ -578,25 +563,6 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
     ij_n_ch = ij_n_ch
   )
 }
-
-#' Prepare the path to a TIFF file for a function that will read from that file.
-#'
-#' The [fs::path_file()] is returned. The calling function is expected to call
-#' `withr::local_dir(fs::path_dir())`.
-#'
-#' @param path A string. The path to a TIFF file.
-#'
-#' @return A string. The [fs::path_file()]. This has an attribute `path_dir`
-#'   with the path to be passed to [withr::local_dir()].
-#'
-#' @noRd
-prep_path <- function(path) {
-  checkmate::assert_string(path)
-  path <- stringr::str_replace_all(path, stringr::coll("\\"), "/") # windows
-  checkmate::assert_file_exists(path)
-  structure(fs::path_file(path), path_dir = fs::path_dir(path))
-}
-
 
 #' Check if EBImage is installed.
 #'
