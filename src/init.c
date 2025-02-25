@@ -17,7 +17,7 @@ extern SEXP get_supported_tags_C(void);
 extern SEXP match_pillar_to_row_3_C(SEXP, SEXP);
 extern SEXP read_tags_C(SEXP, SEXP);
 extern SEXP read_tif_C(SEXP, SEXP);
-extern SEXP write_tif_C(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP write_tif_C(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"count_directories_C",     (DL_FUNC) &count_directories_C,     1},
@@ -29,7 +29,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"match_pillar_to_row_3_C", (DL_FUNC) &match_pillar_to_row_3_C, 2},
     {"read_tags_C",             (DL_FUNC) &read_tags_C,             2},
     {"read_tif_C",              (DL_FUNC) &read_tif_C,              2},
-    {"write_tif_C",             (DL_FUNC) &write_tif_C,             5},
+    {"write_tif_C",             (DL_FUNC) &write_tif_C,             15},
     {NULL, NULL, 0}
 };
 

@@ -89,8 +89,12 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
     out <- unlist(out)
     dim(out) <- c(d[1:2], img_prep$n_ch, length(out) / prod(c(d[1:2], img_prep$n_ch)))
     attrs1$dim <- NULL
-    # Create ijtiff_img object
     out <- do.call(ijtiff_img, c(list(img = out), attrs1))
+    for (tag_name in names(tags1)) {
+      if (is.null(attr(out, tag_name))) {
+        attr(out, tag_name) <- tags1[[tag_name]]
+      }
+    }
   }
   if (is.list(out)) {
     if (list_safety == "error") {

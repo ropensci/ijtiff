@@ -10,6 +10,6 @@ get_supported_tags()
 A named integer vector of supported TIFF tags
 }
 \description{
-Returns a named integer vector of supported TIFF tags. The names are the human-readable
-tag names, and the values are the corresponding tag codes.
+Returns a named integer vector of supported TIFF tags. The names are the
+human-readable tag names, and the values are the corresponding tag codes.
 }

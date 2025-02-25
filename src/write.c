@@ -10,7 +10,7 @@
 #include <Rversion.h>
 
 
-SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats) {
+SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats, SEXP sXResolution, SEXP sYResolution, SEXP sResolutionUnit, SEXP sOrientation, SEXP sXPosition, SEXP sYPosition, SEXP sCopyright, SEXP sArtist, SEXP sDocumentName, SEXP sDateTime) {
   check_type_sizes();
   SEXP dims, img_list = 0;
   tiff_job_t rj;
@@ -65,6 +65,67 @@ SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats) {
 	  TIFFSetField(tiff, TIFFTAG_ROWSPERSTRIP, height);
 	  TIFFSetField(tiff, TIFFTAG_COMPRESSION, compression);
 	  TIFFSetField(tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK);
+	  
+	  // Set XRESOLUTION if provided
+	  if (sXResolution != R_NilValue) {
+	    float xres = (float)asReal(sXResolution);
+	    TIFFSetField(tiff, TIFFTAG_XRESOLUTION, xres);
+	  }
+	  
+	  // Set YRESOLUTION if provided
+	  if (sYResolution != R_NilValue) {
+	    float yres = (float)asReal(sYResolution);
+	    TIFFSetField(tiff, TIFFTAG_YRESOLUTION, yres);
+	  }
+	  
+	  // Set RESOLUTIONUNIT if provided
+	  if (sResolutionUnit != R_NilValue) {
+	    int unit = asInteger(sResolutionUnit);
+	    TIFFSetField(tiff, TIFFTAG_RESOLUTIONUNIT, unit);
+	  }
+	  
+	  // Set ORIENTATION if provided
+	  if (sOrientation != R_NilValue) {
+	    int orientation = asInteger(sOrientation);
+	    TIFFSetField(tiff, TIFFTAG_ORIENTATION, orientation);
+	  }
+	  
+	  // Set XPOSITION if provided
+	  if (sXPosition != R_NilValue) {
+	    float xpos = asReal(sXPosition);
+	    TIFFSetField(tiff, TIFFTAG_XPOSITION, xpos);
+	  }
+	  
+	  // Set YPOSITION if provided
+	  if (sYPosition != R_NilValue) {
+	    float ypos = asReal(sYPosition);
+	    TIFFSetField(tiff, TIFFTAG_YPOSITION, ypos);
+	  }
+	  
+	  // Set COPYRIGHT if provided
+	  if (sCopyright != R_NilValue) {
+	    const char* copyright = CHAR(STRING_ELT(sCopyright, 0));
+	    TIFFSetField(tiff, TIFFTAG_COPYRIGHT, copyright);
+	  }
+	  
+	  // Set ARTIST if provided
+	  if (sArtist != R_NilValue) {
+	    const char* artist = CHAR(STRING_ELT(sArtist, 0));
+	    TIFFSetField(tiff, TIFFTAG_ARTIST, artist);
+	  }
+	  
+	  // Set DOCUMENTNAME if provided
+	  if (sDocumentName != R_NilValue) {
+	    const char* documentname = CHAR(STRING_ELT(sDocumentName, 0));
+	    TIFFSetField(tiff, TIFFTAG_DOCUMENTNAME, documentname);
+	  }
+	  
+	  // Set DATETIME if provided
+	  if (sDateTime != R_NilValue) {
+	    const char* datetime = CHAR(STRING_ELT(sDateTime, 0));
+	    TIFFSetField(tiff, TIFFTAG_DATETIME, datetime);
+	  }
+	  
 	  uint32_t x, y, pl;
 	  tdata_t buf = _TIFFmalloc(width * height * planes * (bps / 8));
 	  float *data_float;

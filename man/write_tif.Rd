@@ -11,7 +11,11 @@ write_tif(
   bits_per_sample = "auto",
   compression = "none",
   overwrite = FALSE,
-  msg = TRUE
+  msg = TRUE,
+  xresolution = NULL,
+  yresolution = NULL,
+  resolutionunit = NULL,
+  orientation = NULL
 )
 
 tif_write(
@@ -20,7 +24,11 @@ tif_write(
   bits_per_sample = "auto",
   compression = "none",
   overwrite = FALSE,
-  msg = TRUE
+  msg = TRUE,
+  xresolution = NULL,
+  yresolution = NULL,
+  resolutionunit = NULL,
+  orientation = NULL
 )
 }
 \arguments{
@@ -51,6 +59,28 @@ compression in a TIFF file if you can; I've noticed it can be buggy.}
 proceed?}
 
 \item{msg}{Print an informative message about the image being written?}
+
+\item{xresolution}{Numeric value specifying the horizontal resolution in pixels per unit.
+This is typically used with \code{resolutionunit} to define the physical dimensions of the image.}
+
+\item{yresolution}{Numeric value specifying the vertical resolution in pixels per unit.
+This is typically used with \code{resolutionunit} to define the physical dimensions of the image.}
+
+\item{resolutionunit}{Integer specifying the unit of measurement for \code{xresolution} and \code{yresolution}.
+Valid values are: 1 (no absolute unit), 2 (inch), or 3 (centimeter). Default is 2 (inch) if not specified.}
+
+\item{orientation}{Integer specifying the orientation of the image.
+Valid values are:
+\itemize{
+\item 1 = Row 0 top, column 0 left (default)
+\item 2 = Row 0 top, column 0 right
+\item 3 = Row 0 bottom, column 0 right
+\item 4 = Row 0 bottom, column 0 left
+\item 5 = Row 0 left, column 0 top
+\item 6 = Row 0 right, column 0 top
+\item 7 = Row 0 right, column 0 bottom
+\item 8 = Row 0 left, column 0 bottom
+}}
 }
 \value{
 The input \code{img} (invisibly).
