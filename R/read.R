@@ -146,7 +146,9 @@ tif_read <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
 #'
 #' @noRd
 map_tag_value <- function(tag_name, value, mappings) {
-  if (is.null(value)) return(NULL)
+  if (is.null(value)) {
+    return(NULL)
+  }
   value_str <- as.character(value)
   mapping <- mappings[[tag_name]]
   if (!is.null(mapping) && value_str %in% names(mapping)) {
@@ -166,7 +168,8 @@ map_tag_value <- function(tag_name, value, mappings) {
 translate_tiff_tags <- function(tags) {
   # Load tag mappings from JSON
   json_path <- system.file("extdata", "tiff-tag-conversions.json",
-                           package = "ijtiff")
+    package = "ijtiff"
+  )
   mappings <- jsonlite::fromJSON(json_path)
   # Map all tags that have mappings defined in the JSON
   for (tag_name in names(mappings)) {

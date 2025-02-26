@@ -34,8 +34,10 @@ test_that("Package 2-channel example I/O works", {
   suppressMessages(
     expect_message(
       write_tif(a2345, tmptif, overwrite = TRUE),
-      paste("Writing.+.tif: an 8-bit, 2x3 pixel image of.+unsigned integer",
-            "type with 4 channels and 5 frames")
+      paste(
+        "Writing.+.tif: an 8-bit, 2x3 pixel image of.+unsigned integer",
+        "type with 4 channels and 5 frames"
+      )
     )
   )
   in_tif <- read_tif(tmptif, msg = FALSE)
@@ -185,8 +187,10 @@ test_that("TIFFErrorHandler_ works", {
   tmptxt <- tempfile(fileext = ".txt") %>%
     stringr::str_replace_all(stringr::coll("\\"), "/")
   writeLines(c("a", "b"), tmptxt)
-  expect_error(suppressWarnings(tif_read(tmptxt, msg = FALSE)),
-               "Cannot read TIFF header")
+  expect_error(
+    suppressWarnings(tif_read(tmptxt, msg = FALSE)),
+    "Cannot read TIFF header"
+  )
 })
 
 test_that("write_tif() errors correctly", {
@@ -317,17 +321,20 @@ test_that("reading certain frames works", {
   expect_equal(dim(img12), dim(img12_alt))
   expect_equal(as.vector(img12), as.vector(img12_alt))
   img12_attrs <- purrr::list_modify(
-    attributes(img12), tags_by_frame = purrr::zap(), dim = purrr::zap()
+    attributes(img12),
+    tags_by_frame = purrr::zap(), dim = purrr::zap()
   )
   img_attrs <- purrr::list_modify(
-    attributes(img), tags_by_frame = purrr::zap(), dim = purrr::zap()
+    attributes(img),
+    tags_by_frame = purrr::zap(), dim = purrr::zap()
   )
   expect_equal(img12_attrs, img_attrs)
   img25_alt <- img[, , , c(2, 5)]
   expect_equal(dim(img25), dim(img25_alt))
   expect_equal(as.vector(img25), as.vector(img25_alt))
   img25_attrs <- purrr::list_modify(
-    attributes(img25), tags_by_frame = purrr::zap(), dim = purrr::zap()
+    attributes(img25),
+    tags_by_frame = purrr::zap(), dim = purrr::zap()
   )
   expect_equal(img25_attrs, img_attrs)
   expect_snapshot_error(read_tif(path, frames = 7, msg = FALSE))

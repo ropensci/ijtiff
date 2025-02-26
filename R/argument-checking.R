@@ -76,17 +76,17 @@ argchk_write_tif <- function(img, path, bits_per_sample, compression,
   )
   compression <- compressions[compression]
   checkmate::assert_flag(msg)
-  
+
   # Check xresolution if provided
   if (!is.null(xresolution)) {
     checkmate::assert_numeric(xresolution, len = 1, lower = 0, null.ok = FALSE)
   }
-  
+
   # Check yresolution if provided
   if (!is.null(yresolution)) {
     checkmate::assert_numeric(yresolution, len = 1, lower = 0, null.ok = FALSE)
   }
-  
+
   # Check resolutionunit if provided
   if (!is.null(resolutionunit)) {
     checkmate::assert_integerish(resolutionunit, len = 1, null.ok = FALSE)
@@ -98,7 +98,7 @@ argchk_write_tif <- function(img, path, bits_per_sample, compression,
       )
     }
   }
-  
+
   # Check orientation if provided
   if (!is.null(orientation)) {
     checkmate::assert_integerish(orientation, len = 1, null.ok = FALSE)
@@ -110,51 +110,58 @@ argchk_write_tif <- function(img, path, bits_per_sample, compression,
       )
     }
   }
-  
+
   # Check xposition if provided
   if (!is.null(xposition)) {
     checkmate::assert_numeric(xposition, len = 1, null.ok = FALSE)
   }
-  
+
   # Check yposition if provided
   if (!is.null(yposition)) {
     checkmate::assert_numeric(yposition, len = 1, null.ok = FALSE)
   }
-  
+
   # Check copyright if provided
   if (!is.null(copyright)) {
     checkmate::assert_string(copyright, null.ok = FALSE)
   }
-  
+
   # Check artist if provided
   if (!is.null(artist)) {
     checkmate::assert_string(artist, null.ok = FALSE)
   }
-  
+
   # Check documentname if provided
   if (!is.null(documentname)) {
     checkmate::assert_string(documentname, null.ok = FALSE)
   }
-  
+
   # Check and format datetime if provided
   if (!is.null(datetime)) {
     # Try to convert to datetime using lubridate
-    dt <- tryCatch({
-      lubridate::as_datetime(datetime)
-    }, error = function(e) {
-      stop("datetime must be convertible to a valid date-time using lubridate::as_datetime(). ",
-           "The final format should be 'YYYY:MM:DD HH:MM:SS'.", call. = FALSE)
-    })
-    
+    dt <- tryCatch(
+      {
+        lubridate::as_datetime(datetime)
+      },
+      error = function(e) {
+        stop("datetime must be convertible to a valid date-time using lubridate::as_datetime(). ",
+          "The final format should be 'YYYY:MM:DD HH:MM:SS'.",
+          call. = FALSE
+        )
+      }
+    )
+
     if (is.na(dt)) {
       stop("datetime must be convertible to a valid date-time using lubridate::as_datetime(). ",
-           "The final format should be 'YYYY:MM:DD HH:MM:SS'.", call. = FALSE)
+        "The final format should be 'YYYY:MM:DD HH:MM:SS'.",
+        call. = FALSE
+      )
     }
-    
+
     # Format to TIFF datetime format "YYYY:MM:DD HH:MM:SS"
     datetime <- format(dt, "%Y:%m:%d %H:%M:%S")
   }
-  
+
   list(
     img = img, path = path, bits_per_sample = bits_per_sample,
     compression = compression, overwrite = overwrite, msg = msg,

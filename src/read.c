@@ -5,115 +5,67 @@
 #include <math.h>
 
 #include "common.h"
+#include "tags.h"
 
 #include <Rinternals.h>
 
-// Helper function to get tag value based on its type
-static SEXP get_tag_value(TIFF *tiff, ttag_t tag, TIFFDataType type) {
-    SEXP out = R_NilValue;
-    
-    // Special case for COLORMAP which needs 3 arrays
-    if (tag == TIFFTAG_COLORMAP) {
-        uint16_t bits_per_sample;
-        uint16_t *red, *green, *blue;
-        if (TIFFGetFieldDefaulted(tiff, TIFFTAG_BITSPERSAMPLE, &bits_per_sample) &&
-            TIFFGetFieldDefaulted(tiff, tag, &red, &green, &blue)) {
-            // quick way to calculate 2^bits_per_sample
-            uint32_t map_size = 1 << bits_per_sample;
-            SEXP colormap = PROTECT(allocMatrix(INTSXP, map_size, 3));
-            int *colormap_ptr = INTEGER(colormap);
-            for (uint32_t i = 0; i < map_size; i++) {
-                colormap_ptr[i] = red[i];                    // red
-                colormap_ptr[i + map_size] = green[i];      // green
-                colormap_ptr[i + 2*map_size] = blue[i];     // blue
-            }
-            SEXP colnames = PROTECT(allocVector(STRSXP, 3));
-            SET_STRING_ELT(colnames, 0, mkChar("red"));
-            SET_STRING_ELT(colnames, 1, mkChar("green"));
-            SET_STRING_ELT(colnames, 2, mkChar("blue"));
-            SEXP dimnames = PROTECT(allocVector(VECSXP, 2));
-            SET_VECTOR_ELT(dimnames, 0, R_NilValue);  // no row names
-            SET_VECTOR_ELT(dimnames, 1, colnames);
-            setAttrib(colormap, R_DimNamesSymbol, dimnames);
-            out = colormap;
-            UNPROTECT(3);
-            return out;
-        }
-    }
-    
-    // Handle the most common TIFF tag types.
-    // We only support these types because they are sufficient for basic TIFF metadata
-    // and can be directly converted to R types without complex conversions:
-    // - TIFF_LONG/SHORT -> R integer
-    // - TIFF_FLOAT -> R double
-    // - TIFF_ASCII -> R string
-    // - TIFF_RATIONAL -> R double (converted by libtiff)
-    switch (type) {
-        case TIFF_LONG: {
-            uint32_t value;
-            if (TIFFGetFieldDefaulted(tiff, tag, &value)) {
-                out = PROTECT(ScalarInteger(value));
-                UNPROTECT(1);
-            }
-            break;
-        }
-        case TIFF_SHORT: {
-            uint16_t value;
-            if (TIFFGetFieldDefaulted(tiff, tag, &value)) {
-                out = PROTECT(ScalarInteger(value));
-                UNPROTECT(1);
-            }
-            break;
-        }
-        case TIFF_FLOAT: {
-            float value;
-            if (TIFFGetFieldDefaulted(tiff, tag, &value)) {
-                out = PROTECT(ScalarReal(value));
-                UNPROTECT(1);
-            }
-            break;
-        }
-        case TIFF_RATIONAL: {
-            float value;  // libtiff converts RATIONAL to float for us
-            if (TIFFGetFieldDefaulted(tiff, tag, &value)) {
-                out = PROTECT(ScalarReal(value));
-                UNPROTECT(1);
-            }
-            break;
-        }
-        case TIFF_ASCII: {
-            const char* value;
-            if (TIFFGetFieldDefaulted(tiff, tag, &value)) {
-                out = PROTECT(mkString(value));
-                UNPROTECT(1);
-            }
-            break;
-        }
-        default:
-            // Other TIFF types are not supported as they are rarely used in basic tags
-            // and would require more complex handling
-            break;
-    }
-    return out;
+// Helper function to validate filename and open TIFF file
+static TIFF* validate_and_open_tiff(SEXP sFn, tiff_job_t *rj, FILE **f, const char **fn) {
+    if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) < 1) Rf_error("invalid filename");
+    *fn = CHAR(STRING_ELT(sFn, 0));
+    return open_tiff_file(*fn, rj, f);
 }
 
-SEXP TIFF_get_tags(TIFF *tiff) {
-    SEXP out = PROTECT(allocVector(VECSXP, n_supported_tags));
-    SEXP names = PROTECT(allocVector(STRSXP, n_supported_tags));
-    for (int i = 0; i < n_supported_tags; i++) {
-        const TIFFField *field = TIFFFieldWithTag(tiff, supported_tags[i]);
-        if (field) {
-            const char *name = TIFFFieldName(field);
-            SEXP value = get_tag_value(tiff, supported_tags[i], TIFFFieldDataType(field));
-            SET_STRING_ELT(names, i, mkChar(name));
-            if (value != R_NilValue) {
-                SET_VECTOR_ELT(out, i, value);
+// Helper function to close TIFF file and cleanup resources
+static void close_tiff_and_cleanup(TIFF *tiff, FILE *f) {
+    TIFFClose(tiff);
+    fclose(f);
+}
+
+// Helper function to handle errors with proper cleanup
+static void handle_error(TIFF *tiff, FILE *f, const char *message, ...) {
+    va_list args;
+    va_start(args, message);
+    close_tiff_and_cleanup(tiff, f);
+    Rf_error(message, args);
+    va_end(args);
+}
+
+// Helper function to copy pixel value based on bit depth and type
+static double get_pixel_value(const unsigned char *v, uint16_t bps, bool is_float) {
+    if (bps == 8) {
+        return (double)v[0];
+    } else if (bps == 16) {
+        return (double)((const uint16_t*)v)[0];
+    } else if (bps == 32) {
+        if (is_float) {
+            return (double)((const float*)v)[0];
+        } else {
+            return (double)((const uint32_t*)v)[0];
+        }
+    }
+    return NA_REAL;
+}
+
+// Helper function to set pixel values for multiple samples
+static void set_pixel_values(double *real_arr, const unsigned char *v, uint16_t bps, 
+                            uint16_t spp, bool is_float, uint32_t imageLength, 
+                            uint32_t imageWidth, uint32_t x, uint32_t y) {
+    size_t j;
+    for (j = 0; j < spp; j++) {
+        size_t offset = (imageLength * imageWidth * j) + imageLength * x + y;
+        if (bps == 8) {
+            real_arr[offset] = (double)v[j];
+        } else if (bps == 16) {
+            real_arr[offset] = (double)((const uint16_t*)v)[j];
+        } else if (bps == 32) {
+            if (is_float) {
+                real_arr[offset] = (double)((const float*)v)[j];
+            } else {
+                real_arr[offset] = (double)((const uint32_t*)v)[j];
             }
         }
     }
-    setAttrib(out, R_NamesSymbol, names);
-    UNPROTECT(2);
-    return out;
 }
 
 SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
@@ -126,16 +78,9 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
     tiff_job_t rj;
     TIFF *tiff;
     FILE *f;
-	if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) != 1) Rf_error("invalid filename");
-	fn = CHAR(STRING_ELT(sFn, 0));
-	f = fopen(fn, "rb");
-	if (!f) Rf_error("unable to open %s", fn);
-	rj.f = f;
-    tiff = TIFF_Open("rmc", &rj); // no mmap, no chopping
-    if (!tiff) {
-        TIFFClose(tiff);
-        Rf_error("Unable to open TIFF");
-    }
+    
+    tiff = validate_and_open_tiff(sFn, &rj, &f, &fn);
+    
     int cur_dir = 0; // 1-based image number
     int *sDirs_intptr = INTEGER(sDirs), cur_sDir_index = 0;
     int sDirs_len = LENGTH(sDirs);
@@ -190,13 +135,11 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                     out_spp, config, colormap[0] ? "yes" : "no");
         #endif
         if (bps == 12) {
-            TIFFClose(tiff);
-            Rf_error("12-bit images are not supported. "
+            handle_error(tiff, f, "12-bit images are not supported. "
                      "Try converting your image to 16-bit.");
         }
         if (bps != 8 && bps != 16 && bps != 32) {
-            TIFFClose(tiff);
-            Rf_error("image has %d bits/sample which is unsupported", bps);
+            handle_error(tiff, f, "image has %d bits/sample which is unsupported", bps);
         }
         if (sformat == SAMPLEFORMAT_INT)
             Rf_warning("The \'ijtiff\' package only supports unsigned "
@@ -262,20 +205,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                         tsize_t i, step = bps / 8;
                         for (i = 0; i < n; i += step) {
                             const uint8_t *v = (const uint8_t*) buf + i;
-                            if (is_float) {
-                                float float_val = ((const float*) v)[0];
-                                real_arr[imageLength * x + y] = float_val;
-                            } else {
-                                int int_val = NA_INTEGER;
-                                if (bps == 8) {
-                                    int_val = v[0];
-                                } else if (bps == 16) {
-                                    int_val = ((const uint16_t*)v)[0];
-                                } else if (bps == 32) {
-                                    int_val = ((const uint32_t*) v)[0];
-                                }
-                                real_arr[imageLength * x + y] = int_val;
-                            }
+                            real_arr[imageLength * x + y] = get_pixel_value(v, bps, is_float);
                             x++;
                             if (x >= imageWidth) {
                                 x -= imageWidth;
@@ -284,30 +214,10 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                         }
                     }
                 } else if (config == PLANARCONFIG_CONTIG) { // interlaced
-                    tsize_t i, j, step = spp * bps / 8;
+                    tsize_t i, step = spp * bps / 8;
                     for (i = 0; i < n; i += step) {
                         const uint8_t *v = (const uint8_t*) buf + i;
-                        if (bps == 8) {
-                            for (j = 0; j < spp; j++) {
-                                real_arr[(imageLength * imageWidth * j) + imageLength * x + y] =
-                                    (double) v[j];
-                            }
-                        } else if (bps == 16) {
-                            for (j = 0; j < spp; j++) {
-                                real_arr[(imageLength * imageWidth * j) + imageLength * x + y] =
-                                    (double) ((const uint16_t*)v)[j];
-                            }
-                        } else if (bps == 32 && (!is_float)) {
-                            for (j = 0; j < spp; j++) {
-                                real_arr[(imageLength * imageWidth * j) + imageLength * x + y] =
-                                    (double) ((const uint32_t*)v)[j];
-                            }
-                        } else if (bps == 32 && is_float) {
-                            for (j = 0; j < spp; j++) {
-                                real_arr[(imageLength * imageWidth * j) + imageLength * x + y] =
-                                    (double) ((const float*)v)[j];
-                            }
-                        }
+                        set_pixel_values(real_arr, v, bps, spp, is_float, imageLength, imageWidth, x, y);
                         x++;
                         if (x >= imageWidth) {
                             x -= imageWidth;
@@ -318,18 +228,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                     tsize_t step = bps / 8, i;
                     for (i = 0; i < n; i += step) {
                         const unsigned char *v = (const unsigned char*) buf + i;
-                        if (bps == 8) {
-                            real_arr[plane_offset + imageLength * x + y] = (uint8_t) v[0];
-                        } else if (bps == 16) {
-                            real_arr[plane_offset + imageLength * x + y] =
-                                (uint16_t) ((const uint16_t*)v)[0];
-                        } else if (bps == 32 && !is_float) {
-                            real_arr[plane_offset + imageLength * x + y] =
-                                (uint32_t) ((const uint32_t*)v)[0];
-                        } else if (bps == 32 && is_float) {
-                            real_arr[plane_offset + imageLength * x + y] =
-                                (double) ((const float*)v)[0];
-                        }
+                        real_arr[plane_offset + imageLength * x + y] = get_pixel_value(v, bps, is_float);
                         x++;
                         if (x >= imageWidth) {
                             x -= imageWidth;
@@ -344,8 +243,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
             }
         } else {  // tiled image
             if (spp > 1 && config != PLANARCONFIG_CONTIG) {
-                TIFFClose(tiff);
-                Rf_error("Planar format tiled images are not supported");
+                handle_error(tiff, f, "Planar format tiled images are not supported");
             }
 
             #if TIFF_DEBUG
@@ -362,21 +260,10 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                         tsize_t i, step = bps / 8;
                         uint32_t xoff = 0, yoff = 0;
                         for (i = 0; i < n; i += step) {
-                            double val = NA_REAL;
                             const unsigned char *v = (const unsigned char*) buf + i;
-                            if (bps == 8) {
-                                val = v[0];
-                            } else if (bps == 16) {
-                                val = ((const uint16_t*)v)[0];
-                            } else if (bps == 32) {
-                                if (is_float) {
-                                    val = ((const float*)v)[0];
-                                } else {
-                                    val = ((const uint32_t*)v)[0];
-                                }
+                            if (x + xoff < imageWidth && y + yoff < imageLength) {
+                                real_arr[imageLength * (x + xoff) + y + yoff] = get_pixel_value(v, bps, is_float);
                             }
-                            if (x + xoff < imageWidth && y + yoff < imageLength)
-                                real_arr[imageLength * (x + xoff) + y + yoff] = val;
                             xoff++;
                             if (xoff >= tileWidth) {
                                 xoff -= tileWidth;
@@ -384,32 +271,12 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                             }
                         }
                     } else if (config == PLANARCONFIG_CONTIG) {  // spp > 1, interlaced
-                        tsize_t i, j, step = spp * bps / 8;
+                        tsize_t i, step = spp * bps / 8;
                         uint32_t xoff = 0, yoff = 0;
                         for (i = 0; i < n; i += step) {
                             const unsigned char *v = (const uint8_t*) buf + i;
                             if (x + xoff < imageWidth && y + yoff < imageLength) {
-                                if (bps == 8) {
-                                    for (j = 0; j < spp; j++)
-                                        real_arr[(imageLength * imageWidth * j) +
-                                                 imageLength * (x + xoff) + y + yoff] =
-                                            (double) v[j];
-                                } else if (bps == 16) {
-                                    for (j = 0; j < spp; j++)
-                                        real_arr[(imageLength * imageWidth * j) +
-                                                 imageLength * (x + xoff) + y + yoff] =
-                                            (double) ((const uint16_t*)v)[j];
-                                } else if (bps == 32 && (!is_float)) {
-                                    for (j = 0; j < spp; j++)
-                                        real_arr[(imageLength * imageWidth * j) +
-                                                 imageLength * (x + xoff) + y + yoff] =
-                                            (double) ((const uint32_t*)v)[j];
-                                } else if (bps == 32 && is_float) {
-                                    for (j = 0; j < spp; j++)
-                                        real_arr[(imageLength * imageWidth * j) +
-                                                  imageLength * (x + xoff) + y + yoff] =
-                                            (double) ((const float*)v)[j];
-                                }
+                                set_pixel_values(real_arr, v, bps, spp, is_float, imageLength, imageWidth, x + xoff, y + yoff);
                             }
                             xoff++;
                             if (xoff >= tileWidth) {
@@ -444,65 +311,11 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
         if (!TIFFReadDirectory(tiff))
             break;
     }
-    TIFFClose(tiff);
+    close_tiff_and_cleanup(tiff, f);
     res = Rf_protect(PairToVectorList(multi_res));  // convert LISTSXP into VECSXP
     to_unprotect++;
     Rf_unprotect(to_unprotect);
     return res;
-}
-
-SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
-    check_type_sizes();
-    int to_unprotect = 0;
-    SEXP multi_res = Rf_protect(R_NilValue);
-    to_unprotect++;
-    SEXP multi_tail = multi_res;
-    const char *fn;
-    tiff_job_t rj;
-    TIFF *tiff;
-    FILE *f;
-    if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) < 1) Rf_error("invalid filename");
-    fn = CHAR(STRING_ELT(sFn, 0));
-    f = fopen(fn, "rb");
-    if (!f) Rf_error("unable to open %s", fn);
-    rj.f = f;
-    tiff = TIFF_Open("rmc", &rj); // no mmap, no chopping
-    if (!tiff)
-        Rf_error("Unable to open TIFF");
-    int cur_dir = 0; // 1-based image number
-    int *sDirs_intptr = INTEGER(sDirs), cur_sDir_index = 0;
-    int sDirs_len = LENGTH(sDirs);
-    while (cur_sDir_index != sDirs_len) {  // read only from images in desired directories
-        ++cur_dir;
-        bool is_match = cur_dir == sDirs_intptr[cur_sDir_index];
-        if (is_match) {
-            ++cur_sDir_index;
-        } else {
-            if (TIFFReadDirectory(tiff)) {
-                continue;
-            } else {
-                break;  // safety net: I don't expect this line to ever be needed
-            }
-        }
-        SEXP cur_tags = Rf_protect(TIFF_get_tags(tiff));
-        to_unprotect++;
-        /* Build a linked list of results */
-        if (multi_res == R_NilValue) {  // first image in stack
-            multi_res = multi_tail = Rf_protect(Rf_list1(cur_tags));
-            to_unprotect++;  // `multi_res` needs to be UNPROTECTed later
-        } else {
-            SEXP q = Rf_protect(Rf_list1(cur_tags));
-            to_unprotect++;
-            multi_tail = SETCDR(multi_tail, q);  // `q` is now PROTECTed as part of `multi_tail`
-            Rf_unprotect(2);  // removing explit PROTECTion of `q` UNPROTECTing `cur_tags`
-            to_unprotect -= 2;
-        }
-        if (!TIFFReadDirectory(tiff))
-            break;
-    }
-    TIFFClose(tiff);
-    Rf_unprotect(to_unprotect);
-    return Rf_PairToVectorList(multi_res);
 }
 
 SEXP count_directories_C(SEXP sFn /*FileName*/) {
@@ -514,20 +327,15 @@ SEXP count_directories_C(SEXP sFn /*FileName*/) {
     tiff_job_t rj;
     TIFF *tiff;
     FILE *f;
-    if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) < 1) Rf_error("invalid filename");
-    fn = CHAR(STRING_ELT(sFn, 0));
-    f = fopen(fn, "rb");
-    if (!f) Rf_error("unable to open %s", fn);
-    rj.f = f;
-    tiff = TIFF_Open("rmc", &rj); // no mmap, no chopping
-    if (!tiff)
-        Rf_error("Unable to open TIFF");
+    
+    tiff = validate_and_open_tiff(sFn, &rj, &f, &fn);
+    
     R_xlen_t cur_dir = 0; // 1-based image number
     while (1) {  // loop over TIFF directories
         cur_dir++;
         if (!TIFFReadDirectory(tiff)) break;
     }
-    TIFFClose(tiff);
+    close_tiff_and_cleanup(tiff, f);
     REAL(res)[0] = cur_dir;
     Rf_unprotect(to_unprotect);
     return res;

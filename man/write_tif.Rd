@@ -15,7 +15,13 @@ write_tif(
   xresolution = NULL,
   yresolution = NULL,
   resolutionunit = NULL,
-  orientation = NULL
+  orientation = NULL,
+  xposition = NULL,
+  yposition = NULL,
+  copyright = NULL,
+  artist = NULL,
+  documentname = NULL,
+  datetime = NULL
 )
 
 tif_write(
@@ -28,7 +34,13 @@ tif_write(
   xresolution = NULL,
   yresolution = NULL,
   resolutionunit = NULL,
-  orientation = NULL
+  orientation = NULL,
+  xposition = NULL,
+  yposition = NULL,
+  copyright = NULL,
+  artist = NULL,
+  documentname = NULL,
+  datetime = NULL
 )
 }
 \arguments{
@@ -81,6 +93,22 @@ Valid values are:
 \item 7 = Row 0 right, column 0 bottom
 \item 8 = Row 0 left, column 0 bottom
 }}
+
+\item{xposition}{Numeric value specifying the x position of the image in resolution units.
+This is typically used with \code{resolutionunit} to define the horizontal position of the image.}
+
+\item{yposition}{Numeric value specifying the y position of the image in resolution units.
+This is typically used with \code{resolutionunit} to define the vertical position of the image.}
+
+\item{copyright}{Character string specifying the copyright notice for the image.}
+
+\item{artist}{Character string specifying the name of the person who created the image.}
+
+\item{documentname}{Character string specifying the name of the document from which the image was scanned.}
+
+\item{datetime}{Date/time for the image. Can be provided as a character string in format "YYYY:MM:DD HH:MM:SS",
+a Date object, a POSIXct/POSIXlt object, or any object that can be converted to a datetime using
+lubridate::as_datetime(). If NULL (default), no datetime is set.}
 }
 \value{
 The input \code{img} (invisibly).

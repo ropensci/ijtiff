@@ -7,5 +7,7 @@
 #'
 #' @export
 get_supported_tags <- function() {
-    .Call("get_supported_tags_C", PACKAGE = "ijtiff")
+  temp_file <- tempfile(fileext = ".tif")
+  on.exit(unlink(temp_file), add = TRUE)
+  .Call("get_supported_tags_C", temp_file, PACKAGE = "ijtiff")
 }

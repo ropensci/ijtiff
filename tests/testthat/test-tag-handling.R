@@ -26,7 +26,7 @@ test_that("TIFF tag handling works correctly", {
   # Test that image data is preserved correctly
   img_data <- as.array(img)
   expect_true(all(img_data >= 0))
-  expect_true(all(img_data <= 255))  # For 8-bit images
+  expect_true(all(img_data <= 255)) # For 8-bit images
   # Test that tag values are consistent with image data type
   if (attr(img, "SampleFormat") == "uint8") {
     expect_true(all(as.integer(img_data) == img_data))
@@ -52,7 +52,8 @@ test_that("TIFF tag reading works", {
   expect_equal(attr(img, "Compression"), "LZW")
   expect_equal(attr(img, "PhotometricInterpretation"), "RGB")
   # Test that required attributes are present
-  required_attrs <- c("BitsPerSample", "SamplesPerPixel",
+  required_attrs <- c(
+    "BitsPerSample", "SamplesPerPixel",
     "SampleFormat", "PlanarConfiguration", "PhotometricInterpretation"
   )
   for (attr_name in required_attrs) {

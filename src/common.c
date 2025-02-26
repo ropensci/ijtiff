@@ -226,6 +226,20 @@ TIFF *TIFF_Open(const char *mode, tiff_job_t *rj) {
                           TIFFSizeProc_, TIFFMapFileProc_, TIFFUnmapFileProc_));
 }
 
+// Helper function to open a TIFF file
+TIFF* open_tiff_file(const char* filename, tiff_job_t* rj, FILE** f) {
+    *f = fopen(filename, "rb");
+    if (!*f) {
+        Rf_error("unable to open %s", filename);
+    }
+    rj->f = *f;
+    TIFF* tiff = TIFF_Open("rmc", rj); // no mmap, no chopping
+    if (!tiff) {
+        Rf_error("Unable to open TIFF");
+    }
+    return tiff;
+}
+
 void check_type_sizes(void) {
   unsigned int sz = sizeof(uint8_t) * CHAR_BIT;
   if (sz != 8) {

@@ -62,7 +62,7 @@
 #' @export
 write_tif <- function(img, path, bits_per_sample = "auto",
                       compression = "none", overwrite = FALSE, msg = TRUE,
-                      xresolution = NULL, yresolution = NULL, 
+                      xresolution = NULL, yresolution = NULL,
                       resolutionunit = NULL, orientation = NULL,
                       xposition = NULL, yposition = NULL,
                       copyright = NULL, artist = NULL, documentname = NULL,

@@ -146,9 +146,9 @@ fix_res_unit <- function(x) {
   desc <- attr(x, "ImageDescription")
   curr_unit <- attr(x, "ResolutionUnit")
   if (!is.null(desc) &&
-      startsWith(desc, "ImageJ") &&
-      stringr::str_detect(desc, "\\sunit=.+\\s") &&
-      (is.null(curr_unit) || curr_unit == "No absolute unit of measurement")) {
+    startsWith(desc, "ImageJ") &&
+    stringr::str_detect(desc, "\\sunit=.+\\s") &&
+    (is.null(curr_unit) || curr_unit == "No absolute unit of measurement")) {
     unit <- stringr::str_extract(desc, "(?<=unit=).+?(?=\\s)")
     if (unit == "inch") {
       attr(x, "ResolutionUnit") <- "Inch"

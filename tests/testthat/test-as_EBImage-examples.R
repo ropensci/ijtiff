@@ -31,7 +31,7 @@ test_that("`as_EBImage()` works", {
     mean(EBImage::imageData(as_EBImage(arr))),
     mean(EBImage::imageData(as_EBImage(array(2^33, dim = rep(4, 4)))))
   )
-  expect_equal(ebimg_install_msg(), paste0(
+  expect_equal(ijtiff:::ebimg_install_msg(), paste0(
     "  * To install `EBImage`:", "\n",
     "    - Install `BiocManager` with `install.packages(\"BiocManager\")`.\n",
     "    - Then run `BiocManager::install(\"EBImage\")`."
