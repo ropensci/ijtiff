@@ -29,3 +29,5 @@
 ^README\.Rmd$
 ^CRAN-SUBMISSION$
 ^scratch\..+$
+^doc$
+^Meta$

@@ -16,17 +16,11 @@ static TIFF* validate_and_open_tiff(SEXP sFn, tiff_job_t *rj, FILE **f, const ch
     return open_tiff_file(*fn, rj, f);
 }
 
-// Helper function to close TIFF file and cleanup resources
-static void close_tiff_and_cleanup(TIFF *tiff, FILE *f) {
-    TIFFClose(tiff);
-    fclose(f);
-}
-
 // Helper function to handle errors with proper cleanup
 static void handle_error(TIFF *tiff, FILE *f, const char *message, ...) {
     va_list args;
     va_start(args, message);
-    close_tiff_and_cleanup(tiff, f);
+    TIFFClose(tiff);
     Rf_error(message, args);
     va_end(args);
 }
@@ -76,6 +70,8 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
     SEXP multi_tail = multi_res, dim;
     const char *fn;  // file name
     tiff_job_t rj;
+    // Initialize tiff_job_t to prevent undefined behavior
+    memset(&rj, 0, sizeof(tiff_job_t));
     TIFF *tiff;
     FILE *f;
     
@@ -311,7 +307,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
         if (!TIFFReadDirectory(tiff))
             break;
     }
-    close_tiff_and_cleanup(tiff, f);
+    TIFFClose(tiff);
     res = Rf_protect(PairToVectorList(multi_res));  // convert LISTSXP into VECSXP
     to_unprotect++;
     Rf_unprotect(to_unprotect);
@@ -335,7 +331,7 @@ SEXP count_directories_C(SEXP sFn /*FileName*/) {
         cur_dir++;
         if (!TIFFReadDirectory(tiff)) break;
     }
-    close_tiff_and_cleanup(tiff, f);
+    TIFFClose(tiff);
     REAL(res)[0] = cur_dir;
     Rf_unprotect(to_unprotect);
     return res;

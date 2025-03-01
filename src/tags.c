@@ -95,7 +95,6 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
     }
     
     TIFFClose(tiff);
-    fclose(f);
     Rf_unprotect(to_unprotect);
     return Rf_PairToVectorList(multi_res);
 }

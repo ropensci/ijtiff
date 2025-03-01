@@ -12,3 +12,5 @@ docs/
 revdep/
 CRAN-SUBMISSION
 scratch.*
+/doc/
+/Meta/

@@ -184,10 +184,11 @@ static int TIFFCloseProc_(thandle_t usr) {
   tiff_job_t *rj = (tiff_job_t*) usr;
   if (rj->f) {
     fclose(rj->f);
+    rj->f = NULL;
   } else if (rj->alloc) {
-  	free(rj->data);
-	  rj->data = 0;
-  	rj->alloc = 0;
+    free(rj->data);
+    rj->data = NULL;
+    rj->alloc = 0;
   }
   last_tiff = 0;
   return 0;
