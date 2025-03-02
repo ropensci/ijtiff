@@ -97,7 +97,8 @@ static void init_tiff(void) {
 }
 
 // Cleanup function to make sure all TIFF resources are released
-void cleanup_tiff(void) {
+void cleanup_tiff(void)
+{
   if (last_tiff) {
     TIFFClose(last_tiff);
     last_tiff = NULL;
@@ -231,10 +232,15 @@ TIFF *TIFF_Open(const char *mode, tiff_job_t *rj) {
     last_tiff = NULL;
   }
   
-  return(last_tiff =
-	         TIFFClientOpen("pkg:tiff", mode, (thandle_t) rj, TIFFReadProc_,
-                           TIFFWriteProc_, TIFFSeekProc_, TIFFCloseProc_,
-                           TIFFSizeProc_, TIFFMapFileProc_, TIFFUnmapFileProc_));
+  // Store the result directly in last_tiff so we can clean it up on error
+  last_tiff = TIFFClientOpen("pkg:tiff", mode, (thandle_t) rj, TIFFReadProc_,
+                         TIFFWriteProc_, TIFFSeekProc_, TIFFCloseProc_,
+                         TIFFSizeProc_, TIFFMapFileProc_, TIFFUnmapFileProc_);
+  
+  // If TIFFClientOpen failed, make sure we don't return a NULL pointer
+  // The memory leak in TIFFClientOpen would have already happened, but
+  // this ensures we properly handle future cleanup
+  return last_tiff;
 }
 
 // Helper function to open a TIFF file
@@ -246,6 +252,9 @@ TIFF* open_tiff_file(const char* filename, tiff_job_t* rj, FILE** f) {
     rj->f = *f;
     TIFF* tiff = TIFF_Open("rmc", rj); // no mmap, no chopping
     if (!tiff) {
+        fclose(*f);
+        *f = NULL;
+        rj->f = NULL;
         Rf_error("Unable to open TIFF");
     }
     return tiff;

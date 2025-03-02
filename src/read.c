@@ -9,10 +9,25 @@
 
 #include <Rinternals.h>
 
+// Helper function for finalizers that safely close a TIFF pointer
+static void cleanup_tiff_ptr(SEXP ptr) {
+    if (!ptr) return;
+    TIFF *tiff = (TIFF*)R_ExternalPtrAddr(ptr);
+    if (tiff) {
+        // If this is the last_tiff, clear that global reference too
+        if (tiff == last_tiff) {
+            last_tiff = NULL;
+        }
+        TIFFClose(tiff);
+        R_ClearExternalPtr(ptr);
+    }
+}
+
 // Helper function to validate filename and open TIFF file
 static TIFF* validate_and_open_tiff(SEXP sFn, tiff_job_t *rj, FILE **f, const char **fn) {
     if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) < 1) Rf_error("invalid filename");
     *fn = CHAR(STRING_ELT(sFn, 0));
+    memset(rj, 0, sizeof(tiff_job_t));
     return open_tiff_file(*fn, rj, f);
 }
 
@@ -65,17 +80,30 @@ static void set_pixel_values(double *real_arr, const unsigned char *v, uint16_t 
 SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
     check_type_sizes();
     int to_unprotect = 0;
-    SEXP res = Rf_protect(R_NilValue), multi_res = Rf_protect(R_NilValue);
-    to_unprotect += 2;  // res and multi_res
-    SEXP multi_tail = multi_res, dim;
-    const char *fn;  // file name
+    SEXP multi_res = R_NilValue;
+    SEXP multi_tail = multi_res;
+    SEXP res = R_NilValue;
+    SEXP dim = R_NilValue;
+    const char *fn;
+    TIFF *tiff = NULL;
+    FILE *f = NULL;
     tiff_job_t rj;
-    // Initialize tiff_job_t to prevent undefined behavior
-    memset(&rj, 0, sizeof(tiff_job_t));
-    TIFF *tiff;
-    FILE *f;
+    
+    // Create a protected pointer for TIFF cleanup
+    SEXP tiff_closer = PROTECT(R_MakeExternalPtr(NULL, R_NilValue, R_NilValue));
+    to_unprotect++;
+    
+    // Set up finalizer that checks if pointer is NULL before closing
+    R_RegisterCFinalizerEx(tiff_closer, (R_CFinalizer_t)cleanup_tiff_ptr, TRUE);
     
     tiff = validate_and_open_tiff(sFn, &rj, &f, &fn);
+    
+    if (!tiff) {
+        Rf_error("Failed to open TIFF file");
+    }
+    
+    // Store the TIFF pointer
+    R_SetExternalPtrAddr(tiff_closer, tiff);
     
     int cur_dir = 0; // 1-based image number
     int *sDirs_intptr = INTEGER(sDirs), cur_sDir_index = 0;
@@ -307,7 +335,10 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
         if (!TIFFReadDirectory(tiff))
             break;
     }
+    // Clear the external pointer to avoid double closing
     TIFFClose(tiff);
+    R_ClearExternalPtr(tiff_closer);
+    
     res = Rf_protect(PairToVectorList(multi_res));  // convert LISTSXP into VECSXP
     to_unprotect++;
     Rf_unprotect(to_unprotect);
@@ -321,17 +352,35 @@ SEXP count_directories_C(SEXP sFn /*FileName*/) {
     to_unprotect++;
     const char *fn;
     tiff_job_t rj;
-    TIFF *tiff;
-    FILE *f;
+    TIFF *tiff = NULL;
+    FILE *f = NULL;
+    
+    // Create a protected pointer for TIFF cleanup
+    SEXP tiff_closer = PROTECT(R_MakeExternalPtr(NULL, R_NilValue, R_NilValue));
+    to_unprotect++;
+    
+    // Set up finalizer that checks if pointer is NULL before closing
+    R_RegisterCFinalizerEx(tiff_closer, (R_CFinalizer_t)cleanup_tiff_ptr, TRUE);
     
     tiff = validate_and_open_tiff(sFn, &rj, &f, &fn);
+    
+    if (!tiff) {
+        Rf_error("Failed to open TIFF file");
+    }
+    
+    // Store the TIFF pointer
+    R_SetExternalPtrAddr(tiff_closer, tiff);
     
     R_xlen_t cur_dir = 0; // 1-based image number
     while (1) {  // loop over TIFF directories
         cur_dir++;
         if (!TIFFReadDirectory(tiff)) break;
     }
+    
     TIFFClose(tiff);
+    // Clear the external pointer to avoid double closing
+    R_ClearExternalPtr(tiff_closer);
+    
     REAL(res)[0] = cur_dir;
     Rf_unprotect(to_unprotect);
     return res;

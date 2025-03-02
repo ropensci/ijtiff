@@ -6,6 +6,20 @@
 #include <stdbool.h>
 #include <string.h>
 
+// Helper function for finalizers that safely close a TIFF pointer
+static void cleanup_tiff_ptr(SEXP ptr) {
+    if (!ptr) return;
+    TIFF *tiff = (TIFF*)R_ExternalPtrAddr(ptr);
+    if (tiff) {
+        // If this is the last_tiff, clear that global reference too
+        if (tiff == last_tiff) {
+            last_tiff = NULL;
+        }
+        TIFFClose(tiff);
+        R_ClearExternalPtr(ptr);
+    }
+}
+
 // Helper function to create a TIFF file at the specified path
 static TIFF* create_tiff_at_path(const char* temp_path) {
     TIFF* tiff = TIFFOpen(temp_path, "w");
@@ -51,8 +65,8 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
     SEXP multi_tail = multi_res;
     const char *fn;
     tiff_job_t rj;
-    TIFF *tiff;
-    FILE *f;
+    TIFF *tiff = NULL;
+    FILE *f = NULL;
     
     if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) < 1) {
         Rf_error("invalid filename");
@@ -62,15 +76,25 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
     // Initialize rj structure properly
     memset(&rj, 0, sizeof(rj));
     
-    tiff = open_tiff_file(fn, &rj, &f);
+    // Create a protected pointer for TIFF cleanup
+    SEXP tiff_closer = PROTECT(R_MakeExternalPtr(NULL, R_NilValue, R_NilValue));
+    to_unprotect++;
     
-    int cur_dir = 0; // 1-based image number
-    int *sDirs_intptr = INTEGER(sDirs), cur_sDir_index = 0;
-    int sDirs_len = LENGTH(sDirs);
+    // Set up finalizer that checks if pointer is NULL before closing
+    R_RegisterCFinalizerEx(tiff_closer, (R_CFinalizer_t)cleanup_tiff_ptr, TRUE);
+    
+    tiff = open_tiff_file(fn, &rj, &f);
     
     if (tiff == NULL) {
         Rf_error("Failed to open TIFF file");
     }
+    
+    // Store the TIFF pointer
+    R_SetExternalPtrAddr(tiff_closer, tiff);
+    
+    int cur_dir = 0; // 1-based image number
+    int *sDirs_intptr = INTEGER(sDirs), cur_sDir_index = 0;
+    int sDirs_len = LENGTH(sDirs);
     
     while (cur_sDir_index != sDirs_len) {  // read only from images in desired directories
         ++cur_dir;
@@ -104,7 +128,10 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
             break;
     }
     
+    // Clear the external pointer to avoid double closing
     TIFFClose(tiff);
+    R_ClearExternalPtr(tiff_closer);
+    
     Rf_unprotect(to_unprotect);
     return Rf_PairToVectorList(multi_res);
 }
