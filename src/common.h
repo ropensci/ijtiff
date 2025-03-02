@@ -17,6 +17,9 @@ typedef struct tiff_job {
 
 TIFF *TIFF_Open(const char *mode, tiff_job_t *rj);
 
+// Cleanup function to make sure all TIFF resources are released
+void cleanup_tiff(void);
+
 // Helper function to open a TIFF file
 TIFF* open_tiff_file(const char* filename, tiff_job_t* rj, FILE** f);
 

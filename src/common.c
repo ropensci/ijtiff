@@ -5,6 +5,7 @@
 #include <sys/types.h>
 
 #include <Rinternals.h>
+#include <R_ext/Rdynload.h>
 
 const ttag_t supported_tags[] = {
     TIFFTAG_IMAGEWIDTH,
@@ -90,10 +91,16 @@ static void TIFFErrorHandler_(const char* module, const char* fmt, va_list ap) {
 }
 
 static void init_tiff(void) {
-  if (need_init) {
-  	TIFFSetWarningHandler(TIFFWarningHandler_);
-	  TIFFSetErrorHandler(TIFFErrorHandler_);
-  	need_init = 0;
+  TIFFSetWarningHandler(TIFFWarningHandler_);
+  TIFFSetErrorHandler(TIFFErrorHandler_);
+  need_init = 0;
+}
+
+// Cleanup function to make sure all TIFF resources are released
+void cleanup_tiff(void) {
+  if (last_tiff) {
+    TIFFClose(last_tiff);
+    last_tiff = NULL;
   }
 }
 
@@ -217,13 +224,17 @@ static void TIFFUnmapFileProc_(thandle_t usr, tdata_t map, toff_t off) {
 /* actual interface */
 TIFF *TIFF_Open(const char *mode, tiff_job_t *rj) {
   if (need_init) init_tiff();
-  #if AGGRESSIVE_CLEANUP
-    if (last_tiff) TIFFClose(last_tiff);
-  #endif
+  
+  // Always close the previous TIFF handle to prevent memory leaks
+  if (last_tiff) {
+    TIFFClose(last_tiff);
+    last_tiff = NULL;
+  }
+  
   return(last_tiff =
 	         TIFFClientOpen("pkg:tiff", mode, (thandle_t) rj, TIFFReadProc_,
-                          TIFFWriteProc_, TIFFSeekProc_, TIFFCloseProc_,
-                          TIFFSizeProc_, TIFFMapFileProc_, TIFFUnmapFileProc_));
+                           TIFFWriteProc_, TIFFSeekProc_, TIFFCloseProc_,
+                           TIFFSizeProc_, TIFFMapFileProc_, TIFFUnmapFileProc_));
 }
 
 // Helper function to open a TIFF file

@@ -3,6 +3,8 @@
 #include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
 
+#include "common.h"
+
 /* FIXME: 
    Check these declarations against the C/Fortran source code.
 */
@@ -37,4 +39,7 @@ void R_init_ijtiff(DllInfo *dll)
 {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
+    
+    // Register cleanup handler to be called at exit
+    R_RegisterCFinalizerEx(R_NilValue, (R_CFinalizer_t) cleanup_tiff, TRUE);
 }

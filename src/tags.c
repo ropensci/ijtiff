@@ -54,13 +54,23 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
     TIFF *tiff;
     FILE *f;
     
-    if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) < 1) Rf_error("invalid filename");
+    if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) < 1) {
+        Rf_error("invalid filename");
+    }
     fn = CHAR(STRING_ELT(sFn, 0));
+    
+    // Initialize rj structure properly
+    memset(&rj, 0, sizeof(rj));
+    
     tiff = open_tiff_file(fn, &rj, &f);
     
     int cur_dir = 0; // 1-based image number
     int *sDirs_intptr = INTEGER(sDirs), cur_sDir_index = 0;
     int sDirs_len = LENGTH(sDirs);
+    
+    if (tiff == NULL) {
+        Rf_error("Failed to open TIFF file");
+    }
     
     while (cur_sDir_index != sDirs_len) {  // read only from images in desired directories
         ++cur_dir;
