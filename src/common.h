@@ -1,6 +1,7 @@
 #ifndef PKG_TIFF_COMMON_H__
 #define PKG_TIFF_COMMON_H__
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <tiff.h>
