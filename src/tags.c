@@ -128,6 +128,11 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
             break;
     }
     
+    // Force cleanup of any internal TIFF buffers before closing
+    // This is necessary because libtiff may be keeping internal buffers
+    // that aren't properly freed when only reading tags
+    TIFFFlush(tiff);
+    
     // Clear the external pointer to avoid double closing
     TIFFClose(tiff);
     R_ClearExternalPtr(tiff_closer);
