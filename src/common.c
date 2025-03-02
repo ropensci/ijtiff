@@ -36,13 +36,15 @@ const ttag_t supported_tags[] = {
     TIFFTAG_COLORMAP
 };
 
-const size_t n_supported_tags = sizeof(supported_tags) / sizeof(supported_tags[0]);
+const size_t n_supported_tags = sizeof(supported_tags) / sizeof(ttag_t);
 
 static int need_init = 1;
+static int err_reenter = 0;
+
+// Global variable to track the last opened TIFF handle
+TIFF *last_tiff = NULL;
 
 static char txtbuf[2048];  // text buffer
-
-static TIFF *last_tiff; /* this to avoid leaks */
 
 // avoid protection issues with setAttrib
 void setAttr(SEXP x, const char *name, SEXP val) {
@@ -70,8 +72,6 @@ static void TIFFWarningHandler_(const char* module, const char* fmt,
     Rf_warning("%s: %s", module, txtbuf);
   }
 }
-
-static int err_reenter = 0;
 
 static void TIFFErrorHandler_(const char* module, const char* fmt, va_list ap) {
   if (err_reenter) return;

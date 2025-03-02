@@ -32,4 +32,7 @@ SEXP getAttr(SEXP x, const char *name);
 extern const ttag_t supported_tags[];
 extern const size_t n_supported_tags;
 
+// Global variable to track the last opened TIFF handle for cleanup
+extern TIFF *last_tiff;
+
 #endif  // PKG_TIFF_COMMON_H__

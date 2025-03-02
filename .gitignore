@@ -14,3 +14,4 @@ CRAN-SUBMISSION
 scratch.*
 /doc/
 /Meta/
+.*Rcheck
