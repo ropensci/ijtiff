@@ -32,7 +32,6 @@ Imports:
     dplyr,
     fs (>= 1.5),
     graphics,
-    imager,
     jsonlite,
     lubridate,
     magrittr (>= 1.5),
@@ -56,7 +55,8 @@ Suggests:
     spelling,
     testthat (>= 3.0),
     tiff,
-    vdiffr
+    vdiffr,
+    withr
 VignetteBuilder: 
     knitr
 Biarch: TRUE

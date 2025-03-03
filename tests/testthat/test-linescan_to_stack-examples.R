@@ -10,6 +10,12 @@ test_that("`linescan_to_stack()` works", {
   )
   expect_equal(linescan, stack_to_linescan(stack))
   arr <- array(1, dim = rep(4, 4))
-  expect_snapshot_error(linescan_to_stack(arr))
-  expect_snapshot_error(stack_to_linescan(arr))
+  expect_error(
+    linescan_to_stack(arr),
+    "fourth dimension.+should be equal to 1"
+  )
+  expect_error(
+    stack_to_linescan(arr),
+    "first dimension.+should be equal to 1"
+  )
 })

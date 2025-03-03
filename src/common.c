@@ -251,7 +251,7 @@ TIFF *TIFF_Open(const char *mode, tiff_job_t *rj) {
   }
   
   // Store the result directly in last_tiff so we can clean it up on error
-  last_tiff = TIFFClientOpen("pkg:tiff", mode, (thandle_t) rj, TIFFReadProc_,
+  last_tiff = TIFFClientOpen("pkg:ijtiff", mode, (thandle_t) rj, TIFFReadProc_,
                          TIFFWriteProc_, TIFFSeekProc_, TIFFCloseProc_,
                          TIFFSizeProc_, TIFFMapFileProc_, TIFFUnmapFileProc_);
   

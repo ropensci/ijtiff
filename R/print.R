@@ -18,21 +18,12 @@ print.ijtiff_img <- function(x, ...) {
   print(x[seq_len(min(6, d[1])), seq_len(min(6, d[2])), 1, 1])
   att_names <- names(attributes(x))
   cli::cat_line(cli::rule("TIFF tags"))
-  possible_tags <- c(
-    "BitsPerSample", "SamplesPerPixel", "SampleFormat",
-    "PlanarConfig", "RowsPerStrip", "TileWidth",
-    "TileLength", "Compression", "Threshholding",
-    "Software", "XResolution", "YResolution",
-    "ResolutionUnit", "XPosition", "YPosition",
-    "Orientation", "Copyright", "Artist",
-    "DocumentName", "DateTime", "ImageDescription",
-    "Photometric", "ColorMap"
-  )
+  possible_tags <- names(get_supported_tags())
   for (pt in possible_tags) {
     if (pt %in% att_names) {
       if (pt == "ColorMap") {
         cli::cli_text(
-          cli::symbol$bullet, " color map: ",
+          cli::symbol$bullet, " ColorMap: ",
           "matrix with {nrow(attr(x, 'ColorMap'))} row{?s} ",
           "and 3 columns (red, green, blue)"
         )

@@ -20,7 +20,10 @@ test_that("`read_tags()` works", {
   # Test that frames 2 and 4 have consistent tags
   expect_equal(multi_frame_tags[c(2, 4)], tags_read(path, frames = c(2, 4)))
   # Test error on non-existent frames
-  expect_snapshot_error(read_tags(path, frames = c(11, 12)))
+  expect_error(
+    read_tags(path, frames = c(11, 12)),
+    "requested.+frame.+12.+only 5"
+  )
   # Test that all frames have consistent tags
   expect_equal(dplyr::n_distinct(multi_frame_tags), 1)
   # Test reading first frame with JSON-mapped tags

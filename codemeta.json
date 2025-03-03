@@ -223,6 +223,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=vdiffr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "withr",
+      "name": "withr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=withr"
     }
   ],
   "softwareRequirements": {
@@ -289,18 +301,6 @@
     },
     "7": {
       "@type": "SoftwareApplication",
-      "identifier": "imager",
-      "name": "imager",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=imager"
-    },
-    "8": {
-      "@type": "SoftwareApplication",
       "identifier": "jsonlite",
       "name": "jsonlite",
       "provider": {
@@ -311,7 +311,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=jsonlite"
     },
-    "9": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "lubridate",
       "name": "lubridate",
@@ -323,7 +323,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=lubridate"
     },
-    "10": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "magrittr",
       "name": "magrittr",
@@ -336,12 +336,12 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=magrittr"
     },
-    "11": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "methods",
       "name": "methods"
     },
-    "12": {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "purrr",
       "name": "purrr",
@@ -353,7 +353,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=purrr"
     },
-    "13": {
+    "12": {
       "@type": "SoftwareApplication",
       "identifier": "readr",
       "name": "readr",
@@ -365,7 +365,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=readr"
     },
-    "14": {
+    "13": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -378,7 +378,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "15": {
+    "14": {
       "@type": "SoftwareApplication",
       "identifier": "strex",
       "name": "strex",
@@ -391,7 +391,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=strex"
     },
-    "16": {
+    "15": {
       "@type": "SoftwareApplication",
       "identifier": "stringr",
       "name": "stringr",
@@ -404,7 +404,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=stringr"
     },
-    "17": {
+    "16": {
       "@type": "SoftwareApplication",
       "identifier": "zeallot",
       "name": "zeallot",
@@ -418,7 +418,7 @@
     },
     "SystemRequirements": "fftw3, libtiff, libbz2, libdeflate, libjpeg, liblzma,\n    libwebp, libzstd, X11, zlib"
   },
-  "fileSize": "3000.035KB",
+  "fileSize": "2851.255KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",

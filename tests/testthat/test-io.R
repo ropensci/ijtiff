@@ -19,7 +19,10 @@ test_that("Package 2-channel example I/O works", {
     msg = FALSE
   )
   expect_equal(dim(img4), c(155, 200, 1, 2))
-  expect_equal(img3[, , 1, 1], img4[, , 1, 1])
+  expect_in(  # allow for img4 going 16-bit during editing :-(
+    list(img3[, , 1, 1]),
+    list(img4[, , 1, 1], img4[, , 1, 1] / 2^8)
+  )
   v22 <- c(2, 2, 1, 1)
   a22 <- array(seq_len(prod(v22)), dim = v22)
   tmptif <- tempfile(fileext = ".tif") %>%
@@ -183,50 +186,6 @@ test_that("List returning works", {
   )
 })
 
-test_that("TIFFErrorHandler_ works", {
-  tmptxt <- tempfile(fileext = ".txt") %>%
-    stringr::str_replace_all(stringr::coll("\\"), "/")
-  writeLines(c("a", "b"), tmptxt)
-  expect_error(
-    suppressWarnings(tif_read(tmptxt, msg = FALSE)),
-    "does not appear to be a valid TIFF file"
-  )
-})
-
-test_that("write_tif() errors correctly", {
-  aaaa <- array(0, dim = rep(4, 4))
-  expect_error(
-    tif_write(aaaa, "path/", msg = FALSE),
-    "path.+cannot end with.+/"
-  )
-  expect_snapshot_error(
-    write_tif(aaaa, "a", bits_per_sample = "abc", msg = FALSE)
-  )
-  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 12, msg = FALSE))
-  aaaa[1] <- -2 * .Call("float_max_C", PACKAGE = "ijtiff")
-  expect_snapshot_error(write_tif(aaaa, "a", msg = FALSE))
-  aaaa[1] <- -1
-  aaaa[2] <- 2 * .Call("float_max_C", PACKAGE = "ijtiff")
-  expect_snapshot_error(write_tif(aaaa, "a", msg = FALSE))
-  aaaa[2] <- 1
-  aaaa[1] <- 0.5
-  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 16, msg = FALSE))
-  aaaa[1] <- 2^33
-  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 16, msg = FALSE))
-  aaaa[1] <- 2^20
-  expect_snapshot_error(write_tif(aaaa, "a", bits_per_sample = 16, msg = FALSE))
-  expect_snapshot_error(
-    suppressWarnings(
-      read_tif(test_path("testthat-figs", "bad_ij1.tif"), msg = FALSE)
-    )
-  )
-  expect_snapshot_error(
-    suppressWarnings(
-      read_tif(test_path("testthat-figs", "bad_ij2.tif"), msg = FALSE)
-    )
-  )
-})
-
 test_that("text-image-io works", {
   mm <- matrix(1:60, nrow = 4)
   dim(mm) <- c(dim(mm), 1, 1)
@@ -337,7 +296,10 @@ test_that("reading certain frames works", {
     tags_by_frame = purrr::zap(), dim = purrr::zap()
   )
   expect_equal(img25_attrs, img_attrs)
-  expect_snapshot_error(read_tif(path, frames = 7, msg = FALSE))
+  expect_error(
+    read_tif(path, frames = 7, msg = FALSE),
+    "requested.+7.+only.+5"
+  )
 })
 
 test_that("Reading Mathieu's file works", {

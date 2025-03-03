@@ -17,14 +17,19 @@
       [6,]  255  255  255  255  255  255
       -- TIFF tags -------------------------------------------------------------------
     Message
+      * ImageWidth: 200
+      * ImageLength: 155
+      * ImageDepth: 1
       * BitsPerSample: 8
       * SamplesPerPixel: 1
       * SampleFormat: unsigned integer data
+      * PlanarConfiguration: contiguous
       * RowsPerStrip: 155
       * Compression: none
       * Threshholding: 1
       * ResolutionUnit: inch
       * Orientation: top_left
       * ImageDescription: ImageJ=1.51s images=2 slices=2 loop=false
-      * color map: matrix with 256 rows and 3 columns (red, green, blue)
+      * PhotometricInterpretation: Palette
+      * ColorMap: matrix with 256 rows and 3 columns (red, green, blue)
 

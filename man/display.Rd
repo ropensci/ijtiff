@@ -9,12 +9,11 @@ display(img, ...)
 \arguments{
 \item{img}{An \link{ijtiff_img} object.}
 
-\item{...}{Passed to \code{imager}'s `plot.cimg().}
+\item{...}{Passed to \code{\link[graphics:plot.raster]{graphics::plot.raster()}}.}
 }
 \description{
 Display an image that has been read in by \code{\link[=read_tif]{read_tif()}} as it would look in
-'ImageJ'. This function is really just \code{imager}'s \code{plot.cimg()} on the
-inside, with some handling.
+'ImageJ'. This function wraps \code{\link[graphics:plot.raster]{graphics::plot.raster()}}.
 }
 \examples{
 img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
