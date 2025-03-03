@@ -189,7 +189,7 @@ test_that("TIFFErrorHandler_ works", {
   writeLines(c("a", "b"), tmptxt)
   expect_error(
     suppressWarnings(tif_read(tmptxt, msg = FALSE)),
-    "Cannot read TIFF header"
+    "does not appear to be a valid TIFF file"
   )
 })
 

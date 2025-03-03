@@ -1,3 +1,11 @@
+# `ijtiff` 3.0.1
+
+## BUG FIXES
+
+* Fixed memory leaks in tag handling code by ensuring proper buffer cleanup
+* Added TIFF file validation to prevent memory leaks when handling invalid files
+* Improved error messages for invalid TIFF files
+
 # `ijtiff` 3.0.0
 
 ## NEW FEATURES

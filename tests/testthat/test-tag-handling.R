@@ -33,13 +33,6 @@ test_that("TIFF tag handling works correctly", {
   }
 })
 
-test_that("TIFF tag error handling works", {
-  # Create a temporary corrupt file
-  tmp_corrupt <- tempfile(fileext = ".tif")
-  writeLines("not a tiff file", tmp_corrupt)
-  suppressWarnings(expect_error(read_tif(tmp_corrupt, msg = FALSE)))
-})
-
 test_that("TIFF tag reading works", {
   # Test reading a simple TIFF file
   path <- system.file("img", "Rlogo.tif", package = "ijtiff")

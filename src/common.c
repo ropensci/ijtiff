@@ -232,6 +232,24 @@ TIFF *TIFF_Open(const char *mode, tiff_job_t *rj) {
     last_tiff = NULL;
   }
   
+  // Verify that the file appears to be a valid TIFF before attempting to open it
+  // Only do this check for read operations (mode contains 'r')
+  if (rj->f && strchr(mode, 'r') != NULL) {
+    // Check for TIFF magic number (II or MM followed by version)
+    char magic[4];
+    long pos = ftell(rj->f);
+    size_t read = fread(magic, 1, 4, rj->f);
+    fseek(rj->f, pos, SEEK_SET); // Reset file position
+    
+    // Check TIFF signature: II (Intel) or MM (Motorola) followed by version (usually 42)
+    if (read != 4 || 
+        !((magic[0] == 'I' && magic[1] == 'I' && magic[2] == 42 && magic[3] == 0) || 
+          (magic[0] == 'M' && magic[1] == 'M' && magic[2] == 0 && magic[3] == 42))) {
+      // Not a valid TIFF file, don't even try TIFFClientOpen
+      return NULL;
+    }
+  }
+  
   // Store the result directly in last_tiff so we can clean it up on error
   last_tiff = TIFFClientOpen("pkg:tiff", mode, (thandle_t) rj, TIFFReadProc_,
                          TIFFWriteProc_, TIFFSeekProc_, TIFFCloseProc_,
@@ -247,7 +265,7 @@ TIFF *TIFF_Open(const char *mode, tiff_job_t *rj) {
 TIFF* open_tiff_file(const char* filename, tiff_job_t* rj, FILE** f) {
     *f = fopen(filename, "rb");
     if (!*f) {
-        Rf_error("unable to open %s", filename);
+        Rf_error("Unable to open %s", filename);
     }
     rj->f = *f;
     TIFF* tiff = TIFF_Open("rmc", rj); // no mmap, no chopping
@@ -255,7 +273,7 @@ TIFF* open_tiff_file(const char* filename, tiff_job_t* rj, FILE** f) {
         fclose(*f);
         *f = NULL;
         rj->f = NULL;
-        Rf_error("Unable to open TIFF");
+        Rf_error("Unable to open as TIFF file: %s does not appear to be a valid TIFF file", filename);
     }
     return tiff;
 }

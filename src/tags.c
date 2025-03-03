@@ -86,6 +86,11 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
     tiff = open_tiff_file(fn, &rj, &f);
     
     if (tiff == NULL) {
+        // open_tiff_file should have raised an error, but just to be safe:
+        if (f) {
+            fclose(f);
+            f = NULL;
+        }
         Rf_error("Failed to open TIFF file");
     }
     
