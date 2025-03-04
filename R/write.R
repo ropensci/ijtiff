@@ -3,8 +3,8 @@
 #' Write images into a TIFF file.
 #'
 #' @inheritParams ijtiff_img
-#' @param path file name or a raw vector
-#' @param bits_per_sample number of bits per sample (numeric scalar). Supported
+#' @param path Path to the TIFF file to write to.
+#' @param bits_per_sample Number of bits per sample (numeric scalar). Supported
 #'   values are 8, 16, and 32. The default `"auto"` automatically picks the
 #'   smallest workable value based on the maximum element in `img`. For example,
 #'   if the maximum element in `img` is 789, then 16-bit will be chosen because

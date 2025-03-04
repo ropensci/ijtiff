@@ -52,9 +52,9 @@ with a redundant 4th slot \code{img[y, x, channel, ]} (see \link{ijtiff_img}
 'Examples' for an example). \item For a multi-channel, multi-plane image,
 use a 4-dimensional array \code{img[y, x, channel, plane]}.}}
 
-\item{path}{file name or a raw vector}
+\item{path}{Path to the TIFF file to write to.}
 
-\item{bits_per_sample}{number of bits per sample (numeric scalar). Supported
+\item{bits_per_sample}{Number of bits per sample (numeric scalar). Supported
 values are 8, 16, and 32. The default \code{"auto"} automatically picks the
 smallest workable value based on the maximum element in \code{img}. For example,
 if the maximum element in \code{img} is 789, then 16-bit will be chosen because
