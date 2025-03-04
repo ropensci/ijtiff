@@ -18,14 +18,17 @@
 #' @param overwrite If writing the image would overwrite a file, do you want to
 #'   proceed?
 #' @param msg Print an informative message about the image being written?
-#' @param xresolution Numeric value specifying the horizontal resolution in pixels per unit.
-#'   This is typically used with `resolutionunit` to define the physical dimensions of the image.
-#' @param yresolution Numeric value specifying the vertical resolution in pixels per unit.
-#'   This is typically used with `resolutionunit` to define the physical dimensions of the image.
-#' @param resolutionunit Integer specifying the unit of measurement for `xresolution` and `yresolution`.
-#'   Valid values are: 1 (no absolute unit), 2 (inch), or 3 (centimeter). Default is 2 (inch) if not specified.
-#' @param orientation Integer specifying the orientation of the image.
-#'   Valid values are:
+#' @param xresolution Numeric value specifying the horizontal resolution in
+#'   pixels per unit. This is typically used with `resolutionunit` to define the
+#'   physical dimensions of the image.
+#' @param yresolution Numeric value specifying the vertical resolution in pixels
+#'   per unit. This is typically used with `resolutionunit` to define the
+#'   physical dimensions of the image.
+#' @param resolutionunit Integer specifying the unit of measurement for
+#'   `xresolution` and `yresolution`. Valid values are: 1 (no absolute unit), 2
+#'   (inch), or 3 (centimeter). Default is 2 (inch) if not specified.
+#' @param orientation Integer specifying the orientation of the image. Valid
+#'   values are:
 #'   * 1 = Row 0 top, column 0 left (default)
 #'   * 2 = Row 0 top, column 0 right
 #'   * 3 = Row 0 bottom, column 0 right
@@ -34,15 +37,21 @@
 #'   * 6 = Row 0 right, column 0 top
 #'   * 7 = Row 0 right, column 0 bottom
 #'   * 8 = Row 0 left, column 0 bottom
-#' @param xposition Numeric value specifying the x position of the image in resolution units.
-#'   This is typically used with `resolutionunit` to define the horizontal position of the image.
-#' @param yposition Numeric value specifying the y position of the image in resolution units.
-#'   This is typically used with `resolutionunit` to define the vertical position of the image.
-#' @param copyright Character string specifying the copyright notice for the image.
-#' @param artist Character string specifying the name of the person who created the image.
-#' @param documentname Character string specifying the name of the document from which the image was scanned.
-#' @param datetime Date/time for the image. Can be provided as a character string in format "YYYY:MM:DD HH:MM:SS",
-#'   a Date object, a POSIXct/POSIXlt object, or any object that can be converted to a datetime using
+#' @param xposition Numeric value specifying the x position of the image in
+#'   resolution units. This is typically used with `resolutionunit` to define
+#'   the horizontal position of the image.
+#' @param yposition Numeric value specifying the y position of the image in
+#'   resolution units. This is typically used with `resolutionunit` to define
+#'   the vertical position of the image.
+#' @param copyright Character string specifying the copyright notice for the
+#'   image.
+#' @param artist Character string specifying the name of the person who created
+#'   the image.
+#' @param documentname Character string specifying the name of the document from
+#'   which the image was scanned.
+#' @param datetime Date/time for the image. Can be provided as a character
+#'   string in format "YYYY:MM:DD HH:MM:SS", a Date object, a POSIXct/POSIXlt
+#'   object, or any object that can be converted to a datetime using
 #'   lubridate::as_datetime(). If NULL (default), no datetime is set.
 #'
 #' @return The input `img` (invisibly).

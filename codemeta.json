@@ -411,7 +411,7 @@
     },
     "SystemRequirements": "fftw3, libtiff, libbz2, libdeflate, libjpeg, liblzma,\n    libwebp, libzstd, X11, zlib"
   },
-  "fileSize": "5239.291KB",
+  "fileSize": "5416.871KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",

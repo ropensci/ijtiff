@@ -1,0 +1,97 @@
+---
+title: "Working with TIFF Tags"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Working with TIFF Tags}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  crop = TRUE
+)
+knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
+```
+
+## Introduction to TIFF Tags
+
+TIFF (Tagged Image File Format) files are structured around a set of metadata elements called "tags". These tags contain information about the image data, such as dimensions, color space, compression method, and other properties. The `ijtiff` package provides functions to work with these tags, allowing you to both read existing tags from TIFF files and understand which tags are supported.
+
+## Supported TIFF Tags
+
+The `get_supported_tags()` function returns a named integer vector of all TIFF tags that are supported by the `ijtiff` package. Let's see what tags are available:
+
+```{r supported-tags}
+library(ijtiff)
+print(supported_tags <- get_supported_tags())
+```
+
+The names in this vector are the human-readable tag names, and the values are the corresponding tag codes defined in the TIFF specification.
+
+## Reading Tags from TIFF Files
+
+To read the tags from an existing TIFF file, you can use the `read_tags()` function. Let's read tags from a sample TIFF file included with the package:
+
+```{r read-tags-example}
+sample_tiff <- system.file("img", "Rlogo.tif", package = "ijtiff")
+tags <- read_tags(sample_tiff)
+tags[[1]]
+```
+
+The `read_tags()` function returns a list where each element corresponds to the tags from one frame of the TIFF file.
+
+## Understanding Tag Values
+
+Different tags have different data types and interpretations. Let's examine the values of some common tags:
+
+```{r tag-examples}
+tags[[1]]$ImageWidth
+tags[[1]]$ImageLength  # Height of the image
+tags[[1]]$XResolution
+tags[[1]]$YResolution
+tags[[1]]$ResolutionUnit
+```
+
+## Tags in Multi-Frame TIFF Files
+
+TIFF files can contain multiple frames, and each frame can have different tag values. Let's examine a multi-frame TIFF file:
+
+```{r multi-frame-tags, message=FALSE}
+multi_frame_tiff <- system.file("img", "Rlogo-banana.tif", package = "ijtiff")
+multi_frame_tags <- read_tags(multi_frame_tiff)
+length(multi_frame_tags)
+```
+
+We can compare tags across frames to see if they differ:
+
+```{r compare-tags}
+dimensions <- data.frame(
+  Frame = character(),
+  Width = integer(),
+  Height = integer(),
+  stringsAsFactors = FALSE
+)
+for (i in seq_along(multi_frame_tags)) {
+  frame_name <- names(multi_frame_tags)[i]
+  dimensions <- rbind(
+    dimensions,
+    data.frame(
+      Frame = frame_name,
+      Width = multi_frame_tags[[i]]$ImageWidth,
+      Height = multi_frame_tags[[i]]$ImageLength,
+      stringsAsFactors = FALSE
+    )
+  )
+}
+dimensions
+```
+
+## Conclusion
+
+TIFF tags provide rich metadata about image files. Using the `ijtiff` package, you can both read these tags from existing files and understand which tags are supported. This can be particularly useful for scientific image analysis, where metadata like resolution, units, and creation time can be crucial for proper interpretation of results.
+
+For more information about TIFF tags, you can refer to the TIFF 6.0 specification or visit the Library of Congress's [TIFF Tag Reference](https://www.loc.gov/preservation/digital/formats/content/tiff_tags.shtml).
