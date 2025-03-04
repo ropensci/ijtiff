@@ -411,7 +411,7 @@
     },
     "SystemRequirements": "fftw3, libtiff, libbz2, libdeflate, libjpeg, liblzma,\n    libwebp, libzstd, X11, zlib"
   },
-  "fileSize": "5395.72KB",
+  "fileSize": "5239.291KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -447,7 +447,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/ijtiff/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/ijtiff/blob/master/README.md",
-  "contIntegration": "https://github.com/ropensci/ijtiff/actions",
+  "contIntegration": ["https://github.com/ropensci/ijtiff/actions", "https://codecov.io/gh/ropensci/ijtiff"],
   "developmentStatus": "https://www.repostatus.org/#inactive",
   "keywords": ["r", "rstats", "tiff-files", "imagej", "tiff-images", "image-manipulation", "r-package", "peer-reviewed"]
 }
