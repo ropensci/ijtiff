@@ -4,11 +4,13 @@
 \alias{as.raster.ijtiff_img}
 \title{Convert an ijtiff_img object to a raster object for plotting}
 \usage{
-\method{as.raster}{ijtiff_img}(ijt_img)
+\method{as.raster}{ijtiff_img}(x, ...)
 }
 \arguments{
-\item{ijt_img}{An \link{ijtiff_img} object. This should be a 4D array with
+\item{x}{An \link{ijtiff_img} object. This should be a 4D array with
 dimensions representing (y, x, channel, frame).}
+
+\item{...}{Passed to \code{\link[graphics:plot.raster]{graphics::plot.raster()}}.}
 }
 \value{
 A \code{raster} object compatible with \code{\link[graphics:plot.raster]{graphics::plot.raster()}}. The

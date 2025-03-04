@@ -4,8 +4,9 @@
 #' be used with base R graphics functions. The function extracts the first frame
 #' of the image and converts it to an RGB raster representation.
 #'
-#' @param ijt_img An [ijtiff_img] object. This should be a 4D array with
+#' @param x An [ijtiff_img] object. This should be a 4D array with
 #'   dimensions representing (y, x, channel, frame).
+#' @param ... Passed to [graphics::plot.raster()].
 #'
 #' @return A `raster` object compatible with [graphics::plot.raster()]. The
 #'   raster will represent the first frame of the input image.
@@ -28,8 +29,8 @@
 #' plot(raster_img)
 #'
 #' @export
-as.raster.ijtiff_img <- function(ijt_img) {
-  img <- ijt_img[, , , 1, drop = FALSE]
+as.raster.ijtiff_img <- function(x, ...) {
+  img <- x[, , , 1, drop = FALSE]
   if (all(is.na(img))) {
     rlang::abort(
       c(
@@ -74,9 +75,12 @@ as.raster.ijtiff_img <- function(ijt_img) {
     for (y in seq_len(dim(img)[1])) {
       for (x in seq_len(dim(img)[2])) {
         if (any(is.na(c(img[y, x, , 1])))) {
-          mat[y, x] <- rgb(img_max, img_max, img_max, maxColorValue = img_max)
+          mat[y, x] <- grDevices::rgb(
+            img_max, img_max, img_max,
+            maxColorValue = img_max
+          )
         } else {
-          mat[y, x] <- rgb(
+          mat[y, x] <- grDevices::rgb(
             img[y, x, 1, 1],
             img[y, x, 2, 1],
             img[y, x, 3, 1],
@@ -89,16 +93,16 @@ as.raster.ijtiff_img <- function(ijt_img) {
     for (y in seq_len(dim(img)[1])) {
       for (x in seq_len(dim(img)[2])) {
         if (is.na(img[y, x, 1, 1])) {
-          mat[y, x] <- gray(1)
+          mat[y, x] <- grDevices::gray(1)
         } else {
-          mat[y, x] <- gray(
+          mat[y, x] <- grDevices::gray(
             img[y, x, 1, 1] / img_max
           )
         }
       }
     }
   }
-  as.raster(mat)
+  as.raster(mat, ...)
 }
 
 #' Basic image display.

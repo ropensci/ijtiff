@@ -1,7 +1,7 @@
 Type: Package
 Package: ijtiff
 Title: Comprehensive TIFF I/O with Full Support for 'ImageJ' TIFF Files
-Version: 3.0.0
+Version: 3.1.0
 Authors@R: c(
     person("Rory", "Nolan", , "rorynoolan@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5239-4043")),
@@ -32,6 +32,7 @@ Imports:
     dplyr,
     fs (>= 1.5),
     graphics,
+    grDevices,
     jsonlite,
     lubridate,
     magrittr (>= 1.5),
@@ -55,7 +56,6 @@ Suggests:
     spelling,
     testthat (>= 3.0),
     tiff,
-    vdiffr,
     withr
 VignetteBuilder: 
     knitr
