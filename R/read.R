@@ -59,9 +59,7 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
     c("error", "warning", "none"),
     ignore_case = TRUE
   )
-  if (msg) {
-    message("Reading image from ", path)
-  }
+  if (msg) message("Reading image from ", path)
   # First read tags from frame 1 to get initial metadata
   tags1 <- translate_tiff_tags(
     .Call("read_tags_C", path, 1L, PACKAGE = "ijtiff")[[1]]

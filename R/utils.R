@@ -131,34 +131,6 @@ lowest_upper_bound <- function(x, possible_upper_bounds, na_rm = TRUE) {
   return(NA_real_)
 }
 
-#' Fix the resolution unit if necessary.
-#'
-#' The resolution unit is another thing that ImageJ sometimes decides to record
-#' in `ImageDescription` so needs to be allowed for.
-#'
-#' @param x An [ijtiff_img] which optionally has a `description` attribute with
-#'   the contents of `ImageDescription`.
-#'
-#' @return An [ijtiff_img].
-#'
-#' @noRd
-fix_res_unit <- function(x) {
-  desc <- attr(x, "ImageDescription")
-  curr_unit <- attr(x, "ResolutionUnit")
-  if (!is.null(desc) &&
-    startsWith(desc, "ImageJ") &&
-    stringr::str_detect(desc, "\\sunit=.+\\s") &&
-    (is.null(curr_unit) || curr_unit == "No absolute unit of measurement")) {
-    unit <- stringr::str_extract(desc, "(?<=unit=).+?(?=\\s)")
-    if (unit == "inch") {
-      attr(x, "ResolutionUnit") <- "Inch"
-    } else if (unit == "cm") {
-      attr(x, "ResolutionUnit") <- "Centimeter"
-    }
-  }
-  x
-}
-
 #' Does the object read by `read_tif_C()` have a colormap or channels specified
 #' in the weird ImageJ way?
 #'
