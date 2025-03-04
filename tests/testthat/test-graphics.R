@@ -57,8 +57,14 @@ test_that("as.raster correctly handles NA values in RGB images", {
 })
 
 test_that("as.raster works with example TIFF files", {
-  img_gray <- read_tif(system.file("img", "Rlogo-grey.tif", package = "ijtiff"))
-  img_rgb <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
+  img_gray <- read_tif(
+    system.file("img", "Rlogo-grey.tif", package = "ijtiff"),
+    msg = FALSE
+  )
+  img_rgb <- read_tif(
+    system.file("img", "Rlogo.tif", package = "ijtiff"),
+    msg = FALSE
+  )
   raster_gray <- as.raster(img_gray)
   raster_rgb <- as.raster(img_rgb)
   expect_s3_class(raster_gray, "raster")
@@ -97,7 +103,7 @@ test_that("as.raster errors with negative values", {
   class(img) <- "ijtiff_img"
   expect_error(
     as.raster(img),
-    "The `img` object you have supplied contains negative values"
+    "The `img` object you have supplied contains values less  than 0."
   )
 })
 
@@ -106,7 +112,7 @@ test_that("as.raster errors with values greater than 2^32-1", {
   class(img) <- "ijtiff_img"
   expect_error(
     as.raster(img),
-    "The `img` object you have supplied contains values greater than 2^32-1"
+    "The `img` object you have supplied contains values greater  than 2\\^32 - 1."
   )
 })
 

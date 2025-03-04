@@ -169,7 +169,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
             Rf_warning("The \'ijtiff\' package only supports unsigned "
                        "integer or float sample formats, but your image contains "
                        "the signed integer format.");
-        res = Rf_protect(allocVector(REALSXP, imageWidth * imageLength * out_spp));
+        res = PROTECT(allocVector(REALSXP, imageWidth * imageLength * out_spp));
         to_unprotect++;  // res needs to be UNPROTECTed later
         real_arr = REAL(res);
         if (tileWidth == 0) {
@@ -313,7 +313,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
             }
         }
         _TIFFfree(buf);
-        dim = Rf_protect(allocVector(INTSXP, (out_spp > 1) ? 3 : 2));
+        dim = PROTECT(allocVector(INTSXP, (out_spp > 1) ? 3 : 2));
         to_unprotect++;
         INTEGER(dim)[0] = imageLength;
         INTEGER(dim)[1] = imageWidth;
@@ -322,10 +322,10 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
         Rf_unprotect(1);  // UNPROTECT `dim`
         to_unprotect--;
         if (multi_res == R_NilValue) {  // first image in stack
-            multi_res = multi_tail = Rf_protect(Rf_list1(res));
+            multi_res = multi_tail = PROTECT(Rf_list1(res));
             to_unprotect++;  // `multi_res` needs to be UNPROTECTed later
         } else {
-            SEXP q = Rf_protect(Rf_list1(res));
+            SEXP q = PROTECT(Rf_list1(res));
             to_unprotect++;
             SETCDR(multi_tail, q);  // `q` is now PROTECTed as part of `multi_tail`
             multi_tail = q;
@@ -339,7 +339,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
     TIFFClose(tiff);
     R_ClearExternalPtr(tiff_closer);
     
-    res = Rf_protect(PairToVectorList(multi_res));  // convert LISTSXP into VECSXP
+    res = PROTECT(PairToVectorList(multi_res));  // convert LISTSXP into VECSXP
     to_unprotect++;
     Rf_unprotect(to_unprotect);
     return res;
@@ -348,7 +348,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
 SEXP count_directories_C(SEXP sFn /*FileName*/) {
     check_type_sizes();
     int to_unprotect = 0;
-    SEXP res = Rf_protect(allocVector(REALSXP, 1));
+    SEXP res = PROTECT(allocVector(REALSXP, 1));
     to_unprotect++;
     const char *fn;
     tiff_job_t rj;

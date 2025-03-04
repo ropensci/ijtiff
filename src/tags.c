@@ -47,7 +47,9 @@ SEXP get_supported_tags_C(SEXP temp_file_path) {
         INTEGER(tags_vec)[i] = supported_tags[i];
         const TIFFField* field = TIFFFieldWithTag(tiff, supported_tags[i]);
         const char* name = field ? TIFFFieldName(field) : "Unknown";
-        SET_STRING_ELT(tags_names, i, mkChar(name));
+        SEXP charName = PROTECT(mkChar(name));
+        SET_STRING_ELT(tags_names, i, charName);
+        UNPROTECT(1); // unprotect charName
     }
     
     TIFFClose(tiff);
@@ -60,7 +62,7 @@ SEXP get_supported_tags_C(SEXP temp_file_path) {
 SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
     check_type_sizes();
     int to_unprotect = 0;
-    SEXP multi_res = Rf_protect(R_NilValue);
+    SEXP multi_res = PROTECT(R_NilValue);
     to_unprotect++;
     SEXP multi_tail = multi_res;
     const char *fn;
@@ -114,15 +116,15 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
             }
         }
         
-        SEXP cur_tags = Rf_protect(TIFF_get_tags(tiff));
+        SEXP cur_tags = PROTECT(TIFF_get_tags(tiff));
         to_unprotect++;
         
         /* Build a linked list of results */
         if (multi_res == R_NilValue) {  // first image in stack
-            multi_res = multi_tail = Rf_protect(Rf_list1(cur_tags));
+            multi_res = multi_tail = PROTECT(Rf_list1(cur_tags));
             to_unprotect++;  // `multi_res` needs to be UNPROTECTed later
         } else {
-            SEXP q = Rf_protect(Rf_list1(cur_tags));
+            SEXP q = PROTECT(Rf_list1(cur_tags));
             to_unprotect++;
             multi_tail = SETCDR(multi_tail, q);  // `q` is now PROTECTed as part of `multi_tail`
             Rf_unprotect(2);  // removing explit PROTECTion of `q` UNPROTECTing `cur_tags`
@@ -166,16 +168,18 @@ static SEXP get_tag_value(TIFF *tiff, ttag_t tag, TIFFDataType type) {
                 colormap_ptr[i + 2*map_size] = blue[i];     // blue
             }
             SEXP colnames = PROTECT(allocVector(STRSXP, 3));
-            SET_STRING_ELT(colnames, 0, mkChar("red"));
-            SET_STRING_ELT(colnames, 1, mkChar("green"));
-            SET_STRING_ELT(colnames, 2, mkChar("blue"));
+            SEXP redStr = PROTECT(mkChar("red"));
+            SET_STRING_ELT(colnames, 0, redStr);
+            SEXP greenStr = PROTECT(mkChar("green"));
+            SET_STRING_ELT(colnames, 1, greenStr);
+            SEXP blueStr = PROTECT(mkChar("blue"));
+            SET_STRING_ELT(colnames, 2, blueStr);
             SEXP dimnames = PROTECT(allocVector(VECSXP, 2));
             SET_VECTOR_ELT(dimnames, 0, R_NilValue);  // no row names
             SET_VECTOR_ELT(dimnames, 1, colnames);
             setAttrib(colormap, R_DimNamesSymbol, dimnames);
-            out = colormap;
-            UNPROTECT(3);
-            return out;
+            UNPROTECT(6); // 1 for colormap, 1 for colnames, 3 for color strings, 1 for dimnames
+            return colormap;
         }
         return R_NilValue;
     }
@@ -234,7 +238,9 @@ SEXP TIFF_get_tags(TIFF *tiff) {
         if (field) {
             const char *name = TIFFFieldName(field);
             SEXP value = get_tag_value(tiff, supported_tags[i], TIFFFieldDataType(field));
-            SET_STRING_ELT(names, i, mkChar(name));
+            SEXP charName = PROTECT(mkChar(name));
+            SET_STRING_ELT(names, i, charName);
+            UNPROTECT(1); // unprotect charName
             if (value != R_NilValue) {
                 SET_VECTOR_ELT(out, i, value);
             }
