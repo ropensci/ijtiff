@@ -1,7 +1,6 @@
 #' @useDynLib ijtiff
 #' @importFrom magrittr '%>%'
 #' @importFrom rlang '%||%'
-#' @importFrom zeallot '%<-%'
 #' @useDynLib ijtiff, .registration = TRUE
 NULL
 

@@ -35,8 +35,6 @@ test_that("prep_frames() errors correctly", {
 })
 
 test_that("ebimg_check() works correctly", {
-  skip_if_not_installed("mockery")
-  
   # First test: Simulate EBImage is installed
   with_mocked_bindings(
     is_installed = function(...) TRUE,
@@ -45,7 +43,6 @@ test_that("ebimg_check() works correctly", {
       expect_true(ijtiff:::ebimg_check())
     }
   )
-  
   # Second test: Simulate EBImage is not installed
   with_mocked_bindings(
     is_installed = function(...) FALSE,
@@ -60,8 +57,14 @@ test_that("ebimg_check() works correctly", {
 })
 
 test_that("lowest_upper_bound() edge cases work correctly", {
-  expect_equal(ijtiff:::lowest_upper_bound(NA_integer_, 1:5, na_rm = FALSE), NA_real_)
-  expect_equal(ijtiff:::lowest_upper_bound(NA_integer_, 1:5, na_rm = TRUE), NA_real_)
+  expect_equal(
+    ijtiff:::lowest_upper_bound(NA_integer_, 1:5, na_rm = FALSE),
+    NA_real_
+  )
+  expect_equal(
+    ijtiff:::lowest_upper_bound(NA_integer_, 1:5, na_rm = TRUE),
+    NA_real_
+  )
 })
 
 test_that("prep_read() errors correctly in unusual circumstances", {

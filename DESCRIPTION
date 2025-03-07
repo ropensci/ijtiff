@@ -41,22 +41,16 @@ Imports:
     readr,
     rlang (>= 1.0),
     strex (>= 1.5),
-    stringr (>= 1.4),
-    zeallot
+    stringr (>= 1.4)
 Suggests: 
     abind,
     covr,
     EBImage,
     knitr,
-    magick,
-    mockery,
-    pacman,
     rmarkdown,
-    rprojroot,
     spelling,
     testthat (>= 3.0),
-    tiff,
-    withr
+    tiff
 VignetteBuilder: 
     knitr
 Biarch: TRUE
