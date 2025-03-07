@@ -50,7 +50,7 @@ Different tags have different data types and interpretations. Let's examine the 
 
 ```{r tag-examples}
 tags[[1]]$ImageWidth
-tags[[1]]$ImageLength  # Height of the image
+tags[[1]]$ImageLength # Height of the image
 tags[[1]]$XResolution
 tags[[1]]$YResolution
 tags[[1]]$ResolutionUnit

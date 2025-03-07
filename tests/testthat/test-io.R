@@ -19,7 +19,7 @@ test_that("Package 2-channel example I/O works", {
     msg = FALSE
   )
   expect_equal(dim(img4), c(155, 200, 1, 2))
-  expect_in(  # allow for img4 going 16-bit during editing :-(
+  expect_in( # allow for img4 going 16-bit during editing :-(
     list(img3[, , 1, 1]),
     list(img4[, , 1, 1], img4[, , 1, 1] / 2^8)
   )

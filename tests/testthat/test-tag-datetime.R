@@ -19,7 +19,7 @@ test_that("DateTime tag can be written and read correctly", {
 
 test_that("DateTime tag validation works correctly", {
   img <- array(1:24, dim = c(2, 3, 4))
-  
+
   # Test with invalid datetime format directly, using suppressWarnings to avoid the warning
   expect_error(
     suppressWarnings(
@@ -27,7 +27,7 @@ test_that("DateTime tag validation works correctly", {
     ),
     "datetime must be convertible to a valid date-time using lubridate::as_datetime\\(\\). The final format should be 'YYYY:MM:DD HH:MM:SS'."
   )
-  
+
   # Test with NULL (should not error)
   test_tag_write_read("datetime", NULL)
 })

@@ -61,7 +61,7 @@ rgbanana_tif[is.na(rgbanana_tif)] <- max(rgbanana_tif, na.rm = TRUE)
 d <- dim(rgbanana_tif)
 reds <- cbind(rgbanana_tif[, , 1, 1], rgbanana_tif[, , 1, 3]) %>%
   apply(2, \(r) rgb(r, 0, 0, maxColorValue = max(rgbanana_tif, na.rm = TRUE)))
-greens <- cbind(rgbanana_tif[, , 2, 1], rgbanana_tif[, , 2, 3]) %>% 
+greens <- cbind(rgbanana_tif[, , 2, 1], rgbanana_tif[, , 2, 3]) %>%
   apply(2, \(g) rgb(0, g, 0, maxColorValue = max(rgbanana_tif, na.rm = TRUE)))
 to_display <- as.raster(rbind(reds, greens))
 graphics::plot(to_display)

@@ -67,7 +67,8 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
   # Now prepare the read operation with the initial tags
   img_prep <- prep_read(path, frames, tags1, tags = FALSE)
   tags <- .Call("read_tags_C", path, img_prep$frames,
-                PACKAGE = "ijtiff")[img_prep$back_map]
+    PACKAGE = "ijtiff"
+  )[img_prep$back_map]
   tags <- purrr::map(tags, translate_tiff_tags)
   # Read the image data
   out <- .Call("read_tif_C", path, img_prep$frames,

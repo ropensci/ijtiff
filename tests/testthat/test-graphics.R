@@ -49,7 +49,7 @@ test_that("as.raster correctly handles NA values in RGB images", {
     ),
     dim = c(10, 10, 3, 1)
   )
-  img[3, 3, 1, 1] <- NA  # Set one channel of one pixel to NA
+  img[3, 3, 1, 1] <- NA # Set one channel of one pixel to NA
   class(img) <- "ijtiff_img"
   raster_img <- as.raster(img)
   expect_equal(dim(raster_img), c(10, 10))
@@ -82,7 +82,7 @@ test_that("as.raster works with 16-bit images", {
 })
 
 test_that("as.raster works with 32-bit images", {
-  img <- array(seq(0, 4294967295-1, length.out = 100), dim = c(10, 10, 1, 1))
+  img <- array(seq(0, 4294967295 - 1, length.out = 100), dim = c(10, 10, 1, 1))
   class(img) <- "ijtiff_img"
   raster_img <- as.raster(img)
   expect_equal(dim(raster_img), c(10, 10))
@@ -129,7 +129,7 @@ test_that("as.raster handles multi-frame images by using first frame", {
   expect_equal(dim(raster_img), c(10, 10))
   expect_s3_class(raster_img, "raster")
   first_frame_values <- img[, , 1, 1]
-  max_val <- 255  # Since we know the values range from 0 to 255
+  max_val <- 255 # Since we know the values range from 0 to 255
   expected_colors <- matrix("", nrow = 10, ncol = 10)
   for (y in 1:10) {
     for (x in 1:10) {
