@@ -4,7 +4,7 @@
 # ijtiff <img src="man/figures/logo.png" height="140" align="right">
 
 [![R-CMD-check](https://github.com/ropensci/ijtiff/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/ijtiff/actions)
-[![codecov](https://codecov.io/gh/ropensci/ijtiff/graph/badge.svg?token=rNNRw2FU0F)](https://codecov.io/gh/ropensci/ijtiff)
+[![codecov](https://app.codecov.io/gh/ropensci/ijtiff/graph/badge.svg?token=rNNRw2FU0F)](https://app.codecov.io/gh/ropensci/ijtiff)
 
 [![Project Status: Inactive – The project has reached a stable, usable
 state but is no longer being actively developed; support/maintenance
