@@ -1,3 +1,9 @@
+# `ijtiff` 3.1.1
+
+## BUG FIXES
+
+* Fix a `PROTECT`ion error in `tags.c`.
+
 # `ijtiff` 3.1.0
 
 ## MINOR IMPROVEMENTS
