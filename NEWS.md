@@ -1,3 +1,9 @@
+# `ijtiff` 3.1.3
+
+## MINOR IMPROVEMENTS
+
+* Fix `PROTECT`ion error.
+
 # `ijtiff` 3.1.2
 
 ## BUG FIXES
