@@ -154,7 +154,6 @@ if (test_failed) {
     "PKG_CPPFLAGS=", PKG_CFLAGS, "\n",
     "PKG_LIBS=", PKG_LIBS
   )
-  # Use the correct path to Makevars file from the config directory
-  makevars_path <- file.path(getwd(), "../../src/Makevars")
-  writeLines(makevars_content, makevars_path)
+  # When R CMD INSTALL runs this script, we need to write to "src/Makevars" directly
+  writeLines(makevars_content, "src/Makevars")
 }
