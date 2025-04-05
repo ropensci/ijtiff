@@ -26,7 +26,6 @@ static TIFF* create_tiff_at_path(const char* temp_path) {
     if (!tiff) {
         error("Could not create TIFF object at %s", temp_path);
     }
-    
     return tiff;
 }
 
@@ -34,15 +33,11 @@ SEXP get_supported_tags_C(SEXP temp_file_path) {
     if (TYPEOF(temp_file_path) != STRSXP || LENGTH(temp_file_path) < 1) {
         error("Invalid temporary file path");
     }
-    
     const char* path = CHAR(STRING_ELT(temp_file_path, 0));
-    
     SEXP tags_vec = PROTECT(allocVector(INTSXP, n_supported_tags));
     SEXP tags_names = PROTECT(allocVector(STRSXP, n_supported_tags));
-    
     // Create a TIFF file at the specified path
     TIFF* tiff = create_tiff_at_path(path);
-    
     for (size_t i = 0; i < n_supported_tags; i++) {
         INTEGER(tags_vec)[i] = supported_tags[i];
         const TIFFField* field = TIFFFieldWithTag(tiff, supported_tags[i]);
@@ -51,9 +46,7 @@ SEXP get_supported_tags_C(SEXP temp_file_path) {
         SET_STRING_ELT(tags_names, i, charName);
         UNPROTECT(1); // unprotect charName
     }
-    
     TIFFClose(tiff);
-    
     setAttrib(tags_vec, R_NamesSymbol, tags_names);
     UNPROTECT(2);
     return tags_vec;
@@ -69,24 +62,18 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
     tiff_job_t rj;
     TIFF *tiff = NULL;
     FILE *f = NULL;
-    
     if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) < 1) {
         Rf_error("invalid filename");
     }
     fn = CHAR(STRING_ELT(sFn, 0));
-    
     // Initialize rj structure properly
     memset(&rj, 0, sizeof(rj));
-    
     // Create a protected pointer for TIFF cleanup
     SEXP tiff_closer = PROTECT(R_MakeExternalPtr(NULL, R_NilValue, R_NilValue));
     to_unprotect++;
-    
     // Set up finalizer that checks if pointer is NULL before closing
     R_RegisterCFinalizerEx(tiff_closer, (R_CFinalizer_t)cleanup_tiff_ptr, TRUE);
-    
     tiff = open_tiff_file(fn, &rj, &f);
-    
     if (tiff == NULL) {
         // open_tiff_file should have raised an error, but just to be safe:
         if (f) {
@@ -95,14 +82,11 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
         }
         Rf_error("Failed to open TIFF file");
     }
-    
     // Store the TIFF pointer
     R_SetExternalPtrAddr(tiff_closer, tiff);
-    
     int cur_dir = 0; // 1-based image number
     int *sDirs_intptr = INTEGER(sDirs), cur_sDir_index = 0;
     int sDirs_len = LENGTH(sDirs);
-    
     while (cur_sDir_index != sDirs_len) {  // read only from images in desired directories
         ++cur_dir;
         bool is_match = cur_dir == sDirs_intptr[cur_sDir_index];
@@ -115,10 +99,8 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
                 break;  // safety net: I don't expect this line to ever be needed
             }
         }
-        
         SEXP cur_tags = PROTECT(TIFF_get_tags(tiff));
         to_unprotect++;
-        
         /* Build a linked list of results */
         if (multi_res == R_NilValue) {  // first image in stack
             multi_res = multi_tail = PROTECT(Rf_list1(cur_tags));
@@ -130,20 +112,16 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
             Rf_unprotect(2);  // removing explit PROTECTion of `q` UNPROTECTing `cur_tags`
             to_unprotect -= 2;
         }
-        
         if (!TIFFReadDirectory(tiff))
             break;
     }
-    
     // Force cleanup of any internal TIFF buffers before closing
     // This is necessary because libtiff may be keeping internal buffers
     // that aren't properly freed when only reading tags
     TIFFFlush(tiff);
-    
     // Clear the external pointer to avoid double closing
     TIFFClose(tiff);
     R_ClearExternalPtr(tiff_closer);
-    
     Rf_unprotect(to_unprotect);
     return Rf_PairToVectorList(multi_res);
 }
@@ -151,7 +129,6 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
 // Helper function to get tag value based on its type
 static SEXP get_tag_value(TIFF *tiff, ttag_t tag, TIFFDataType type) {
     SEXP out = R_NilValue;
-    
     // Special case for COLORMAP which needs 3 arrays
     if (tag == TIFFTAG_COLORMAP) {
         uint16_t bits_per_sample;
@@ -183,7 +160,6 @@ static SEXP get_tag_value(TIFF *tiff, ttag_t tag, TIFFDataType type) {
         }
         return R_NilValue;
     }
-    
     // Handle the most common TIFF tag types.
     // We only support these types because they are sufficient for basic TIFF metadata
     // and can be directly converted to R types without complex conversions
@@ -237,16 +213,15 @@ SEXP TIFF_get_tags(TIFF *tiff) {
         const TIFFField *field = TIFFFieldWithTag(tiff, supported_tags[i]);
         if (field) {
             const char *name = TIFFFieldName(field);
-            SEXP value = get_tag_value(tiff, supported_tags[i], TIFFFieldDataType(field));
+            SEXP value = PROTECT(get_tag_value(tiff, supported_tags[i], TIFFFieldDataType(field)));
             SEXP charName = PROTECT(mkChar(name));
             SET_STRING_ELT(names, i, charName);
-            UNPROTECT(1); // unprotect charName
+            UNPROTECT(2); // unprotect charName and value
             if (value != R_NilValue) {
                 SET_VECTOR_ELT(out, i, value);
             }
         }
     }
-    
     setAttrib(out, R_NamesSymbol, names);
     UNPROTECT(2);
     return out;
