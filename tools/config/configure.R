@@ -59,16 +59,18 @@ if (pkg_config_available) {
     error = function(cnd) ""
   )
   pkgconfig_success <- any(
-    purrr::map_lgl(
+    sapply(
       list(PKGCONFIG_CFLAGS, PKGCONFIG_LIBS, PKGCONFIG_STATIC_LIBS),
-      ~ isTRUE(nchar(.) > 0)
+      \(x) isTRUE(nchar(x) > 0)
     )
   )
   if (pkgconfig_success) {
     if (length(PKGCONFIG_CFLAGS) == 0) PKGCONFIG_CFLAGS <- ""
     PKGCONFIG_LIBS <- paste(PKGCONFIG_LIBS, PKGCONFIG_STATIC_LIBS)
-    PKGCONFIG_LIBS <- unique(stringr::str_split(PKGCONFIG_LIBS, "\\s+")[[1]])
-    PKGCONFIG_LIBS <- stringr::str_trim(paste(PKGCONFIG_LIBS, collapse = " "))
+    # Split by whitespace, remove empty strings, and make unique
+    pkg_libs_parts <- strsplit(PKGCONFIG_LIBS, "[[:space:]]+")[[1]]
+    pkg_libs_parts <- pkg_libs_parts[pkg_libs_parts != ""]
+    PKGCONFIG_LIBS <- trimws(paste(unique(pkg_libs_parts), collapse = " "))
   }
 }
 
@@ -77,8 +79,8 @@ INCLUDE_DIR <- system2("echo", "$INCLUDE_DIR", stdout = TRUE)
 LIB_DIR <- system2("echo", "$LIB_DIR", stdout = TRUE)
 if (nchar(INCLUDE_DIR) || nchar(LIB_DIR)) {
   cat("Found INCLUDE_DIR and/or LIB_DIR!", "\n")
-  PKG_CFLAGS <- stringr::str_glue("-I{INCLUDE_DIR} {PKG_CFLAGS}")
-  PKG_LIBS <- stringr::str_glue("-L{LIB_DIR} {PKG_LIBS}")
+  PKG_CFLAGS <- paste0("-I", INCLUDE_DIR, " ", PKG_CFLAGS)
+  PKG_LIBS <- paste0("-L", LIB_DIR, " ", PKG_LIBS)
 } else {
   if (nchar(PKGCONFIG_CFLAGS) || nchar(PKGCONFIG_LIBS)) {
     cat("Found pkg-config cflags and/or libs for libtiff!", "\n")
@@ -91,20 +93,18 @@ if (nchar(INCLUDE_DIR) || nchar(LIB_DIR)) {
 
 # pkg-config often says -ljbig and -lLerc are necessary but they seem not to be
 for (lib in c("jbig", "[Ll]erc")) {
-  PKG_LIBS <- stringr::str_replace_all(
-    PKG_LIBS,
-    stringr::str_glue("\\s?-l{lib}(\\s?)"),
-    "\\1"
-  )
+  # Remove -ljbig or -lLerc libraries
+  pattern <- paste0("(^|[[:space:]])-l", lib, "($|[[:space:]])")
+  PKG_LIBS <- gsub(pattern, "\\1\\2", PKG_LIBS)
 }
 
 
-PKG_LIBS <- stringr::str_trim(PKG_LIBS)
-PKG_CFLAGS <- stringr::str_trim(PKG_CFLAGS)
+PKG_LIBS <- trimws(PKG_LIBS)
+PKG_CFLAGS <- trimws(PKG_CFLAGS)
 
 # For debugging
-cat(stringr::str_glue("Using PKG_CFLAGS={PKG_CFLAGS}"), "\n")
-cat(stringr::str_glue("Using PKG_LIBS={PKG_LIBS}"), "\n")
+cat(paste0("Using PKG_CFLAGS=", PKG_CFLAGS), "\n")
+cat(paste0("Using PKG_LIBS=", PKG_LIBS), "\n")
 
 # Find compiler
 CC <- system2(paste0(R.home(), "/bin/R"),
@@ -133,27 +133,28 @@ test_failed <- as.logical(
 if (test_failed) {
   cat(
     "------------------------- ANTICONF ERROR ---------------------------\n",
-    stringr::str_glue(
-      "Configuration failed because {PKG_CONFIG_NAME} was not found. \n",
-      " Try installing:", "\n",
-      "  * deb: {PKG_DEB_NAME} (Debian, Ubuntu, etc)", "\n",
-      "  * rpm: {PKG_RPM_NAME} (Fedora, EPEL)", "\n",
-      "  * brew: {PKG_BREW_NAME} (OSX)", "\n",
-      " If {PKG_CONFIG_NAME} is already installed, check that 'pkg-config'",
+    paste0(
+      "Configuration failed because ", PKG_CONFIG_NAME, " was not found. \n",
+      " Try installing:\n",
+      "  * deb: ", PKG_DEB_NAME, " (Debian, Ubuntu, etc)\n",
+      "  * rpm: ", PKG_RPM_NAME, " (Fedora, EPEL)\n",
+      "  * brew: ", PKG_BREW_NAME, " (OSX)\n",
+      " If ", PKG_CONFIG_NAME, " is already installed, check that 'pkg-config'",
       "\n", " is in your PATH and PKG_CONFIG_PATH contains a ",
-      " {PKG_CONFIG_NAME}.pc file.", "\n",
+      " ", PKG_CONFIG_NAME, ".pc file.\n",
       " If pkg-config is unavailable,",
-      " you can set INCLUDE_DIR and LIB_DIR", "\n", " manually via:", "\n",
-      " `R CMD INSTALL --configure-vars='INCLUDE_DIR=... LIB_DIR=...'`", "\n",
+      " you can set INCLUDE_DIR and LIB_DIR\n manually via:\n",
+      " `R CMD INSTALL --configure-vars='INCLUDE_DIR=... LIB_DIR=...'`\n",
       "--------------------------------------------------------------------"
     )
   )
 } else { # Write to Makevars
-  readr::write_lines(
-    stringr::str_glue(
-      "PKG_CPPFLAGS={PKG_CFLAGS}", "\n",
-      "PKG_LIBS={PKG_LIBS}"
-    ),
-    "src/Makevars"
+  # Use base R to write the Makevars file
+  makevars_content <- paste0(
+    "PKG_CPPFLAGS=", PKG_CFLAGS, "\n",
+    "PKG_LIBS=", PKG_LIBS
   )
+  # Use the correct path to Makevars file from the config directory
+  makevars_path <- file.path(getwd(), "../../src/Makevars")
+  writeLines(makevars_content, makevars_path)
 }
