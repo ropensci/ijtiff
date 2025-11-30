@@ -47,9 +47,11 @@ test_that("resolution values work together with resolutionunit", {
 
   # Write the image with all resolution parameters
   write_tif(img, temp_file,
-    xresolution = xres_value,
-    yresolution = yres_value,
-    resolutionunit = unit_value,
+    tags_to_write = list(
+      xresolution = xres_value,
+      yresolution = yres_value,
+      resolutionunit = unit_value
+    ),
     msg = FALSE
   )
 

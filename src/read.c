@@ -9,20 +9,6 @@
 
 #include <Rinternals.h>
 
-// Helper function for finalizers that safely close a TIFF pointer
-static void cleanup_tiff_ptr(SEXP ptr) {
-    if (!ptr) return;
-    TIFF *tiff = (TIFF*)R_ExternalPtrAddr(ptr);
-    if (tiff) {
-        // If this is the last_tiff, clear that global reference too
-        if (tiff == last_tiff) {
-            last_tiff = NULL;
-        }
-        TIFFClose(tiff);
-        R_ClearExternalPtr(ptr);
-    }
-}
-
 // Helper function to validate filename and open TIFF file
 static TIFF* validate_and_open_tiff(SEXP sFn, tiff_job_t *rj, FILE **f, const char **fn) {
     if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) < 1) Rf_error("invalid filename");

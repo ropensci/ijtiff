@@ -53,19 +53,21 @@ static void set_required_tiff_fields(TIFF *tiff, uint32_t width, uint32_t height
 static void set_optional_tiff_tags(TIFF *tiff, SEXP sXResolution, SEXP sYResolution,
                                   SEXP sResolutionUnit, SEXP sOrientation,
                                   SEXP sXPosition, SEXP sYPosition, SEXP sCopyright,
-                                  SEXP sArtist, SEXP sDocumentName, SEXP sDateTime) {
+                                  SEXP sArtist, SEXP sDocumentName, SEXP sDateTime,
+                                  SEXP sImageDescription) {
   set_float_tag_if_provided(tiff, sXResolution, TIFFTAG_XRESOLUTION);
   set_float_tag_if_provided(tiff, sYResolution, TIFFTAG_YRESOLUTION);
   set_float_tag_if_provided(tiff, sXPosition, TIFFTAG_XPOSITION);
   set_float_tag_if_provided(tiff, sYPosition, TIFFTAG_YPOSITION);
-  
+
   set_int_tag_if_provided(tiff, sResolutionUnit, TIFFTAG_RESOLUTIONUNIT);
   set_int_tag_if_provided(tiff, sOrientation, TIFFTAG_ORIENTATION);
-  
+
   set_string_tag_if_provided(tiff, sCopyright, TIFFTAG_COPYRIGHT);
   set_string_tag_if_provided(tiff, sArtist, TIFFTAG_ARTIST);
   set_string_tag_if_provided(tiff, sDocumentName, TIFFTAG_DOCUMENTNAME);
   set_string_tag_if_provided(tiff, sDateTime, TIFFTAG_DATETIME);
+  set_string_tag_if_provided(tiff, sImageDescription, TIFFTAG_IMAGEDESCRIPTION);
 }
 
 // Helper function to copy data from R array to TIFF buffer
@@ -101,10 +103,11 @@ static void copy_data_to_buffer(tdata_t buf, double *real_arr, uint32_t width,
   }
 }
 
-SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats, 
-                SEXP sXResolution, SEXP sYResolution, SEXP sResolutionUnit, 
-                SEXP sOrientation, SEXP sXPosition, SEXP sYPosition, 
-                SEXP sCopyright, SEXP sArtist, SEXP sDocumentName, SEXP sDateTime) {
+SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats,
+                SEXP sXResolution, SEXP sYResolution, SEXP sResolutionUnit,
+                SEXP sOrientation, SEXP sXPosition, SEXP sYPosition,
+                SEXP sCopyright, SEXP sArtist, SEXP sDocumentName, SEXP sDateTime,
+                SEXP sImageDescription) {
   check_type_sizes();
   
   // Validate and extract basic parameters
@@ -168,9 +171,9 @@ SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats,
     
     // Set required and optional TIFF fields
     set_required_tiff_fields(tiff, width, height, planes, bps, compression, floats);
-    set_optional_tiff_tags(tiff, sXResolution, sYResolution, sResolutionUnit, 
-                          sOrientation, sXPosition, sYPosition, sCopyright, 
-                          sArtist, sDocumentName, sDateTime);
+    set_optional_tiff_tags(tiff, sXResolution, sYResolution, sResolutionUnit,
+                          sOrientation, sXPosition, sYPosition, sCopyright,
+                          sArtist, sDocumentName, sDateTime, sImageDescription);
     
     // Allocate and fill buffer
     tdata_t buf = _TIFFmalloc(width * height * planes * (bps / 8));

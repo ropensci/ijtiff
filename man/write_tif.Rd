@@ -12,16 +12,7 @@ write_tif(
   compression = "none",
   overwrite = FALSE,
   msg = TRUE,
-  xresolution = NULL,
-  yresolution = NULL,
-  resolutionunit = NULL,
-  orientation = NULL,
-  xposition = NULL,
-  yposition = NULL,
-  copyright = NULL,
-  artist = NULL,
-  documentname = NULL,
-  datetime = NULL
+  tags_to_write = NULL
 )
 
 tif_write(
@@ -31,16 +22,7 @@ tif_write(
   compression = "none",
   overwrite = FALSE,
   msg = TRUE,
-  xresolution = NULL,
-  yresolution = NULL,
-  resolutionunit = NULL,
-  orientation = NULL,
-  xposition = NULL,
-  yposition = NULL,
-  copyright = NULL,
-  artist = NULL,
-  documentname = NULL,
-  datetime = NULL
+  tags_to_write = NULL
 )
 }
 \arguments{
@@ -72,52 +54,23 @@ proceed?}
 
 \item{msg}{Print an informative message about the image being written?}
 
-\item{xresolution}{Numeric value specifying the horizontal resolution in
-pixels per unit. This is typically used with \code{resolutionunit} to define the
-physical dimensions of the image.}
-
-\item{yresolution}{Numeric value specifying the vertical resolution in pixels
-per unit. This is typically used with \code{resolutionunit} to define the
-physical dimensions of the image.}
-
-\item{resolutionunit}{Integer specifying the unit of measurement for
-\code{xresolution} and \code{yresolution}. Valid values are: 1 (no absolute unit), 2
-(inch), or 3 (centimeter). Default is 2 (inch) if not specified.}
-
-\item{orientation}{Integer specifying the orientation of the image. Valid
-values are:
+\item{tags_to_write}{A named list of TIFF tags to write. Tag names are
+case-insensitive and hyphens/underscores are ignored (e.g., "X_Resolution",
+"x-resolution", and "xresolution" are all equivalent). Supported tags are:
 \itemize{
-\item 1 = Row 0 top, column 0 left (default)
-\item 2 = Row 0 top, column 0 right
-\item 3 = Row 0 bottom, column 0 right
-\item 4 = Row 0 bottom, column 0 left
-\item 5 = Row 0 left, column 0 top
-\item 6 = Row 0 right, column 0 top
-\item 7 = Row 0 right, column 0 bottom
-\item 8 = Row 0 left, column 0 bottom
+\item \code{xresolution} - Numeric value for horizontal resolution in pixels per
+unit
+\item \code{yresolution} - Numeric value for vertical resolution in pixels per unit
+\item \code{resolutionunit} - Integer: 1 (none), 2 (inch), or 3 (centimeter)
+\item \code{orientation} - Integer 1-8 for image orientation
+\item \code{xposition} - Numeric value for horizontal position in resolution units
+\item \code{yposition} - Numeric value for vertical position in resolution units
+\item \code{copyright} - Character string for copyright notice
+\item \code{artist} - Character string for creator name
+\item \code{documentname} - Character string for document name
+\item \code{datetime} - Date/time (character, Date, or POSIXct)
+\item \code{imagedescription} - Character string for image description
 }}
-
-\item{xposition}{Numeric value specifying the x position of the image in
-resolution units. This is typically used with \code{resolutionunit} to define
-the horizontal position of the image.}
-
-\item{yposition}{Numeric value specifying the y position of the image in
-resolution units. This is typically used with \code{resolutionunit} to define
-the vertical position of the image.}
-
-\item{copyright}{Character string specifying the copyright notice for the
-image.}
-
-\item{artist}{Character string specifying the name of the person who created
-the image.}
-
-\item{documentname}{Character string specifying the name of the document from
-which the image was scanned.}
-
-\item{datetime}{Date/time for the image. Can be provided as a character
-string in format "YYYY:MM:DD HH:MM:SS", a Date object, a POSIXct/POSIXlt
-object, or any object that can be converted to a datetime using
-lubridate::as_datetime(). If NULL (default), no datetime is set.}
 }
 \value{
 The input \code{img} (invisibly).
@@ -128,7 +81,18 @@ Write images into a TIFF file.
 \examples{
 img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 temp_dir <- tempdir()
+
+# Basic write
 write_tif(img, paste0(temp_dir, "/", "Rlogo"))
+
+# Write with tags
+write_tif(img, paste0(temp_dir, "/", "Rlogo_with_tags"),
+          tags_to_write = list(
+            artist = "R Core Team",
+            copyright = "(c) 2024",
+            imagedescription = "The R logo"
+          ))
+
 img <- matrix(1:4, nrow = 2)
 write_tif(img, paste0(temp_dir, "/", "tiny2x2"))
 list.files(temp_dir, pattern = "tif$")

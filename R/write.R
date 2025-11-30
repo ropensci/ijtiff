@@ -18,41 +18,21 @@
 #' @param overwrite If writing the image would overwrite a file, do you want to
 #'   proceed?
 #' @param msg Print an informative message about the image being written?
-#' @param xresolution Numeric value specifying the horizontal resolution in
-#'   pixels per unit. This is typically used with `resolutionunit` to define the
-#'   physical dimensions of the image.
-#' @param yresolution Numeric value specifying the vertical resolution in pixels
-#'   per unit. This is typically used with `resolutionunit` to define the
-#'   physical dimensions of the image.
-#' @param resolutionunit Integer specifying the unit of measurement for
-#'   `xresolution` and `yresolution`. Valid values are: 1 (no absolute unit), 2
-#'   (inch), or 3 (centimeter). Default is 2 (inch) if not specified.
-#' @param orientation Integer specifying the orientation of the image. Valid
-#'   values are:
-#'   * 1 = Row 0 top, column 0 left (default)
-#'   * 2 = Row 0 top, column 0 right
-#'   * 3 = Row 0 bottom, column 0 right
-#'   * 4 = Row 0 bottom, column 0 left
-#'   * 5 = Row 0 left, column 0 top
-#'   * 6 = Row 0 right, column 0 top
-#'   * 7 = Row 0 right, column 0 bottom
-#'   * 8 = Row 0 left, column 0 bottom
-#' @param xposition Numeric value specifying the x position of the image in
-#'   resolution units. This is typically used with `resolutionunit` to define
-#'   the horizontal position of the image.
-#' @param yposition Numeric value specifying the y position of the image in
-#'   resolution units. This is typically used with `resolutionunit` to define
-#'   the vertical position of the image.
-#' @param copyright Character string specifying the copyright notice for the
-#'   image.
-#' @param artist Character string specifying the name of the person who created
-#'   the image.
-#' @param documentname Character string specifying the name of the document from
-#'   which the image was scanned.
-#' @param datetime Date/time for the image. Can be provided as a character
-#'   string in format "YYYY:MM:DD HH:MM:SS", a Date object, a POSIXct/POSIXlt
-#'   object, or any object that can be converted to a datetime using
-#'   lubridate::as_datetime(). If NULL (default), no datetime is set.
+#' @param tags_to_write A named list of TIFF tags to write. Tag names are
+#'   case-insensitive and hyphens/underscores are ignored (e.g., "X_Resolution",
+#'   "x-resolution", and "xresolution" are all equivalent). Supported tags are:
+#'   * `xresolution` - Numeric value for horizontal resolution in pixels per
+#'     unit
+#'   * `yresolution` - Numeric value for vertical resolution in pixels per unit
+#'   * `resolutionunit` - Integer: 1 (none), 2 (inch), or 3 (centimeter)
+#'   * `orientation` - Integer 1-8 for image orientation
+#'   * `xposition` - Numeric value for horizontal position in resolution units
+#'   * `yposition` - Numeric value for vertical position in resolution units
+#'   * `copyright` - Character string for copyright notice
+#'   * `artist` - Character string for creator name
+#'   * `documentname` - Character string for document name
+#'   * `datetime` - Date/time (character, Date, or POSIXct)
+#'   * `imagedescription` - Character string for image description
 #'
 #' @return The input `img` (invisibly).
 #'
@@ -64,29 +44,32 @@
 #' @examples
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' temp_dir <- tempdir()
+#'
+#' # Basic write
 #' write_tif(img, paste0(temp_dir, "/", "Rlogo"))
+#'
+#' # Write with tags
+#' write_tif(img, paste0(temp_dir, "/", "Rlogo_with_tags"),
+#'           tags_to_write = list(
+#'             artist = "R Core Team",
+#'             copyright = "(c) 2024",
+#'             imagedescription = "The R logo"
+#'           ))
+#'
 #' img <- matrix(1:4, nrow = 2)
 #' write_tif(img, paste0(temp_dir, "/", "tiny2x2"))
 #' list.files(temp_dir, pattern = "tif$")
 #' @export
 write_tif <- function(img, path, bits_per_sample = "auto",
                       compression = "none", overwrite = FALSE, msg = TRUE,
-                      xresolution = NULL, yresolution = NULL,
-                      resolutionunit = NULL, orientation = NULL,
-                      xposition = NULL, yposition = NULL,
-                      copyright = NULL, artist = NULL, documentname = NULL,
-                      datetime = NULL) {
+                      tags_to_write = NULL) {
   to_invisibly_return <- img
   if (endsWith(path, "/")) rlang::abort("`path` cannot end with '/'.")
   path <- fs::path_expand(path)
   args <- argchk_write_tif(
     img = img, path = path, bits_per_sample = bits_per_sample,
     compression = compression, overwrite = overwrite, msg = msg,
-    xresolution = xresolution, yresolution = yresolution,
-    resolutionunit = resolutionunit, orientation = orientation,
-    xposition = xposition, yposition = yposition,
-    copyright = copyright, artist = artist, documentname = documentname,
-    datetime = datetime
+    tags_to_write = tags_to_write
   )
   d <- dim(args$img)
   floats <- anyNA(args$img) || (!can_be_intish(args$img))
@@ -197,36 +180,28 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     }
   }
   if (args$msg) {
-    bps <- args$bits_per_sample %>%
-      {
-        dplyr::case_when(
-          . == 8 ~ "an 8-bit, ",
-          . == 16 ~ "a 16-bit, ",
-          . == 32 ~ "a 32-bit, ",
-          TRUE ~ "a 0-bit, "
-        )
-      }
+    bps <- format_bps_message(args$bits_per_sample)
     message(
       "Writing ", args$path, ": ", bps, d[1], "x", d[2], " pixel image of ",
       ifelse(floats, "floating point", "unsigned integer"),
-      " type with ", d[3],
-      " ", "channel", ifelse(d[3] > 1, "s", ""), " and ",
-      d[4], " frame", ifelse(d[4] > 1, "s", ""), " . . ."
+      " type with ", format_dims_message(d[3], d[4]), " . . ."
     )
   }
   what <- enlist_img(args$img)
+  tags <- args$tags_to_write
   written <- .Call("write_tif_C", what, args$path, args$bits_per_sample, args$compression,
     floats,
-    args$xresolution,
-    args$yresolution,
-    args$resolutionunit,
-    args$orientation,
-    args$xposition,
-    args$yposition,
-    args$copyright,
-    args$artist,
-    args$documentname,
-    args$datetime,
+    tags$xresolution,
+    tags$yresolution,
+    tags$resolutionunit,
+    tags$orientation,
+    tags$xposition,
+    tags$yposition,
+    tags$copyright,
+    tags$artist,
+    tags$documentname,
+    tags$datetime,
+    tags$imagedescription,
     PACKAGE = "ijtiff"
   )
   if (args$msg) message("\b Done.")
@@ -237,11 +212,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
 #' @export
 tif_write <- function(img, path, bits_per_sample = "auto",
                       compression = "none", overwrite = FALSE, msg = TRUE,
-                      xresolution = NULL, yresolution = NULL,
-                      resolutionunit = NULL, orientation = NULL,
-                      xposition = NULL, yposition = NULL,
-                      copyright = NULL, artist = NULL, documentname = NULL,
-                      datetime = NULL) {
+                      tags_to_write = NULL) {
   write_tif(
     img = img,
     path = path,
@@ -249,15 +220,6 @@ tif_write <- function(img, path, bits_per_sample = "auto",
     compression = compression,
     overwrite = overwrite,
     msg = msg,
-    xresolution = xresolution,
-    yresolution = yresolution,
-    resolutionunit = resolutionunit,
-    orientation = orientation,
-    xposition = xposition,
-    yposition = yposition,
-    copyright = copyright,
-    artist = artist,
-    documentname = documentname,
-    datetime = datetime
+    tags_to_write = tags_to_write
   )
 }

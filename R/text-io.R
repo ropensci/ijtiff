@@ -56,9 +56,7 @@ write_txt_img <- function(img, path, rds = FALSE, msg = TRUE) {
   if (msg) {
     message(
       "Writing ", msg_paths, ": a ", d[1], "x", d[2],
-      " pixel text image with ", d[3],
-      " ", "channel", ifelse(d[3] > 1, "s", ""), " and ",
-      d[4], " frame", ifelse(d[4] > 1, "s", ""), " . . ."
+      " pixel text image with ", format_dims_message(d[3], d[4]), " . . ."
     )
   }
   dfs <- purrr::map(

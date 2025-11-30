@@ -12,19 +12,18 @@ create_test_image <- function() {
 #' @param tag_name The name of the tag as used in write_tif
 #' @return The proper tag name for accessing in tags
 get_proper_tag_name <- function(tag_name) {
-  # Special case for tag names with 'resolution' in them
-  if (tag_name == "xresolution") {
-    return("XResolution")
-  } else if (tag_name == "yresolution") {
-    return("YResolution")
-  } else if (tag_name == "resolutionunit") {
-    return("ResolutionUnit")
-  } else if (tag_name == "datetime") {
-    return("DateTime")
-  } else {
-    # For other tags, capitalize the first letter
-    return(paste0(toupper(substr(tag_name, 1, 1)), substr(tag_name, 2, nchar(tag_name))))
-  }
+  switch(tag_name,
+    xresolution = "XResolution",
+    yresolution = "YResolution",
+    resolutionunit = "ResolutionUnit",
+    datetime = "DateTime",
+    imagedescription = "ImageDescription",
+    xposition = "XPosition",
+    yposition = "YPosition",
+    documentname = "DocumentName",
+    # Default: capitalize first letter
+    paste0(toupper(substr(tag_name, 1, 1)), substr(tag_name, 2, nchar(tag_name)))
+  )
 }
 
 #' Test that a tag can be written and read back
@@ -45,7 +44,8 @@ test_tag_write_read <- function(tag_name, tag_value, expected_value = NULL, writ
 
   # Prepare arguments for write_tif
   args <- list(img = img, path = temp_file, msg = FALSE)
-  args[[tag_name]] <- tag_value
+  args$tags_to_write <- list()
+  args$tags_to_write[[tag_name]] <- tag_value
   args <- c(args, write_args)
 
   # Write the image with the tag
@@ -99,7 +99,8 @@ test_tag_valid_values <- function(tag_name, valid_values, expected_values = NULL
 
     # Prepare arguments for write_tif
     args <- list(img = img, path = temp_file, overwrite = TRUE, msg = FALSE)
-    args[[tag_name]] <- val
+    args$tags_to_write <- list()
+    args$tags_to_write[[tag_name]] <- val
     args <- c(args, write_args)
 
     # Should not error
@@ -125,7 +126,8 @@ test_tag_invalid_values <- function(tag_name, invalid_values, write_args = list(
   for (val in invalid_values) {
     # Prepare arguments for write_tif
     args <- list(img = img, path = temp_file, msg = FALSE)
-    args[[tag_name]] <- val
+    args$tags_to_write <- list()
+    args$tags_to_write[[tag_name]] <- val
     args <- c(args, write_args)
 
     # Should error

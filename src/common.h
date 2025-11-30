@@ -20,6 +20,9 @@ TIFF *TIFF_Open(const char *mode, tiff_job_t *rj);
 // Cleanup function to make sure all TIFF resources are released
 void cleanup_tiff(void);
 
+// Helper function for finalizers that safely close a TIFF pointer
+void cleanup_tiff_ptr(SEXP ptr);
+
 // Helper function to open a TIFF file
 TIFF* open_tiff_file(const char* filename, tiff_job_t* rj, FILE** f);
 

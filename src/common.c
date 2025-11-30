@@ -105,6 +105,20 @@ void cleanup_tiff(void)
   }
 }
 
+// Helper function for finalizers that safely close a TIFF pointer
+void cleanup_tiff_ptr(SEXP ptr) {
+    if (!ptr) return;
+    TIFF *tiff = (TIFF*)R_ExternalPtrAddr(ptr);
+    if (tiff) {
+        // If this is the last_tiff, clear that global reference too
+        if (tiff == last_tiff) {
+            last_tiff = NULL;
+        }
+        TIFFClose(tiff);
+        R_ClearExternalPtr(ptr);
+    }
+}
+
 static tsize_t TIFFReadProc_(thandle_t usr, tdata_t buf, tsize_t length) {
   tiff_job_t *rj = (tiff_job_t*) usr;  // rj is read_job
   tsize_t to_read = length;

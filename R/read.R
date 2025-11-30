@@ -110,15 +110,7 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
     }
   } else if (msg) {
     ints <- attr(out, "SampleFormat") %in% c("uint", "uint8", "int")
-    bps <- attr(out, "BitsPerSample") %>%
-      {
-        dplyr::case_when(
-          . == 8 ~ "an 8-bit, ",
-          . == 16 ~ "a 16-bit, ",
-          . == 32 ~ "a 32-bit, ",
-          TRUE ~ paste0("a ", ., "-bit, ")
-        )
-      }
+    bps <- format_bps_message(attr(out, "BitsPerSample"))
     type <- if (ints) "integer" else "float"
     message(
       stringr::str_glue(

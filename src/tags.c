@@ -6,20 +6,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-// Helper function for finalizers that safely close a TIFF pointer
-static void cleanup_tiff_ptr(SEXP ptr) {
-    if (!ptr) return;
-    TIFF *tiff = (TIFF*)R_ExternalPtrAddr(ptr);
-    if (tiff) {
-        // If this is the last_tiff, clear that global reference too
-        if (tiff == last_tiff) {
-            last_tiff = NULL;
-        }
-        TIFFClose(tiff);
-        R_ClearExternalPtr(ptr);
-    }
-}
-
 // Helper function to create a TIFF file at the specified path
 static TIFF* create_tiff_at_path(const char* temp_path) {
     TIFF* tiff = TIFFOpen(temp_path, "w");

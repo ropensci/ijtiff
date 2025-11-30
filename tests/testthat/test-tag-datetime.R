@@ -23,7 +23,8 @@ test_that("DateTime tag validation works correctly", {
   # Test with invalid datetime format directly, using suppressWarnings to avoid the warning
   expect_error(
     suppressWarnings(
-      write_tif(img, tempfile(fileext = ".tif"), datetime = "invalid-date")
+      write_tif(img, tempfile(fileext = ".tif"),
+                tags_to_write = list(datetime = "invalid-date"))
     ),
     "datetime must be convertible to a valid date-time using lubridate::as_datetime\\(\\). The final format should be 'YYYY:MM:DD HH:MM:SS'."
   )

@@ -40,7 +40,9 @@ test_that("x and y resolution can be set together", {
   on.exit(if (file.exists(temp_file)) file.remove(temp_file), add = TRUE)
 
   # Write the image with both resolutions
-  write_tif(img, temp_file, xresolution = xres_value, yresolution = yres_value, msg = FALSE)
+  write_tif(img, temp_file,
+            tags_to_write = list(xresolution = xres_value, yresolution = yres_value),
+            msg = FALSE)
 
   # Read the image and check if both resolutions are preserved
   tags <- read_tags(temp_file)

@@ -1,3 +1,40 @@
+#' Normalize TIFF tag name
+#'
+#' Converts tag name to lowercase and removes hyphens and underscores
+#'
+#' @param name A character string
+#'
+#' @return A normalized character string
+#'
+#' @noRd
+normalize_tag_name <- function(name) {
+  name |>
+    tolower() |>
+    stringr::str_remove_all("[-_]")
+}
+
+#' Format bits-per-sample for user messages
+#' @param bps Bits per sample value
+#' @return Formatted string like "an 8-bit, "
+#' @noRd
+format_bps_message <- function(bps) {
+  dplyr::case_when(
+    bps == 8 ~ "an 8-bit, ",
+    bps == 16 ~ "a 16-bit, ",
+    bps == 32 ~ "a 32-bit, ",
+    TRUE ~ paste0("a ", bps, "-bit, ")
+  )
+}
+
+#' Format channel/frame count for messages
+#' @noRd
+format_dims_message <- function(n_channels, n_frames) {
+  paste0(
+    n_channels, " channel", if (n_channels > 1) "s" else "", " and ",
+    n_frames, " frame", if (n_frames > 1) "s" else ""
+  )
+}
+
 #' Prep an [ijtiff_img]-style array for `write_tif_C()`.
 #'
 #' It has to be a list of 3-dimensional arrays. Heavy lifting done in C++ by
