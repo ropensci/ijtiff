@@ -1,12 +1,23 @@
 # `ijtiff` 3.2.0
 
+## NEW FEATURES
+
+* `write_tif()` now uses a `tags_to_write` parameter that accepts a named list of TIFF tags, consolidating support for all writable tags (previously used individual parameters).
+* Support for writing `imagedescription` TIFF tag (tag 270) for OME-TIFF metadata.
+* Automatic metadata preservation: TIFF tags are automatically extracted from image attributes (e.g., from `read_tif()`) and included when writing, enabling round-trip editing without metadata loss.
+* Tag name normalization: tag names in `tags_to_write` are now case-insensitive and ignore hyphens/underscores.
+* Compression and bits-per-sample overrides: `tags_to_write` can now override `compression` and `bits_per_sample` parameters.
+
 ## MINOR IMPROVEMENTS
 
 * Replace `vapply()` with `purrr::map_chr()` in tag normalization for cleaner, more consistent code style.
+* Refactored argument checking logic for better organization.
 
 ## TESTS
 
-* Add comprehensive test suite for automatic metadata pass-through feature (`test-metadata-passthrough.R`).
+* Add comprehensive test suite for automatic metadata pass-through and attribute tag handling (39 new tests).
+* Add tests for compression override via `tags_to_write` (11 tests).
+* Add tests for `bits_per_sample` override via `tags_to_write` (9 tests).
 
 # `ijtiff` 3.1.3
 
