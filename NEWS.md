@@ -1,3 +1,13 @@
+# `ijtiff` 3.2.0
+
+## MINOR IMPROVEMENTS
+
+* Replace `vapply()` with `purrr::map_chr()` in tag normalization for cleaner, more consistent code style.
+
+## TESTS
+
+* Add comprehensive test suite for automatic metadata pass-through feature (`test-metadata-passthrough.R`).
+
 # `ijtiff` 3.1.3
 
 ## MINOR IMPROVEMENTS
