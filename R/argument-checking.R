@@ -34,7 +34,7 @@ get_tags_from_attributes <- function(img) {
   allowed_tags <- get_allowed_tags()
 
   # Normalize attribute names and check if they match allowed tags
-  normalized_names <- vapply(names(attrs), normalize_tag_name, character(1))
+  normalized_names <- purrr::map_chr(names(attrs), normalize_tag_name)
 
   # Keep only attributes that match allowed tags
   matching_indices <- normalized_names %in% allowed_tags
@@ -71,8 +71,7 @@ validate_tags_to_write <- function(tags_to_write) {
 
   allowed_tags <- get_allowed_tags()
 
-  normalized_names <- vapply(names(tags_to_write), normalize_tag_name,
-                             character(1))
+  normalized_names <- purrr::map_chr(names(tags_to_write), normalize_tag_name)
   invalid_names <- normalized_names[!normalized_names %in% allowed_tags]
 
   if (length(invalid_names) > 0) {

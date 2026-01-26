@@ -15,3 +15,5 @@ scratch.*
 /doc/
 /Meta/
 .*Rcheck
+.serena
+*.Rout
