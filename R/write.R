@@ -20,7 +20,16 @@
 #' @param msg Print an informative message about the image being written?
 #' @param tags_to_write A named list of TIFF tags to write. Tag names are
 #'   case-insensitive and hyphens/underscores are ignored (e.g., "X_Resolution",
-#'   "x-resolution", and "xresolution" are all equivalent). Supported tags are:
+#'   "x-resolution", and "xresolution" are all equivalent). 
+#'   
+#'   If `NULL` (the default), any supported TIFF tags present as attributes on
+#'   `img` (e.g., from `read_tif()`) will be automatically extracted and written.
+#'   If `tags_to_write` is specified, it is merged with auto-detected tags, with
+#'   explicit tags taking precedence. This enables round-trip editing where
+#'   metadata from a read image is preserved on re-export unless explicitly
+#'   overridden.
+#'   
+#'   Supported tags are:
 #'   * `xresolution` - Numeric value for horizontal resolution in pixels per
 #'     unit
 #'   * `yresolution` - Numeric value for vertical resolution in pixels per unit
@@ -48,8 +57,14 @@
 #' # Basic write
 #' write_tif(img, paste0(temp_dir, "/", "Rlogo"))
 #'
-#' # Write with tags
-#' write_tif(img, paste0(temp_dir, "/", "Rlogo_with_tags"),
+#' # Round-trip with automatic metadata preservation
+#' # Metadata from read_tif is automatically preserved
+#' img_with_metadata <- read_tif(system.file("img", "Rlogo.tif", 
+#'                                           package = "ijtiff"))
+#' write_tif(img_with_metadata, paste0(temp_dir, "/", "Rlogo_preserved"))
+#'
+#' # Write with additional/overridden tags
+#' write_tif(img_with_metadata, paste0(temp_dir, "/", "Rlogo_with_tags"),
 #'           tags_to_write = list(
 #'             artist = "R Core Team",
 #'             copyright = "(c) 2024",
