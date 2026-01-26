@@ -31,3 +31,5 @@
 ^scratch\..+$
 ^doc$
 ^Meta$
+^.*.Rout$
+^.serena$

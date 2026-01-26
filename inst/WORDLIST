@@ -4,7 +4,6 @@ CMD
 DOI
 FCS
 Grayscale
-HH
 Hacky
 Homebrew
 ImageDepth
@@ -12,9 +11,9 @@ ImageJ
 JBIG
 LUTs
 Messasges
+OME
 ORCID
 POSIXct
-POSIXlt
 Parra
 PlanarConfig
 README
@@ -27,7 +26,6 @@ TIFFs
 Threshholding
 XResolution
 YResolution
-YYYY
 awaresystems
 bona
 codecov
@@ -35,7 +33,6 @@ coercible
 colormaps
 colour
 colours
-datetime
 fide
 github
 grayscale
@@ -44,7 +41,6 @@ imagej
 img
 libtiff
 linescan
-lubridate
 md
 nd
 rOpenSci
@@ -54,3 +50,4 @@ softwares
 th
 tifftags
 www
+xresolution

@@ -120,7 +120,7 @@ extract_desired_plane <- function(arr) {
 
 #' Compute the desired plane.
 #'
-#' This function wraps [extract_desired_plane()]. Sometimes the TIFF reading is
+#' This function wraps `extract_desired_plane()`. Sometimes the TIFF reading is
 #' weird and you get more planes than you wanted, but one of them is clearly the
 #' right one. This function will pluck that out for you. If the images have a
 #' color palette, that conversion takes place here too.
