@@ -2,12 +2,30 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #include <limits.h>
 
 #include "common.h"
 
 #include <Rinternals.h>
 #include <Rversion.h>
+
+// Format the message, close+neutralize the TIFF handle while rj is still on the
+// live stack, then raise the R error. Mirrors read.c's handle_error: rj is a
+// stack local in write_tif_C, so the close MUST happen synchronously here (while
+// rj is alive) -- deferring it to the external-pointer finalizer would run
+// TIFFClose against a dead stack frame. cleanup_tiff_ptr does TIFFClose (which,
+// for the in-memory job, frees rj.data because rj.alloc != 0) +
+// R_ClearExternalPtr (so the finalizer cannot re-close) + resets last_tiff.
+static void write_handle_error(SEXP tiff_closer, const char *message, ...) {
+  char buf[1024];
+  va_list args;
+  va_start(args, message);
+  vsnprintf(buf, sizeof(buf), message, args);
+  va_end(args);
+  cleanup_tiff_ptr(tiff_closer);
+  Rf_error("%s", buf);
+}
 
 // Helper function to set a float tag if not NULL
 static void set_float_tag_if_provided(TIFF *tiff, SEXP value, ttag_t tag) {
@@ -154,19 +172,35 @@ SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats,
     Rf_error("cannot create TIFF structure");
   }
 
+  // write_tif_C has no other owner of the handle, so register an
+  // external-pointer finalizer exactly like read_tif_C, as a backstop for a
+  // libtiff-internal error that longjmps past the manual TIFFClose (without it
+  // that leaks the TIFF handle and, for the in-memory job, the malloc'd rj.data
+  // buffer). cleanup_tiff_ptr closes once when tiff_closer becomes unreachable,
+  // and the in-memory close proc frees rj.data because rj.alloc != 0.
+  // write_tif_C's OWN post-open errors instead close synchronously via
+  // write_handle_error (rj is a stack local, so the close must happen while rj
+  // is still alive rather than being deferred to the finalizer). On the success
+  // paths we close manually and R_ClearExternalPtr so the finalizer can never
+  // double-close.
+  SEXP tiff_closer = PROTECT(R_MakeExternalPtr(NULL, R_NilValue, R_NilValue));
+  R_RegisterCFinalizerEx(tiff_closer, (R_CFinalizer_t)cleanup_tiff_ptr, TRUE);
+  R_SetExternalPtrAddr(tiff_closer, tiff);
+
   // Process each image
   while (true) {
     // Get current image from list if applicable
     if (img_list) image = VECTOR_ELT(img_list, img_index++);
     
-    // Validate image
+    // Validate image (handle is open here: close synchronously on error)
     if (TYPEOF(image) != REALSXP && TYPEOF(image) != INTSXP)
-      Rf_error("image must be a numeric array");
-    
+      write_handle_error(tiff_closer, "image must be a numeric array");
+
     dims = Rf_getAttrib(image, R_DimSymbol);
     if (dims == R_NilValue || TYPEOF(dims) != INTSXP ||
         LENGTH(dims) < 2 || LENGTH(dims) > 3) {
-      Rf_error("image must be an array of two or three dimensions");
+      write_handle_error(tiff_closer,
+                         "image must be an array of two or three dimensions");
     }
     
     // Extract image dimensions
@@ -183,7 +217,7 @@ SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats,
     
     // Allocate and fill buffer
     tdata_t buf = _TIFFmalloc(width * height * planes * (bps / 8));
-    if (!buf) Rf_error("cannot allocate output image buffer");
+    if (!buf) write_handle_error(tiff_closer, "cannot allocate output image buffer");
     
     double *real_arr = REAL(image);
     copy_data_to_buffer(buf, real_arr, width, height, planes, bps, floats);
@@ -203,12 +237,15 @@ SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats,
   if (to_memory) {
     SEXP res;
     TIFFFlush(tiff);
-    res = PROTECT(allocVector(RAWSXP, rj.len));
+    res = PROTECT(allocVector(RAWSXP, rj.len));  // extract bytes BEFORE close
     memcpy(RAW(res), rj.data, rj.len);
     TIFFClose(tiff);   // frees rj.data via close proc
-    UNPROTECT(1);
+    R_ClearExternalPtr(tiff_closer);  // finalizer must not double-close
+    UNPROTECT(2);      // res + tiff_closer
     return res;
   }
   TIFFClose(tiff);
+  R_ClearExternalPtr(tiff_closer);  // finalizer must not double-close
+  UNPROTECT(1);        // tiff_closer
   return ScalarInteger(n_img);
 }
