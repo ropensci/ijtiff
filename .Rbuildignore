@@ -33,3 +33,5 @@
 ^Meta$
 ^.*.Rout$
 ^.serena$
+^data-raw$
+^\.superpowers$
