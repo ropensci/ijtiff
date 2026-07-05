@@ -44,6 +44,8 @@
 #'   * `documentname` - Character string for document name
 #'   * `datetime` - Date/time (character, Date, or POSIXct)
 #'   * `imagedescription` - Character string for image description
+#'   * `photometric` - `"RGB"`, `"BlackIsZero"`, or `"WhiteIsZero"` (or
+#'     integer code 0/1/2). Default is `"BlackIsZero"`.
 #'
 #' @return The input `img` (invisibly), or — when `path = NULL` — a raw
 #'   vector of the TIFF bytes.
@@ -225,6 +227,7 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     tags$documentname,
     tags$datetime,
     tags$imagedescription,
+    tags$photometric,
     PACKAGE = "ijtiff"
   )
   if (to_memory) {

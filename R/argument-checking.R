@@ -6,7 +6,8 @@ get_allowed_tags <- function() {
   c(
     "xresolution", "yresolution", "resolutionunit", "orientation",
     "xposition", "yposition", "copyright", "artist", "documentname",
-    "datetime", "imagedescription", "compression", "bitspersample"
+    "datetime", "imagedescription", "compression", "bitspersample",
+    "photometric"
   )
 }
 
@@ -35,6 +36,11 @@ get_tags_from_attributes <- function(img) {
 
   # Normalize attribute names and check if they match allowed tags
   normalized_names <- purrr::map_chr(names(attrs), normalize_tag_name)
+  # PhotometricInterpretation attribute -> the writable `photometric` tag.
+  # This rename must happen BEFORE the allowed-tags filter below, because
+  # normalize_tag_name() turns "PhotometricInterpretation" into
+  # "photometricinterpretation", which is not itself an allowed tag name.
+  normalized_names[normalized_names == "photometricinterpretation"] <- "photometric"
 
   # Keep only attributes that match allowed tags
   matching_indices <- normalized_names %in% allowed_tags
@@ -53,6 +59,19 @@ get_tags_from_attributes <- function(img) {
   #  orientation comes as "top_left" etc. but needs 1-8)
   excluded_tags <- c("resolutionunit", "orientation")
   result <- result[!names(result) %in% excluded_tags]
+
+  # Silently drop an auto-extracted `photometric` whose value this writer
+  # cannot produce (Palette/CMYK/YCbCr/CIELab/TransparencyMask/...) so that
+  # round-tripping such an image does not hard-error. Only an EXPLICIT
+  # `tags_to_write = list(photometric = ...)` with an unwritable value should
+  # error (handled in argchk_write_tif).
+  if ("photometric" %in% names(result)) {
+    pm <- result[["photometric"]]
+    writable <- c("whiteiszero", "miniswhite", "blackiszero", "minisblack", "rgb")
+    ok <- (is.character(pm) && tolower(pm) %in% writable) ||
+      (is.numeric(pm) && pm %in% c(0, 1, 2))
+    if (!ok) result[["photometric"]] <- NULL # drop, do not error, on round-trip
+  }
 
   result
 }
@@ -260,6 +279,45 @@ argchk_write_tif <- function(img, path, bits_per_sample, compression,
   # Validate enum tags
   validate_enum_tag(tags_to_write, "resolutionunit", c(1, 2, 3))
   validate_enum_tag(tags_to_write, "orientation", 1:8)
+
+  # Translate/validate `photometric` (surviving auto-extracted value, or an
+  # explicit one from `tags_to_write`) into the integer TIFF photometric
+  # code. Auto-extracted values were already filtered to writable ones in
+  # get_tags_from_attributes(); an EXPLICIT unwritable value errors here.
+  if (!is.null(tags_to_write$photometric)) {
+    pm <- tags_to_write$photometric
+    codes <- c(
+      WhiteIsZero = 0L, MinIsWhite = 0L, BlackIsZero = 1L,
+      MinIsBlack = 1L, RGB = 2L
+    )
+    if (is.character(pm)) {
+      if (!tolower(pm) %in% tolower(names(codes))) {
+        rlang::abort(c(
+          "`photometric` must be one of WhiteIsZero, BlackIsZero, or RGB.",
+          x = stringr::str_glue("You supplied '{pm}', which this writer cannot produce.")
+        ))
+      }
+      key <- strex::match_arg(pm, names(codes), ignore_case = TRUE)
+      tags_to_write$photometric <- codes[[key]]
+    } else {
+      checkmate::assert_integerish(pm, len = 1)
+      if (!pm %in% c(0L, 1L, 2L)) {
+        rlang::abort("`photometric` code must be 0 (WhiteIsZero), 1 (BlackIsZero) or 2 (RGB).")
+      }
+      tags_to_write$photometric <- as.integer(pm)
+    }
+    # RGB requires 3 (RGB) or 4 (RGBA) planes -- reject an invalid combination
+    # rather than writing a malformed TIFF other readers will refuse.
+    if (identical(tags_to_write$photometric, 2L)) {
+      n_planes <- if (length(dim(img)) >= 3) dim(img)[3] else 1L
+      if (!n_planes %in% c(3L, 4L)) {
+        rlang::abort(c(
+          "`photometric = \"RGB\"` requires a 3- or 4-channel image.",
+          x = stringr::str_glue("Your image has {n_planes} channel(s).")
+        ))
+      }
+    }
+  }
 
   # Validate string tags
   purrr::walk(

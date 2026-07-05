@@ -42,6 +42,7 @@ test_that("a write error after the TIFF handle is open leaves the session health
   expect_error(
     .Call("write_tif_C", bad_list, f, 8L, 1L, FALSE,
           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+          NULL,
           PACKAGE = "ijtiff"),
     "image must be a numeric array"
   )
@@ -49,6 +50,7 @@ test_that("a write error after the TIFF handle is open leaves the session health
   expect_error(
     .Call("write_tif_C", bad_list, NULL, 8L, 1L, FALSE,
           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+          NULL,
           PACKAGE = "ijtiff"),
     "image must be a numeric array"
   )

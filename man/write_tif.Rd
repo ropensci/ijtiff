@@ -81,6 +81,8 @@ unit
 \item \code{documentname} - Character string for document name
 \item \code{datetime} - Date/time (character, Date, or POSIXct)
 \item \code{imagedescription} - Character string for image description
+\item \code{photometric} - \code{"RGB"}, \code{"BlackIsZero"}, or \code{"WhiteIsZero"} (or
+integer code 0/1/2). Default is \code{"BlackIsZero"}.
 }}
 }
 \value{

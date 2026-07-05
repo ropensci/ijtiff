@@ -51,9 +51,9 @@ static void set_string_tag_if_provided(TIFF *tiff, SEXP value, ttag_t tag) {
 }
 
 // Helper function to set all required TIFF fields
-static void set_required_tiff_fields(TIFF *tiff, uint32_t width, uint32_t height, 
-                                    uint32_t planes, int bps, int compression, 
-                                    bool floats) {
+static void set_required_tiff_fields(TIFF *tiff, uint32_t width, uint32_t height,
+                                    uint32_t planes, int bps, int compression,
+                                    bool floats, int photometric) {
   TIFFSetField(tiff, TIFFTAG_IMAGEWIDTH, width);
   TIFFSetField(tiff, TIFFTAG_IMAGELENGTH, height);
   TIFFSetField(tiff, TIFFTAG_PLANARCONFIG, 1);
@@ -63,7 +63,14 @@ static void set_required_tiff_fields(TIFF *tiff, uint32_t width, uint32_t height
   TIFFSetField(tiff, TIFFTAG_SAMPLEFORMAT, floats ? SAMPLEFORMAT_IEEEFP : SAMPLEFORMAT_UINT);
   TIFFSetField(tiff, TIFFTAG_ROWSPERSTRIP, height);
   TIFFSetField(tiff, TIFFTAG_COMPRESSION, compression);
-  TIFFSetField(tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK);
+  TIFFSetField(tiff, TIFFTAG_PHOTOMETRIC, photometric);
+  // Set ExtraSamples ONLY for RGBA (RGB + 4th alpha plane). Do NOT touch the
+  // MINISBLACK path -- adding ExtraSamples there would change the bytes of
+  // every existing multi-channel write for no functional gain.
+  if (photometric == PHOTOMETRIC_RGB && planes == 4) {
+    uint16_t extra[1] = { EXTRASAMPLE_UNASSALPHA };
+    TIFFSetField(tiff, TIFFTAG_EXTRASAMPLES, 1, extra);
+  }
 }
 
 // Helper function to set all optional TIFF tags
@@ -124,8 +131,13 @@ SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats,
                 SEXP sXResolution, SEXP sYResolution, SEXP sResolutionUnit,
                 SEXP sOrientation, SEXP sXPosition, SEXP sYPosition,
                 SEXP sCopyright, SEXP sArtist, SEXP sDocumentName, SEXP sDateTime,
-                SEXP sImageDescription) {
+                SEXP sImageDescription, SEXP sPhotometric) {
   check_type_sizes();
+
+  // Photometric interpretation: default MINISBLACK unless the R side has
+  // resolved an explicit/auto-extracted writable photometric code.
+  int photometric = (sPhotometric == R_NilValue)
+      ? PHOTOMETRIC_MINISBLACK : asInteger(sPhotometric);
   
   // Validate and extract basic parameters
   int bps = asInteger(sBPS);
@@ -209,7 +221,8 @@ SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats,
     if (LENGTH(dims) == 3) planes = INTEGER(dims)[2];
     
     // Set required and optional TIFF fields
-    set_required_tiff_fields(tiff, width, height, planes, bps, compression, floats);
+    set_required_tiff_fields(tiff, width, height, planes, bps, compression, floats,
+                            photometric);
     set_optional_tiff_tags(tiff, sXResolution, sYResolution, sResolutionUnit,
                           sOrientation, sXPosition, sYPosition, sCopyright,
                           sArtist, sDocumentName, sDateTime, sImageDescription);
