@@ -10,13 +10,12 @@
 #include <Rinternals.h>
 #include <Rversion.h>
 
-// Format the message, close+neutralize the TIFF handle while rj is still on the
-// live stack, then raise the R error. Mirrors read.c's handle_error: rj is a
-// stack local in write_tif_C, so the close MUST happen synchronously here (while
-// rj is alive) -- deferring it to the external-pointer finalizer would run
-// TIFFClose against a dead stack frame. cleanup_tiff_ptr does TIFFClose (which,
-// for the in-memory job, frees rj.data because rj.alloc != 0) +
-// R_ClearExternalPtr (so the finalizer cannot re-close) + resets last_tiff.
+// Format the message, close+neutralize the heap-owned TIFF context, then raise
+// the R error. Mirrors read.c's handle_error. cleanup_tiff_ptr does TIFFClose
+// (which, for the in-memory job, frees ctx->rj.data because ctx->rj.alloc != 0)
+// + free(ctx) + R_ClearExternalPtr (so the finalizer cannot re-close) + resets
+// last_tiff. The job state ctx->rj lives on the heap inside the ctx, so the
+// close reads valid memory whether it runs here or later in the finalizer.
 static void write_handle_error(SEXP tiff_closer, const char *message, ...) {
   char buf[1024];
   va_list args;
@@ -149,43 +148,43 @@ SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats,
     img_list = image;
   }
   
+  // Heap-allocate the TIFF context and register its finalizer BEFORE opening,
+  // so a failed open still frees the ctx via the finalizer. The job state
+  // (ctx->rj) lives inside the ctx on the heap, so cleanup_tiff_ptr always
+  // closes against valid memory even if a libtiff-internal error longjmps out.
+  // For the in-memory job, TIFFClose's close proc frees ctx->rj.data because
+  // ctx->rj.alloc != 0. write_tif_C's OWN post-open errors close synchronously
+  // via write_handle_error (which calls cleanup_tiff_ptr); on the success paths
+  // we also call cleanup_tiff_ptr, which clears the external pointer so the
+  // finalizer can never double-close.
+  tiff_ctx_t *ctx;
+  SEXP tiff_closer = PROTECT(new_tiff_ctx(&ctx));
+
   // Open output: filename (STRSXP) or in-memory buffer (where == NULL)
-  tiff_job_t rj;
-  memset(&rj, 0, sizeof(rj));
   int to_memory = (where == R_NilValue);
   if (to_memory) {
-    rj.alloc = 256 * 1024;   // non-zero alloc => close proc owns/frees rj.data
-    rj.data = malloc(rj.alloc);
-    if (!rj.data) Rf_error("unable to allocate in-memory output buffer");
-    rj.len = 0; rj.ptr = 0; rj.f = NULL;
+    ctx->rj.alloc = 256 * 1024;   // non-zero alloc => close proc owns/frees data
+    ctx->rj.data = malloc(ctx->rj.alloc);
+    if (!ctx->rj.data) Rf_error("unable to allocate in-memory output buffer");
+    ctx->rj.len = 0; ctx->rj.ptr = 0; ctx->rj.f = NULL;
   } else {
     if (TYPEOF(where) != STRSXP || LENGTH(where) != 1)
       Rf_error("invalid filename");
     const char *fn = CHAR(STRING_ELT(where, 0));
-    rj.f = fopen(fn, "w+b");
-    if (!rj.f) Rf_error("unable to create %s", fn);
+    ctx->rj.f = fopen(fn, "w+b");
+    if (!ctx->rj.f) Rf_error("unable to create %s", fn);
   }
 
-  TIFF *tiff = TIFF_Open("wm", &rj);
+  TIFF *tiff = TIFF_Open("wm", &ctx->rj);
   if (!tiff) {
-    if (to_memory) free(rj.data);
+    // ctx->tiff is still NULL, so the finalizer won't TIFFClose (and thus won't
+    // free ctx->rj.data via the close proc); free the in-memory buffer here.
+    if (to_memory) { free(ctx->rj.data); ctx->rj.data = NULL; }
     Rf_error("cannot create TIFF structure");
   }
 
-  // write_tif_C has no other owner of the handle, so register an
-  // external-pointer finalizer exactly like read_tif_C, as a backstop for a
-  // libtiff-internal error that longjmps past the manual TIFFClose (without it
-  // that leaks the TIFF handle and, for the in-memory job, the malloc'd rj.data
-  // buffer). cleanup_tiff_ptr closes once when tiff_closer becomes unreachable,
-  // and the in-memory close proc frees rj.data because rj.alloc != 0.
-  // write_tif_C's OWN post-open errors instead close synchronously via
-  // write_handle_error (rj is a stack local, so the close must happen while rj
-  // is still alive rather than being deferred to the finalizer). On the success
-  // paths we close manually and R_ClearExternalPtr so the finalizer can never
-  // double-close.
-  SEXP tiff_closer = PROTECT(R_MakeExternalPtr(NULL, R_NilValue, R_NilValue));
-  R_RegisterCFinalizerEx(tiff_closer, (R_CFinalizer_t)cleanup_tiff_ptr, TRUE);
-  R_SetExternalPtrAddr(tiff_closer, tiff);
+  // Store the handle in the ctx so the finalizer can close it.
+  ctx->tiff = tiff;
 
   // Process each image
   while (true) {
@@ -237,15 +236,14 @@ SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats,
   if (to_memory) {
     SEXP res;
     TIFFFlush(tiff);
-    res = PROTECT(allocVector(RAWSXP, rj.len));  // extract bytes BEFORE close
-    memcpy(RAW(res), rj.data, rj.len);
-    TIFFClose(tiff);   // frees rj.data via close proc
-    R_ClearExternalPtr(tiff_closer);  // finalizer must not double-close
+    // Extract bytes BEFORE close: cleanup_tiff_ptr's TIFFClose frees ctx->rj.data.
+    res = PROTECT(allocVector(RAWSXP, ctx->rj.len));
+    memcpy(RAW(res), ctx->rj.data, ctx->rj.len);
+    cleanup_tiff_ptr(tiff_closer);  // TIFFClose frees rj.data, frees ctx, clears ptr
     UNPROTECT(2);      // res + tiff_closer
     return res;
   }
-  TIFFClose(tiff);
-  R_ClearExternalPtr(tiff_closer);  // finalizer must not double-close
+  cleanup_tiff_ptr(tiff_closer);  // TIFFClose, free ctx, clear ptr
   UNPROTECT(1);        // tiff_closer
   return ScalarInteger(n_img);
 }

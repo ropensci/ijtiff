@@ -44,16 +44,15 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
     SEXP multi_res = PROTECT(R_NilValue);
     to_unprotect++;
     SEXP multi_tail = multi_res;
-    tiff_job_t rj;
     TIFF *tiff = NULL;
     FILE *f = NULL;
-    // Initialize rj structure properly
-    memset(&rj, 0, sizeof(rj));
-    // Create a protected pointer for TIFF cleanup
-    SEXP tiff_closer = PROTECT(R_MakeExternalPtr(NULL, R_NilValue, R_NilValue));
+    // Heap-allocate the TIFF context and register its finalizer BEFORE opening,
+    // so a failed open still frees the ctx via the finalizer. ctx->rj (the job
+    // state) is zeroed by calloc and lives on the heap for the ctx's lifetime.
+    tiff_ctx_t *ctx;
+    SEXP tiff_closer = PROTECT(new_tiff_ctx(&ctx));
     to_unprotect++;
-    R_RegisterCFinalizerEx(tiff_closer, (R_CFinalizer_t)cleanup_tiff_ptr, TRUE);
-    tiff = open_tiff_source(sFn, &rj, &f);
+    tiff = open_tiff_source(sFn, &ctx->rj, &f);
     if (tiff == NULL) {
         // open_tiff_file should have raised an error, but just to be safe:
         if (f) {
@@ -62,8 +61,8 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
         }
         Rf_error("Failed to open TIFF file");
     }
-    // Store the TIFF pointer
-    R_SetExternalPtrAddr(tiff_closer, tiff);
+    // Store the handle in the ctx so the finalizer can close it.
+    ctx->tiff = tiff;
     int cur_dir = 0; // 1-based image number
     int *sDirs_intptr = INTEGER(sDirs), cur_sDir_index = 0;
     int sDirs_len = LENGTH(sDirs);
@@ -99,9 +98,8 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
     // This is necessary because libtiff may be keeping internal buffers
     // that aren't properly freed when only reading tags
     TIFFFlush(tiff);
-    // Clear the external pointer to avoid double closing
-    TIFFClose(tiff);
-    R_ClearExternalPtr(tiff_closer);
+    // Close the handle, free the ctx and clear the external pointer.
+    cleanup_tiff_ptr(tiff_closer);
     Rf_unprotect(to_unprotect);
     return Rf_PairToVectorList(multi_res);
 }

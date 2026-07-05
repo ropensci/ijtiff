@@ -15,7 +15,23 @@ typedef struct tiff_job {
     char *data;
 } tiff_job_t;
 
+// Heap-owned context for a single TIFF operation. The libtiff client handle
+// points at &ctx->rj, and the external-pointer finalizer (cleanup_tiff_ptr)
+// owns this struct: it closes ctx->tiff (which reads ctx->rj) and frees ctx.
+// Because rj lives on the heap inside ctx (lifetime tied to the external
+// pointer), the finalizer always closes against valid memory even if the
+// entry point longjmp'd out on a libtiff-internal error.
+typedef struct tiff_ctx {
+    TIFF *tiff;        // libtiff handle (NULL until opened / after close)
+    tiff_job_t rj;     // job state — libtiff's client handle points at &ctx->rj
+} tiff_ctx_t;
+
 TIFF *TIFF_Open(const char *mode, tiff_job_t *rj);
+
+// Allocate a zeroed tiff_ctx_t, wrap it in a finalized external pointer.
+// Returns the (unprotected) external pointer; *out receives the ctx.
+// The CALLER must PROTECT the returned SEXP.
+SEXP new_tiff_ctx(tiff_ctx_t **out);
 
 // Cleanup function to make sure all TIFF resources are released
 void cleanup_tiff(void);

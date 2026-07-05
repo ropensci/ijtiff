@@ -106,18 +106,41 @@ void cleanup_tiff(void)
   }
 }
 
-// Helper function for finalizers that safely close a TIFF pointer
+// Allocate a zeroed tiff_ctx_t and wrap it in a finalized external pointer.
+// The ctx is heap-owned by the returned external pointer: cleanup_tiff_ptr
+// closes ctx->tiff (which reads the heap-resident ctx->rj) and frees ctx.
+// The returned SEXP is UNPROTECTED — the caller must PROTECT it. We PROTECT
+// internally only for the duration of the finalizer registration (which may
+// allocate) so a GC there cannot collect the fresh external pointer.
+SEXP new_tiff_ctx(tiff_ctx_t **out) {
+    tiff_ctx_t *ctx = (tiff_ctx_t*) calloc(1, sizeof(tiff_ctx_t));
+    if (!ctx) Rf_error("unable to allocate TIFF context");
+    SEXP p = PROTECT(R_MakeExternalPtr(ctx, R_NilValue, R_NilValue));
+    R_RegisterCFinalizerEx(p, (R_CFinalizer_t) cleanup_tiff_ptr, TRUE);
+    UNPROTECT(1);
+    *out = ctx;
+    return p;
+}
+
+// Finalizer / synchronous cleanup for a tiff_ctx_t owned by an external
+// pointer. Closes the libtiff handle (TIFFCloseProc_ reads the heap-resident
+// ctx->rj, so this is safe even after the entry point longjmp'd out) and then
+// frees the ctx. Idempotent: clears the external-pointer address so a second
+// call (e.g. the finalizer after a synchronous success-path call) is a no-op.
 void cleanup_tiff_ptr(SEXP ptr) {
     if (!ptr) return;
-    TIFF *tiff = (TIFF*)R_ExternalPtrAddr(ptr);
-    if (tiff) {
+    tiff_ctx_t *ctx = (tiff_ctx_t*) R_ExternalPtrAddr(ptr);
+    if (!ctx) return;
+    if (ctx->tiff) {
         // If this is the last_tiff, clear that global reference too
-        if (tiff == last_tiff) {
+        if (ctx->tiff == last_tiff) {
             last_tiff = NULL;
         }
-        TIFFClose(tiff);
-        R_ClearExternalPtr(ptr);
+        TIFFClose(ctx->tiff);   // TIFFCloseProc_ reads &ctx->rj — heap, valid
+        ctx->tiff = NULL;
     }
+    free(ctx);
+    R_ClearExternalPtr(ptr);
 }
 
 static tsize_t TIFFReadProc_(thandle_t usr, tdata_t buf, tsize_t length) {
