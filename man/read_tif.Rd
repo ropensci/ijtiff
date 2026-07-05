@@ -51,12 +51,13 @@ https://www.awaresystems.be/imaging/tiff/tifftags.html.
 
 TIFF images can have a wide range of internal representations, but only the
 most common in image processing are supported (8-bit, 16-bit and 32-bit
-integer and 32-bit float samples).
+integer and 32-bit float samples, and 12-bit grayscale integer samples).
 }
 \note{
-\itemize{ \item 12-bit TIFFs are not supported. \item There is no
-standard for packing order for TIFFs beyond 8-bit so we assume big-endian
-packing}.
+\itemize{ \item 12-bit grayscale TIFFs are supported (values returned
+in 0..4095, assuming big-endian packing); 12-bit colour, colormap, and
+tiled 12-bit TIFFs are not. \item There is no standard for packing order
+for TIFFs beyond 8-bit so we assume big-endian packing}.
 }
 \examples{
 img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))

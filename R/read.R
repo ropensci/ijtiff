@@ -24,7 +24,7 @@
 #'
 #' TIFF images can have a wide range of internal representations, but only the
 #' most common in image processing are supported (8-bit, 16-bit and 32-bit
-#' integer and 32-bit float samples).
+#' integer and 32-bit float samples, and 12-bit grayscale integer samples).
 #'
 #' @param path A string, the path to the tiff file to read. `path` may also
 #'   be a raw vector of TIFF bytes, read in-memory.
@@ -38,9 +38,10 @@
 #'
 #' @return An object of class [ijtiff_img] or a list of [ijtiff_img]s.
 #'
-#' @note \itemize{ \item 12-bit TIFFs are not supported. \item There is no
-#'   standard for packing order for TIFFs beyond 8-bit so we assume big-endian
-#'   packing}.
+#' @note \itemize{ \item 12-bit grayscale TIFFs are supported (values returned
+#'   in 0..4095, assuming big-endian packing); 12-bit colour, colormap, and
+#'   tiled 12-bit TIFFs are not. \item There is no standard for packing order
+#'   for TIFFs beyond 8-bit so we assume big-endian packing}.
 #'
 #' @author Simon Urbanek wrote most of this code for the 'tiff' package. Rory
 #'   Nolan lifted it from there and changed it around a bit for this 'ijtiff'

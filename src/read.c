@@ -10,6 +10,10 @@
 
 #include <Rinternals.h>
 
+// Unpack two big-endian-packed 12-bit samples from 3 bytes (from the 'tiff' package)
+#define DE12A(v) ((((unsigned int) (v)[0]) << 4) | (((unsigned int) (v)[1]) >> 4))
+#define DE12B(v) (((((unsigned int) (v)[1]) & 0x0f) << 8) | ((unsigned int) (v)[2]))
+
 // Helper function to validate filename and open TIFF file
 static TIFF* validate_and_open_tiff(SEXP sFn, tiff_job_t *rj, FILE **f, const char **fn) {
     *fn = (TYPEOF(sFn) == STRSXP && LENGTH(sFn) >= 1) ? CHAR(STRING_ELT(sFn, 0)) : "<raw>";
@@ -147,12 +151,15 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                     imageWidth, imageLength, imageDepth, tileWidth, tileLength, bps, spp,
                     out_spp, config, colormap[0] ? "yes" : "no");
         #endif
-        if (bps == 12) {
-            handle_error(tiff_closer, "12-bit images are not supported. "
-                     "Try converting your image to 16-bit.");
+        if (bps == 12 && spp != 1) {
+            handle_error(tiff_closer, "12-bit images are only supported for "
+                     "single-channel (grayscale) TIFFs.");
         }
-        if (bps != 8 && bps != 16 && bps != 32) {
+        if (bps != 8 && bps != 12 && bps != 16 && bps != 32) {
             handle_error(tiff_closer, "image has %d bits/sample which is unsupported", bps);
+        }
+        if (bps == 12 && colormap[0]) {
+            handle_error(tiff_closer, "12-bit images with a colormap are not supported.");
         }
         if (sformat == SAMPLEFORMAT_INT)
             Rf_warning("The \'ijtiff\' package only supports unsigned "
@@ -172,6 +179,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
             #endif
             for (strip = 0; strip < TIFFNumberOfStrips(tiff); strip++) {
                 tsize_t n = TIFFReadEncodedStrip(tiff, strip, buf, (tsize_t) -1);
+                if (n <= 0) continue;
                 if (spp == 1) { // config doesn't matter for spp == 1
                     if (colormap[0]) {
                         tsize_t i, step = bps / 8;
@@ -215,14 +223,32 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                             }
                         }
                     } else { // direct gray
-                        tsize_t i, step = bps / 8;
-                        for (i = 0; i < n; i += step) {
-                            const uint8_t *v = (const uint8_t*) buf + i;
-                            real_arr[imageLength * x + y] = get_pixel_value(v, bps, is_float);
-                            x++;
-                            if (x >= imageWidth) {
-                                x -= imageWidth;
+                        if (bps == 12) {
+                            // 12-bit: each scanline is byte-padded to rowbytes.
+                            size_t rowbytes = ((size_t) imageWidth * 12 + 7) / 8;
+                            tsize_t rows_in_strip = (rowbytes > 0) ? (n / rowbytes) : 0;
+                            for (tsize_t r = 0; r < rows_in_strip; r++) {
+                                const unsigned char *rowp =
+                                    (const unsigned char*) buf + (size_t) r * rowbytes;
+                                uint32_t col = 0;
+                                while (col < imageWidth) {
+                                    const unsigned char *v = rowp + (col / 2) * 3;
+                                    real_arr[imageLength * col + y] = (double) DE12A(v);
+                                    col++;
+                                    if (col < imageWidth) {
+                                        real_arr[imageLength * col + y] = (double) DE12B(v);
+                                        col++;
+                                    }
+                                }
                                 y++;
+                            }
+                        } else {
+                            tsize_t i, step = bps / 8;
+                            for (i = 0; i < n; i += step) {
+                                const uint8_t *v = (const uint8_t*) buf + i;
+                                real_arr[imageLength * x + y] = get_pixel_value(v, bps, is_float);
+                                x++;
+                                if (x >= imageWidth) { x -= imageWidth; y++; }
                             }
                         }
                     }
@@ -255,6 +281,9 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                 }
             }
         } else {  // tiled image
+            if (bps == 12) {
+                handle_error(tiff_closer, "12-bit tiled images are not supported.");
+            }
             if (spp > 1 && config != PLANARCONFIG_CONTIG) {
                 handle_error(tiff_closer, "Planar format tiled images are not supported");
             }
