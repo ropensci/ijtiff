@@ -18,7 +18,7 @@ extern SEXP float_max_C(void);
 extern SEXP get_supported_tags_C(SEXP);
 extern SEXP match_pillar_to_row_3_C(SEXP, SEXP);
 extern SEXP read_tags_C(SEXP, SEXP);
-extern SEXP read_tif_C(SEXP, SEXP);
+extern SEXP read_tif_C(SEXP, SEXP, SEXP);
 extern SEXP write_tif_C(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
@@ -30,7 +30,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"get_supported_tags_C",    (DL_FUNC) &get_supported_tags_C,    1},
     {"match_pillar_to_row_3_C", (DL_FUNC) &match_pillar_to_row_3_C, 2},
     {"read_tags_C",             (DL_FUNC) &read_tags_C,             2},
-    {"read_tif_C",              (DL_FUNC) &read_tif_C,              2},
+    {"read_tif_C",              (DL_FUNC) &read_tif_C,              3},
     {"write_tif_C",             (DL_FUNC) &write_tif_C,             16},
     {NULL, NULL, 0}
 };

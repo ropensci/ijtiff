@@ -35,6 +35,16 @@
 #'   error. You can instead opt to throw a warning (`list_safety = "warning"`)
 #'   or to just return the list quietly (`list_safety = "none"`).
 #' @param msg Print an informative message about the image being read?
+#' @param convert One of `"auto"` (default), `"force"`, `"never"`, controlling
+#'   libtiff's RGBA decoder. `"auto"` reads every image directly and only falls
+#'   back to RGBA for images the direct decoder cannot parse at all (certain
+#'   tiled/planar or odd-bit-depth files that would otherwise error), preserving
+#'   existing behaviour for all currently-readable images. `"force"` always
+#'   decodes via RGBA, converting any colorspace (YCbCr, CMYK, CIELab, ...) to
+#'   8-bit RGB(A) --- use this to read such images in RGB. `"never"` never uses
+#'   the RGBA decoder and errors on images the direct decoder cannot parse.
+#'   Note: for images with frames of differing dimensions read as a list, the
+#'   converted arrays keep their raw per-frame dimensions and are not reconciled.
 #'
 #' @return An object of class [ijtiff_img] or a list of [ijtiff_img]s.
 #'
@@ -52,7 +62,8 @@
 #' @examples
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' @export
-read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
+read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE,
+                     convert = "auto") {
   is_raw_src <- is.raw(path)
   if (!is_raw_src) path <- fs::path_expand(path)
   frames <- prep_frames(frames)
@@ -62,6 +73,10 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
     c("error", "warning", "none"),
     ignore_case = TRUE
   )
+  checkmate::assert_string(convert)
+  convert <- strex::match_arg(convert, c("auto", "force", "never"),
+                              ignore_case = TRUE)
+  convert_code <- match(convert, c("never", "auto", "force")) - 1L  # 0/1/2
   if (msg) {
     message("Reading image from ", if (is_raw_src) "raw vector" else path)
   }
@@ -76,9 +91,11 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
   )[img_prep$back_map]
   tags <- purrr::map(tags, translate_tiff_tags)
   # Read the image data
-  out <- .Call("read_tif_C", path, img_prep$frames,
+  out <- .Call("read_tif_C", path, img_prep$frames, convert_code,
     PACKAGE = "ijtiff"
   )[img_prep$back_map]
+  # Detect the internal RGBA-conversion marker BEFORE unlist() drops it.
+  converted <- length(out) > 0 && isTRUE(attr(out[[1]], "converted"))
   for (i in seq_along(out)) {
     for (tag_name in names(tags[[i]])) {
       attr(out[[i]], tag_name) <- tags[[i]][[tag_name]]
@@ -87,14 +104,22 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
   ds <- dims(out)
   if (dplyr::n_distinct(ds) == 1) {
     d <- ds[[1]]
-    if (colormap_or_ij_channels(out, img_prep, d)) {
-      out <- purrr::map(out, compute_desired_plane)
+    if (converted) {
+      # Converted arrays carry their own channel count (3/4 from RGBA decode),
+      # which differs from source SamplesPerPixel; use it and skip the
+      # colormap/ImageJ-channel path (irrelevant for RGB(A) output).
+      n_ch_eff <- if (length(d) > 2) d[3] else 1L
+    } else {
+      n_ch_eff <- img_prep$n_ch
+      if (colormap_or_ij_channels(out, img_prep, d)) {
+        out <- purrr::map(out, compute_desired_plane)
+      }
     }
     out <- unlist(out)
     dim(out) <- c(
       d[1:2],
-      img_prep$n_ch,
-      length(out) / prod(c(d[1:2], img_prep$n_ch))
+      n_ch_eff,
+      length(out) / prod(c(d[1:2], n_ch_eff))
     )
     attrs1 <- attributes(out[[1]])
     attrs1$dim <- NULL
@@ -126,6 +151,24 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
       )
     )
   }
+  if (converted && !is.list(out)) {
+    attr(out, "BitsPerSample") <- 8L
+    attr(out, "SampleFormat") <- "unsigned integer data"
+    attr(out, "SamplesPerPixel") <- dim(out)[3]   # was source spp (e.g. 4 for CMYK)
+    # data is now RGB(A), not the source colorspace — fix the attr so a
+    # subsequent write_tif() round-trips correctly instead of trying to write
+    # the un-writable source photometric (YCbCr/Palette/CMYK/...).
+    attr(out, "PhotometricInterpretation") <-
+      if (dim(out)[3] >= 3) "RGB" else "BlackIsZero"
+    if (msg) {
+      message(
+        "Note: decoded via RGBA conversion (source colorspace/bit depth not ",
+        "directly representable); returned as 8-bit ", dim(out)[3], "-channel."
+      )
+    }
+  }
+  # TODO: reconcile converted attrs in the list-output branch (ragged converted
+  # stacks keep their raw per-element dims and the internal "converted" attr).
   tags_prep <- prep_read(path, frames, tags1, tags = TRUE)
   tags_by_frame <- read_tags(path, frames)
   attr(out, "tags_by_frame") <- tags_by_frame
@@ -134,8 +177,12 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
 
 #' @rdname read_tif
 #' @export
-tif_read <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
-  read_tif(path = path, frames = frames, list_safety = list_safety, msg = msg)
+tif_read <- function(path, frames = "all", list_safety = "error", msg = TRUE,
+                     convert = "auto") {
+  read_tif(
+    path = path, frames = frames, list_safety = list_safety, msg = msg,
+    convert = convert
+  )
 }
 
 # Helper function to map a tag value using the mappings

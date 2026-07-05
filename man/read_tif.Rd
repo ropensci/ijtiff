@@ -5,9 +5,21 @@
 \alias{tif_read}
 \title{Read an image stored in the TIFF format}
 \usage{
-read_tif(path, frames = "all", list_safety = "error", msg = TRUE)
+read_tif(
+  path,
+  frames = "all",
+  list_safety = "error",
+  msg = TRUE,
+  convert = "auto"
+)
 
-tif_read(path, frames = "all", list_safety = "error", msg = TRUE)
+tif_read(
+  path,
+  frames = "all",
+  list_safety = "error",
+  msg = TRUE,
+  convert = "auto"
+)
 }
 \arguments{
 \item{path}{A string, the path to the tiff file to read. \code{path} may also
@@ -22,6 +34,17 @@ error. You can instead opt to throw a warning (\code{list_safety = "warning"})
 or to just return the list quietly (\code{list_safety = "none"}).}
 
 \item{msg}{Print an informative message about the image being read?}
+
+\item{convert}{One of \code{"auto"} (default), \code{"force"}, \code{"never"}, controlling
+libtiff's RGBA decoder. \code{"auto"} reads every image directly and only falls
+back to RGBA for images the direct decoder cannot parse at all (certain
+tiled/planar or odd-bit-depth files that would otherwise error), preserving
+existing behaviour for all currently-readable images. \code{"force"} always
+decodes via RGBA, converting any colorspace (YCbCr, CMYK, CIELab, ...) to
+8-bit RGB(A) --- use this to read such images in RGB. \code{"never"} never uses
+the RGBA decoder and errors on images the direct decoder cannot parse.
+Note: for images with frames of differing dimensions read as a list, the
+converted arrays keep their raw per-frame dimensions and are not reconciled.}
 }
 \value{
 An object of class \link{ijtiff_img} or a list of \link{ijtiff_img}s.

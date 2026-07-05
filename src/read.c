@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdarg.h>
+#include <stdint.h>
 #include <math.h>
 
 #include "common.h"
@@ -13,6 +14,21 @@
 // Unpack two big-endian-packed 12-bit samples from 3 bytes (from the 'tiff' package)
 #define DE12A(v) ((((unsigned int) (v)[0]) << 4) | (((unsigned int) (v)[1]) >> 4))
 #define DE12B(v) (((((unsigned int) (v)[1]) & 0x0f) << 8) | ((unsigned int) (v)[2]))
+
+// Capture-only libtiff message handler used *only* around TIFFReadRGBAImage.
+// The package's global error handler (common.c) turns any libtiff error into a
+// fatal Rf_error AND closes last_tiff, which would leave read_tif_C's cleanup
+// external pointer dangling (double-close crash on the next read/GC). libtiff's
+// RGBA reader is designed to report recoverable errors (called with
+// stopOnError = 0) and then return 0; to honour that we swap in this non-fatal
+// handler for the duration of the call, record the last message, and let the
+// caller raise a clean handle_error() (which clears the external pointer).
+static char rgba_msg_buf[1024];
+static void rgba_capture_handler(const char *module, const char *fmt,
+                                 va_list ap) {
+    (void) module;
+    vsnprintf(rgba_msg_buf, sizeof(rgba_msg_buf), fmt, ap);
+}
 
 // Helper function to validate filename and open TIFF file
 static TIFF* validate_and_open_tiff(SEXP sFn, tiff_job_t *rj, FILE **f, const char **fn) {
@@ -70,8 +86,9 @@ static void set_pixel_values(double *real_arr, const unsigned char *v, uint16_t 
     }
 }
 
-SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
+SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs, SEXP sConvert) {
     check_type_sizes();
+    int convert_mode = asInteger(sConvert);  // 0 never, 1 auto, 2 force
     int to_unprotect = 0;
     SEXP multi_res = R_NilValue;
     SEXP multi_tail = multi_res;
@@ -152,6 +169,87 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                     imageWidth, imageLength, imageDepth, tileWidth, tileLength, bps, spp,
                     out_spp, config, colormap[0] ? "yes" : "no");
         #endif
+        bool is_tiled = (tileWidth != 0);
+        // direct_ok is keyed on STRUCTURE ONLY (bit depth + tiling/planar layout),
+        // NEVER photometric. These are exactly the cases the strip/tile decoder
+        // below cannot parse and which already error today; keying on photometric
+        // would divert/break CMYK, YCbCr, CIELab images that read fine today.
+        bool direct_ok =
+            (bps == 8 || bps == 12 || bps == 16 || bps == 32) &&
+            !(bps == 12 && spp != 1) &&
+            !(bps == 12 && is_tiled) &&
+            !(bps == 12 && colormap[0]) &&
+            !(is_tiled && spp > 1 && config != PLANARCONFIG_CONTIG);
+        bool do_convert = (convert_mode == 2) ||             // force: always RGBA
+                          (convert_mode == 1 && !direct_ok); // auto: rescue structural only
+        if (!direct_ok && convert_mode == 0) {               // never
+            handle_error(tiff_closer, "image has %d bits/sample with this "
+                     "tiling/planar layout, which cannot be read directly; use "
+                     "convert = \"force\".", (int) bps);
+        }
+        if (do_convert) {
+            size_t npix = (size_t) imageWidth * imageLength;
+            if (imageWidth != 0 && npix / imageWidth != imageLength)
+                handle_error(tiff_closer, "image dimensions overflow during RGBA conversion");
+            if (npix > SIZE_MAX / sizeof(uint32_t))
+                handle_error(tiff_closer, "image too large to decode via RGBA conversion");
+            uint32_t *raster = (uint32_t*) R_alloc(npix, sizeof(uint32_t));
+            // Swap in non-fatal handlers so a recoverable libtiff error inside
+            // the RGBA reader returns 0 here instead of longjmp-ing out of the
+            // .Call and leaving tiff_closer dangling (double-close crash).
+            rgba_msg_buf[0] = '\0';
+            TIFFErrorHandler prev_eh = TIFFSetErrorHandler(rgba_capture_handler);
+            TIFFErrorHandler prev_wh = TIFFSetWarningHandler(rgba_capture_handler);
+            int rgba_ok = TIFFReadRGBAImageOriented(tiff, imageWidth, imageLength,
+                                                    raster, ORIENTATION_TOPLEFT, 0);
+            TIFFSetErrorHandler(prev_eh);   // restore BEFORE any handle_error longjmp
+            TIFFSetWarningHandler(prev_wh);
+            if (!rgba_ok) {
+                handle_error(tiff_closer,
+                             "TIFFReadRGBAImage failed for this image%s%s",
+                             rgba_msg_buf[0] ? ": " : "", rgba_msg_buf);
+            }
+            // Pass 1: keep the alpha plane only if some pixel is non-opaque.
+            bool has_alpha = false;
+            for (size_t i = 0; i < npix; i++) {
+                if (TIFFGetA(raster[i]) != 255) { has_alpha = true; break; }
+            }
+            out_spp = has_alpha ? 4 : 3;
+            // Pass 2: allocate EXACTLY W*L*out_spp (setAttrib(dim) requires
+            // prod(dim) == length) and fill it, raw 0..255.
+            res = PROTECT(allocVector(REALSXP, (R_xlen_t) npix * out_spp));
+            to_unprotect++;
+            real_arr = REAL(res);
+            for (y = 0; y < imageLength; y++) {
+                for (x = 0; x < imageWidth; x++) {
+                    uint32_t px = raster[(size_t) y * imageWidth + x];
+                    size_t base = (size_t) imageLength * x + y;
+                    real_arr[base]              = (double) TIFFGetR(px);
+                    real_arr[npix + base]       = (double) TIFFGetG(px);
+                    real_arr[2 * npix + base]   = (double) TIFFGetB(px);
+                    if (has_alpha)
+                        real_arr[3 * npix + base] = (double) TIFFGetA(px);
+                }
+            }
+            dim = PROTECT(allocVector(INTSXP, 3));
+            to_unprotect++;
+            INTEGER(dim)[0] = imageLength;
+            INTEGER(dim)[1] = imageWidth;
+            INTEGER(dim)[2] = out_spp;
+            setAttrib(res, R_DimSymbol, dim);
+            setAttr(res, "converted", ScalarLogical(1));  // R reconciles n_ch/bps
+            Rf_unprotect(1); to_unprotect--;  // UNPROTECT dim
+            // splice into the multi-image list exactly like the direct path
+            if (multi_res == R_NilValue) {
+                multi_res = multi_tail = PROTECT(Rf_list1(res)); to_unprotect++;
+            } else {
+                SEXP q = PROTECT(Rf_list1(res)); to_unprotect++;
+                SETCDR(multi_tail, q); multi_tail = q;
+                Rf_unprotect(2); to_unprotect -= 2;
+            }
+            if (!TIFFReadDirectory(tiff)) break;
+            continue;  // next directory
+        }
         if (bps == 12 && spp != 1) {
             handle_error(tiff_closer, "12-bit images are only supported for "
                      "single-channel (grayscale) TIFFs.");
