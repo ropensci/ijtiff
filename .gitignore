@@ -18,3 +18,4 @@ scratch.*
 .serena
 *.Rout
 tmp/
+data-raw/make-gray12
