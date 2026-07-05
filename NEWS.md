@@ -1,3 +1,23 @@
+# `ijtiff` 3.3.0
+
+## NEW FEATURES
+
+* `read_tif()` and `read_tags()` can read directly from an in-memory raw vector of TIFF bytes; `write_tif(img, path = NULL)` writes to memory and returns the TIFF file as a raw vector.
+* 12-bit grayscale TIFFs are now readable (values returned in 0..4095, big-endian packing assumed).
+* Signed-integer TIFFs now read with correct negative values (previously warned and read as unsigned).
+* `read_tif()` gains a `convert` argument. `convert = "force"` decodes any image via libtiff's RGBA reader, converting exotic colorspaces (YCbCr, CMYK/separated, CIELab, …) to 8-bit RGB(A) — useful for images that previously read in a non-RGB colorspace or (for JPEG-YCbCr) not meaningfully at all. `convert = "auto"` (the default) preserves existing behaviour for every currently-readable image and only uses the RGBA reader as a fallback for images the direct decoder cannot parse at all. `convert = "never"` disables it.
+* `write_tif()` can write `PHOTOMETRIC_RGB` images via `tags_to_write = list(photometric = "RGB")`; the default remains `BlackIsZero`. Supported TIFF metadata (including `PhotometricInterpretation`) now round-trips through read→write automatically.
+
+## BEHAVIOUR CHANGES
+
+* Because photometric now round-trips, an image read from a `WhiteIsZero` TIFF is re-written as `WhiteIsZero` (previously `BlackIsZero`). Unwritable source photometrics (Palette/CMYK/YCbCr/CIELab/…) are silently not written unless you convert the image.
+
+## BUG FIXES
+
+* Fixed a stale check that caused the "Reading … image" message to always say "float" regardless of the true sample format.
+* `read_tif()`/`read_tags()` error messages for unsupported images now render their values correctly (previously a `va_list` misuse garbled the numbers).
+* Fixed a memory-safety bug where reading a corrupt/truncated TIFF that errored mid-decode could leave a dangling handle and crash (segfault) on a subsequent read or at garbage collection. The TIFF handle's state is now heap-owned and cleaned up by its finalizer, removing a latent double-close/use-after-free.
+
 # `ijtiff` 3.2.0
 
 ## NEW FEATURES
