@@ -97,13 +97,15 @@ static void init_tiff(void) {
   need_init = 0;
 }
 
-// Cleanup function to make sure all TIFF resources are released
+// atexit-style cleanup registered in init.c. Every TIFF handle is owned by a
+// per-ctx external-pointer finalizer (cleanup_tiff_ptr), registered with
+// onexit=TRUE so R runs it at process exit. That finalizer is the sole owner
+// and closes each handle exactly once. We therefore must NOT TIFFClose here:
+// doing so would double-close a finalizer-owned handle at exit (use-after-free).
+// We only drop the tracking global.
 void cleanup_tiff(void)
 {
-  if (last_tiff) {
-    TIFFClose(last_tiff);
-    last_tiff = NULL;
-  }
+  last_tiff = NULL;
 }
 
 // Allocate a zeroed tiff_ctx_t and wrap it in a finalized external pointer.
@@ -263,13 +265,15 @@ static void TIFFUnmapFileProc_(thandle_t usr, tdata_t map, toff_t off) {
 /* actual interface */
 TIFF *TIFF_Open(const char *mode, tiff_job_t *rj) {
   if (need_init) init_tiff();
-  
-  // Always close the previous TIFF handle to prevent memory leaks
-  if (last_tiff) {
-    TIFFClose(last_tiff);
-    last_tiff = NULL;
-  }
-  
+
+  // Do NOT eagerly TIFFClose(last_tiff) here. Every handle is owned by a
+  // per-ctx external-pointer finalizer (cleanup_tiff_ptr), which is the sole
+  // owner and closes it exactly once. A handle "leaked" by a global-handler
+  // error is reclaimed by its own finalizer at GC — closing it here as well
+  // would double-close a finalizer-owned handle (use-after-free). last_tiff is
+  // still assigned below purely so cleanup_tiff_ptr can null it when that ctx's
+  // handle is the most-recent one.
+
   // Verify that the file appears to be a valid TIFF before attempting to open it
   // Only do this check for read operations (mode contains 'r')
   if (rj->f && strchr(mode, 'r') != NULL) {

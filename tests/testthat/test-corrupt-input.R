@@ -66,3 +66,42 @@ test_that("reading a corrupt TIFF raw vector in a gc loop does not crash", {
   succeed()
   expect_true(TRUE)
 })
+
+# Regression for the residual last_tiff double-close use-after-free.
+#
+# After the heap-ctx fix (above), the per-ctx external-pointer finalizer
+# (cleanup_tiff_ptr) is the SOLE owner of each TIFF* and closes it exactly once.
+# But two spots still eagerly TIFFClose(last_tiff): TIFF_Open (on the *next*
+# open) and cleanup_tiff (at exit). When a corrupt read errored mid-decode, the
+# handle was left open and owned by a still-pending finalizer; a subsequent
+# TIFF_Open (any later read/write) would TIFFClose it via last_tiff, and then the
+# original ctx's finalizer would TIFFClose the same handle AGAIN at gc() ->
+# double-close / use-after-free -> nondeterministic SIGBUS/SIGABRT. The fix
+# removes both eager closes; the finalizer alone reclaims each handle.
+#
+# The interleaved "corrupt read -> good read -> gc()" pattern below is what
+# triggers it (the good read's TIFF_Open double-closes the corrupt read's
+# leaked-but-finalizer-owned handle). NOTE: testthat runs everything in one
+# process and can MASK a fatal double-close (an abort inside the loop may still
+# be reported as passing depending on the handler); the authoritative check is
+# the bare-Rscript harness (crashtest.R patterns 1 & 2, exit code 0 across
+# repeats), which crashes (exit 134/138) on the pre-fix code.
+test_that("corrupt read followed by good reads in a gc loop does not crash", {
+  bytes <- make_corrupt_tiff_bytes()
+  f <- tempfile(fileext = ".tif")
+  writeBin(bytes, f)
+  good <- system.file("img", "Rlogo.tif", package = "ijtiff")
+  expect_true(file.exists(good))
+  suppressWarnings(
+    for (i in 1:80) {
+      expect_error(read_tif(f, msg = FALSE))    # corrupt: errors mid-decode
+      x <- read_tif(good, msg = FALSE)          # good: its TIFF_Open used to
+      expect_true(is.array(x))                  #       double-close the above
+      if (i %% 5L == 0L) gc()                   # sparse gc to vary finalizer timing
+    }
+  )
+  gc()
+  # Reached only if the session survived every corrupt+good read + gc.
+  succeed()
+  expect_true(TRUE)
+})
