@@ -51,7 +51,9 @@
 #' @note \itemize{ \item 12-bit grayscale TIFFs are supported (values returned
 #'   in 0..4095, assuming big-endian packing); 12-bit colour, colormap, and
 #'   tiled 12-bit TIFFs are not. \item There is no standard for packing order
-#'   for TIFFs beyond 8-bit so we assume big-endian packing}.
+#'   for TIFFs beyond 8-bit so we assume big-endian packing. \item RGBA
+#'   conversion (`convert = "auto"`/`"force"`) is unavailable for tiled
+#'   separate-planar images, which therefore cannot be read at all}.
 #'
 #' @author Simon Urbanek wrote most of this code for the 'tiff' package. Rory
 #'   Nolan lifted it from there and changed it around a bit for this 'ijtiff'
@@ -95,6 +97,9 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE,
     PACKAGE = "ijtiff"
   )[img_prep$back_map]
   # Detect the internal RGBA-conversion marker BEFORE unlist() drops it.
+  # NOTE: this reads the marker from the first frame only. A multi-directory
+  # file that mixes RGBA-rescued and directly-decoded frames under convert =
+  # "auto" is not handled (an exotic case we do not attempt to solve).
   converted <- length(out) > 0 && isTRUE(attr(out[[1]], "converted"))
   for (i in seq_along(out)) {
     for (tag_name in names(tags[[i]])) {

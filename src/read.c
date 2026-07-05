@@ -147,7 +147,13 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs, SEXP sConvert) {
             tileWidth = tileLength = 0;
         }
         TIFFGetField(tiff, TIFFTAG_PLANARCONFIG, &config);
-        TIFFGetField(tiff, TIFFTAG_BITSPERSAMPLE, &bps);
+        // Use the *defaulted* getter for BitsPerSample: per the TIFF spec a
+        // file may omit the tag (default 1, e.g. bilevel images), in which case
+        // plain TIFFGetField fails and would leave bps at its init value (8),
+        // misreading a 1-bit image as 8-bit garbage. read_tags_C already
+        // defaults this tag; match it so structural checks (direct_ok / RGBA
+        // rescue) see the true bit depth.
+        TIFFGetFieldDefaulted(tiff, TIFFTAG_BITSPERSAMPLE, &bps);
         TIFFGetField(tiff, TIFFTAG_SAMPLESPERPIXEL, &spp);
         out_spp = spp;
         TIFFGetField(tiff, TIFFTAG_COLORMAP, colormap, colormap + 1, colormap + 2);
@@ -183,9 +189,14 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs, SEXP sConvert) {
         bool do_convert = (convert_mode == 2) ||             // force: always RGBA
                           (convert_mode == 1 && !direct_ok); // auto: rescue structural only
         if (!direct_ok && convert_mode == 0) {               // never
-            handle_error(tiff_closer, "image has %d bits/sample with this "
-                     "tiling/planar layout, which cannot be read directly; use "
-                     "convert = \"force\".", (int) bps);
+            // NOTE: RGBA conversion (convert = "auto"/"force") cannot rescue
+            // tiled separate-planar images either -- libtiff's non-mmap
+            // TIFFReadRGBAImage mishandles tiled + PLANARCONFIG_SEPARATE, and
+            // ijtiff always disables mmap. Such images are unreadable here.
+            handle_error(tiff_closer, "this image cannot be read directly "
+                     "(unsupported bit depth, or a tiled/planar layout the "
+                     "direct decoder does not handle); try convert = \"force\" "
+                     "to decode it via RGBA.");
         }
         if (do_convert) {
             size_t npix = (size_t) imageWidth * imageLength;

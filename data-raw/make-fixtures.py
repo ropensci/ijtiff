@@ -1,4 +1,7 @@
-import numpy as np, tifffile, pathlib
+import numpy as np
+import tifffile
+import pathlib
+
 out = pathlib.Path("inst/img")
 out.mkdir(parents=True, exist_ok=True)
 
@@ -19,8 +22,13 @@ tifffile.imwrite(out / "tiled_rgb.tif", rgb, tile=(16, 16), photometric="rgb")
 # `rgb` array as-is silently produces a corrupt tag set (ImageWidth=3,
 # SamplesPerPixel=40). Move the channel axis to the front before writing.
 rgb_planar = np.moveaxis(rgb, -1, 0)  # (3, 40, 48)
-tifffile.imwrite(out / "tiled_planar.tif", rgb_planar, tile=(16, 16), photometric="rgb",
-                 planarconfig="separate")
+tifffile.imwrite(
+    out / "tiled_planar.tif",
+    rgb_planar,
+    tile=(16, 16),
+    photometric="rgb",
+    planarconfig="separate",
+)
 
 # YCbCr via JPEG compression (photometric=6). Reads as GARBAGE today (not an
 # error); convert="force" decodes it to RGB.
@@ -30,4 +38,10 @@ tifffile.imwrite(out / "ycbcr.tif", rgb, photometric="ycbcr", compression="jpeg"
 # correct 4-channel C,M,Y,K array on the direct path; convert="force" -> RGB.
 cmyk = (np.random.default_rng(1).integers(0, 256, (40, 48, 4))).astype(np.uint8)
 tifffile.imwrite(out / "cmyk.tif", cmyk, photometric="separated")
-print("wrote signed16, tiled_rgb, tiled_planar, ycbcr, cmyk")
+
+# 1-bit bilevel, strip-based. bps=1 is direct-undecodable (hits the reader's
+# unsupported-bit-depth error) but is RGBA-decodable in non-mmap mode, so it is
+# the positive fixture for the convert="auto" RGBA rescue.
+b = (np.random.default_rng(3).integers(0, 2, (40, 48))).astype(bool)
+tifffile.imwrite(out / "bilevel1.tif", b)
+print("wrote signed16, tiled_rgb, tiled_planar, ycbcr, cmyk, bilevel1")

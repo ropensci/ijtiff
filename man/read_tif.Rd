@@ -80,7 +80,9 @@ integer and 32-bit float samples, and 12-bit grayscale integer samples).
 \itemize{ \item 12-bit grayscale TIFFs are supported (values returned
 in 0..4095, assuming big-endian packing); 12-bit colour, colormap, and
 tiled 12-bit TIFFs are not. \item There is no standard for packing order
-for TIFFs beyond 8-bit so we assume big-endian packing}.
+for TIFFs beyond 8-bit so we assume big-endian packing. \item RGBA
+conversion (\code{convert = "auto"}/\code{"force"}) is unavailable for tiled
+separate-planar images, which therefore cannot be read at all}.
 }
 \examples{
 img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))

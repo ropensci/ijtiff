@@ -1,10 +1,11 @@
-# Skip a fixture only if the linked libtiff lacks the codec to RGBA-decode it
-# (e.g. no JPEG codec for YCbCr). Match the capability error specifically so a
-# genuine logic bug in our branch does NOT get silently skipped.
+# Skip a fixture only if the linked libtiff genuinely lacks the codec to decode
+# it (e.g. no JPEG codec for YCbCr). Match ONLY codec-absence messages, so a
+# real logic bug in the RGBA branch surfaces as an error rather than a silent
+# skip. Do NOT match "RGBA" here -- that is the branch's own failure message.
 can_convert <- function(path) {
   tryCatch({ read_tif(path, convert = "force", msg = FALSE); TRUE },
            error = function(e) {
-             if (grepl("JPEG|codec|compress|RGBA", conditionMessage(e),
+             if (grepl("JPEG|codec|compress", conditionMessage(e),
                        ignore.case = TRUE)) FALSE else stop(e)
            })
 }
@@ -45,21 +46,32 @@ test_that("convert='auto' (default) leaves currently-readable images UNCHANGED",
   expect_null(attr(tr, "converted"))
 })
 
-test_that("convert='auto' RGBA-rescues a structurally-undecodable image", {
-  # tiled + planar (spp>1, non-contig) errors on the direct path today.
-  tp <- system.file("img", "tiled_planar.tif", package = "ijtiff")
-  skip_if_not(can_convert(tp), "libtiff cannot RGBA-decode tiled-planar")
-  img <- read_tif(tp, msg = FALSE)                  # auto falls back
-  expect_gte(dim(img)[3], 3L)
+test_that("convert='auto' RGBA-rescues a direct-undecodable image (bilevel 1-bit)", {
+  # bilevel1.tif is 1-bit (bps=1): the direct decoder cannot parse it, so the
+  # DEFAULT convert="auto" must transparently RGBA-rescue it. This is the
+  # marquee auto-rescue capability -- it must PASS, not skip.
+  bl <- system.file("img", "bilevel1.tif", package = "ijtiff")
+  img <- read_tif(bl, msg = FALSE)                  # default convert = "auto"
+  expect_gte(dim(img)[3], 3L)                       # RGB(A) output
+  expect_lte(max(img), 255); expect_gte(min(img), 0)
   expect_equal(attr(img, "BitsPerSample"), 8L)
+  expect_equal(attr(img, "SamplesPerPixel"), dim(img)[3])
+  expect_equal(attr(img, "PhotometricInterpretation"), "RGB")
+  expect_null(attr(img, "converted"))              # internal marker, not leaked
+})
+
+test_that("tiled separate-planar images cannot be read (auto or never)", {
+  # libtiff's non-mmap TIFFReadRGBAImage mishandles tiled + PLANARCONFIG_SEPARATE
+  # and ijtiff always disables mmap, so RGBA cannot rescue these; the direct path
+  # cannot parse them either. They therefore error under BOTH auto and never.
+  tp <- system.file("img", "tiled_planar.tif", package = "ijtiff")
+  expect_error(read_tif(tp, convert = "auto", msg = FALSE))
+  expect_error(read_tif(tp, convert = "never", msg = FALSE))
 })
 
 test_that("convert='never' does NOT error on a currently-readable image", {
   cm <- system.file("img", "cmyk.tif", package = "ijtiff")
   expect_no_error(read_tif(cm, convert = "never", msg = FALSE))   # reads today
-  # but 'never' still errors on the structurally-undecodable case
-  tp <- system.file("img", "tiled_planar.tif", package = "ijtiff")
-  expect_error(read_tif(tp, convert = "never", msg = FALSE))
 })
 
 test_that("forced conversion prints a message", {

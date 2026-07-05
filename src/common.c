@@ -80,12 +80,13 @@ static void TIFFErrorHandler_(const char* module, const char* fmt, va_list ap) {
   err_reenter = 1;
   /* we can't pass it directly since R has no vprintf entry point */
   vsnprintf(txtbuf, sizeof(txtbuf), fmt, ap);
-  /* we have to close the TIFF that caused it as it will not
-     come back -- recursive calls won't work under errors
-     but that is hopefully unlikely/impossible */
+  /* Do NOT TIFFClose(last_tiff) here. The read entry points own their handle
+     through a registered external-pointer finalizer (cleanup_tiff_ptr); that
+     finalizer is the single owner and closes exactly once when the Rf_error
+     below longjmps out. Closing here as well would leave those external
+     pointers dangling and cause a double-close (segfault) on the next GC. */
   Rf_warning("The tiff file you are attempting to read from is causing the "
                "following problem: \"%s: %s\"", module, txtbuf);
-  if (last_tiff) TIFFClose(last_tiff); /* this will also reset last_tiff */
   err_reenter = 0;
   Rf_error("%s: %s", module, txtbuf);
 }
