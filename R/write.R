@@ -3,7 +3,9 @@
 #' Write images into a TIFF file.
 #'
 #' @inheritParams ijtiff_img
-#' @param path Path to the TIFF file to write to.
+#' @param path Path to the TIFF file to write to. Pass `path = NULL` to write
+#'   to memory; `write_tif` then returns the TIFF file as a raw vector instead
+#'   of writing to disk.
 #' @param bits_per_sample Number of bits per sample (numeric scalar). Supported
 #'   values are 8, 16, and 32. The default `"auto"` automatically picks the
 #'   smallest workable value based on the maximum element in `img`. For example,
@@ -43,7 +45,8 @@
 #'   * `datetime` - Date/time (character, Date, or POSIXct)
 #'   * `imagedescription` - Character string for image description
 #'
-#' @return The input `img` (invisibly).
+#' @return The input `img` (invisibly), or — when `path = NULL` — a raw
+#'   vector of the TIFF bytes.
 #'
 #' @author Simon Urbanek wrote most of this code for the 'tiff' package. Rory
 #'   Nolan lifted it from there and changed it around a bit for this 'ijtiff'
@@ -79,12 +82,16 @@ write_tif <- function(img, path, bits_per_sample = "auto",
                       compression = "none", overwrite = FALSE, msg = TRUE,
                       tags_to_write = NULL) {
   to_invisibly_return <- img
-  if (endsWith(path, "/")) rlang::abort("`path` cannot end with '/'.")
-  path <- fs::path_expand(path)
+  to_memory <- is.null(path)
+  if (!to_memory) {
+    checkmate::assert_string(path)
+    if (endsWith(path, "/")) rlang::abort("`path` cannot end with '/'.")
+    path <- fs::path_expand(path)
+  }
   args <- argchk_write_tif(
     img = img, path = path, bits_per_sample = bits_per_sample,
     compression = compression, overwrite = overwrite, msg = msg,
-    tags_to_write = tags_to_write
+    tags_to_write = tags_to_write, to_memory = to_memory
   )
   d <- dim(args$img)
   floats <- anyNA(args$img) || (!can_be_intish(args$img))
@@ -197,7 +204,8 @@ write_tif <- function(img, path, bits_per_sample = "auto",
   if (args$msg) {
     bps <- format_bps_message(args$bits_per_sample)
     message(
-      "Writing ", args$path, ": ", bps, d[1], "x", d[2], " pixel image of ",
+      "Writing ", if (to_memory) "raw vector" else args$path, ": ", bps,
+      d[1], "x", d[2], " pixel image of ",
       ifelse(floats, "floating point", "unsigned integer"),
       " type with ", format_dims_message(d[3], d[4]), " . . ."
     )
@@ -219,6 +227,10 @@ write_tif <- function(img, path, bits_per_sample = "auto",
     tags$imagedescription,
     PACKAGE = "ijtiff"
   )
+  if (to_memory) {
+    if (args$msg) message("\b Done.")
+    return(written) # `written` is the RAWSXP of TIFF bytes
+  }
   if (args$msg) message("\b Done.")
   invisible(to_invisibly_return)
 }

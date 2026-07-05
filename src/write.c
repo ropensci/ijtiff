@@ -131,23 +131,29 @@ SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats,
     img_list = image;
   }
   
-  // Open output file
-  const char *fn;
-  if (TYPEOF(where) != STRSXP || LENGTH(where) != 1)
-    Rf_error("invalid filename");
-  
-  fn = CHAR(STRING_ELT(where, 0));
+  // Open output: filename (STRSXP) or in-memory buffer (where == NULL)
   tiff_job_t rj;
-  FILE *f = fopen(fn, "w+b");
-  if (!f) Rf_error("unable to create %s", fn);
-  rj.f = f;
-  
+  memset(&rj, 0, sizeof(rj));
+  int to_memory = (where == R_NilValue);
+  if (to_memory) {
+    rj.alloc = 256 * 1024;   // non-zero alloc => close proc owns/frees rj.data
+    rj.data = malloc(rj.alloc);
+    if (!rj.data) Rf_error("unable to allocate in-memory output buffer");
+    rj.len = 0; rj.ptr = 0; rj.f = NULL;
+  } else {
+    if (TYPEOF(where) != STRSXP || LENGTH(where) != 1)
+      Rf_error("invalid filename");
+    const char *fn = CHAR(STRING_ELT(where, 0));
+    rj.f = fopen(fn, "w+b");
+    if (!rj.f) Rf_error("unable to create %s", fn);
+  }
+
   TIFF *tiff = TIFF_Open("wm", &rj);
   if (!tiff) {
-    if (!rj.f) free(rj.data);
+    if (to_memory) free(rj.data);
     Rf_error("cannot create TIFF structure");
   }
-  
+
   // Process each image
   while (true) {
     // Get current image from list if applicable
@@ -194,6 +200,15 @@ SEXP write_tif_C(SEXP image, SEXP where, SEXP sBPS, SEXP sCompr, SEXP sFloats,
     }
   }
   
+  if (to_memory) {
+    SEXP res;
+    TIFFFlush(tiff);
+    res = PROTECT(allocVector(RAWSXP, rj.len));
+    memcpy(RAW(res), rj.data, rj.len);
+    TIFFClose(tiff);   // frees rj.data via close proc
+    UNPROTECT(1);
+    return res;
+  }
   TIFFClose(tiff);
   return ScalarInteger(n_img);
 }

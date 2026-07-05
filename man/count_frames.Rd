@@ -10,7 +10,8 @@ count_frames(path)
 frames_count(path)
 }
 \arguments{
-\item{path}{A string. The path to the tiff file to read.}
+\item{path}{A string, the path to the tiff file to read. \code{path} may also
+be a raw vector of TIFF bytes, read in-memory.}
 }
 \value{
 A number, the number of frames in the TIFF file. This has an

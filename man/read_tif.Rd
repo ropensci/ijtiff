@@ -10,7 +10,8 @@ read_tif(path, frames = "all", list_safety = "error", msg = TRUE)
 tif_read(path, frames = "all", list_safety = "error", msg = TRUE)
 }
 \arguments{
-\item{path}{A string. The path to the tiff file to read.}
+\item{path}{A string, the path to the tiff file to read. \code{path} may also
+be a raw vector of TIFF bytes, read in-memory.}
 
 \item{frames}{Which frames do you want to read. Default all. To read the 2nd
 and 7th frames, use \code{frames = c(2, 7)}.}

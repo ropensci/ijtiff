@@ -34,7 +34,9 @@ with a redundant 4th slot \code{img[y, x, channel, ]} (see \link{ijtiff_img}
 'Examples' for an example). \item For a multi-channel, multi-plane image,
 use a 4-dimensional array \code{img[y, x, channel, plane]}.}}
 
-\item{path}{Path to the TIFF file to write to.}
+\item{path}{Path to the TIFF file to write to. Pass \code{path = NULL} to write
+to memory; \code{write_tif} then returns the TIFF file as a raw vector instead
+of writing to disk.}
 
 \item{bits_per_sample}{Number of bits per sample (numeric scalar). Supported
 values are 8, 16, and 32. The default \code{"auto"} automatically picks the
@@ -82,7 +84,8 @@ unit
 }}
 }
 \value{
-The input \code{img} (invisibly).
+The input \code{img} (invisibly), or — when \code{path = NULL} — a raw
+vector of the TIFF bytes.
 }
 \description{
 Write images into a TIFF file.

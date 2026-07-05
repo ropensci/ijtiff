@@ -203,7 +203,7 @@ colormap_or_ij_channels <- function(img_lst, prep, d) {
 #' count_frames(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' @export
 count_frames <- function(path) {
-  path <- fs::path_expand(path)
+  if (!is.raw(path)) path <- fs::path_expand(path)
   prep <- prep_read(path,
     frames = "all",
     tags1 = read_tags(path, frames = 1)[[1]]
@@ -501,7 +501,7 @@ prep_read <- function(path, frames, tags1, tags = FALSE) {
   frames <- prep_frames(frames)
   frames_max <- max(frames)
   translated_ij_desc <- translate_ij_description(tags1)
-  path <- fs::path_expand(path)
+  if (!is.raw(path)) path <- fs::path_expand(path)
   n_dirs <- .Call("count_directories_C", path, PACKAGE = "ijtiff")
   if (!is.na(translated_ij_desc$n_slices)) {
     if (frames[[1]] == "all") {

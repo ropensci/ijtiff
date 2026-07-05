@@ -10,7 +10,8 @@ read_tags(path, frames = "all", translate_tags = TRUE)
 tags_read(path, frames = 1)
 }
 \arguments{
-\item{path}{A string. The path to the tiff file to read.}
+\item{path}{A string, the path to the tiff file to read. \code{path} may also
+be a raw vector of TIFF bytes, read in-memory.}
 
 \item{frames}{Which frames do you want to read. Default all. To read the 2nd
 and 7th frames, use \code{frames = c(2, 7)}.}

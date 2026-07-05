@@ -133,9 +133,12 @@ validate_enum_tag <- function(tags, tag_name, allowed_values,
 #'
 #' @noRd
 argchk_write_tif <- function(img, path, bits_per_sample, compression,
-                             overwrite, msg, tags_to_write) {
-  checkmate::assert_string(path)
-  path <- stringr::str_replace_all(path, stringr::coll("\\"), "/") # windows
+                             overwrite, msg, tags_to_write,
+                             to_memory = FALSE) {
+  if (!to_memory) {
+    checkmate::assert_string(path)
+    path <- stringr::str_replace_all(path, stringr::coll("\\"), "/") # windows
+  }
   checkmate::assert_scalar(bits_per_sample)
   checkmate::assert(
     checkmate::check_string(bits_per_sample),
@@ -168,21 +171,23 @@ argchk_write_tif <- function(img, path, bits_per_sample, compression,
     }
   }
   checkmate::assert_string(compression)
-  if (endsWith(tolower(path), ".tiff") || endsWith(tolower(path), ".tif")) {
-    path <- paste0(strex::str_before_last_dot(path), ".tif")
-  }
-  path <- strex::str_give_ext(path, "tif")
   checkmate::assert_flag(overwrite)
-  if (file.exists(path) && (!overwrite)) {
-    rlang::abort(
-      c(
-        stringr::str_glue(
-          "The file {path}, already exists and `overwrite` ",
-          "is set to `FALSE`."
-        ),
-        x = "To enable overwriting, use `overwrite = TRUE`."
+  if (!to_memory) {
+    if (endsWith(tolower(path), ".tiff") || endsWith(tolower(path), ".tif")) {
+      path <- paste0(strex::str_before_last_dot(path), ".tif")
+    }
+    path <- strex::str_give_ext(path, "tif")
+    if (file.exists(path) && (!overwrite)) {
+      rlang::abort(
+        c(
+          stringr::str_glue(
+            "The file {path}, already exists and `overwrite` ",
+            "is set to `FALSE`."
+          ),
+          x = "To enable overwriting, use `overwrite = TRUE`."
+        )
       )
-    )
+    }
   }
   checkmate::assert_array(img)
   checkmate::assert_array(img, min.d = 2, max.d = 4)
@@ -288,6 +293,7 @@ argchk_write_tif <- function(img, path, bits_per_sample, compression,
     tags_to_write$datetime <- format(dt, "%Y:%m:%d %H:%M:%S")
   }
 
+  if (to_memory) path <- NULL
   list(
     img = img, path = path, bits_per_sample = bits_per_sample,
     compression = compression, overwrite = overwrite, msg = msg,

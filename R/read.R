@@ -26,7 +26,8 @@
 #' most common in image processing are supported (8-bit, 16-bit and 32-bit
 #' integer and 32-bit float samples).
 #'
-#' @param path A string. The path to the tiff file to read.
+#' @param path A string, the path to the tiff file to read. `path` may also
+#'   be a raw vector of TIFF bytes, read in-memory.
 #' @param frames Which frames do you want to read. Default all. To read the 2nd
 #'   and 7th frames, use `frames = c(2, 7)`.
 #' @param list_safety A string. This is for type safety of this function. Since
@@ -51,7 +52,8 @@
 #' img <- read_tif(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' @export
 read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
-  path <- fs::path_expand(path)
+  is_raw_src <- is.raw(path)
+  if (!is_raw_src) path <- fs::path_expand(path)
   frames <- prep_frames(frames)
   checkmate::assert_logical(msg, max.len = 1)
   checkmate::assert_string(list_safety)
@@ -59,7 +61,9 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
     c("error", "warning", "none"),
     ignore_case = TRUE
   )
-  if (msg) message("Reading image from ", path)
+  if (msg) {
+    message("Reading image from ", if (is_raw_src) "raw vector" else path)
+  }
   # First read tags from frame 1 to get initial metadata
   tags1 <- translate_tiff_tags(
     .Call("read_tags_C", path, 1L, PACKAGE = "ijtiff")[[1]]
@@ -181,7 +185,8 @@ translate_tiff_tags <- function(tags) {
 #' TIFF files contain metadata about images in their _TIFF tags_. This function
 #' is for reading this information without reading the actual image.
 #'
-#' @param path A string. The path to the tiff file to read.
+#' @param path A string, the path to the tiff file to read. `path` may also
+#'   be a raw vector of TIFF bytes, read in-memory.
 #' @param frames Which frames do you want to read. Default all. To read the 2nd
 #'   and 7th frames, use `frames = c(2, 7)`.
 #' @param translate_tags Logical. Should the TIFF tags be translated to
@@ -198,7 +203,7 @@ translate_tiff_tags <- function(tags) {
 #' read_tags(system.file("img", "Rlogo.tif", package = "ijtiff"))
 #' @export
 read_tags <- function(path, frames = "all", translate_tags = TRUE) {
-  path <- fs::path_expand(path)
+  if (!is.raw(path)) path <- fs::path_expand(path)
   frames <- prep_frames(frames)
   # First read tags from frame 1 to get initial metadata
   tags1 <- .Call("read_tags_C", path, 1L, PACKAGE = "ijtiff")[[1]]
