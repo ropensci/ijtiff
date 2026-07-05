@@ -114,7 +114,9 @@ read_tif <- function(path, frames = "all", list_safety = "error", msg = TRUE) {
       message("Reading a list of images with differing dimensions . . .")
     }
   } else if (msg) {
-    ints <- attr(out, "SampleFormat") %in% c("uint", "uint8", "int")
+    sf <- attr(out, "SampleFormat")
+    ints <- length(sf) == 1 &&
+      (grepl("integer", sf, ignore.case = TRUE) || sf %in% c("1", "2"))
     bps <- format_bps_message(attr(out, "BitsPerSample"))
     type <- if (ints) "integer" else "float"
     message(

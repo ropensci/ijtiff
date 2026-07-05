@@ -4,7 +4,7 @@
       read_tif(test_path("testthat-figs", "Rlogo-banana-red.tif"))
     Message
       Reading image from testthat-figs/Rlogo-banana-red.tif
-      Reading an 8-bit, float image with dimensions 155x200x1x2 (y,x,channel,frame) . . .
+      Reading an 8-bit, integer image with dimensions 155x200x1x2 (y,x,channel,frame) . . .
       155x200 pixel ijtiff_img with 1 channel and 2 frames.
       Preview (top left of first channel of first frame):
     Output

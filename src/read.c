@@ -34,38 +34,38 @@ static void handle_error(SEXP tiff_closer, const char *message, ...) {
 }
 
 // Helper function to copy pixel value based on bit depth and type
-static double get_pixel_value(const unsigned char *v, uint16_t bps, bool is_float) {
+static double get_pixel_value(const unsigned char *v, uint16_t bps, bool is_float,
+                              bool is_signed) {
     if (bps == 8) {
-        return (double)v[0];
+        return is_signed ? (double)((const int8_t*)v)[0] : (double)v[0];
     } else if (bps == 16) {
-        return (double)((const uint16_t*)v)[0];
+        return is_signed ? (double)((const int16_t*)v)[0]
+                         : (double)((const uint16_t*)v)[0];
     } else if (bps == 32) {
-        if (is_float) {
-            return (double)((const float*)v)[0];
-        } else {
-            return (double)((const uint32_t*)v)[0];
-        }
+        if (is_float) return (double)((const float*)v)[0];
+        return is_signed ? (double)((const int32_t*)v)[0]
+                         : (double)((const uint32_t*)v)[0];
     }
     return NA_REAL;
 }
 
 // Helper function to set pixel values for multiple samples
-static void set_pixel_values(double *real_arr, const unsigned char *v, uint16_t bps, 
-                            uint16_t spp, bool is_float, uint32_t imageLength, 
-                            uint32_t imageWidth, uint32_t x, uint32_t y) {
+static void set_pixel_values(double *real_arr, const unsigned char *v, uint16_t bps,
+                            uint16_t spp, bool is_float, bool is_signed,
+                            uint32_t imageLength, uint32_t imageWidth,
+                            uint32_t x, uint32_t y) {
     size_t j;
     for (j = 0; j < spp; j++) {
         size_t offset = (imageLength * imageWidth * j) + imageLength * x + y;
         if (bps == 8) {
-            real_arr[offset] = (double)v[j];
+            real_arr[offset] = is_signed ? (double)((const int8_t*)v)[j] : (double)v[j];
         } else if (bps == 16) {
-            real_arr[offset] = (double)((const uint16_t*)v)[j];
+            real_arr[offset] = is_signed ? (double)((const int16_t*)v)[j]
+                                         : (double)((const uint16_t*)v)[j];
         } else if (bps == 32) {
-            if (is_float) {
-                real_arr[offset] = (double)((const float*)v)[j];
-            } else {
-                real_arr[offset] = (double)((const uint32_t*)v)[j];
-            }
+            if (is_float) real_arr[offset] = (double)((const float*)v)[j];
+            else real_arr[offset] = is_signed ? (double)((const int32_t*)v)[j]
+                                              : (double)((const uint32_t*)v)[j];
         }
     }
 }
@@ -138,6 +138,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
             sformat == SAMPLEFORMAT_IEEEFP) {
             is_float = true;
         }
+        bool is_signed = (sformat == SAMPLEFORMAT_INT);
         if (spp == 1) { /* modify out_spp for colormaps */
             if (colormap[2]) {
                 out_spp = 3;
@@ -161,10 +162,6 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
         if (bps == 12 && colormap[0]) {
             handle_error(tiff_closer, "12-bit images with a colormap are not supported.");
         }
-        if (sformat == SAMPLEFORMAT_INT)
-            Rf_warning("The \'ijtiff\' package only supports unsigned "
-                       "integer or float sample formats, but your image contains "
-                       "the signed integer format.");
         res = PROTECT(allocVector(REALSXP, imageWidth * imageLength * out_spp));
         to_unprotect++;  // res needs to be UNPROTECTed later
         real_arr = REAL(res);
@@ -246,7 +243,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                             tsize_t i, step = bps / 8;
                             for (i = 0; i < n; i += step) {
                                 const uint8_t *v = (const uint8_t*) buf + i;
-                                real_arr[imageLength * x + y] = get_pixel_value(v, bps, is_float);
+                                real_arr[imageLength * x + y] = get_pixel_value(v, bps, is_float, is_signed);
                                 x++;
                                 if (x >= imageWidth) { x -= imageWidth; y++; }
                             }
@@ -256,7 +253,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                     tsize_t i, step = spp * bps / 8;
                     for (i = 0; i < n; i += step) {
                         const uint8_t *v = (const uint8_t*) buf + i;
-                        set_pixel_values(real_arr, v, bps, spp, is_float, imageLength, imageWidth, x, y);
+                        set_pixel_values(real_arr, v, bps, spp, is_float, is_signed, imageLength, imageWidth, x, y);
                         x++;
                         if (x >= imageWidth) {
                             x -= imageWidth;
@@ -267,7 +264,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                     tsize_t step = bps / 8, i;
                     for (i = 0; i < n; i += step) {
                         const unsigned char *v = (const unsigned char*) buf + i;
-                        real_arr[plane_offset + imageLength * x + y] = get_pixel_value(v, bps, is_float);
+                        real_arr[plane_offset + imageLength * x + y] = get_pixel_value(v, bps, is_float, is_signed);
                         x++;
                         if (x >= imageWidth) {
                             x -= imageWidth;
@@ -304,7 +301,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                         for (i = 0; i < n; i += step) {
                             const unsigned char *v = (const unsigned char*) buf + i;
                             if (x + xoff < imageWidth && y + yoff < imageLength) {
-                                real_arr[imageLength * (x + xoff) + y + yoff] = get_pixel_value(v, bps, is_float);
+                                real_arr[imageLength * (x + xoff) + y + yoff] = get_pixel_value(v, bps, is_float, is_signed);
                             }
                             xoff++;
                             if (xoff >= tileWidth) {
@@ -318,7 +315,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                         for (i = 0; i < n; i += step) {
                             const unsigned char *v = (const uint8_t*) buf + i;
                             if (x + xoff < imageWidth && y + yoff < imageLength) {
-                                set_pixel_values(real_arr, v, bps, spp, is_float, imageLength, imageWidth, x + xoff, y + yoff);
+                                set_pixel_values(real_arr, v, bps, spp, is_float, is_signed, imageLength, imageWidth, x + xoff, y + yoff);
                             }
                             xoff++;
                             if (xoff >= tileWidth) {
