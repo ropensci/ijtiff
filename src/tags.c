@@ -44,22 +44,16 @@ SEXP read_tags_C(SEXP sFn /*FileName*/, SEXP sDirs) {
     SEXP multi_res = PROTECT(R_NilValue);
     to_unprotect++;
     SEXP multi_tail = multi_res;
-    const char *fn;
     tiff_job_t rj;
     TIFF *tiff = NULL;
     FILE *f = NULL;
-    if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) < 1) {
-        Rf_error("invalid filename");
-    }
-    fn = CHAR(STRING_ELT(sFn, 0));
     // Initialize rj structure properly
     memset(&rj, 0, sizeof(rj));
     // Create a protected pointer for TIFF cleanup
     SEXP tiff_closer = PROTECT(R_MakeExternalPtr(NULL, R_NilValue, R_NilValue));
     to_unprotect++;
-    // Set up finalizer that checks if pointer is NULL before closing
     R_RegisterCFinalizerEx(tiff_closer, (R_CFinalizer_t)cleanup_tiff_ptr, TRUE);
-    tiff = open_tiff_file(fn, &rj, &f);
+    tiff = open_tiff_source(sFn, &rj, &f);
     if (tiff == NULL) {
         // open_tiff_file should have raised an error, but just to be safe:
         if (f) {

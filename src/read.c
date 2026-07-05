@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #include <math.h>
 
 #include "common.h"
@@ -11,19 +12,21 @@
 
 // Helper function to validate filename and open TIFF file
 static TIFF* validate_and_open_tiff(SEXP sFn, tiff_job_t *rj, FILE **f, const char **fn) {
-    if (TYPEOF(sFn) != STRSXP || LENGTH(sFn) < 1) Rf_error("invalid filename");
-    *fn = CHAR(STRING_ELT(sFn, 0));
-    memset(rj, 0, sizeof(tiff_job_t));
-    return open_tiff_file(*fn, rj, f);
+    *fn = (TYPEOF(sFn) == STRSXP && LENGTH(sFn) >= 1) ? CHAR(STRING_ELT(sFn, 0)) : "<raw>";
+    return open_tiff_source(sFn, rj, f);
 }
 
-// Helper function to handle errors with proper cleanup
-static void handle_error(TIFF *tiff, FILE *f, const char *message, ...) {
+// Format the message, close+neutralize the TIFF handle while rj is still on the
+// live stack, then raise the R error. Takes the tiff_closer external pointer so
+// cleanup_tiff_ptr can close exactly once and prevent the finalizer re-closing.
+static void handle_error(SEXP tiff_closer, const char *message, ...) {
+    char buf[1024];
     va_list args;
     va_start(args, message);
-    TIFFClose(tiff);
-    Rf_error(message, args);
+    vsnprintf(buf, sizeof(buf), message, args);
     va_end(args);
+    cleanup_tiff_ptr(tiff_closer);   // TIFFClose + R_ClearExternalPtr + reset last_tiff
+    Rf_error("%s", buf);
 }
 
 // Helper function to copy pixel value based on bit depth and type
@@ -145,11 +148,11 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
                     out_spp, config, colormap[0] ? "yes" : "no");
         #endif
         if (bps == 12) {
-            handle_error(tiff, f, "12-bit images are not supported. "
+            handle_error(tiff_closer, "12-bit images are not supported. "
                      "Try converting your image to 16-bit.");
         }
         if (bps != 8 && bps != 16 && bps != 32) {
-            handle_error(tiff, f, "image has %d bits/sample which is unsupported", bps);
+            handle_error(tiff_closer, "image has %d bits/sample which is unsupported", bps);
         }
         if (sformat == SAMPLEFORMAT_INT)
             Rf_warning("The \'ijtiff\' package only supports unsigned "
@@ -253,7 +256,7 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs) {
             }
         } else {  // tiled image
             if (spp > 1 && config != PLANARCONFIG_CONTIG) {
-                handle_error(tiff, f, "Planar format tiled images are not supported");
+                handle_error(tiff_closer, "Planar format tiled images are not supported");
             }
 
             #if TIFF_DEBUG

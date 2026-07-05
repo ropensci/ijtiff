@@ -292,6 +292,25 @@ TIFF* open_tiff_file(const char* filename, tiff_job_t* rj, FILE** f) {
     return tiff;
 }
 
+// Open a TIFF from either a filename (STRSXP) or an in-memory raw vector (RAWSXP).
+TIFF* open_tiff_source(SEXP src, tiff_job_t *rj, FILE **f) {
+    memset(rj, 0, sizeof(tiff_job_t));
+    *f = NULL;
+    if (TYPEOF(src) == RAWSXP) {
+        rj->data = (char*) RAW(src);
+        rj->len = LENGTH(src);
+        rj->alloc = 0;   // 0 alloc => close proc will not free (we don't own it)
+        rj->ptr = 0;
+        rj->f = NULL;
+        TIFF *tiff = TIFF_Open("rmc", rj);  // no mmap, no chopping
+        if (!tiff) Rf_error("supplied raw vector is not a valid TIFF");
+        return tiff;
+    }
+    if (TYPEOF(src) != STRSXP || LENGTH(src) < 1) Rf_error("invalid filename");
+    const char *fn = CHAR(STRING_ELT(src, 0));
+    return open_tiff_file(fn, rj, f);
+}
+
 void check_type_sizes(void) {
   unsigned int sz = sizeof(uint8_t) * CHAR_BIT;
   if (sz != 8) {

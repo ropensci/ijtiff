@@ -26,6 +26,9 @@ void cleanup_tiff_ptr(SEXP ptr);
 // Helper function to open a TIFF file
 TIFF* open_tiff_file(const char* filename, tiff_job_t* rj, FILE** f);
 
+// Open a TIFF from a filename (STRSXP) or an in-memory raw vector (RAWSXP)
+TIFF* open_tiff_source(SEXP src, tiff_job_t* rj, FILE** f);
+
 void check_type_sizes(void);
 
 void setAttr(SEXP x, const char *name, SEXP val);

@@ -1,0 +1,10 @@
+test_that("read_tif reads from an in-memory raw vector identically to a file", {
+  # TODO(Task 3): remove skip()
+  testthat::skip("raw-vector R support lands in Task 3")
+  p <- system.file("img", "Rlogo.tif", package = "ijtiff")
+  from_file <- read_tif(p, msg = FALSE)
+  bytes <- readBin(p, "raw", n = file.info(p)$size)
+  from_raw <- read_tif(bytes, msg = FALSE)
+  expect_identical(as.array(from_raw), as.array(from_file))
+  expect_identical(dim(from_raw), dim(from_file))
+})
