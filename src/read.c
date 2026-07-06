@@ -274,7 +274,21 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs, SEXP sConvert) {
         if (bps == 12 && colormap[0]) {
             handle_error(tiff_closer, "12-bit images with a colormap are not supported.");
         }
-        res = PROTECT(allocVector(REALSXP, imageWidth * imageLength * out_spp));
+        // Compute the element count in 64-bit and guard against overflow before
+        // allocating. imageWidth/imageLength are uint32_t and out_spp uint16_t,
+        // so `imageWidth * imageLength * out_spp` would overflow in 32-bit
+        // arithmetic BEFORE being widened to allocVector's R_xlen_t argument --
+        // a forged huge-dimension TIFF could wrap it to a small count, under-
+        // allocate res, and let the strip/tile decode write out of bounds. This
+        // mirrors the overflow guard already used on the RGBA path above.
+        {
+            size_t npix = (size_t) imageWidth * imageLength;
+            if (imageWidth != 0 && npix / imageWidth != imageLength)
+                handle_error(tiff_closer, "image dimensions overflow");
+            if (out_spp != 0 && npix > SIZE_MAX / out_spp)
+                handle_error(tiff_closer, "image too large to read");
+            res = PROTECT(allocVector(REALSXP, (R_xlen_t) (npix * out_spp)));
+        }
         to_unprotect++;  // res needs to be UNPROTECTed later
         real_arr = REAL(res);
         if (tileWidth == 0) {
