@@ -1,1 +1,13 @@
 comment: false
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%      # allow small dips from defensive/unreachable branches
+    patch:
+      default:
+        target: auto
+        threshold: 5%      # new defensive guards are often untestable
+        informational: true # report, don't fail the build

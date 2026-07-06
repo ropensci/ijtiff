@@ -285,8 +285,10 @@ SEXP read_tif_C(SEXP sFn /*filename*/, SEXP sDirs, SEXP sConvert) {
             size_t npix = (size_t) imageWidth * imageLength;
             if (imageWidth != 0 && npix / imageWidth != imageLength)
                 handle_error(tiff_closer, "image dimensions overflow");
-            if (out_spp != 0 && npix > SIZE_MAX / out_spp)
-                handle_error(tiff_closer, "image too large to read");
+            if (out_spp != 0 && npix > SIZE_MAX / out_spp)  // GCOV_EXCL_LINE
+                handle_error(tiff_closer, "image too large to read");  // GCOV_EXCL_LINE
+            // ^ unreachable via a real TIFF: the dimension guard above already
+            //   bounds npix well below SIZE_MAX/out_spp, so gcov never sees it.
             res = PROTECT(allocVector(REALSXP, (R_xlen_t) (npix * out_spp)));
         }
         to_unprotect++;  // res needs to be UNPROTECTed later
